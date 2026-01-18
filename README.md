@@ -1,51 +1,50 @@
-# 3bro web (3BROTHERS clone)
+# 3bro web
 
-Clone trang Home của `3brothers.net` vào Next.js (App Router) để bạn chỉnh sửa.
+Marketing site for the 3brothers KOL/KOC agency built with Next.js (App Router), TypeScript, and styled-components. It includes landing pages for creators/brands, mirrored assets from the original site, and Supabase-backed authentication for admin access.
 
-Hiện tại Home không còn đọc/parsing HTML từ `src/3brothers/*.html` khi chạy runtime nữa — markup đã được generate thành JSX/TSX trong các components (không dùng `dangerouslySetInnerHTML`).
+## Stack
+- Next.js 14+ (App Router) with TypeScript
+- styled-components with shared design tokens, media query helpers, and global styles (`src/styles`)
+- Next `poppins` font setup (`src/lib/fonts.ts`)
+- Supabase auth (email/password + Google) with browser/server clients and edge proxy refresh (`src/lib/supabase`, `proxy.ts`)
+- Swiper for sliders; Next/Image configured for `media.3brothers.net` and `media.metub.net`
+- Path alias `@/*` via `tsconfig.json`
+
+## Routes and features
+- `/` home composed of sections (Banner, Passion, Information, Passion Crew, Newsletter/Get in touch, Trending)
+- `/for-creators`, `/for-brands`, `/our-brand` dedicated landing pages sharing the header/footer and section components
+- `/login` email/password + Google auth; `/auth/callback` exchanges Supabase OAuth codes and redirects to `/admin` (guarded)
+- API stubs: `POST /api/get-in-touch` and `POST /api/newsletter` (expect Zod schemas in `@/lib/validations`; currently log and return canned responses)
+- Mirrored assets live under `public/metub/template/**`
 
 ## Requirements
+- Node.js 18+
+- Yarn (preferred package manager)
 
-- Node.js 18+ (recommended)
-
-## Run locally
-
+## Quickstart
+1. Create `.env.local` with Supabase credentials:
 ```bash
-npm install
-npm run dev
+NEXT_PUBLIC_SUPABASE_URL=https://<project>.supabase.co
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY=<anon-public-key>
 ```
+   - Enable the Google provider in Supabase and add `http://localhost:3000/auth/callback` (plus your production origin) as an authorized redirect URL.
+2. Install dependencies: `yarn install`
+3. Start the dev server: `yarn dev` and open http://localhost:3000
 
-Open `http://localhost:3000`.
+## Scripts
+- `yarn dev` — run Next.js dev server
+- `yarn lint` — run ESLint
+- `yarn build` — production build
+- `yarn start` — serve the production build
 
-## Sync 3BROTHERS Home
+## Project layout
+- `src/app` — App Router routes and metadata (landing pages, login/admin, API handlers, auth callback)
+- `src/components` — UI primitives (Button/Heading/Text), layout primitives (Container/Section/Stack/Grid), shared Header/Footer, landing sections
+- `src/styles` — design tokens, theme typing, media query helpers, global styles
+- `src/lib/supabase` — Supabase config plus browser/server clients and proxy refresh helper
+- `public/metub/template` — mirrored fonts/images/video from 3brothers.net
 
-Tải HTML + assets của Home về local:
-
-```bash
-npm run sync:3brothers:home
-```
-
-Lệnh trên sẽ:
-- sync HTML/assets từ `3brothers.net`
-- generate các section components trong `src/components/home/sections/*` (JSX/TSX)
-
-Nếu muốn force tải lại tất cả (kể cả file đã tồn tại):
-
-```bash
-npm run sync:3brothers:home -- --force
-```
-
-Nếu chỉ muốn generate lại file sections (không sync):
-
-```bash
-npm run gen:3brothers:home
-```
-
-## Files
-
-- `src/app/page.tsx` — render Home
-- `src/app/layout.tsx` — include CSS của 3BROTHERS
-- `src/components/home/sections/*` — Home sections (generated)
-- `src/3brothers/original/home.html` — HTML gốc (tham khảo)
-- `src/3brothers/home-body.html` — body HTML đã sync (input để generate)
-- `public/metub/template/*` — CSS/JS/fonts/images/video đã mirror
+## Notes
+- Contact/newsletter forms are UI-only; wire them to persistence/email and add the missing Zod schemas in `@/lib/validations`.
+- Jobs/blog CMS, RBAC permissions, and analytics are not implemented yet.
+- Keep new styling values sourced from the shared tokens to avoid magic numbers.
