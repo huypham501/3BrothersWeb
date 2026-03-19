@@ -21,7 +21,7 @@ export async function createSupabaseServerClient(
             cookieStore.set(name, value, options)
           );
         } catch {
-          // In RSC the cookie store is read-only; proxy.ts will handle refresh.
+          // In RSC the cookie store is read-only; middleware.ts will handle refresh.
         }
       },
     },

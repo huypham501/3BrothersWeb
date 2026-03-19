@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { ForBrandsView } from "@/components/forBrands/ForBrandsView";
 
-const SITE_URL = "https://3brothers.net";
+import { SITE_URL } from "@/lib/constants";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

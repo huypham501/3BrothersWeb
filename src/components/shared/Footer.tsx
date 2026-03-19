@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import styled from 'styled-components';
 import { Container } from '@/components/primitives/Container';
 import { Button } from '@/components/ui/Button';
@@ -29,7 +30,7 @@ export function Footer() {
                   <Col $spanMd={5} style={{ padding: '24px 16px' }}>
                     <Button
                       as={Link}
-                      href="/get-in-touch.html"
+                      href="/get-in-touch"
                       $variant="gradient"
                       $size="xl"
                       $rounded
@@ -52,8 +53,8 @@ export function Footer() {
               <ShowOnDesktop>
                 <LogoFooter 
                   src="/metub/template/images/3brothers-logo-color.png" 
-                  width="135" 
-                  height="40" 
+                  width={135} 
+                  height={40} 
                   className="lazy" 
                   alt="Creators | 3BROTHERS Network | Leading Talent Network" 
                 />
@@ -146,7 +147,7 @@ const AboutFooter = styled.div`
   }
 `;
 
-const LogoFooter = styled.img`
+const LogoFooter = styled(Image)`
   margin-bottom: ${({ theme }) => theme.spacing.lg};
 `;
 

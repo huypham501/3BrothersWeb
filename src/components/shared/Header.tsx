@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import styled, { css } from 'styled-components';
@@ -18,10 +19,10 @@ export function Header() {
         <Navbar>
           <LogoWrapper>
             <Link href="/" aria-label="3brothers home">
-              <img
+              <Image
                 src="/metub/template/images/3brothers-logo-white.png"
-                width="91"
-                height="23"
+                width={91}
+                height={23}
                 alt="3BROTHERS NETWORK | The Leading Creator Economy Platform"
               />
             </Link>
@@ -57,7 +58,7 @@ export function Header() {
                 </NavLink>
               </NavItem>
               <NavItem>
-                <NavLink href="/social-commerce.html">
+                <NavLink href="/social-commerce">
                   Social Commerce
                 </NavLink>
               </NavItem>
@@ -71,12 +72,12 @@ export function Header() {
                 </NavLink>
               </NavItem>
               <NavItem>
-                <NavLink href="/blog.html">
+                <NavLink href="/blog">
                   Blog
                 </NavLink>
               </NavItem>
               <NavItem>
-                <NavLink href="/careers.html">
+                <NavLink href="/careers">
                   Careers
                 </NavLink>
               </NavItem>
@@ -94,7 +95,7 @@ export function Header() {
             <NavbarRight>
               <Button 
                 as={Link} 
-                href="/get-in-touch.html" 
+                href="/get-in-touch" 
                 $variant="gradient" 
                 $rounded
               >

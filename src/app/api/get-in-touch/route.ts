@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getInTouchCreatorSchema, getInTouchBrandSchema } from '@/lib/validations';
+import { ContactService } from '@/lib/services/contact.service';
 
 export async function POST(request: NextRequest) {
   try {
@@ -12,20 +13,7 @@ export async function POST(request: NextRequest) {
     
     const validatedData = schema.parse(body);
 
-    // TODO: Send email or save to database
-    // For now, simulate checking if already submitted
-    // In real implementation, check database
-    const alreadySubmitted = false;
-
-    if (alreadySubmitted) {
-      return NextResponse.json(
-        { message: 'You have already submitted.' },
-        { status: 400 }
-      );
-    }
-
-    // TODO: Implement actual email sending logic
-    console.log('Get in touch submission:', validatedData);
+    await ContactService.processSubmission(validatedData);
 
     return NextResponse.json(
       { message: 'Thanks! We\'ll get back to you as soon as we can.', success: true },
@@ -34,6 +22,13 @@ export async function POST(request: NextRequest) {
 
   } catch (error) {
     console.error('Get in touch error:', error);
+    
+    if (error instanceof Error && error.message === 'ALREADY_SUBMITTED') {
+      return NextResponse.json(
+        { message: 'You have already submitted.' },
+        { status: 400 }
+      );
+    }
     
     if (error instanceof Error) {
       return NextResponse.json(

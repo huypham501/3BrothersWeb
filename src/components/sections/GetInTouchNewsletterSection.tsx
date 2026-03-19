@@ -1,11 +1,233 @@
 'use client';
 
+import { useState, FormEvent } from 'react';
 import styled from 'styled-components';
 import { Container } from '@/components/primitives/Container';
 import { H2 } from '@/components/ui/Heading';
 import { Button } from '@/components/ui/Button';
 import { mq } from '@/styles/mediaQueries';
 
+// --- Types ---
+type TabType = 'creator' | 'brand';
+
+// --- React Component (Logic goes first) ---
+export function GetInTouchNewsletterSection() {
+  const [activeTab, setActiveTab] = useState<TabType>('creator');
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [message, setMessage] = useState('');
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setStatus('loading');
+    setMessage('');
+
+    const formData = new FormData(e.currentTarget);
+    const data = {
+      isCreator: activeTab === 'creator' ? 1 : 0,
+      email: formData.get('email'),
+      content: formData.get('content'),
+      ...(activeTab === 'creator' && { channelLink: formData.get('channelLink') })
+    };
+
+    try {
+      const res = await fetch('/api/get-in-touch', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+
+      const result = await res.json();
+
+      if (!res.ok) {
+        throw new Error(result.message || 'Submission failed');
+      }
+
+      setStatus('success');
+      setMessage(result.message || 'Thanks! We will get back to you soon.');
+      (e.target as HTMLFormElement).reset();
+    } catch (err) {
+      setStatus('error');
+      setMessage(err instanceof Error ? err.message : 'An error occurred while submitting.');
+    }
+  };
+
+  return (
+    <NewsletterSection aria-label="Get In Touch">
+      <Container>
+        <NewsletterRow>
+          <NewsletterLeft>
+            <div className="heading">
+              <H2>
+                READY TO<span>Create...</span>BY PASSION?
+              </H2>
+            </div>
+          </NewsletterLeft>
+          <NewsletterRight>
+            <TabHorizontal>
+              <NavTabs role="tablist">
+                <NavItem className={activeTab === 'creator' ? 'active' : ''}>
+                  <NavLink
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setActiveTab('creator');
+                      setStatus('idle');
+                      setMessage('');
+                    }}
+                    href="#tab1"
+                    role="tab"
+                  >
+                    I'm a Creator
+                  </NavLink>
+                </NavItem>
+                <NavItem className={activeTab === 'brand' ? 'active' : ''}>
+                  <NavLink
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setActiveTab('brand');
+                      setStatus('idle');
+                      setMessage('');
+                    }}
+                    href="#tab2"
+                    role="tab"
+                  >
+                    Brand / Partner
+                  </NavLink>
+                </NavItem>
+              </NavTabs>
+
+              <TabContent>
+                {/* CREATOR TAB */}
+                {activeTab === 'creator' && (
+                  <TabPane className="active">
+                    <Forms onSubmit={handleSubmit}>
+                      <FormRow>
+                        <FormColumn>
+                          <FormGroup>
+                            <FormLabel className="required">E-MAIL</FormLabel>
+                            <FormControl
+                              name="email"
+                              type="email"
+                              placeholder="example@mail.com"
+                              required
+                            />
+                          </FormGroup>
+                        </FormColumn>
+                        <FormColumn>
+                          <FormGroup>
+                            <FormLabel className="required">YOUR CHANNEL LINK?</FormLabel>
+                            <FormControl
+                              name="channelLink"
+                              type="text"
+                              placeholder="@username"
+                              required
+                            />
+                          </FormGroup>
+                        </FormColumn>
+                      </FormRow>
+                      <FormGroup>
+                        <FormLabel className="required">TELL US YOUR CONCERN</FormLabel>
+                        <FormTextarea
+                          name="content"
+                          placeholder="Enter text here..."
+                          rows={3}
+                          required
+                        />
+                      </FormGroup>
+                      <FormButton>
+                        <ButtonWrapper>
+                          <Button
+                            $variant="gradient"
+                            $size="xl"
+                            type="submit"
+                            disabled={status === 'loading'}
+                          >
+                            {status === 'loading' ? 'SUBMITTING...' : 'SUBMIT'}
+                          </Button>
+                        </ButtonWrapper>
+                        <ContactText>
+                          <p>
+                            For Creators:{' '}
+                            <a href="mailto:support@3brothers.net">support@3brothers.net</a>
+                          </p>
+                          <p>
+                            For Brand:{' '}
+                            <a href="mailto:booking@3brothers.net">booking@3brothers.net</a>
+                          </p>
+                        </ContactText>
+                      </FormButton>
+                    </Forms>
+                  </TabPane>
+                )}
+
+                {/* BRAND TAB */}
+                {activeTab === 'brand' && (
+                  <TabPane className="active">
+                    <Forms onSubmit={handleSubmit}>
+                      <FormGroup>
+                        <FormLabel className="required">E-MAIL</FormLabel>
+                        <FormControl
+                          name="email"
+                          type="email"
+                          placeholder="example@mail.com"
+                          required
+                        />
+                      </FormGroup>
+                      <FormGroup>
+                        <FormLabel className="required">TELL US YOUR CONCERN</FormLabel>
+                        <FormTextarea
+                          name="content"
+                          placeholder="Live by passion, amazing!!! Let's go"
+                          rows={3}
+                          required
+                        />
+                      </FormGroup>
+                      <FormButton>
+                        <ButtonWrapper>
+                          <Button
+                            $variant="gradient"
+                            $size="xl"
+                            type="submit"
+                            disabled={status === 'loading'}
+                          >
+                            {status === 'loading' ? 'SUBMITTING...' : 'SUBMIT'}
+                          </Button>
+                        </ButtonWrapper>
+                        <ContactText>
+                          <p>
+                            For Creators:{' '}
+                            <a href="mailto:support@3brothers.net">support@3brothers.net</a>
+                          </p>
+                          <p>
+                            For Brand:{' '}
+                            <a href="mailto:booking@3brothers.net">booking@3brothers.net</a>
+                          </p>
+                        </ContactText>
+                      </FormButton>
+                    </Forms>
+                  </TabPane>
+                )}
+              </TabContent>
+            </TabHorizontal>
+          </NewsletterRight>
+        </NewsletterRow>
+
+        {status === 'error' && (
+          <MessNewsletter className="error">
+            {message}
+          </MessNewsletter>
+        )}
+        
+        {status === 'success' && (
+          <MessNewsletter className="success">
+            {message}
+          </MessNewsletter>
+        )}
+      </Container>
+    </NewsletterSection>
+  );
+}
+
+// --- Styled Components (Moved to bottom per R6 pattern) ---
 const NewsletterSection = styled.section`
   padding: ${({ theme }) => theme.spacing['4xl']} 0;
   background-color: ${({ theme }) => theme.colors.bgDark};
@@ -96,6 +318,12 @@ const TabPane = styled.div`
   
   &.active {
     display: block;
+    animation: fadeIn 0.3s ease-in-out;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 `;
 
@@ -217,163 +445,17 @@ const MessNewsletter = styled.div`
   margin-top: ${({ theme }) => theme.spacing['2xl']};
   padding: ${({ theme }) => theme.spacing.lg};
   border-radius: ${({ theme }) => theme.borderRadius.md};
-  display: none;
+  display: block;
 
   &.error {
     background: ${({ theme }) => theme.colors.errorBg};
     color: ${({ theme }) => theme.colors.error};
+    border: 1px solid ${({ theme }) => theme.colors.errorBorder};
   }
 
   &.success {
     background: ${({ theme }) => theme.colors.successBg};
     color: ${({ theme }) => theme.colors.success};
+    border: 1px solid ${({ theme }) => theme.colors.successBorder};
   }
 `;
-
-export function GetInTouchNewsletterSection() {
-  return (
-    <NewsletterSection aria-label="Get In Touch">
-      <Container>
-        <NewsletterRow>
-          <NewsletterLeft>
-            <div className="heading">
-              <H2>
-                READY TO<span>Create...</span>BY PASSION?
-              </H2>
-            </div>
-          </NewsletterLeft>
-          <NewsletterRight>
-            <TabHorizontal className="tab-horizontal">
-              <NavTabs className="nav nav-tabs nav-justified" id="tab" role="tablist">
-                <NavItem className="nav-item active">
-                  <NavLink className="nav-link" href="#tab1" data-toggle="tab">
-                    I'm a Creator
-                  </NavLink>
-                </NavItem>
-                <NavItem className="nav-item">
-                  <NavLink className="nav-link" href="#tab2" data-toggle="tab">
-                    Brand / Partner
-                  </NavLink>
-                </NavItem>
-              </NavTabs>
-              <TabContent className="tab-content">
-                <TabPane className="tab-pane fade in active" id="tab1" role="tabpanel">
-                  <Forms className="forms" action="" method="">
-                    <FormRow>
-                      <FormColumn>
-                        <FormGroup className="form-group">
-                          <FormLabel className="form-label required">E-MAIL</FormLabel>
-                          <FormControl
-                            id="get_in_touch_email_creator"
-                            className="form-control"
-                            type="text"
-                            placeholder="example@mail.com"
-                          />
-                        </FormGroup>
-                      </FormColumn>
-                      <FormColumn>
-                        <FormGroup className="form-group">
-                          <FormLabel className="form-label required">
-                            YOUR CHANNEL LINK?
-                          </FormLabel>
-                          <FormControl
-                            id="get_in_touch_channel_link_creator"
-                            className="form-control"
-                            type="text"
-                            placeholder="@username"
-                          />
-                        </FormGroup>
-                      </FormColumn>
-                    </FormRow>
-                    <FormGroup className="form-group">
-                      <FormLabel className="form-label required">
-                        TELL US YOUR CONCERN
-                      </FormLabel>
-                      <FormTextarea
-                        id="get_in_touch_content_creator"
-                        className="form-control"
-                        placeholder="Enter text here..."
-                        rows={3}
-                      />
-                    </FormGroup>
-                    <FormButton className="form-button">
-                      <ButtonWrapper>
-                        <Button
-                          id="get_in_touch_send_creator"
-                          $variant="gradient"
-                          $size="xl"
-                          type="button"
-                        >
-                          SUBMIT
-                        </Button>
-                      </ButtonWrapper>
-                      <ContactText className="text">
-                        <p className="visit-site">
-                          For Creators:{' '}
-                          <a href="mailto:support@3brothers.net">support@3brothers.net</a>
-                        </p>
-                        <p className="visit-site">
-                          For Brand:{' '}
-                          <a href="mailto:booking@3brothers.net">booking@3brothers.net</a>
-                        </p>
-                      </ContactText>
-                    </FormButton>
-                  </Forms>
-                </TabPane>
-                <TabPane className="tab-pane fade" id="tab2" role="tabpanel">
-                  <Forms className="forms" action="" method="">
-                    <FormGroup className="form-group">
-                      <FormLabel className="form-label required">E-MAIL</FormLabel>
-                      <FormControl
-                        id="get_in_touch_email"
-                        className="form-control"
-                        type="text"
-                        placeholder="example@mail.com"
-                      />
-                    </FormGroup>
-                    <FormGroup className="form-group">
-                      <FormLabel className="form-label required">
-                        TELL US YOUR CONCERN
-                      </FormLabel>
-                      <FormTextarea
-                        id="get_in_touch_content"
-                        className="form-control"
-                        placeholder="Live by passion, amazing!!! Let's go"
-                        rows={3}
-                      />
-                    </FormGroup>
-                    <FormButton className="form-button">
-                      <ButtonWrapper>
-                        <Button
-                          id="get_in_touch_send"
-                          $variant="gradient"
-                          $size="xl"
-                          type="button"
-                        >
-                          SUBMIT
-                        </Button>
-                      </ButtonWrapper>
-                      <ContactText className="text">
-                        <p className="visit-site">
-                          For Creators:{' '}
-                          <a href="mailto:support@3brothers.net">support@3brothers.net</a>
-                        </p>
-                        <p className="visit-site">
-                          For Brand:{' '}
-                          <a href="mailto:booking@3brothers.net">booking@3brothers.net</a>
-                        </p>
-                      </ContactText>
-                    </FormButton>
-                  </Forms>
-                </TabPane>
-              </TabContent>
-            </TabHorizontal>
-          </NewsletterRight>
-        </NewsletterRow>
-
-        <MessNewsletter className="mess-newsletter error" />
-        <MessNewsletter className="mess-newsletter success" />
-      </Container>
-    </NewsletterSection>
-  );
-}

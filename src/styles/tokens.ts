@@ -174,15 +174,15 @@ export const shadows = {
 
 export const zIndex = {
   base: 1,
+  overlay: 10,
+  modal: 20,
   dropdown: 1000,
   sticky: 1020,
   fixed: 1030,
   header: 1040,
-  overlay: 15,
-  modal: 20,
   popover: 1060,
   tooltip: 1070,
-  preloader: 999,
+  preloader: 1099,
 } as const;
 
 export const motion = {

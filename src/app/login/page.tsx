@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { LoginPage } from "@/components/auth/LoginPage";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
-const SITE_URL = "https://3brothers.net";
+import { SITE_URL } from "@/lib/constants";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -42,13 +42,7 @@ type LoginPageProps = {
   }>;
 };
 
-function getSafeRedirectPath(nextParam?: string) {
-  if (nextParam && nextParam.startsWith("/") && !nextParam.startsWith("//")) {
-    return nextParam;
-  }
-
-  return "/admin";
-}
+import { getSafeRedirectPath } from "@/lib/auth/utils";
 
 export default async function Login({ searchParams }: LoginPageProps) {
   const supabase = await createSupabaseServerClient();

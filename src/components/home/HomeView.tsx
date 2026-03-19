@@ -10,7 +10,7 @@ import { PassionSection } from "@/components/home/sections/PassionSection";
 import { Preloader } from "@/components/home/sections/Preloader";
 import { TrendingSection } from "@/components/home/sections/TrendingSection";
 
-export function ThreeBrothersHomeView() {
+export function HomeView() {
   return (
     <>
       <div>

@@ -22,13 +22,7 @@ const oauthErrorMessages: Record<string, string> = {
   missing_code: 'Missing OAuth code. Please try signing in again.',
 };
 
-function getSafeRedirectPath(nextParam?: string | null) {
-  if (nextParam && nextParam.startsWith('/') && !nextParam.startsWith('//')) {
-    return nextParam;
-  }
-
-  return DEFAULT_REDIRECT;
-}
+import { getSafeRedirectPath } from '@/lib/auth/utils';
 
 export function LoginPage() {
   const router = useRouter();

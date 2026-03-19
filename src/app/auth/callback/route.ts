@@ -2,13 +2,7 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { createSupabaseRouteClient } from "@/lib/supabase/server";
 
-function getSafeRedirectPath(nextParam: string | null) {
-  if (nextParam && nextParam.startsWith("/") && !nextParam.startsWith("//")) {
-    return nextParam;
-  }
-
-  return "/admin";
-}
+import { getSafeRedirectPath } from "@/lib/auth/utils";
 
 export async function GET(request: NextRequest) {
   const requestUrl = new URL(request.url);

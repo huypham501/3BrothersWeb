@@ -1,10 +1,6 @@
-'use client';
-
 import type { ReactNode } from "react";
-import { ThemeProvider } from "styled-components";
-import { theme } from "@/styles/theme";
-import { GlobalStyles } from "@/styles/globalStyles";
 import { poppins } from "@/lib/fonts";
+import ClientProviders from "@/components/ClientProviders";
 
 // Import Swiper styles
 import 'swiper/css';
@@ -29,10 +25,9 @@ export default function RootLayout({
         />
       </head>
       <body className={poppins.variable}>
-        <ThemeProvider theme={theme}>
-          <GlobalStyles />
+        <ClientProviders>
           {children}
-        </ThemeProvider>
+        </ClientProviders>
       </body>
     </html>
   );

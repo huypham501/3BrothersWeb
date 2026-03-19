@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import { ThreeBrothersHome } from "@/components/home/ThreeBrothersHome";
+import { HomeView } from "@/components/home/HomeView";
 
-const SITE_URL = "https://3brothers.net";
+import { SITE_URL } from "@/lib/constants";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -36,5 +36,5 @@ export const metadata: Metadata = {
 };
 
 export default function HomePage() {
-  return <ThreeBrothersHome />;
+  return <HomeView />;
 }
