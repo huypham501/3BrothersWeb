@@ -9,6 +9,35 @@ import { Section } from '@/components/primitives/Section';
 import styled from 'styled-components';
 import { mq } from '@/styles/mediaQueries';
 
+export function InformationSection() {
+  return (
+    <StyledInformationSection>
+      <InformationInner>
+        <Container>
+          <BoxText>
+            <H3 $variant="title-2">
+              PASSIONS KNOWS NO BORDERS! CLIMB THE CHART & BRING YOUR CREATIVE TO LIFE WITH 3BROTHERS
+            </H3>
+            <MainText>
+              With our expertise of optimization and platforms know-how, we can bring your amazing contents
+              to wherever your audience are.
+            </MainText>
+            <Button 
+              as={Link} 
+              href="/for-creators" 
+              $variant="outlineLight" 
+              $rounded
+              style={{ textTransform: 'uppercase' }}
+            >
+              <span>CREATOR PROGRAM</span>
+            </Button>
+          </BoxText>
+        </Container>
+      </InformationInner>
+    </StyledInformationSection>
+  );
+}
+
 const StyledInformationSection = styled(Section)`
   overflow: hidden;
 `;
@@ -52,32 +81,3 @@ const MainText = styled(Text)`
     margin-bottom: 32px;
   }
 `;
-
-export function InformationSection() {
-  return (
-    <StyledInformationSection>
-      <InformationInner>
-        <Container>
-          <BoxText>
-            <H3 $variant="title-2">
-              PASSIONS KNOWS NO BORDERS! CLIMB THE CHART & BRING YOUR CREATIVE TO LIFE WITH 3BROTHERS
-            </H3>
-            <MainText>
-              With our expertise of optimization and platforms know-how, we can bring your amazing contents
-              to wherever your audience are.
-            </MainText>
-            <Button 
-              as={Link} 
-              href="/for-creators" 
-              $variant="outlineLight" 
-              $rounded
-              style={{ textTransform: 'uppercase' }}
-            >
-              <span>CREATOR PROGRAM</span>
-            </Button>
-          </BoxText>
-        </Container>
-      </InformationInner>
-    </StyledInformationSection>
-  );
-}

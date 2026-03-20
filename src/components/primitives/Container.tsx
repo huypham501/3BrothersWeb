@@ -15,6 +15,7 @@ interface ContainerProps {
   $noPadding?: boolean;
 }
 
+
 export const Container = styled.div<ContainerProps>`
   width: 100%;
   padding-right: ${({ $noPadding }) => ($noPadding ? 0 : '15px')};

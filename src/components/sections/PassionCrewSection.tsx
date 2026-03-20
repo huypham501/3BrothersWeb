@@ -6,7 +6,10 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Thumbs } from 'swiper/modules';
 import type { Swiper as SwiperType } from 'swiper';
 import styled from 'styled-components';
-import { Container, H2, H3, Row, Col, Link } from '@/components';
+import { Container } from '@/components/primitives/Container';
+import { Row, Col } from '@/components/primitives/Grid';
+import { H2, H3 } from '@/components/ui/Heading';
+import { Link } from '@/components/ui/Link';
 import { mq } from '@/styles/mediaQueries';
 import { breakpoints, spacing } from '@/styles/tokens';
 
@@ -22,171 +25,6 @@ const SWIPER_BREAKPOINT_LG = parseInt(breakpoints.lg, 10);
 const SWIPER_SPACE_SM = parseInt(spacing['2xl'], 10);
 const SWIPER_SPACE_MD = parseInt(spacing['2xl'], 10);
 const SWIPER_SPACE_LG = parseInt(spacing['4xl'], 10);
-
-const StyledPassionCrewSection = styled.section`
-  padding: ${({ theme }) => theme.spacing['3xl']} 0;
-  background: ${({ theme }) => theme.colors.bgDark};
-
-  ${mq.md} {
-    padding: ${({ theme }) => theme.spacing['4xl']} 0;
-  }
-
-  ${mq.lg} {
-    padding: ${({ theme }) => theme.spacing['5xl']} 0;
-  }
-`;
-
-const Heading = styled.div`
-  margin-bottom: ${({ theme }) => theme.spacing['3xl']};
-
-  ${mq.md} {
-    margin-bottom: ${({ theme }) => theme.spacing['3xl']};
-  }
-
-  ${mq.lg} {
-    margin-bottom: ${({ theme }) => theme.spacing['4xl']};
-  }
-`;
-
-const CrewSlider = styled.div`
-  margin-bottom: ${({ theme }) => theme.spacing['3xl']};
-
-  .swiper {
-    overflow: visible;
-  }
-
-  .swiper-pagination {
-    position: relative;
-    margin-top: ${({ theme }) => theme.spacing['2xl']};
-  }
-`;
-
-const CrewItemWrap = styled.div`
-  position: relative;
-  margin-bottom: ${({ theme }) => theme.spacing['2xl']};
-
-  ${mq.md} {
-    margin-bottom: 0;
-  }
-`;
-
-const CrewItemImg = styled.div`
-  position: relative;
-  border-radius: ${({ theme }) => theme.borderRadius.full};
-  overflow: hidden;
-  aspect-ratio: 1;
-
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: opacity ${({ theme }) => theme.motion.duration.base} ${({ theme }) => theme.motion.easing.easeInOut};
-  }
-
-  &:hover {
-    img {
-      opacity: 0;
-    }
-  }
-`;
-
-const CrewItemImgBefore = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-  pointer-events: none;
-
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-`;
-
-const CrewItemEllipse = styled.div`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 0;
-  pointer-events: none;
-  width: 100%;
-  height: 100%;
-  background: ${({ theme }) => theme.colors.secondaryDark};
-  border-radius: ${({ theme }) => theme.borderRadius.full};
-
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    opacity: 0.3;
-  }
-`;
-
-const CrewItemText = styled.div`
-  color: ${({ theme }) => theme.colors.textSecondary};
-`;
-
-const CrewTitle = styled(H3)`
-  margin-bottom: ${({ theme }) => theme.spacing[4]};
-  color: ${({ theme }) => theme.colors.textPrimary};
-`;
-
-const CrewMeta = styled.div`
-  margin-bottom: ${({ theme }) => theme.spacing[4]};
-
-  p {
-    margin: 0;
-    font-size: ${({ theme }) => theme.typography.fontSize.sm};
-    line-height: ${({ theme }) => theme.typography.lineHeight.relaxed};
-    color: ${({ theme }) => theme.colors.textSecondary};
-
-    span {
-      color: ${({ theme }) => theme.colors.primary};
-      font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
-    }
-  }
-`;
-
-const CrewExpert = styled.div`
-  margin-bottom: ${({ theme }) => theme.spacing[5]};
-  font-size: ${({ theme }) => theme.typography.fontSize.base};
-  line-height: ${({ theme }) => theme.typography.lineHeight.relaxed};
-  color: ${({ theme }) => theme.colors.textSecondary};
-
-  p {
-    margin: 0;
-  }
-`;
-
-const ViewMore = styled.div``;
-
-const CrewThumbs = styled.div`
-  .swiper {
-    position: relative;
-  }
-`;
-
-const ThumbSlide = styled.div`
-  cursor: pointer;
-  border-radius: ${({ theme }) => theme.borderRadius.full};
-  overflow: hidden;
-  transition: transform ${({ theme }) => theme.motion.duration.base} ${({ theme }) => theme.motion.easing.easeInOut};
-
-  &:hover {
-    transform: scale(1.1);
-  }
-
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: ${({ theme }) => theme.borderRadius.full};
-  }
-`;
 
 // Data for crew members
 const crewMembers = [
@@ -467,3 +305,168 @@ export function PassionCrewSection() {
     </StyledPassionCrewSection>
   );
 }
+
+const StyledPassionCrewSection = styled.section`
+  padding: ${({ theme }) => theme.spacing['3xl']} 0;
+  background: ${({ theme }) => theme.colors.bgDark};
+
+  ${mq.md} {
+    padding: ${({ theme }) => theme.spacing['4xl']} 0;
+  }
+
+  ${mq.lg} {
+    padding: ${({ theme }) => theme.spacing['5xl']} 0;
+  }
+`;
+
+const Heading = styled.div`
+  margin-bottom: ${({ theme }) => theme.spacing['3xl']};
+
+  ${mq.md} {
+    margin-bottom: ${({ theme }) => theme.spacing['3xl']};
+  }
+
+  ${mq.lg} {
+    margin-bottom: ${({ theme }) => theme.spacing['4xl']};
+  }
+`;
+
+const CrewSlider = styled.div`
+  margin-bottom: ${({ theme }) => theme.spacing['3xl']};
+
+  .swiper {
+    overflow: visible;
+  }
+
+  .swiper-pagination {
+    position: relative;
+    margin-top: ${({ theme }) => theme.spacing['2xl']};
+  }
+`;
+
+const CrewItemWrap = styled.div`
+  position: relative;
+  margin-bottom: ${({ theme }) => theme.spacing['2xl']};
+
+  ${mq.md} {
+    margin-bottom: 0;
+  }
+`;
+
+const CrewItemImg = styled.div`
+  position: relative;
+  border-radius: ${({ theme }) => theme.borderRadius.full};
+  overflow: hidden;
+  aspect-ratio: 1;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: opacity ${({ theme }) => theme.motion.duration.base} ${({ theme }) => theme.motion.easing.easeInOut};
+  }
+
+  &:hover {
+    img {
+      opacity: 0;
+    }
+  }
+`;
+
+const CrewItemImgBefore = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+`;
+
+const CrewItemEllipse = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 0;
+  pointer-events: none;
+  width: 100%;
+  height: 100%;
+  background: ${({ theme }) => theme.colors.secondaryDark};
+  border-radius: ${({ theme }) => theme.borderRadius.full};
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    opacity: 0.3;
+  }
+`;
+
+const CrewItemText = styled.div`
+  color: ${({ theme }) => theme.colors.textSecondary};
+`;
+
+const CrewTitle = styled(H3)`
+  margin-bottom: ${({ theme }) => theme.spacing[4]};
+  color: ${({ theme }) => theme.colors.textPrimary};
+`;
+
+const CrewMeta = styled.div`
+  margin-bottom: ${({ theme }) => theme.spacing[4]};
+
+  p {
+    margin: 0;
+    font-size: ${({ theme }) => theme.typography.fontSize.sm};
+    line-height: ${({ theme }) => theme.typography.lineHeight.relaxed};
+    color: ${({ theme }) => theme.colors.textSecondary};
+
+    span {
+      color: ${({ theme }) => theme.colors.primary};
+      font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
+    }
+  }
+`;
+
+const CrewExpert = styled.div`
+  margin-bottom: ${({ theme }) => theme.spacing[5]};
+  font-size: ${({ theme }) => theme.typography.fontSize.base};
+  line-height: ${({ theme }) => theme.typography.lineHeight.relaxed};
+  color: ${({ theme }) => theme.colors.textSecondary};
+
+  p {
+    margin: 0;
+  }
+`;
+
+const ViewMore = styled.div``;
+
+const CrewThumbs = styled.div`
+  .swiper {
+    position: relative;
+  }
+`;
+
+const ThumbSlide = styled.div`
+  cursor: pointer;
+  border-radius: ${({ theme }) => theme.borderRadius.full};
+  overflow: hidden;
+  transition: transform ${({ theme }) => theme.motion.duration.base} ${({ theme }) => theme.motion.easing.easeInOut};
+
+  &:hover {
+    transform: scale(1.1);
+  }
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: ${({ theme }) => theme.borderRadius.full};
+  }
+`;

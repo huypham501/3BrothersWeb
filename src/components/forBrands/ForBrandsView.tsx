@@ -31,7 +31,7 @@ export function ForBrandsView() {
   );
 }
 
+
 const PageRoot = styled.div`
   background-color: ${({ theme }) => theme.colors.white};
 `;
-

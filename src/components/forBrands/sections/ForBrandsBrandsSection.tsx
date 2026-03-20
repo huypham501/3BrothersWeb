@@ -58,6 +58,7 @@ export function ForBrandsBrandsSection() {
   );
 }
 
+
 const BrandsSection = styled.section`
   background-color: ${({ theme }) => theme.colors.bgDark};
   background-image: url(/metub/template/images/bg/bg-brands.png);

@@ -105,6 +105,7 @@ const sizeStyles = {
   `,
 };
 
+
 export const Button = styled.button<ButtonProps>`
   display: inline-block;
   font-weight: ${({ theme }) => theme.typography.fontWeight.bold};

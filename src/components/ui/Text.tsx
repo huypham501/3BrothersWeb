@@ -30,6 +30,7 @@ const colorMap = {
   inherit: () => 'inherit',
 };
 
+
 export const Text = styled.p<TextProps>`
   margin-top: 0;
   margin-bottom: 1rem;

@@ -186,9 +186,9 @@ export function ForBrandsCampaignsSection() {
                                 <strong>{section.heading}</strong>
                               </p>
                             )}
-                            {"bullets" in section ? (
+                            {"bullets" in section && section.bullets ? (
                               <CampaignBullets>
-                                {section.bullets.map((bullet) => (
+                                {(section.bullets as readonly string[]).map((bullet) => (
                                   <li key={bullet}>{bullet}</li>
                                 ))}
                               </CampaignBullets>
@@ -247,6 +247,7 @@ export function ForBrandsCampaignsSection() {
     </CampaignsSection>
   );
 }
+
 
 const CampaignsSection = styled.section`
   padding: ${({ theme }) => theme.spacing["4xl"]} 0;

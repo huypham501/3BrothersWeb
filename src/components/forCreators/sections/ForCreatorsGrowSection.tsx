@@ -60,6 +60,7 @@ export function ForCreatorsGrowSection() {
   );
 }
 
+
 const GrowSection = styled.section`
   padding: ${({ theme }) => theme.spacing["4xl"]} 0;
   color: ${({ theme }) => theme.colors.white};

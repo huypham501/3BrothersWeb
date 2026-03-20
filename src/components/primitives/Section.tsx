@@ -13,6 +13,7 @@ interface SectionProps {
   $noPadding?: boolean;
 }
 
+
 export const Section = styled.section<SectionProps>`
   background-color: ${({ $bgColor, theme }) => 
     $bgColor || theme.colors.white};

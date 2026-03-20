@@ -21,6 +21,7 @@ export function ForCreatorsCtaSection() {
   );
 }
 
+
 const CtaSection = styled.section`
   padding: ${({ theme }) => theme.spacing["4xl"]} 0;
   background-color: ${({ theme }) => theme.colors.bgDark};

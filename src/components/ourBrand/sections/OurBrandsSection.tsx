@@ -197,6 +197,7 @@ export function OurBrandsSection() {
   );
 }
 
+
 const Section = styled.section`
   padding: ${({ theme }) => theme.spacing["3xl"]} 0 ${({ theme }) => theme.spacing["5xl"]};
 
@@ -297,4 +298,3 @@ const BrandHeroImage = styled.img`
   height: auto;
   display: block;
 `;
-

@@ -19,6 +19,17 @@ interface GridProps {
   $columnGap?: Spacing | string;
 }
 
+// Bootstrap-style row for flex-based grid
+// Bootstrap-style col
+interface ColProps {
+  $auto?: boolean;
+  $span?: number;
+  $spanMd?: number;
+  $spanLg?: number;
+  $spanXl?: number;
+}
+
+
 export const Grid = styled.div<GridProps>`
   display: grid;
   grid-template-columns: repeat(${({ $columns = 1 }) => $columns}, 1fr);
@@ -50,22 +61,12 @@ export const Grid = styled.div<GridProps>`
     }`}
 `;
 
-// Bootstrap-style row for flex-based grid
 export const Row = styled.div<{ $gutter?: string; $noGutters?: boolean }>`
   display: flex;
   flex-wrap: wrap;
   margin-right: ${({ $noGutters }) => ($noGutters ? 0 : '-15px')};
   margin-left: ${({ $noGutters }) => ($noGutters ? 0 : '-15px')};
 `;
-
-// Bootstrap-style col
-interface ColProps {
-  $auto?: boolean;
-  $span?: number;
-  $spanMd?: number;
-  $spanLg?: number;
-  $spanXl?: number;
-}
 
 export const Col = styled.div<ColProps>`
   flex: ${({ $auto, $span }) => 

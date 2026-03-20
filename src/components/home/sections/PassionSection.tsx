@@ -5,6 +5,24 @@ import { Container } from '@/components/primitives/Container';
 import { Section } from '@/components/primitives/Section';
 import { mq } from '@/styles/mediaQueries';
 
+export function PassionSection() {
+  return (
+    <PassionSectionWrapper>
+      <Container>
+        <SectionTitle>LIVE BY PASSION</SectionTitle>
+        
+        <Description>
+          We believe in the superpower where technology meets creativity, and those
+          creators with great passion will spark joy and influence millions other people.
+          Together with them, METUB is building a creator economy to helps creators turn their
+          passion into a sustainable career by growing their fanbase and enable creator
+          earning potentials across platforms through digital content & commerce.
+        </Description>
+      </Container>
+    </PassionSectionWrapper>
+  );
+}
+
 const PassionSectionWrapper = styled(Section)`
   background-color: ${({ theme }) => theme.colors.primary};
   color: white;
@@ -43,21 +61,3 @@ const Description = styled.p`
     font-size: ${({ theme }) => theme.typography.fontSize.lg};
   }
 `;
-
-export function PassionSection() {
-  return (
-    <PassionSectionWrapper>
-      <Container>
-        <SectionTitle>LIVE BY PASSION</SectionTitle>
-        
-        <Description>
-          We believe in the superpower where technology meets creativity, and those
-          creators with great passion will spark joy and influence millions other people.
-          Together with them, METUB is building a creator economy to helps creators turn their
-          passion into a sustainable career by growing their fanbase and enable creator
-          earning potentials across platforms through digital content & commerce.
-        </Description>
-      </Container>
-    </PassionSectionWrapper>
-  );
-}

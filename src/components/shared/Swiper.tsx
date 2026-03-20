@@ -12,6 +12,7 @@ interface SwiperControlsProps {
   $variant?: 'default' | 'light' | 'static' | 'align';
 }
 
+
 export const SwiperControls = styled.div<SwiperControlsProps>`
   position: relative;
   height: 40px;

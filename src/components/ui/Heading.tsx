@@ -17,12 +17,6 @@ interface HeadingProps {
   $align?: 'left' | 'center' | 'right';
 }
 
-const baseHeadingStyles = css`
-  line-height: ${({ theme }) => theme.typography.lineHeight.tight};
-  font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
-  margin-bottom: 0.5rem;
-`;
-
 const titleStyles = css<HeadingProps>`
   font-family: ${({ theme }) => theme.typography.fontFamily.heading};
   font-weight: ${({ theme }) => theme.typography.fontWeight.extrabold};
@@ -37,6 +31,14 @@ const titleStyles = css<HeadingProps>`
         font-weight: ${({ theme }) => theme.typography.fontWeight.black};
       }
     `}
+`;
+
+// Utility component for section headings
+
+const baseHeadingStyles = css`
+  line-height: ${({ theme }) => theme.typography.lineHeight.tight};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
+  margin-bottom: 0.5rem;
 `;
 
 const title2Styles = css`
@@ -149,7 +151,6 @@ export const H6 = styled.h6<HeadingProps>`
   text-align: ${({ $align = 'left' }) => $align};
 `;
 
-// Utility component for section headings
 export const SectionHeading = styled.div<{ $marginBottom?: string }>`
   margin-bottom: ${({ $marginBottom = '48px' }) => $marginBottom};
 

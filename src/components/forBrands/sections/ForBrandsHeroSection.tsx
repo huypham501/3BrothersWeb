@@ -48,6 +48,7 @@ export function ForBrandsHeroSection() {
   );
 }
 
+
 const HeroSection = styled.section`
   position: relative;
   width: 100%;

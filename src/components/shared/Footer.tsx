@@ -107,6 +107,7 @@ export function Footer() {
 // Styled Components
 // ============================================
 
+
 const FooterElement = styled.footer`
   /* Footer styles */
 `;

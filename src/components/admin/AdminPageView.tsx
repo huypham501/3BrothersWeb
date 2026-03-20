@@ -32,6 +32,7 @@ export function AdminPageView({ userEmail }: AdminPageViewProps) {
   );
 }
 
+
 const PageRoot = styled.div`
   min-height: 100vh;
   display: flex;

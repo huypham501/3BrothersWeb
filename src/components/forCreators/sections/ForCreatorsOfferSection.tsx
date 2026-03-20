@@ -101,6 +101,7 @@ export function ForCreatorsOfferSection() {
   );
 }
 
+
 const OfferSection = styled.section`
   padding: ${({ theme }) => theme.spacing["4xl"]} 0;
   background-color: ${({ theme }) => theme.colors.white};
@@ -236,4 +237,3 @@ const ExtraOfferText = styled.h3`
   font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
   color: ${({ theme }) => theme.colors.textPrimary};
 `;
-

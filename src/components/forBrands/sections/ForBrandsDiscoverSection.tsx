@@ -102,6 +102,7 @@ export function ForBrandsDiscoverSection() {
   );
 }
 
+
 const DiscoverSection = styled.section`
   padding: ${({ theme }) => theme.spacing["4xl"]} 0;
   background-color: ${({ theme }) => theme.colors.white};
@@ -181,4 +182,3 @@ const DiscoverDescription = styled.div`
   line-height: ${({ theme }) => theme.typography.lineHeight.relaxed};
   color: ${({ theme }) => theme.colors.textBody};
 `;
-

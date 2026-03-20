@@ -3,6 +3,43 @@
 import { useEffect, useState } from 'react';
 import styled, { keyframes } from 'styled-components';
 
+export function Preloader() {
+  const [isHiding, setIsHiding] = useState(false);
+  const [isHidden, setIsHidden] = useState(false);
+
+  useEffect(() => {
+    // Wait for initial content to load
+    const hideTimer = setTimeout(() => {
+      setIsHiding(true);
+      
+      // Remove from DOM after fade-out animation
+      setTimeout(() => {
+        setIsHidden(true);
+      }, 500);
+    }, 1000); // Show preloader for 1 second
+
+    return () => clearTimeout(hideTimer);
+  }, []);
+
+  if (isHidden) {
+    return null;
+  }
+
+  return (
+    <StyledPreloader id="preloader" $isHiding={isHiding}>
+      <PreloadPage className="preload-page">
+        <img
+          src="/metub/template/images/3brothers-logo-color-mark.png"
+          width="675"
+          height="200"
+          alt="3BROTHERS NETWORK | The Leading Creator Economy Platform"
+          className="animated-sm fadeInRight"
+        />
+      </PreloadPage>
+    </StyledPreloader>
+  );
+}
+
 const fadeInRight = keyframes`
   from {
     opacity: 0;
@@ -42,40 +79,3 @@ const PreloadPage = styled.div`
     animation: ${fadeInRight} ${({ theme }) => theme.motion.duration.slow} ${({ theme }) => theme.motion.easing.easeInOut};
   }
 `;
-
-export function Preloader() {
-  const [isHiding, setIsHiding] = useState(false);
-  const [isHidden, setIsHidden] = useState(false);
-
-  useEffect(() => {
-    // Wait for initial content to load
-    const hideTimer = setTimeout(() => {
-      setIsHiding(true);
-      
-      // Remove from DOM after fade-out animation
-      setTimeout(() => {
-        setIsHidden(true);
-      }, 500);
-    }, 1000); // Show preloader for 1 second
-
-    return () => clearTimeout(hideTimer);
-  }, []);
-
-  if (isHidden) {
-    return null;
-  }
-
-  return (
-    <StyledPreloader id="preloader" $isHiding={isHiding}>
-      <PreloadPage className="preload-page">
-        <img
-          src="/metub/template/images/3brothers-logo-color-mark.png"
-          width="675"
-          height="200"
-          alt="3BROTHERS NETWORK | The Leading Creator Economy Platform"
-          className="animated-sm fadeInRight"
-        />
-      </PreloadPage>
-    </StyledPreloader>
-  );
-}

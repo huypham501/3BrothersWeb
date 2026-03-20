@@ -20,6 +20,7 @@ export function OurBrandHeaderSection() {
   );
 }
 
+
 const HeaderSection = styled.section`
   border-top: 1px solid ${({ theme }) => theme.colors.border};
   padding: ${({ theme }) => theme.spacing["6xl"]} 0 ${({ theme }) => theme.spacing["3xl"]};
@@ -53,4 +54,3 @@ const Subtitle = styled.p`
   line-height: ${({ theme }) => theme.typography.lineHeight.relaxed};
   color: ${({ theme }) => theme.colors.textBody};
 `;
-

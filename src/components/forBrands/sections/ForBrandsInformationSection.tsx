@@ -66,6 +66,7 @@ function TickerRow({ items }: { items: readonly TickerItem[] }) {
   );
 }
 
+
 const tickerScroll = keyframes`
   from {
     transform: translateX(0);

@@ -26,6 +26,7 @@ export function ForCreatorsHeroSection() {
   );
 }
 
+
 const HeroSection = styled.section`
   width: 100%;
 `;
@@ -49,4 +50,3 @@ const HeroImageMobile = styled.img`
     display: none;
   }
 `;
-

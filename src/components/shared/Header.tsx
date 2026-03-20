@@ -109,10 +109,10 @@ export function Header() {
   );
 }
 
-
 // ============================================
 // Styled Components
 // ============================================
+
 
 const HeaderElement = styled.header`
   position: fixed;

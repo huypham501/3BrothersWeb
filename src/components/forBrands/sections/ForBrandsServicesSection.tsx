@@ -53,6 +53,7 @@ export function ForBrandsServicesSection() {
   );
 }
 
+
 const ServicesSection = styled.section`
   padding: ${({ theme }) => theme.spacing["4xl"]} 0;
   background-color: ${({ theme }) => theme.colors.white};
@@ -152,4 +153,3 @@ const ServiceList = styled.ul`
     color: ${({ theme }) => theme.colors.textBody};
   }
 `;
-

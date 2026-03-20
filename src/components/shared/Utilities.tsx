@@ -8,6 +8,9 @@
 import styled from 'styled-components';
 import { mq } from '@/styles/mediaQueries';
 
+// Display utilities
+// Aspect ratio box (for maintaining aspect ratios)
+
 export const Divider = styled.hr<{ $spacing?: 'sm' | 'md' | 'lg' }>`
   margin: ${({ $spacing = 'md' }) => {
     switch ($spacing) {
@@ -109,7 +112,6 @@ export const VisuallyHidden = styled.span`
   border-width: 0;
 `;
 
-// Display utilities
 export const ShowOnMobile = styled.div`
   display: block;
 
@@ -146,7 +148,6 @@ export const HideOnMobile = styled.div`
   }
 `;
 
-// Aspect ratio box (for maintaining aspect ratios)
 export const AspectRatio = styled.div<{ $ratio: string }>`
   position: relative;
   width: 100%;

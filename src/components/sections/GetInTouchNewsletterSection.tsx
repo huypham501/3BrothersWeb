@@ -228,6 +228,7 @@ export function GetInTouchNewsletterSection() {
 }
 
 // --- Styled Components (Moved to bottom per R6 pattern) ---
+
 const NewsletterSection = styled.section`
   padding: ${({ theme }) => theme.spacing['4xl']} 0;
   background-color: ${({ theme }) => theme.colors.bgDark};

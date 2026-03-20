@@ -19,40 +19,6 @@ const SWIPER_BREAKPOINT_SM = parseInt(breakpoints.sm, 10);
 const SWIPER_BREAKPOINT_LG = parseInt(breakpoints.lg, 10);
 const SWIPER_SPACE_XL = parseInt(spacing.xl, 10);
 
-const StyledTrendingSection = styled(Section)`
-  margin-top: ${({ theme }) => theme.spacing['2xl']};
-  
-  ${mq.lg} {
-    margin-top: ${({ theme }) => theme.spacing['5xl']};
-  }
-`;
-
-const Heading = styled.div`
-  margin-bottom: ${({ theme }) => theme.spacing.xl};
-
-  ${mq.md} {
-    margin-bottom: ${({ theme }) => theme.spacing['3xl']};
-  }
-  
-  h2 {
-    display: inline-flex;
-    align-items: center;
-    gap: ${({ theme }) => theme.spacing.md};
-    
-    img {
-      vertical-align: middle;
-    }
-  }
-`;
-
-const TrendingSwiper = styled.div`
-  position: relative;
-  
-  .swiper {
-    overflow: visible;
-  }
-`;
-
 // Sample trending data
 const trendingPosts = [
   {
@@ -178,3 +144,37 @@ export function TrendingSection() {
     </StyledTrendingSection>
   );
 }
+
+const StyledTrendingSection = styled(Section)`
+  margin-top: ${({ theme }) => theme.spacing['2xl']};
+  
+  ${mq.lg} {
+    margin-top: ${({ theme }) => theme.spacing['5xl']};
+  }
+`;
+
+const Heading = styled.div`
+  margin-bottom: ${({ theme }) => theme.spacing.xl};
+
+  ${mq.md} {
+    margin-bottom: ${({ theme }) => theme.spacing['3xl']};
+  }
+  
+  h2 {
+    display: inline-flex;
+    align-items: center;
+    gap: ${({ theme }) => theme.spacing.md};
+    
+    img {
+      vertical-align: middle;
+    }
+  }
+`;
+
+const TrendingSwiper = styled.div`
+  position: relative;
+  
+  .swiper {
+    overflow: visible;
+  }
+`;

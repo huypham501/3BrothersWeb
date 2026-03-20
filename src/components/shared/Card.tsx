@@ -8,6 +8,8 @@
 import styled, { css } from 'styled-components';
 import { mq } from '@/styles/mediaQueries';
 
+// Card Flex variant (for blog list)
+
 export const Card = styled.div<{ $variant?: 'default' | 'flex' | 'main' }>`
   margin-bottom: ${({ theme }) => theme.spacing.xl};
 
@@ -158,7 +160,6 @@ export const CardText = styled.p`
   }
 `;
 
-// Card Flex variant (for blog list)
 export const CardFlex = styled(Card)`
   display: flex;
 

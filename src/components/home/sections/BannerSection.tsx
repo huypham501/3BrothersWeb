@@ -3,6 +3,37 @@
 import styled from 'styled-components';
 import { BannerPlayReel } from './BannerPlayReel';
 
+export type BannerSectionProps = {
+  height?: number;
+  videoSrc?: string;
+  posterSrc?: string;
+};
+
+export function BannerSection({
+  height = 720,
+  videoSrc = '/metub/template/images/metub_video.mp4',
+  posterSrc = '/metub/template/images/upload/banner-v2.jpg'
+}: BannerSectionProps) {
+  return (
+    <StyledBannerSection $height={height} data-height={height}>
+      <BannerPlayVideo $height={height} className="banner-play-video" data-height={height}>
+        <video
+          preload="auto"
+          autoPlay
+          playsInline
+          muted
+          loop
+          src={videoSrc}
+          poster={posterSrc}
+        >
+          <source src={videoSrc} type="video/mp4" />
+        </video>
+      </BannerPlayVideo>
+      <BannerPlayReel />
+    </StyledBannerSection>
+  );
+}
+
 const StyledBannerSection = styled.section<{ $height: number }>`
   height: ${({ $height }) => $height}px;
   position: relative;
@@ -57,34 +88,3 @@ const BannerPlayVideo = styled.div<{ $height: number }>`
     object-fit: cover;
   }
 `;
-
-export type BannerSectionProps = {
-  height?: number;
-  videoSrc?: string;
-  posterSrc?: string;
-};
-
-export function BannerSection({
-  height = 720,
-  videoSrc = '/metub/template/images/metub_video.mp4',
-  posterSrc = '/metub/template/images/upload/banner-v2.jpg'
-}: BannerSectionProps) {
-  return (
-    <StyledBannerSection $height={height} data-height={height}>
-      <BannerPlayVideo $height={height} className="banner-play-video" data-height={height}>
-        <video
-          preload="auto"
-          autoPlay
-          playsInline
-          muted
-          loop
-          src={videoSrc}
-          poster={posterSrc}
-        >
-          <source src={videoSrc} type="video/mp4" />
-        </video>
-      </BannerPlayVideo>
-      <BannerPlayReel />
-    </StyledBannerSection>
-  );
-}

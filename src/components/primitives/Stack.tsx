@@ -37,6 +37,7 @@ const justifyMap = {
   evenly: 'space-evenly',
 };
 
+
 export const Stack = styled.div<StackProps>`
   display: flex;
   flex-direction: ${({ $direction = 'column' }) => $direction};

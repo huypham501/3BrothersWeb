@@ -29,6 +29,7 @@ export function ForCreatorsView() {
   );
 }
 
+
 const PageRoot = styled.div`
   background-color: ${({ theme }) => theme.colors.white};
 `;

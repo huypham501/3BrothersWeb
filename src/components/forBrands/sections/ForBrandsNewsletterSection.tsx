@@ -64,6 +64,7 @@ export function ForBrandsNewsletterSection() {
   );
 }
 
+
 const NewsletterSection = styled.section`
   padding: ${({ theme }) => theme.spacing["5xl"]} 0;
   background-color: ${({ theme }) => theme.colors.bgDark};
