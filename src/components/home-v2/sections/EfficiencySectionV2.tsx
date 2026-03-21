@@ -1,6 +1,7 @@
 'use client';
 
 import styled from 'styled-components';
+import { colors, spacing, typography, mediaQueries, borderRadius, motion } from '@/styles/tokens';
 
 export function EfficiencySectionV2() {
   return (
@@ -47,11 +48,16 @@ export function EfficiencySectionV2() {
 
 const SectionContainer = styled.section`
   width: 100%;
-  padding: 120px 80px;
+  padding: 120px ${spacing['5xl']};
   display: flex;
   flex-direction: column;
-  gap: 80px;
+  gap: ${spacing['5xl']};
   font-family: 'Montserrat', 'Inter', sans-serif;
+
+  ${mediaQueries.down.sm} {
+    padding: 60px ${spacing.lg};
+    gap: ${spacing['2xl']};
+  }
 `;
 
 const TopHeader = styled.div`
@@ -59,36 +65,51 @@ const TopHeader = styled.div`
   justify-content: space-between;
   align-items: flex-end;
   width: 100%;
+
+  ${mediaQueries.down.sm} {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: ${spacing.xl};
+  }
 `;
 
 const TextContent = styled.div`
   max-width: 600px;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: ${spacing.lg};
 `;
 
 const Title = styled.h2`
-  font-weight: 700;
+  font-weight: ${typography.fontWeight.bold};
   font-size: 68px;
   line-height: 110%;
   text-transform: uppercase;
-  color: #003CA6;
-  margin: 0;
+  color: ${colors.primary};
+  margin: ${spacing[0]};
+
+  ${mediaQueries.down.sm} {
+    font-size: ${typography.fontSize['5xl']};
+  }
 `;
 
 const Description = styled.p`
   font-family: 'Inter', sans-serif;
-  font-weight: 400;
-  font-size: 16px;
+  font-weight: ${typography.fontWeight.normal};
+  font-size: ${typography.fontSize.md};
   line-height: 150%;
-  color: #4A5568;
-  margin: 0;
+  color: ${colors.textBody};
+  margin: ${spacing[0]};
 `;
 
 const ButtonGroup = styled.div`
   display: flex;
   gap: 20px;
+
+  ${mediaQueries.down.sm} {
+    flex-direction: column;
+    width: 100%;
+  }
 `;
 
 const PrimaryButton = styled.a`
@@ -96,16 +117,20 @@ const PrimaryButton = styled.a`
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  padding: 14px 24px;
-  gap: 8px;
-  background: #003CA6;
-  border-radius: 24px;
-  color: #FFFFFF;
+  padding: 14px ${spacing.lg};
+  gap: ${spacing.xs};
+  background: ${colors.primary};
+  border-radius: ${borderRadius.xl};
+  color: ${colors.white};
   text-decoration: none;
-  font-weight: 600;
+  font-weight: ${typography.fontWeight.semibold};
   font-family: 'Inter', sans-serif;
-  font-size: 16px;
-  transition: opacity 0.2s;
+  font-size: ${typography.fontSize.md};
+  transition: opacity ${motion.duration.base};
+
+  ${mediaQueries.down.sm} {
+    width: 100%;
+  }
 
   &:hover {
     opacity: 0.8;
@@ -117,60 +142,79 @@ const SecondaryButton = styled.a`
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  padding: 14px 24px;
-  gap: 8px;
+  padding: 14px ${spacing.lg};
+  gap: ${spacing.xs};
   background: transparent;
-  border: 1px solid #003CA6;
-  border-radius: 24px;
-  color: #003CA6;
+  border: 1px solid ${colors.primary};
+  border-radius: ${borderRadius.xl};
+  color: ${colors.primary};
   text-decoration: none;
-  font-weight: 600;
+  font-weight: ${typography.fontWeight.semibold};
   font-family: 'Inter', sans-serif;
-  font-size: 16px;
-  transition: background 0.2s;
+  font-size: ${typography.fontSize.md};
+  transition: background ${motion.duration.base};
+
+  ${mediaQueries.down.sm} {
+    width: 100%;
+  }
 
   &:hover {
-    background: rgba(0, 60, 166, 0.05);
+    background: rgba(0, 60, 166, 0.05); /* Assuming some alpha color */
   }
 `;
 
 const StatsCard = styled.div`
   width: 100%;
-  background: #FFFFFF;
+  background: ${colors.white};
   border-radius: 40px;
-  padding: 60px 80px;
+  padding: 60px ${spacing['5xl']};
   display: flex;
   justify-content: space-between;
   align-items: center;
   box-shadow: 0px 20px 40px rgba(6, 21, 48, 0.05);
+
+  ${mediaQueries.down.sm} {
+    flex-direction: column;
+    padding: ${spacing['2xl']} ${spacing.lg};
+    align-items: flex-start;
+    gap: ${spacing.xl};
+  }
 `;
 
 const StatItem = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 12px;
+  gap: ${spacing.sm};
   flex: 1;
 
   /* Separator lines between items except the last one */
   &:not(:last-child) {
-    border-right: 1px solid #E2E8F0;
-    margin-right: 40px;
+    border-right: 1px solid ${colors.borderLight};
+    margin-right: ${spacing['2xl']};
+
+    ${mediaQueries.down.sm} {
+      border-right: none;
+      border-bottom: 1px solid ${colors.borderLight};
+      margin-right: 0;
+      padding-bottom: ${spacing.xl};
+      width: 100%;
+    }
   }
 `;
 
 const StatNumber = styled.div`
-  font-weight: 800;
-  font-size: 64px;
+  font-weight: ${typography.fontWeight.extrabold};
+  font-size: ${typography.fontSize['9xl']};
   line-height: 100%;
-  color: #003CA6;
+  color: ${colors.primary};
 `;
 
 const StatLabel = styled.div`
   font-family: 'Inter', sans-serif;
-  font-weight: 500;
-  font-size: 20px;
+  font-weight: ${typography.fontWeight.medium};
+  font-size: ${typography.fontSize.xl};
   line-height: 140%;
-  color: #4A5568;
+  color: ${colors.textBody};
   max-width: 140px;
 `;

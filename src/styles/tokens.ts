@@ -12,7 +12,7 @@ export const colors = {
   secondary: '#FFE773',      // Secondary 1st
   secondaryLight: '#F9F9F9', // Secondary 2nd
   secondaryDark: '#061530',  // Secondary 3rd
-  
+
   // Text colors
   textPrimary: '#061530',    // Using secondary 3rd for primary text
   textSecondary: '#363B53',
@@ -21,7 +21,7 @@ export const colors = {
   textLight: '#7C808F',
   textDisabled: '#9B9DA9',
   textPlaceholder: '#CDCFD0',
-  
+
   // Grayscale
   white: '#FFFFFF',
   black: '#000000',
@@ -32,19 +32,21 @@ export const colors = {
   gray400: '#e0e0e0',
   gray500: '#999999',
   gray600: '#cccccc',
-  
+
   // Background
   bgPrimary: '#003CA6',
   bgSecondary: '#6395ED',
   bgDark: '#061530',
   bgLight: '#F9F9F9',
   bgLightAlt: '#F5F5F6',
-  
+  brandLightBlue: '#E0EBFF',
+  brandLightBlueDark: '#D4E2FF',
+
   // Borders
   border: '#F5F5F6',
   borderLight: '#ECECEE',
   borderInput: '#e0e0e0',
-  
+
   // Semantic colors
   success: '#28a745',
   successBg: '#d4edda',
@@ -57,7 +59,7 @@ export const colors = {
   warning: '#fcf8e3',
   info: '#007bff',
   infoHover: '#0056b3',
-  
+
   // Image fallback
   imageFallback: '#F9F9F9', // Secondary 2nd
 } as const;
@@ -69,7 +71,7 @@ export const spacing = {
   3: '1rem',       // 16px
   4: '1.5rem',     // 24px
   5: '3rem',       // 48px
-  
+
   // Additional spacing values found in CSS
   xs: '8px',
   sm: '12px',
@@ -93,7 +95,7 @@ export const typography = {
     poppins: "var(--font-poppins, 'Poppins', sans-serif)",
     mono: 'var(--bs-font-monospace)',
   },
-  
+
   fontSize: {
     xs: '11px',
     sm: '13px',
@@ -115,7 +117,7 @@ export const typography = {
     '13xl': '108px',
     '14xl': '120px',
   },
-  
+
   fontWeight: {
     normal: 400,
     medium: 500,
@@ -124,7 +126,7 @@ export const typography = {
     extrabold: 800,
     black: 900,
   },
-  
+
   lineHeight: {
     none: 1,
     tight: 1.125,
@@ -144,6 +146,23 @@ export const breakpoints = {
   xl: '1200px',
   xxl: '1400px',
   custom: '1300px',
+} as const;
+
+export const mediaQueries = {
+  up: {
+    sm: `@media (min-width: ${breakpoints.sm})`,
+    md: `@media (min-width: ${breakpoints.md})`,
+    lg: `@media (min-width: ${breakpoints.lg})`,
+    xl: `@media (min-width: ${breakpoints.xl})`,
+    xxl: `@media (min-width: ${breakpoints.xxl})`,
+  },
+  down: {
+    sm: `@media (max-width: ${breakpoints.sm})`,
+    md: `@media (max-width: ${breakpoints.md})`,
+    lg: `@media (max-width: ${breakpoints.lg})`,
+    xl: `@media (max-width: ${breakpoints.xl})`,
+    xxl: `@media (max-width: ${breakpoints.xxl})`,
+  }
 } as const;
 
 export const containerWidths = {
@@ -192,7 +211,7 @@ export const motion = {
     slow: '0.3s',
     slower: '0.5s',
   },
-  
+
   easing: {
     linear: 'linear',
     easeIn: 'ease-in',

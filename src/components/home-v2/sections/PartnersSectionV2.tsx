@@ -1,6 +1,7 @@
 'use client';
 
 import styled from 'styled-components';
+import { colors, spacing, typography, mediaQueries, borderRadius, motion } from '@/styles/tokens';
 
 export function PartnersSectionV2() {
   const partners = [
@@ -23,7 +24,7 @@ export function PartnersSectionV2() {
 const PartnersContainer = styled.section`
   width: 100%;
   height: 120px;
-  background: #031027; /* Dark blue bridging the hero and next section */
+  background: ${colors.bgDark};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -32,25 +33,36 @@ const PartnersContainer = styled.section`
   margin-top: -60px;
   padding-top: 60px; /* offset the margin */
   z-index: 1; 
+
+  ${mediaQueries.down.sm} {
+    height: 80px;
+  }
 `;
 
 const LogosWrapper = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 63px; /* From CSS */
+  gap: 63px;
   max-width: 1363px;
   width: 100%;
-  padding: 0 40px;
+  padding: 0 ${spacing['2xl']};
   justify-content: space-between;
   opacity: 0.8;
+
+  ${mediaQueries.down.lg} {
+    overflow-x: auto;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
 `;
 
 const LogoTextPlaceholder = styled.div`
-  color: #FFFFFF;
+  color: ${colors.white};
   font-family: 'Inter', sans-serif;
-  font-weight: 700;
-  font-size: 20px;
+  font-weight: ${typography.fontWeight.bold};
+  font-size: ${typography.fontSize.xl};
   text-transform: uppercase;
   letter-spacing: 1px;
 `;

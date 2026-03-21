@@ -1,6 +1,7 @@
 'use client';
 
 import styled from 'styled-components';
+import { colors, spacing, typography, mediaQueries, borderRadius, motion } from '@/styles/tokens';
 
 export function HeroSectionV2() {
   return (
@@ -8,7 +9,7 @@ export function HeroSectionV2() {
       <GlowEffect />
       <ContentWrapper>
         <TextBlock>
-          <Title>Đồng hành để<br/>cùng thành<br/>công</Title>
+          <Title>Đồng hành để<br />cùng thành<br />công</Title>
           <SubText>
             3Brothers Media cung cấp giải pháp phù hợp và hiệu quả cho nhãn hàng dựa trên sự thấu hiểu - tôn trọng màu sắc Talent.
           </SubText>
@@ -31,14 +32,24 @@ export function HeroSectionV2() {
 const HeroContainer = styled.section`
   position: relative;
   width: 100%;
-  height: 800px; /* From CSS */
-  background: linear-gradient(0deg, #031027, #031027), linear-gradient(180deg, #6395ED 0%, #003CA6 100%);
-  border-radius: 0px 0px 120px 120px;
+  min-height: 800px;
+  background: linear-gradient(0deg, ${colors.bgDark}, ${colors.bgDark}), linear-gradient(180deg, ${colors.primaryLight} 0%, ${colors.primary} 100%);
+  border-radius: 0 0 120px 120px;
   overflow: hidden;
   display: flex;
   align-items: center;
-  padding: 0 80px;
-  color: #FFFFFF;
+  padding: 0 ${spacing['5xl']};
+  color: ${colors.white};
+
+  ${mediaQueries.down.lg} {
+    padding: 0 ${spacing['3xl']};
+  }
+
+  ${mediaQueries.down.sm} {
+    min-height: 100vh;
+    padding: ${spacing['2xl']} ${spacing.lg};
+    border-radius: 0 0 60px 60px;
+  }
 `;
 
 const GlowEffect = styled.div`
@@ -47,9 +58,16 @@ const GlowEffect = styled.div`
   height: 585px;
   left: -30px;
   top: 406px;
-  background: #003CA6;
+  background: ${colors.primary};
   filter: blur(50px);
   z-index: 0;
+
+  ${mediaQueries.down.sm} {
+    width: 600px;
+    height: 400px;
+    top: 30%;
+    left: -100px;
+  }
 `;
 
 const ContentWrapper = styled.div`
@@ -59,38 +77,64 @@ const ContentWrapper = styled.div`
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  margin-top: 60px; /* to offset the header */
+  max-width: 1440px;
+  margin: ${spacing['4xl']} auto 0;
+
+  ${mediaQueries.down.lg} {
+    flex-direction: column;
+    gap: ${spacing['3xl']};
+    align-items: center;
+    text-align: center;
+  }
 `;
 
 const TextBlock = styled.div`
   max-width: 600px;
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  gap: ${spacing.xl};
+
+  ${mediaQueries.down.lg} {
+    align-items: center;
+    width: 100%;
+  }
 `;
 
 const Title = styled.h1`
   font-family: 'Montserrat', sans-serif;
-  font-weight: 700;
+  font-weight: ${typography.fontWeight.bold};
   font-size: 68px;
   line-height: 120%;
   text-transform: uppercase;
-  margin: 0;
+  margin: ${spacing[0]};
+
+  ${mediaQueries.down.sm} {
+    font-size: ${typography.fontSize['5xl']};
+  }
 `;
 
 const SubText = styled.p`
   font-family: 'Montserrat', sans-serif;
   font-style: normal;
-  font-weight: 400;
-  font-size: 16px;
+  font-weight: ${typography.fontWeight.normal};
+  font-size: ${typography.fontSize.md};
   line-height: 140%;
-  margin: 0;
+  margin: ${spacing[0]};
   opacity: 0.9;
+
+  ${mediaQueries.down.sm} {
+    font-size: ${typography.fontSize.base};
+  }
 `;
 
 const ButtonGroup = styled.div`
   display: flex;
   gap: 20px;
+
+  ${mediaQueries.down.sm} {
+    flex-direction: column;
+    width: 100%;
+  }
 `;
 
 const PrimaryButton = styled.a`
@@ -98,16 +142,20 @@ const PrimaryButton = styled.a`
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  padding: 14px 24px;
-  gap: 8px;
-  background: #FFFFFF;
-  border-radius: 24px;
-  color: #003CA6;
+  padding: 14px ${spacing.lg};
+  gap: ${spacing.xs};
+  background: ${colors.white};
+  border-radius: ${borderRadius.xl};
+  color: ${colors.primary};
   text-decoration: none;
-  font-weight: 600;
+  font-weight: ${typography.fontWeight.semibold};
   font-family: 'Inter', sans-serif;
-  font-size: 16px;
-  transition: opacity 0.2s;
+  font-size: ${typography.fontSize.md};
+  transition: opacity ${motion.duration.base};
+
+  ${mediaQueries.down.sm} {
+    width: 100%;
+  }
 
   &:hover {
     opacity: 0.8;
@@ -119,17 +167,21 @@ const SecondaryButton = styled.a`
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  padding: 14px 24px;
-  gap: 8px;
+  padding: 14px ${spacing.lg};
+  gap: ${spacing.xs};
   background: transparent;
-  border: 1px solid #FFFFFF;
-  border-radius: 24px;
-  color: #FFFFFF;
+  border: 1px solid ${colors.white};
+  border-radius: ${borderRadius.xl};
+  color: ${colors.white};
   text-decoration: none;
-  font-weight: 600;
+  font-weight: ${typography.fontWeight.semibold};
   font-family: 'Inter', sans-serif;
-  font-size: 16px;
-  transition: background 0.2s;
+  font-size: ${typography.fontSize.md};
+  transition: background ${motion.duration.base};
+
+  ${mediaQueries.down.sm} {
+    width: 100%;
+  }
 
   &:hover {
     background: rgba(255, 255, 255, 0.1);
@@ -137,9 +189,10 @@ const SecondaryButton = styled.a`
 `;
 
 const ImagePlaceholder = styled.div`
-  width: 480px;
-  height: 560px;
-  background: linear-gradient(180deg, #A48B8B, #4C3C3C); /* approximate color for the placeholder */
+  width: 100%;
+  max-width: 480px;
+  aspect-ratio: 480 / 560;
+  background: linear-gradient(180deg, #A48B8B, #4C3C3C);
   border-radius: 40px;
   display: flex;
   align-items: center;
@@ -148,12 +201,16 @@ const ImagePlaceholder = styled.div`
   position: relative;
   overflow: hidden;
 
+  ${mediaQueries.down.lg} {
+    margin-top: ${spacing.xl};
+  }
+
   &::after {
     content: "L'Oreal Paris Image Placeholder";
     color: rgba(255,255,255,0.7);
-    font-weight: bold;
+    font-weight: ${typography.fontWeight.bold};
     font-family: 'Inter', sans-serif;
     text-align: center;
-    padding: 20px;
+    padding: ${spacing.lg};
   }
 `;

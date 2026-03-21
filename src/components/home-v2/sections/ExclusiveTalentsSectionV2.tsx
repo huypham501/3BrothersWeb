@@ -1,6 +1,7 @@
 'use client';
 
 import styled from 'styled-components';
+import { colors, spacing, typography, mediaQueries, borderRadius, motion } from '@/styles/tokens';
 
 export function ExclusiveTalentsSectionV2() {
   const talents = [
@@ -58,32 +59,46 @@ export function ExclusiveTalentsSectionV2() {
 
 const SectionContainer = styled.section`
   width: 100%;
-  background: #031027; /* Dark blue background */
+  background: ${colors.bgDark};
   border-radius: 120px 120px 0 0;
-  padding: 120px 80px;
+  padding: 120px ${spacing['5xl']};
   display: flex;
   flex-direction: column;
-  gap: 80px;
-  color: #FFFFFF;
-  margin-top: 40px; /* Overlaps slightly with section above if necessary, or just margin */
+  gap: ${spacing['5xl']};
+  color: ${colors.white};
+  margin-top: 40px;
+
+  ${mediaQueries.down.sm} {
+    padding: 60px ${spacing.lg};
+    gap: ${spacing['2xl']};
+    border-radius: 60px 60px 0 0;
+  }
 `;
 
 const Title = styled.h2`
   font-family: 'Montserrat', sans-serif;
-  font-weight: 700;
+  font-weight: ${typography.fontWeight.bold};
   font-size: 68px;
   line-height: 120%;
   text-transform: uppercase;
-  margin: 0;
+  margin: ${spacing[0]};
   text-align: left;
+
+  ${mediaQueries.down.sm} {
+    font-size: ${typography.fontSize['5xl']};
+  }
 `;
 
 const MainTalentArea = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: stretch;
-  gap: 40px;
+  gap: ${spacing['2xl']};
   width: 100%;
+
+  ${mediaQueries.down.lg} {
+    flex-direction: column;
+  }
 `;
 
 const TalentInfoContent = styled.div`
@@ -91,70 +106,74 @@ const TalentInfoContent = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 32px;
+  gap: ${spacing.xl};
 `;
 
 const TalentNameBlock = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: ${spacing.sm};
 `;
 
 const TalentName = styled.h3`
   font-family: 'Montserrat', sans-serif;
-  font-weight: 700;
-  font-size: 56px;
-  margin: 0;
-  background: linear-gradient(90deg, #FFFFFF 0%, #AEC2F2 100%);
+  font-weight: ${typography.fontWeight.bold};
+  font-size: ${typography.fontSize['8xl']};
+  margin: ${spacing[0]};
+  background: linear-gradient(90deg, ${colors.white} 0%, ${colors.brandLightBlueDark} 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+
+  ${mediaQueries.down.sm} {
+    font-size: ${typography.fontSize['4xl']};
+  }
 `;
 
 const TalentHandle = styled.div`
   font-family: 'Inter', sans-serif;
-  font-weight: 500;
-  font-size: 20px;
-  color: #6395ED;
+  font-weight: ${typography.fontWeight.medium};
+  font-size: ${typography.fontSize.xl};
+  color: ${colors.primaryLight};
 `;
 
 const StatsBlock = styled.div`
   display: flex;
-  gap: 32px;
+  gap: ${spacing.xl};
 `;
 
 const Stat = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: ${spacing.xs};
 `;
 
 const StatValue = styled.div`
-  font-weight: 700;
-  font-size: 32px;
-  color: #FFFFFF;
+  font-weight: ${typography.fontWeight.bold};
+  font-size: ${typography.fontSize['4xl']};
+  color: ${colors.white};
 `;
 
 const StatLabel = styled.div`
   font-family: 'Inter', sans-serif;
-  font-size: 16px;
+  font-size: ${typography.fontSize.md};
   color: #AEC2F2;
 `;
 
 const TalentDescription = styled.p`
   font-family: 'Inter', sans-serif;
-  font-weight: 400;
-  font-size: 16px;
+  font-weight: ${typography.fontWeight.normal};
+  font-size: ${typography.fontSize.md};
   line-height: 160%;
   color: #D1DBE8;
   max-width: 500px;
-  margin: 0;
+  margin: ${spacing[0]};
 `;
 
 const ReadMore = styled.a`
   font-family: 'Inter', sans-serif;
-  font-weight: 600;
-  font-size: 16px;
-  color: #FFFFFF;
+  font-weight: ${typography.fontWeight.semibold};
+  font-size: ${typography.fontSize.md};
+  color: ${colors.white};
   text-decoration: underline;
   cursor: pointer;
   
@@ -171,9 +190,13 @@ const TalentPhotoMain = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 24px;
+  font-size: ${typography.fontSize['2xl']};
   color: rgba(255,255,255,0.5);
   border: 4px solid rgba(255,255,255,0.1);
+
+  ${mediaQueries.down.lg} {
+    height: 400px;
+  }
 
   &::after {
     content: "Nguyệt Busi Photo Placeholder";
@@ -184,34 +207,47 @@ const TalentPhotoMain = styled.div`
 const BottomSlidersArea = styled.div`
   display: flex;
   align-items: center;
-  gap: 40px;
+  gap: ${spacing['2xl']};
   width: 100%;
-  margin-top: 40px;
+  margin-top: ${spacing['2xl']};
+
+  ${mediaQueries.down.sm} {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 `;
 
 const VerticalText = styled.div`
   writing-mode: vertical-rl;
   transform: rotate(180deg);
   font-family: 'Montserrat', sans-serif;
-  font-weight: 700;
-  font-size: 24px;
-  color: #FFFFFF;
+  font-weight: ${typography.fontWeight.bold};
+  font-size: ${typography.fontSize['2xl']};
+  color: ${colors.white};
   letter-spacing: 4px;
   opacity: 0.8;
   height: 200px;
   text-align: center;
+
+  ${mediaQueries.down.sm} {
+    writing-mode: horizontal-tb;
+    transform: none;
+    height: auto;
+    letter-spacing: 2px;
+  }
 `;
 
 const SliderTrack = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: ${spacing.lg};
   flex: 1;
+  width: 100%;
 `;
 
 const ThumbnailsRow = styled.div`
   display: flex;
-  gap: 24px;
+  gap: ${spacing.lg};
   overflow-x: auto;
   /* hide scrollbar */
   &::-webkit-scrollbar {
@@ -229,11 +265,11 @@ const TalentThumb = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  padding: 16px;
+  padding: ${spacing.md};
   position: relative;
   overflow: hidden;
   cursor: pointer;
-  transition: transform 0.2s;
+  transition: transform ${motion.duration.base};
 
   &:hover {
     transform: translateY(-8px);
@@ -250,9 +286,9 @@ const TalentThumb = styled.div`
 const ThumbName = styled.div`
   position: relative;
   font-family: 'Montserrat', sans-serif;
-  font-weight: 700;
-  font-size: 18px;
-  color: #FFFFFF;
+  font-weight: ${typography.fontWeight.bold};
+  font-size: ${typography.fontSize.lg};
+  color: ${colors.white};
   z-index: 1;
 `;
 
@@ -270,7 +306,7 @@ const CustomScrollbar = styled.div`
     top: 0;
     height: 100%;
     width: 20%; /* simulates scroll position */
-    background: #FFFFFF;
+    background: ${colors.white};
     border-radius: 2px;
   }
 `;

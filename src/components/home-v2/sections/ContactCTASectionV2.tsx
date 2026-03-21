@@ -1,6 +1,7 @@
 'use client';
 
 import styled from 'styled-components';
+import { colors, spacing, typography, mediaQueries, borderRadius, motion } from '@/styles/tokens';
 
 export function ContactCTASectionV2() {
   return (
@@ -24,7 +25,7 @@ export function ContactCTASectionV2() {
 
 const SectionContainer = styled.section`
   width: 100%;
-  padding: 160px 80px;
+  padding: 160px ${spacing['5xl']};
   position: relative;
   display: flex;
   flex-direction: column;
@@ -34,7 +35,11 @@ const SectionContainer = styled.section`
   overflow: hidden;
 
   /* Simulating the light blue background with vertical beams/streaks */
-  background: linear-gradient(180deg, #E0EBFF 0%, #D4E2FF 100%);
+  background: linear-gradient(180deg, ${colors.brandLightBlue} 0%, ${colors.brandLightBlueDark} 100%);
+
+  ${mediaQueries.down.sm} {
+    padding: 80px ${spacing.lg};
+  }
 `;
 
 const BeamsBackground = styled.div`
@@ -59,26 +64,38 @@ const ContentBlock = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 32px;
+  gap: ${spacing.xl};
+
+  ${mediaQueries.down.sm} {
+    gap: ${spacing.lg};
+  }
 `;
 
 const Title = styled.h2`
   font-family: 'Montserrat', sans-serif;
-  font-weight: 700;
-  font-size: 64px;
+  font-weight: ${typography.fontWeight.bold};
+  font-size: ${typography.fontSize['9xl']};
   line-height: 120%;
   text-transform: uppercase;
-  color: #003CA6;
-  margin: 0;
+  color: ${colors.primary};
+  margin: ${spacing[0]};
+
+  ${mediaQueries.down.sm} {
+    font-size: ${typography.fontSize['5xl']};
+  }
 `;
 
 const Subtitle = styled.p`
   font-family: 'Inter', sans-serif;
-  font-weight: 400;
-  font-size: 18px;
+  font-weight: ${typography.fontWeight.normal};
+  font-size: ${typography.fontSize.lg};
   line-height: 160%;
-  color: #4A5568;
-  margin: 0;
+  color: ${colors.textBody};
+  margin: ${spacing[0]};
+
+  ${mediaQueries.down.sm} {
+    font-size: ${typography.fontSize.md};
+  }
 `;
 
 const ContactButton = styled.a`
@@ -86,16 +103,16 @@ const ContactButton = styled.a`
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  padding: 16px 32px;
-  gap: 12px;
-  background: #003CA6;
-  border-radius: 30px;
-  color: #FFFFFF;
+  padding: ${spacing.md} ${spacing.xl};
+  gap: ${spacing.sm};
+  background: ${colors.primary};
+  border-radius: ${borderRadius.round};
+  color: ${colors.white};
   text-decoration: none;
-  font-weight: 600;
+  font-weight: ${typography.fontWeight.semibold};
   font-family: 'Inter', sans-serif;
-  font-size: 18px;
-  transition: opacity 0.2s;
+  font-size: ${typography.fontSize.lg};
+  transition: opacity ${motion.duration.base};
 
   &:hover {
     opacity: 0.8;

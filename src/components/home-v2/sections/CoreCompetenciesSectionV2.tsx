@@ -1,6 +1,7 @@
 'use client';
 
 import styled from 'styled-components';
+import { colors, spacing, typography, mediaQueries, borderRadius, motion } from '@/styles/tokens';
 
 const SERVICES = [
   {
@@ -48,43 +49,60 @@ export function CoreCompetenciesSectionV2() {
 
 const SectionContainer = styled.section`
   width: 100%;
-  padding: 120px 80px;
+  padding: 120px ${spacing['5xl']};
   background: transparent;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 80px;
+  gap: ${spacing['5xl']};
   font-family: 'Montserrat', 'Inter', sans-serif;
+
+  ${mediaQueries.down.sm} {
+    padding: 60px ${spacing.lg};
+    gap: ${spacing['2xl']};
+  }
 `;
 
 const Title = styled.h2`
-  font-weight: 700;
+  font-weight: ${typography.fontWeight.bold};
   font-size: 68px;
   line-height: 120%;
   text-align: center;
   text-transform: uppercase;
-  color: #003CA6; /* Blue brand color */
-  margin: 0;
+  color: ${colors.primary}; /* Blue brand color */
+  margin: ${spacing[0]};
+
+  ${mediaQueries.down.sm} {
+    font-size: ${typography.fontSize['5xl']};
+  }
 `;
 
 const GridContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 40px;
+  gap: ${spacing['2xl']};
   width: 100%;
   max-width: 1280px;
+
+  ${mediaQueries.down.lg} {
+    grid-template-columns: 1fr;
+  }
 `;
 
 const Card = styled.div`
-  background: #FFFFFF;
+  background: ${colors.white};
   border-radius: 40px;
-  padding: 48px;
+  padding: ${spacing['3xl']};
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: ${spacing.lg};
   box-shadow: 0px 20px 40px rgba(6, 21, 48, 0.05);
   position: relative;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform ${motion.duration.base} ${motion.easing.easeOut}, box-shadow ${motion.duration.base} ${motion.easing.easeOut};
+
+  ${mediaQueries.down.sm} {
+    padding: ${spacing.xl};
+  }
 
   &:hover {
     transform: translateY(-8px);
@@ -99,22 +117,26 @@ const CardHeader = styled.div`
 `;
 
 const CardTitle = styled.h3`
-  font-weight: 700;
-  font-size: 32px;
+  font-weight: ${typography.fontWeight.bold};
+  font-size: ${typography.fontSize['4xl']};
   line-height: 120%;
-  color: #0D1E44;
-  margin: 0;
+  color: ${colors.textPrimary};
+  margin: ${spacing[0]};
+
+  ${mediaQueries.down.sm} {
+    font-size: ${typography.fontSize['2xl']};
+  }
 `;
 
 const ArrowIcon = styled.div`
   width: 48px;
   height: 48px;
-  border-radius: 50%;
-  background: #F3F6FF;
+  border-radius: ${borderRadius.full};
+  background: ${colors.brandLightBlue};
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #003CA6;
+  color: ${colors.primary};
   cursor: pointer;
   
   svg {
@@ -125,25 +147,29 @@ const ArrowIcon = styled.div`
 
 const CardDescription = styled.p`
   font-family: 'Inter', sans-serif;
-  font-weight: 400;
-  font-size: 16px;
+  font-weight: ${typography.fontWeight.normal};
+  font-size: ${typography.fontSize.md};
   line-height: 150%;
-  color: #4A5568;
-  margin: 0;
+  color: ${colors.textBody};
+  margin: ${spacing[0]};
   max-width: 90%;
+
+  ${mediaQueries.down.sm} {
+    max-width: 100%;
+  }
 `;
 
 const ImagePlaceholder = styled.div`
   width: 100%;
   height: 200px;
   border-radius: 20px;
-  background: #EAF0FF;
+  background: ${colors.brandLightBlue};
   margin-top: auto; /* Pushes the image to the bottom if text varies */
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #003CA6;
-  font-weight: 500;
-  font-size: 14px;
-  border: 1px dashed #AEC2F2;
+  color: ${colors.primary};
+  font-weight: ${typography.fontWeight.medium};
+  font-size: ${typography.fontSize.base};
+  border: 1px dashed ${colors.brandLightBlueDark};
 `;
