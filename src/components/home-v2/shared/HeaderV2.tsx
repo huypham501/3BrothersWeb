@@ -1,46 +1,79 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Link from 'next/link';
+import { HeaderContactButton } from '../components/HeaderContactButton';
 
 export function HeaderV2() {
+  const [isFloating, setIsFloating] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsFloating(window.scrollY > 10);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    // Initial check
+    handleScroll();
+
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
     <HeaderContainer>
-      <LogoContainer>
-        <LogoText>3BROTHERS</LogoText>
-      </LogoContainer>
+      <NavBarPill $isFloating={isFloating}>
+        <LogoContainer>
+          <LogoText $isFloating={isFloating}>3BROTHERS</LogoText>
+        </LogoContainer>
 
-      <NavLinks>
-        <NavItem href="#">For Creators</NavItem>
-        <NavItem href="#">For Brands</NavItem>
-        <NavItem href="#">Our Brands</NavItem>
-        <NavItem href="#">Blogs</NavItem>
-        <NavItem href="#">Careers</NavItem>
-        
-        <ContactButton href="#">
-          Liên hệ ngay
-          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14M12 5l7 7-7 7" />
-          </svg>
-        </ContactButton>
-      </NavLinks>
+        <NavLinks>
+          <NavItem href="#" $isFloating={isFloating}>For Creators</NavItem>
+          <NavItem href="#" $isFloating={isFloating}>For Brands</NavItem>
+          <NavItem href="#" $isFloating={isFloating}>Our Brands</NavItem>
+          <NavItem href="#" $isFloating={isFloating}>Blogs</NavItem>
+          <NavItem href="#" $isFloating={isFloating}>Careers</NavItem>
+
+          <HeaderContactButton href="#" $isFloating={isFloating} />
+        </NavLinks>
+      </NavBarPill>
     </HeaderContainer>
   );
 }
 
 const HeaderContainer = styled.header`
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
   height: 164px;
   display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 35px;
+  z-index: 100;
+  pointer-events: none; /* Let clicks pass through the huge container if they miss the pill */
+`;
+
+const NavBarPill = styled.div<{ $isFloating: boolean }>`
+  pointer-events: auto;
+  display: flex;
+  flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding: 0 80px;
-  z-index: 100;
-  /* Font setting applied globally or we ensure it here */
-  font-family: 'Inter', sans-serif;
+  padding: 12px 12px 12px 32px;
+  width: 100%;
+  max-width: 1369px; /* Max width from design */
+  height: 72px;
+  
+  background: ${({ $isFloating }) => $isFloating ? 'rgba(255, 255, 255, 0.5)' : 'rgba(0, 13, 37, 0.45)'};
+  backdrop-filter: blur(12px);
+  border-radius: 40px;
+  transition: all 0.3s ease;
+
+  @media (max-width: 1024px) {
+    padding: 12px 12px 12px 24px;
+  }
 `;
 
 const LogoContainer = styled.div`
@@ -49,13 +82,15 @@ const LogoContainer = styled.div`
   cursor: pointer;
 `;
 
-const LogoText = styled.span`
+const LogoText = styled.span<{ $isFloating: boolean }>`
+  font-family: 'Inter', sans-serif;
   font-weight: 800;
   font-size: 28px;
-  color: #0d1e44; // From the light blue background contrast
+  color: ${({ $isFloating }) => $isFloating ? '#061530' : '#FFFFFF'};
   letter-spacing: -0.5px;
   display: flex;
   align-items: center;
+  transition: color 0.3s ease;
   
   // A simple placeholder for the exact 3Brothers logo
   &::before {
@@ -72,44 +107,20 @@ const LogoText = styled.span`
 const NavLinks = styled.nav`
   display: flex;
   align-items: center;
-  gap: 48px;
-`;
+  gap: 40px;
 
-const NavItem = styled(Link)`
-  font-weight: 500;
-  font-size: 16px;
-  line-height: 150%;
-  color: #0d1e44;
-  text-decoration: none;
-  transition: opacity 0.2s ease;
-
-  &:hover {
-    opacity: 0.8;
+  @media (max-width: 1024px) {
+    display: none; /* Hide nav links on tablet/mobile for now, or adapt later */
   }
 `;
 
-const ContactButton = styled(Link)`
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  padding: 14px 24px;
-  gap: 8px;
-  background: #003CA6;
-  border-radius: 24px; // Pill shape from design
-  color: #FFFFFF;
+const NavItem = styled(Link) <{ $isFloating: boolean }>`
+  font-family: 'Montserrat', sans-serif;
   font-weight: 600;
   font-size: 16px;
-  line-height: 150%;
+  line-height: 160%;
+  color: ${({ $isFloating }) => $isFloating ? '#061530' : '#FFFFFF'};
   text-decoration: none;
-  transition: background 0.2s ease;
-
-  &:hover {
-    background: #002266;
-  }
-
-  svg {
-    width: 20px;
-    height: 20px;
-  }
 `;
+
+
