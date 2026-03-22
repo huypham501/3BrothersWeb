@@ -35,7 +35,8 @@ const HeroContainer = styled.section`
   min-height: 800px;
   background: linear-gradient(0deg, ${colors.bgDark}, ${colors.bgDark}), linear-gradient(180deg, ${colors.primaryLight} 0%, ${colors.primary} 100%);
   border-radius: 0 0 120px 120px;
-  overflow: hidden;
+  overflow-x: clip;
+  overflow-y: visible;
   display: flex;
   align-items: center;
   padding: 0 ${spacing['5xl']};
@@ -200,6 +201,7 @@ const ImagePlaceholder = styled.div`
   border: 4px solid rgba(255,255,255,0.2);
   position: relative;
   overflow: hidden;
+  margin-top: -360px;
 
   ${mediaQueries.down.lg} {
     margin-top: ${spacing.xl};
