@@ -1,7 +1,8 @@
 'use client';
 
 import styled from 'styled-components';
-import { colors, spacing, typography, mediaQueries, borderRadius, motion } from '@/styles/tokens';
+import { colors, spacing, typography, mediaQueries } from '@/styles/tokens';
+import { CoreCompetencyCard } from '../components/CoreCompetencyCard';
 
 const SERVICES = [
   {
@@ -26,23 +27,19 @@ export function CoreCompetenciesSectionV2() {
   return (
     <SectionContainer>
       <Title>Năng lực cốt lõi</Title>
-      
-      <GridContainer>
-        {SERVICES.map((service, index) => (
-          <Card key={index}>
-            <CardHeader>
-              <CardTitle>{service.title}</CardTitle>
-              <ArrowIcon>
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14M12 5l7 7-7 7" />
-                </svg>
-              </ArrowIcon>
-            </CardHeader>
-            <CardDescription>{service.description}</CardDescription>
-            <ImagePlaceholder>Image Illustration</ImagePlaceholder>
-          </Card>
-        ))}
-      </GridContainer>
+      <GridWrapper>
+        <GridLineHorizontal />
+        <GridLineVertical />
+        <GridContainer>
+          {SERVICES.map((service, index) => (
+            <CoreCompetencyCard
+              key={index}
+              title={service.title}
+              description={service.description}
+            />
+          ))}
+        </GridContainer>
+      </GridWrapper>
     </SectionContainer>
   );
 }
@@ -54,122 +51,79 @@ const SectionContainer = styled.section`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: ${spacing['5xl']};
-  font-family: 'Montserrat', 'Inter', sans-serif;
+  gap: 80px;
 
   ${mediaQueries.down.sm} {
     padding: 60px ${spacing.lg};
-    gap: ${spacing['2xl']};
+    gap: 40px;
   }
 `;
 
 const Title = styled.h2`
+  font-family: 'Montserrat', sans-serif;
   font-weight: ${typography.fontWeight.bold};
-  font-size: 68px;
-  line-height: 120%;
+  font-size: 42px;
+  line-height: 140%;
   text-align: center;
   text-transform: uppercase;
-  color: ${colors.primary}; /* Blue brand color */
+  color: #003CA6;
   margin: ${spacing[0]};
 
   ${mediaQueries.down.sm} {
-    font-size: ${typography.fontSize['5xl']};
+    font-size: ${typography.fontSize['3xl']};
+  }
+`;
+
+const GridWrapper = styled.div`
+  position: relative;
+  width: 100%;
+  max-width: 1280px;
+`;
+
+const GridLineHorizontal = styled.div`
+  position: absolute;
+  top: 50%;
+  left: -40px;
+  right: -40px;
+  height: 1px;
+  background: #061530;
+  opacity: 0.2;
+  z-index: 0;
+
+  ${mediaQueries.down.lg} {
+    display: none;
+  }
+`;
+
+const GridLineVertical = styled.div`
+  position: absolute;
+  top: -40px;
+  bottom: -40px;
+  left: 50%;
+  width: 1px;
+  background: #061530;
+  opacity: 0.2;
+  z-index: 0;
+
+  ${mediaQueries.down.lg} {
+    display: none;
   }
 `;
 
 const GridContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: ${spacing['2xl']};
+  column-gap: 60px;
+  row-gap: 120px;
   width: 100%;
-  max-width: 1280px;
+  position: relative;
+  z-index: 1;
 
   ${mediaQueries.down.lg} {
     grid-template-columns: 1fr;
+    column-gap: 0;
+    row-gap: 60px;
   }
 `;
 
-const Card = styled.div`
-  background: ${colors.white};
-  border-radius: 40px;
-  padding: ${spacing['3xl']};
-  display: flex;
-  flex-direction: column;
-  gap: ${spacing.lg};
-  box-shadow: 0px 20px 40px rgba(6, 21, 48, 0.05);
-  position: relative;
-  transition: transform ${motion.duration.base} ${motion.easing.easeOut}, box-shadow ${motion.duration.base} ${motion.easing.easeOut};
 
-  ${mediaQueries.down.sm} {
-    padding: ${spacing.xl};
-  }
-
-  &:hover {
-    transform: translateY(-8px);
-    box-shadow: 0px 30px 60px rgba(6, 21, 48, 0.08);
-  }
-`;
-
-const CardHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-`;
-
-const CardTitle = styled.h3`
-  font-weight: ${typography.fontWeight.bold};
-  font-size: ${typography.fontSize['4xl']};
-  line-height: 120%;
-  color: ${colors.textPrimary};
-  margin: ${spacing[0]};
-
-  ${mediaQueries.down.sm} {
-    font-size: ${typography.fontSize['2xl']};
-  }
-`;
-
-const ArrowIcon = styled.div`
-  width: 48px;
-  height: 48px;
-  border-radius: ${borderRadius.full};
-  background: ${colors.brandLightBlue};
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: ${colors.primary};
-  cursor: pointer;
-  
-  svg {
-    width: 24px;
-    height: 24px;
-  }
-`;
-
-const CardDescription = styled.p`
-  font-family: 'Inter', sans-serif;
-  font-weight: ${typography.fontWeight.normal};
-  font-size: ${typography.fontSize.md};
-  line-height: 150%;
-  color: ${colors.textBody};
-  margin: ${spacing[0]};
-  max-width: 90%;
-
-  ${mediaQueries.down.sm} {
-    max-width: 100%;
-  }
-`;
-
-const ImagePlaceholder = styled.div`
-  width: 100%;
-  height: 200px;
-  border-radius: 20px;
-  background: ${colors.brandLightBlue};
-  margin-top: auto; /* Pushes the image to the bottom if text varies */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: ${colors.primary};
-  font-weight: ${typography.fontWeight.medium};
-  font-size: ${typography.fontSize.base};
-  border: 1px dashed ${colors.brandLightBlueDark};
-`;
