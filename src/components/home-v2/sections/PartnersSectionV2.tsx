@@ -29,8 +29,6 @@ const PartnersContainer = styled.section`
   align-items: center;
   justify-content: center;
   position: relative;
-  /* Shift it up slightly to tuck under the Hero's border-radius if needed */
-  margin-top: -60px;
   padding-top: 60px; /* offset the margin */
   z-index: 1; 
 

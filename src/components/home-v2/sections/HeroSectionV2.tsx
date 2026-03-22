@@ -2,6 +2,7 @@
 
 import styled from 'styled-components';
 import { colors, spacing, typography, mediaQueries, borderRadius, motion } from '@/styles/tokens';
+import { HeroMediaPlaceholder } from '../components/HeroMediaPlaceholder';
 
 export function HeroSectionV2() {
   return (
@@ -23,7 +24,7 @@ export function HeroSectionV2() {
             <SecondaryButton href="#">Xem portfolio</SecondaryButton>
           </ButtonGroup>
         </TextBlock>
-        <ImagePlaceholder />
+        <HeroMediaPlaceholder />
       </ContentWrapper>
     </HeroContainer>
   );
@@ -33,10 +34,9 @@ const HeroContainer = styled.section`
   position: relative;
   width: 100%;
   min-height: 800px;
-  background: linear-gradient(0deg, ${colors.bgDark}, ${colors.bgDark}), linear-gradient(180deg, ${colors.primaryLight} 0%, ${colors.primary} 100%);
+  background: linear-gradient(0deg, #031027, #031027), linear-gradient(180deg, ${colors.primaryLight} 0%, ${colors.primary} 100%);
   border-radius: 0 0 120px 120px;
-  overflow-x: clip;
-  overflow-y: visible;
+  overflow: hidden;
   display: flex;
   align-items: center;
   padding: 0 ${spacing['5xl']};
@@ -49,7 +49,7 @@ const HeroContainer = styled.section`
   ${mediaQueries.down.sm} {
     min-height: 100vh;
     padding: ${spacing['2xl']} ${spacing.lg};
-    border-radius: 0 0 60px 60px;
+    border-radius: 0 0 80px 80px;
   }
 `;
 
@@ -144,10 +144,11 @@ const PrimaryButton = styled.a`
   justify-content: center;
   align-items: center;
   padding: 14px ${spacing.lg};
+  height: 52px;
   gap: ${spacing.xs};
-  background: ${colors.white};
+  background: ${colors.black};
   border-radius: ${borderRadius.xl};
-  color: ${colors.primary};
+  color: ${colors.white};
   text-decoration: none;
   font-weight: ${typography.fontWeight.semibold};
   font-family: 'Inter', sans-serif;
@@ -186,33 +187,5 @@ const SecondaryButton = styled.a`
 
   &:hover {
     background: rgba(255, 255, 255, 0.1);
-  }
-`;
-
-const ImagePlaceholder = styled.div`
-  width: 100%;
-  max-width: 480px;
-  aspect-ratio: 480 / 560;
-  background: linear-gradient(180deg, #A48B8B, #4C3C3C);
-  border-radius: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 4px solid rgba(255,255,255,0.2);
-  position: relative;
-  overflow: hidden;
-  margin-top: -360px;
-
-  ${mediaQueries.down.lg} {
-    margin-top: ${spacing.xl};
-  }
-
-  &::after {
-    content: "L'Oreal Paris Image Placeholder";
-    color: rgba(255,255,255,0.7);
-    font-weight: ${typography.fontWeight.bold};
-    font-family: 'Inter', sans-serif;
-    text-align: center;
-    padding: ${spacing.lg};
   }
 `;

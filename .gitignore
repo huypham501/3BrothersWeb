@@ -21,3 +21,4 @@ pnpm-debug.log*
 # AI agents and design assets
 /design
 .agent-state
+.chrome-profile
