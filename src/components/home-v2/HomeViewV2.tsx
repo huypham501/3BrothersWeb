@@ -17,8 +17,10 @@ export function HomeViewV2() {
   return (
     <Wrapper>
       <HeaderV2 />
-      <HeroSectionV2 />
-      <PartnersSectionV2 />
+      <HeroPartnersWrapper>
+        <HeroSectionV2 />
+        <PartnersSectionV2 />
+      </HeroPartnersWrapper>
       <CoreCompetenciesSectionV2 />
       <EfficiencySectionV2 />
       <ExclusiveTalentsSectionV2 />
@@ -39,4 +41,10 @@ const Wrapper = styled.div`
   box-shadow: 0px 4.5px 225px rgba(6, 21, 48, 0.6);
   overflow-x: hidden;
   font-family: 'Montserrat', 'Inter', sans-serif;
+`;
+
+const HeroPartnersWrapper = styled.div`
+  width: 100%;
+  position: relative;
+  background: linear-gradient(180deg, #000000 84.09%, #071E48 100%);
 `;

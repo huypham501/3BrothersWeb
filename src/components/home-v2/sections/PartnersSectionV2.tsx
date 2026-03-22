@@ -24,7 +24,7 @@ export function PartnersSectionV2() {
 const PartnersContainer = styled.section`
   width: 100%;
   height: 120px;
-  background: ${colors.bgDark};
+  background: transparent;
   display: flex;
   align-items: center;
   justify-content: center;

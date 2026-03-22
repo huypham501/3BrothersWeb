@@ -2,12 +2,15 @@
 
 import styled from 'styled-components';
 import { colors, spacing, typography, mediaQueries, borderRadius, motion } from '@/styles/tokens';
+import { HeroBackgroundGraphics } from '../components/HeroBackgroundGraphics';
 import { HeroMediaPlaceholder } from '../components/HeroMediaPlaceholder';
+import { PrimaryButton } from '../components/PrimaryButton';
+import { SecondaryButton } from '../components/SecondaryButton';
 
 export function HeroSectionV2() {
   return (
     <HeroContainer>
-      <GlowEffect />
+      <HeroBackgroundGraphics />
       <ContentWrapper>
         <TextBlock>
           <Title>Đồng hành để<br />cùng thành<br />công</Title>
@@ -53,23 +56,6 @@ const HeroContainer = styled.section`
   }
 `;
 
-const GlowEffect = styled.div`
-  position: absolute;
-  width: 1064px;
-  height: 585px;
-  left: -30px;
-  top: 406px;
-  background: ${colors.primary};
-  filter: blur(50px);
-  z-index: 0;
-
-  ${mediaQueries.down.sm} {
-    width: 600px;
-    height: 400px;
-    top: 30%;
-    left: -100px;
-  }
-`;
 
 const ContentWrapper = styled.div`
   position: relative;
@@ -138,54 +124,4 @@ const ButtonGroup = styled.div`
   }
 `;
 
-const PrimaryButton = styled.a`
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  padding: 14px ${spacing.lg};
-  height: 52px;
-  gap: ${spacing.xs};
-  background: ${colors.black};
-  border-radius: ${borderRadius.xl};
-  color: ${colors.white};
-  text-decoration: none;
-  font-weight: ${typography.fontWeight.semibold};
-  font-family: 'Inter', sans-serif;
-  font-size: ${typography.fontSize.md};
-  transition: opacity ${motion.duration.base};
 
-  ${mediaQueries.down.sm} {
-    width: 100%;
-  }
-
-  &:hover {
-    opacity: 0.8;
-  }
-`;
-
-const SecondaryButton = styled.a`
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  padding: 14px ${spacing.lg};
-  gap: ${spacing.xs};
-  background: transparent;
-  border: 1px solid ${colors.white};
-  border-radius: ${borderRadius.xl};
-  color: ${colors.white};
-  text-decoration: none;
-  font-weight: ${typography.fontWeight.semibold};
-  font-family: 'Inter', sans-serif;
-  font-size: ${typography.fontSize.md};
-  transition: background ${motion.duration.base};
-
-  ${mediaQueries.down.sm} {
-    width: 100%;
-  }
-
-  &:hover {
-    background: rgba(255, 255, 255, 0.1);
-  }
-`;

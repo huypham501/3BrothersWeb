@@ -64,17 +64,6 @@ export const GlobalStyles = createGlobalStyle`
     vertical-align: middle;
   }
 
-  /* Links */
-  a {
-    color: ${({ theme }) => theme.colors.textSecondary};
-    text-decoration: none;
-    
-    &:hover, &:focus {
-      text-decoration: none;
-      color: ${({ theme }) => theme.colors.primary};
-    }
-  }
-
   /* Headings */
   h1, h2, h3, h4, h5, h6 {
     margin-top: 0;

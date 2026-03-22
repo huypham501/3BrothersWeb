@@ -12,13 +12,14 @@ export function HeroMediaPlaceholder() {
 const PlaceholderContainer = styled.div`
   width: 100%;
   max-width: 480px;
-  aspect-ratio: 480 / 560;
+  aspect-ratio: 5 / 6;
   background: linear-gradient(180deg, #A48B8B, #4C3C3C);
   border-radius: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 4px solid rgba(255,255,255,0.2);
+  box-sizing: border-box;
+  border: 12px solid #003CA6;
   position: relative;
   overflow: hidden;
   margin-top: -360px;
