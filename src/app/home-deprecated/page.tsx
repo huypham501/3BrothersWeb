@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { HomeViewV2 } from "@/components/home-v2/HomeViewV2";
+import { HomeView } from "@/components/home/HomeView";
 
 import { SITE_URL } from "@/lib/constants";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "3BROTHERS NETWORK | The Leading Creator Economy Platform",
+  title: "3BROTHERS NETWORK | The Leading Creator Economy Platform (Deprecated)",
   description: "Make your passion your paycheck",
   keywords: ["youtube", "creators", "creator economy", "3brothers network"],
   alternates: {
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "3BROTHERS NETWORK | The Leading Creator Economy Platform",
+    title: "3BROTHERS NETWORK | The Leading Creator Economy Platform (Deprecated)",
     description: "Make your passion your paycheck",
     url: SITE_URL,
     type: "website",
@@ -29,12 +29,12 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "3BROTHERS NETWORK | The Leading Creator Economy Platform",
+    title: "3BROTHERS NETWORK | The Leading Creator Economy Platform (Deprecated)",
     description: "Make your passion your paycheck",
     images: ["/3brothers.png"],
   },
 };
 
-export default function HomePage() {
-  return <HomeViewV2 />;
+export default function HomeDeprecatedPage() {
+  return <HomeView />;
 }
