@@ -6,6 +6,14 @@ export interface CoreCompetencyCardProps {
   description: string;
 }
 
+const Montserrat = "'Montserrat', sans-serif";
+
+const ArrowIconSVG = () => (
+  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 17L17 7M17 7H7.5M17 7V16.5" />
+  </svg>
+);
+
 export function CoreCompetencyCard({ title, description }: CoreCompetencyCardProps) {
   return (
     <CardContainer>
@@ -13,15 +21,21 @@ export function CoreCompetencyCard({ title, description }: CoreCompetencyCardPro
         <TitleRow>
           <CardTitle>{title}</CardTitle>
           <ArrowIcon>
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 17L17 7M17 7H7M17 7V17" />
-            </svg>
+            <ArrowIconSVG />
           </ArrowIcon>
         </TitleRow>
         <CardDescription>{description}</CardDescription>
       </TextGroup>
       <ImageContainer>
         <ImagePlaceholder>Image Illustration</ImagePlaceholder>
+        <HoverOverlay>
+          <OverlayContent>
+            <span>Xem chi tiết</span>
+            <OverlayArrow>
+              <ArrowIconSVG />
+            </OverlayArrow>
+          </OverlayContent>
+        </HoverOverlay>
       </ImageContainer>
     </CardContainer>
   );
@@ -34,6 +48,18 @@ const CardContainer = styled.div`
   width: 100%;
   position: relative;
   cursor: pointer;
+
+  &:hover {
+    ${() => CardTitle} {
+      color: ${colors.primary};
+    }
+    ${() => HoverOverlay} {
+      opacity: 1;
+    }
+    ${() => ArrowIcon} {
+      transform: translate(2px, -2px);
+    }
+  }
 `;
 
 const TextGroup = styled.div`
@@ -48,15 +74,17 @@ const TitleRow = styled.div`
   justify-content: space-between;
   align-items: flex-start;
   width: 100%;
+  gap: 24px;
 `;
 
 const CardTitle = styled.h3`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${Montserrat};
   font-weight: ${typography.fontWeight.bold};
   font-size: 26px;
   line-height: 140%;
-  color: #061530;
+  color: ${colors.textPrimary};
   margin: ${spacing[0]};
+  transition: color ${motion.duration.base} ${motion.easing.easeOut};
 
   ${mediaQueries.down.sm} {
     font-size: ${typography.fontSize.xl};
@@ -66,31 +94,27 @@ const CardTitle = styled.h3`
 const ArrowIcon = styled.div`
   width: 40px;
   height: 40px;
-  border: 4px solid #003CA6;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #003CA6;
+  color: ${colors.primary};
   cursor: pointer;
   flex-shrink: 0;
   transition: transform ${motion.duration.base} ${motion.easing.easeOut};
-  
-  &:hover {
-    transform: translate(2px, -2px);
-  }
+  margin-top: 4px; /* Align with top of text */
   
   svg {
-    width: 20px;
-    height: 20px;
+    width: 100%;
+    height: 100%;
   }
 `;
 
 const CardDescription = styled.p`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${Montserrat};
   font-weight: ${typography.fontWeight.normal};
-  font-size: 16px;
+  font-size: ${typography.fontSize.md};
   line-height: 140%;
-  color: #061530;
+  color: ${colors.textPrimary};
   opacity: 0.8;
   margin: ${spacing[0]};
   max-width: 90%;
@@ -103,7 +127,7 @@ const CardDescription = styled.p`
 const ImageContainer = styled.div`
   width: 100%;
   aspect-ratio: 612 / 455;
-  border-radius: 24px;
+  border-radius: ${spacing.lg};
   border: 8px solid rgba(255, 255, 255, 0.5);
   box-shadow: 0px 4px 24px rgba(6, 21, 48, 0.2);
   background: ${colors.brandLightBlue};
@@ -117,7 +141,51 @@ const ImageContainer = styled.div`
 
 const ImagePlaceholder = styled.div`
   color: ${colors.primary};
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${Montserrat};
   font-weight: ${typography.fontWeight.medium};
   font-size: ${typography.fontSize.base};
+`;
+
+const HoverOverlay = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(6, 21, 48, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity ${motion.duration.base} ${motion.easing.easeOut};
+  z-index: 2;
+`;
+
+const OverlayContent = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${spacing.md};
+  color: ${colors.white};
+  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.5);
+
+  span {
+    font-family: ${Montserrat};
+    font-weight: ${typography.fontWeight.bold};
+    font-size: 26px;
+    line-height: 140%;
+  }
+`;
+
+const OverlayArrow = styled.div`
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  svg {
+    width: 100%;
+    height: 100%;
+  }
 `;
