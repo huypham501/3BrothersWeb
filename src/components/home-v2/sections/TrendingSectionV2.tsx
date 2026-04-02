@@ -23,105 +23,108 @@ export function TrendingSectionV2() {
     <SectionContainer>
       <HeaderRow>
         <Title>Xu hướng có gì?</Title>
-        <ViewAllLink href="#">
-          Xem tất cả
-          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14M12 5l7 7-7 7" />
-          </svg>
-        </ViewAllLink>
+        <DividerLine />
       </HeaderRow>
-      
+
       <CardsGrid>
         {NEWS_DATA.map((news, index) => (
           <NewsCard key={index}>
             <CardImage />
             <CardContent>
-              <CardDate>{news.date}</CardDate>
               <CardTitle>{news.title}</CardTitle>
+              <CardDate>{news.date}</CardDate>
             </CardContent>
           </NewsCard>
         ))}
       </CardsGrid>
+
+      <ViewAllLink href="#">
+        Xem tất cả
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.67} d="M5 12h14M12 5l7 7-7 7" />
+        </svg>
+      </ViewAllLink>
     </SectionContainer>
   );
 }
 
 const SectionContainer = styled.section`
   width: 100%;
-  padding: 120px ${spacing['5xl']};
+  padding: 120px 84px;
   background: ${colors.bgDark};
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 60px;
+  align-items: flex-start;
+  gap: 0;
   color: ${colors.white};
+  isolation: isolate;
 
   ${mediaQueries.down.sm} {
     padding: 60px ${spacing.lg};
-    gap: ${spacing['2xl']};
   }
 `;
 
 const HeaderRow = styled.div`
   width: 100%;
   display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  max-width: 1280px;
+  flex-direction: row;
+  align-items: center;
+  gap: 41px;
+  margin-bottom: 64px;
 
   ${mediaQueries.down.sm} {
     flex-direction: column;
     align-items: flex-start;
     gap: ${spacing.lg};
+    margin-bottom: 40px;
   }
 `;
 
 const Title = styled.h2`
   font-family: 'Montserrat', sans-serif;
+  font-style: normal;
   font-weight: ${typography.fontWeight.bold};
-  font-size: 68px;
-  line-height: 120%;
+  font-size: 42px;
+  line-height: 140%;
   text-transform: uppercase;
-  margin: ${spacing[0]};
+  margin: 0;
+  color: ${colors.white};
+  white-space: nowrap;
+  flex-shrink: 0;
 
   ${mediaQueries.down.sm} {
     font-size: ${typography.fontSize['5xl']};
   }
 `;
 
-const ViewAllLink = styled.a`
-  font-family: 'Inter', sans-serif;
-  font-weight: ${typography.fontWeight.semibold};
-  font-size: ${typography.fontSize.lg};
-  color: ${colors.white};
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-  gap: ${spacing.sm};
-  opacity: 0.9;
-
-  &:hover {
-    text-decoration: underline;
-    opacity: 1;
-  }
+const DividerLine = styled.div`
+  flex: 1;
+  height: 1px;
+  background: ${colors.primaryLight};
+  opacity: 0.5;
 `;
 
 const CardsGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: ${spacing['2xl']};
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 33px;
   width: 100%;
-  max-width: 1280px;
+  padding-bottom: 24px;
 
   ${mediaQueries.down.lg} {
-    grid-template-columns: 1fr;
+    flex-direction: column;
+    padding-bottom: 0;
+    gap: ${spacing['2xl']};
   }
 `;
 
 const NewsCard = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${spacing.lg};
+  align-items: flex-start;
+  gap: 20px;
+  flex: 1;
   cursor: pointer;
   transition: transform ${motion.duration.base};
 
@@ -132,41 +135,62 @@ const NewsCard = styled.div`
 
 const CardImage = styled.div`
   width: 100%;
-  height: 280px;
-  border-radius: 30px;
+  height: 268px;
+  border-radius: 24px;
+  border: 1px solid ${colors.white};
   background: linear-gradient(180deg, #A48B8B, #4C3C3C);
-  border: 2px solid rgba(255,255,255,0.1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: rgba(255,255,255,0.6);
-  font-family: 'Inter', sans-serif;
-  font-weight: ${typography.fontWeight.semibold};
-  
-  &::after {
-    content: 'Article Image Placeholder';
-  }
+  flex-shrink: 0;
+  overflow: hidden;
 `;
 
 const CardContent = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${spacing.md};
-`;
-
-const CardDate = styled.div`
-  font-family: 'Inter', sans-serif;
-  font-weight: ${typography.fontWeight.medium};
-  font-size: ${typography.fontSize.base};
-  color: #AEC2F2;
-  text-transform: uppercase;
+  align-items: flex-start;
+  gap: 12px;
+  width: 100%;
 `;
 
 const CardTitle = styled.h3`
   font-family: 'Montserrat', sans-serif;
+  font-style: normal;
   font-weight: ${typography.fontWeight.bold};
   font-size: ${typography.fontSize['2xl']};
   line-height: 140%;
   color: ${colors.white};
-  margin: ${spacing[0]};
+  margin: 0;
+`;
+
+const CardDate = styled.div`
+  font-family: 'Montserrat', sans-serif;
+  font-style: normal;
+  font-weight: ${typography.fontWeight.normal};
+  font-size: 12px;
+  line-height: 140%;
+  color: ${colors.white};
+  text-transform: uppercase;
+  opacity: 0.8;
+`;
+
+const ViewAllLink = styled.a`
+  font-family: 'Montserrat', sans-serif;
+  font-style: normal;
+  font-weight: ${typography.fontWeight.bold};
+  font-size: ${typography.fontSize.md};
+  line-height: 140%;
+  color: ${colors.secondary};
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: ${spacing.xs};
+  margin-top: ${spacing['3xl']};
+
+  svg {
+    stroke: ${colors.secondary};
+  }
+
+  &:hover {
+    text-decoration: underline;
+    opacity: 0.85;
+  }
 `;
