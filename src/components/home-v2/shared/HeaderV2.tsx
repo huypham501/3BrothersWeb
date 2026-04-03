@@ -24,14 +24,16 @@ export function HeaderV2() {
     <HeaderContainer>
       <NavBarPill $isFloating={isFloating}>
         <LogoContainer>
-          <LogoText $isFloating={isFloating}>3BROTHERS</LogoText>
+          <Link href="/" style={{ textDecoration: 'none' }}>
+            <LogoText $isFloating={isFloating}>3BROTHERS</LogoText>
+          </Link>
         </LogoContainer>
 
         <NavLinks>
-          <NavItem href="#" $isFloating={isFloating}>For Creators</NavItem>
-          <NavItem href="#" $isFloating={isFloating}>For Brands</NavItem>
-          <NavItem href="#" $isFloating={isFloating}>Our Brands</NavItem>
-          <NavItem href="#" $isFloating={isFloating}>Blogs</NavItem>
+          <NavItem href="/for-creators" $isFloating={isFloating}>For Creators</NavItem>
+          <NavItem href="/for-brands" $isFloating={isFloating}>For Brands</NavItem>
+          <NavItem href="/our-brand" $isFloating={isFloating}>Our Brands</NavItem>
+          <NavItem href="/blogs" $isFloating={isFloating}>Blogs</NavItem>
           <NavItem href="#" $isFloating={isFloating}>Careers</NavItem>
 
           <HeaderContactButton href="#" $isFloating={isFloating} />

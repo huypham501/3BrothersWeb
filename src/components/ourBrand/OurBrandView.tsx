@@ -2,28 +2,36 @@
 
 import styled from "styled-components";
 import { GetInTouchNewsletterSection } from "@/components/sections/GetInTouchNewsletterSection";
-import { Footer } from "@/components/shared/Footer";
-import { Header } from "@/components/shared/Header";
+import { HeaderV2 } from "@/components/home-v2/shared/HeaderV2";
+import { FooterV2 } from "@/components/home-v2/shared/FooterV2";
 import { OurBrandHeaderSection } from "@/components/ourBrand/sections/OurBrandHeaderSection";
 import { OurBrandsSection } from "@/components/ourBrand/sections/OurBrandsSection";
 
 export function OurBrandView() {
   return (
     <PageRoot>
-      <div className="wrapper">
-        <Header />
-        <main className="main-content">
-          <OurBrandHeaderSection />
-          <OurBrandsSection />
-          <GetInTouchNewsletterSection />
-        </main>
-        <Footer />
-      </div>
+      <HeaderV2 />
+      <MainContent>
+        <OurBrandHeaderSection />
+        <OurBrandsSection />
+        <GetInTouchNewsletterSection />
+      </MainContent>
+      <FooterV2 />
     </PageRoot>
   );
 }
 
 
 const PageRoot = styled.div`
+  position: relative;
+  width: 100%;
+  margin: 0 auto;
+  min-height: 100vh;
   background-color: ${({ theme }) => theme.colors.white};
+  overflow-x: hidden;
+`;
+
+const MainContent = styled.main`
+  width: 100%;
+  padding-top: 164px; /* offset for fixed header height */
 `;

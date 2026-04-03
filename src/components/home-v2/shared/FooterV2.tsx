@@ -20,11 +20,11 @@ export function FooterV2() {
         <RightSide>
           <LinkGroup>
             <LinkTitle>MENU</LinkTitle>
-            <FooterLink href="#">For Brands</FooterLink>
-            <FooterLink href="#">For Creators</FooterLink>
+            <FooterLink href="/for-brands">For Brands</FooterLink>
+            <FooterLink href="/for-creators">For Creators</FooterLink>
             <FooterLink href="#">About Us</FooterLink>
             <FooterLink href="#">Careers</FooterLink>
-            <FooterLink href="#">Blogs</FooterLink>
+            <FooterLink href="/blogs">Blogs</FooterLink>
           </LinkGroup>
           
           <LinkGroup>
