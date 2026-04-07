@@ -33,5 +33,4 @@ const PageRoot = styled.div`
 
 const MainContent = styled.main`
   width: 100%;
-  padding-top: 164px; /* offset for fixed header height */
 `;

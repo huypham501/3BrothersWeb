@@ -40,7 +40,7 @@ export function ForCreatorsHeroSectionV2() {
             Gia nhập ngay
             <ArrowIcon>
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <path d="M4.167 10h11.666M10 4.167 15.833 10 10 15.833" stroke="#061530" strokeWidth="1.67" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M4.167 10h11.666M10 4.167 15.833 10 10 15.833" stroke="#061530" strokeWidth="1.67" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </ArrowIcon>
           </PrimaryButton>
