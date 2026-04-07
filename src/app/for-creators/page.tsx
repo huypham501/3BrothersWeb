@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { ForCreatorsView } from "@/components/forCreators/ForCreatorsView";
+import { ForCreatorsViewV2 } from "@/components/forCreators-v2/ForCreatorsViewV2";
 
 import { SITE_URL } from "@/lib/constants";
 
@@ -36,6 +36,6 @@ export const metadata: Metadata = {
 };
 
 export default function ForCreatorsPage() {
-  return <ForCreatorsView />;
+  return <ForCreatorsViewV2 />;
 }
 
