@@ -1,8 +1,9 @@
 'use client';
 
 import styled from 'styled-components';
-import { colors, spacing, typography, mediaQueries, borderRadius, motion } from '@/styles/tokens';
+import { colors, spacing, typography, mediaQueries, motion } from '@/styles/tokens';
 import { useState } from 'react';
+import { BlogPostCard } from '@/components/blog/components/BlogPostCard';
 
 // ── Constants ────────────────────────────────────────────────────────────────
 
@@ -13,72 +14,84 @@ const INITIAL_VISIBLE = INITIAL_VISIBLE_ROWS * ITEMS_PER_ROW; // 9
 const BLOG_POSTS = [
   {
     id: 1,
+    slug: '2025-tang-toc-media-he-sinh-thai-influence',
     title: '2025 - Một năm tăng tốc Media trong hệ sinh thái Influence',
     date: '12 JAN 2026',
     imageBg: 'linear-gradient(135deg, #003CA6 0%, #1a56c4 50%, #0a3080 100%)',
   },
   {
     id: 2,
+    slug: 'dong-hanh-xuan-ve-ban-em-2026',
     title: 'Đồng hành cùng chương trình "Xuân Về Bản Em 2026"',
     date: '12 JAN 2026',
     imageBg: 'linear-gradient(135deg, #D4A020 0%, #E8B830 50%, #F0C840 100%)',
   },
   {
     id: 3,
+    slug: '3brothers-media-x-wechoice-awards-2025',
     title: '3BROTHERS MEDIA x WECHOICE AWARDS 2025',
     date: '12 JAN 2026',
     imageBg: 'linear-gradient(135deg, #C0C8D8 0%, #D8E0EE 50%, #B8C4D4 100%)',
   },
   {
     id: 4,
+    slug: '2025-tang-toc-media-he-sinh-thai-influence-2',
     title: '2025 - Một năm tăng tốc Media trong hệ sinh thái Influence',
     date: '12 JAN 2026',
     imageBg: 'linear-gradient(135deg, #003CA6 0%, #1a56c4 50%, #0a3080 100%)',
   },
   {
     id: 5,
+    slug: 'dong-hanh-xuan-ve-ban-em-2026-2',
     title: 'Đồng hành cùng chương trình "Xuân Về Bản Em 2026"',
     date: '12 JAN 2026',
     imageBg: 'linear-gradient(135deg, #D4A020 0%, #E8B830 50%, #F0C840 100%)',
   },
   {
     id: 6,
+    slug: '3brothers-media-x-wechoice-awards-2025-2',
     title: '3BROTHERS MEDIA x WECHOICE AWARDS 2025',
     date: '12 JAN 2026',
     imageBg: 'linear-gradient(135deg, #C0C8D8 0%, #D8E0EE 50%, #B8C4D4 100%)',
   },
   {
     id: 7,
+    slug: '2025-tang-toc-media-he-sinh-thai-influence-3',
     title: '2025 - Một năm tăng tốc Media trong hệ sinh thái Influence',
     date: '12 JAN 2026',
     imageBg: 'linear-gradient(135deg, #003CA6 0%, #1a56c4 50%, #0a3080 100%)',
   },
   {
     id: 8,
+    slug: 'dong-hanh-xuan-ve-ban-em-2026-3',
     title: 'Đồng hành cùng chương trình "Xuân Về Bản Em 2026"',
     date: '12 JAN 2026',
     imageBg: 'linear-gradient(135deg, #D4A020 0%, #E8B830 50%, #F0C840 100%)',
   },
   {
     id: 9,
+    slug: '3brothers-media-x-wechoice-awards-2025-3',
     title: '3BROTHERS MEDIA x WECHOICE AWARDS 2025',
     date: '12 JAN 2026',
     imageBg: 'linear-gradient(135deg, #C0C8D8 0%, #D8E0EE 50%, #B8C4D4 100%)',
   },
   {
     id: 10,
+    slug: '2025-tang-toc-media-he-sinh-thai-influence-4',
     title: '2025 - Một năm tăng tốc Media trong hệ sinh thái Influence',
     date: '12 JAN 2026',
     imageBg: 'linear-gradient(135deg, #003CA6 0%, #1a56c4 50%, #0a3080 100%)',
   },
   {
     id: 11,
+    slug: 'dong-hanh-xuan-ve-ban-em-2026-4',
     title: 'Đồng hành cùng chương trình "Xuân Về Bản Em 2026"',
     date: '12 JAN 2026',
     imageBg: 'linear-gradient(135deg, #D4A020 0%, #E8B830 50%, #F0C840 100%)',
   },
   {
     id: 12,
+    slug: '3brothers-media-x-wechoice-awards-2025-4',
     title: '3BROTHERS MEDIA x WECHOICE AWARDS 2025',
     date: '12 JAN 2026',
     imageBg: 'linear-gradient(135deg, #C0C8D8 0%, #D8E0EE 50%, #B8C4D4 100%)',
@@ -118,15 +131,7 @@ export function BlogContentsSection() {
           return (
             <CardsRow key={rowIdx} $isLast={rowIdx === Math.ceil(visiblePosts.length / ITEMS_PER_ROW) - 1}>
               {rowPosts.map((post) => (
-                <BlogCard key={post.id}>
-                  <CardImageWrapper>
-                    <CardImage $bg={post.imageBg} />
-                  </CardImageWrapper>
-                  <CardText>
-                    <CardTitle>{post.title}</CardTitle>
-                    <CardDate>{post.date}</CardDate>
-                  </CardText>
-                </BlogCard>
+                <BlogPostCard key={post.id} post={post} />
               ))}
             </CardsRow>
           );
@@ -221,82 +226,6 @@ const CardsRow = styled.div<{ $isLast: boolean }>`
     padding-bottom: 0;
     gap: ${spacing.xl};
   }
-`;
-
-const BlogCard = styled.a`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding: 0;
-  gap: 20px;
-  flex: 1;
-  min-width: 0;
-  text-decoration: none;
-  cursor: pointer;
-  transition: transform ${motion.duration.base} ease;
-
-  &:hover {
-    transform: translateY(-6px);
-  }
-
-  ${mediaQueries.down.lg} {
-    width: 100%;
-    flex: none;
-  }
-`;
-
-const CardImageWrapper = styled.div`
-  box-sizing: border-box;
-  width: 100%;
-  height: 268px;
-  border: 1px solid ${colors.white};
-  border-radius: ${borderRadius.xl};
-  overflow: hidden;
-  flex-shrink: 0;
-  position: relative;
-`;
-
-const CardImage = styled.div<{ $bg: string }>`
-  position: absolute;
-  inset: 0;
-  background: ${({ $bg }) => $bg};
-  background-size: cover;
-  background-position: center;
-`;
-
-const CardText = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding: 0;
-  gap: 12px;
-  width: 100%;
-`;
-
-const CardTitle = styled.h3`
-  font-family: 'Montserrat', sans-serif;
-  font-style: normal;
-  font-weight: ${typography.fontWeight.bold};
-  font-size: ${typography.fontSize['2xl']};
-  line-height: 140%;
-  color: #061530;
-  margin: 0;
-  /* Allow two lines max before truncation */
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  overflow: hidden;
-`;
-
-const CardDate = styled.div`
-  font-family: 'Montserrat', sans-serif;
-  font-style: normal;
-  font-weight: ${typography.fontWeight.normal};
-  font-size: 12px;
-  line-height: 140%;
-  text-transform: uppercase;
-  color: #061530;
-  opacity: 0.8;
 `;
 
 // ── Load more button ──────────────────────────────────────────────────────────
