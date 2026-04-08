@@ -23,7 +23,7 @@ export function FooterV2() {
             <FooterLink href="/for-brands">For Brands</FooterLink>
             <FooterLink href="/for-creators">For Creators</FooterLink>
             <FooterLink href="#">About Us</FooterLink>
-            <FooterLink href="#">Careers</FooterLink>
+            <FooterLink href="/careers">Careers</FooterLink>
             <FooterLink href="/blogs">Blogs</FooterLink>
           </LinkGroup>
           

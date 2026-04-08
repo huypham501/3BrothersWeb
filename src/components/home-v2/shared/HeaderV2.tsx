@@ -34,7 +34,7 @@ export function HeaderV2() {
           <NavItem href="/for-brands" $isFloating={isFloating}>For Brands</NavItem>
           <NavItem href="/our-brand" $isFloating={isFloating}>Our Brands</NavItem>
           <NavItem href="/blogs" $isFloating={isFloating}>Blogs</NavItem>
-          <NavItem href="#" $isFloating={isFloating}>Careers</NavItem>
+          <NavItem href="/careers" $isFloating={isFloating}>Careers</NavItem>
 
           <HeaderContactButton href="#" $isFloating={isFloating} />
         </NavLinks>
