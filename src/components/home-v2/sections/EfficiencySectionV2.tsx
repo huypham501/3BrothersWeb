@@ -1,5 +1,6 @@
 'use client';
 
+import React, { Fragment } from 'react';
 import styled from 'styled-components';
 import { colors, spacing, typography, mediaQueries, motion } from '@/styles/tokens';
 
@@ -58,16 +59,16 @@ export function EfficiencySectionV2() {
         {/* Stats row */}
         <StatsRow>
           {STATS.map((stat, index) => (
-            <>
-              <StatItem key={index}>
+            <Fragment key={`stat-group-${index}`}>
+              <StatItem>
                 <StatLabelGroup>
                   <StatTitle>{stat.title}</StatTitle>
                   <StatDescription>{stat.description}</StatDescription>
                 </StatLabelGroup>
                 <StatNumber>{stat.number}</StatNumber>
               </StatItem>
-              {index < STATS.length - 1 && <StatDivider key={`divider-${index}`} />}
-            </>
+              {index < STATS.length - 1 && <StatDivider />}
+            </Fragment>
           ))}
         </StatsRow>
       </ContentWrapper>

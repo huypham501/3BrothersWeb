@@ -8,9 +8,9 @@ export function ContactCTASectionV2() {
     <SectionContainer>
       <BeamsBackground />
       <ContentBlock>
-        <Title>Đừng ngần ngại<br/>liên hệ</Title>
+        <Title>Đừng ngần ngại liên hệ</Title>
         <Subtitle>
-          3Brothers Media với sứ mệnh trở thành cầu nối tin cậy giữa các nhãn hàng và các nhà sáng tạo nội dung (KOLs), chúng tôi cam kết mang lại những giá trị vượt trội, góp phần xây dựng thương hiệu mạnh mẽ và lan tỏa thông điệp hiệu quả.
+          3Brothers Media với sứ mệnh trở thành cầu nối tin cậy giữa các nhãn hàng và các nhà sáng tạo nội dung (KOLs). Chúng tôi tôn trọng cá tính, màu sắc riêng biệt của từng KOL.
         </Subtitle>
         <ContactButton href="#">
           Liên hệ ngay
@@ -34,8 +34,8 @@ const SectionContainer = styled.section`
   text-align: center;
   overflow: hidden;
 
-  /* Simulating the light blue background with vertical beams/streaks */
-  background: linear-gradient(180deg, ${colors.brandLightBlue} 0%, ${colors.brandLightBlueDark} 100%);
+  /* Vibrant blue background as seen in the design */
+  background: linear-gradient(180deg, ${colors.primaryLight} 0%, ${colors.primary} 100%);
 
   ${mediaQueries.down.sm} {
     padding: 80px ${spacing.lg};
@@ -60,7 +60,7 @@ const BeamsBackground = styled.div`
 
 const ContentBlock = styled.div`
   z-index: 10;
-  max-width: 800px;
+  max-width: 1100px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -74,10 +74,10 @@ const ContentBlock = styled.div`
 const Title = styled.h2`
   font-family: 'Montserrat', sans-serif;
   font-weight: ${typography.fontWeight.bold};
-  font-size: ${typography.fontSize['9xl']};
+  font-size: 68px;
   line-height: 120%;
   text-transform: uppercase;
-  color: ${colors.primary};
+  color: ${colors.white};
   margin: ${spacing[0]};
 
   ${mediaQueries.down.sm} {
@@ -86,15 +86,16 @@ const Title = styled.h2`
 `;
 
 const Subtitle = styled.p`
-  font-family: 'Inter', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-weight: ${typography.fontWeight.normal};
-  font-size: ${typography.fontSize.lg};
-  line-height: 160%;
-  color: ${colors.textBody};
+  font-size: ${typography.fontSize.md};
+  line-height: 140%;
+  color: rgba(255, 255, 255, 0.9);
   margin: ${spacing[0]};
+  max-width: 900px;
 
   ${mediaQueries.down.sm} {
-    font-size: ${typography.fontSize.md};
+    font-size: ${typography.fontSize.base};
   }
 `;
 
@@ -105,9 +106,9 @@ const ContactButton = styled.a`
   align-items: center;
   padding: ${spacing.md} ${spacing.xl};
   gap: ${spacing.sm};
-  background: ${colors.primary};
+  background: ${colors.white};
   border-radius: ${borderRadius.round};
-  color: ${colors.white};
+  color: ${colors.primary};
   text-decoration: none;
   font-weight: ${typography.fontWeight.semibold};
   font-family: 'Inter', sans-serif;

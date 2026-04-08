@@ -117,15 +117,19 @@ export function ExclusiveTalentsSectionV2() {
               <TalentDescription
                 ref={descRef}
                 $clamped={isExpandable && !isExpanded}
+                $isExpanded={isExpanded}
                 $maxHeight={CLAMP_MAX_HEIGHT}
               >
                 {FULL_DESCRIPTION}
-                {isExpandable && (
-                  <ReadMoreButton onClick={() => setIsExpanded(v => !v)}>
-                    {isExpanded ? 'Thu gọn' : 'Xem thêm'}
-                  </ReadMoreButton>
-                )}
               </TalentDescription>
+              {isExpandable && (
+                <ReadMoreButton
+                  onClick={() => setIsExpanded(v => !v)}
+                  $clamped={!isExpanded}
+                >
+                  {isExpanded ? 'Thu gọn' : 'Xem thêm'}
+                </ReadMoreButton>
+              )}
             </DescriptionInner>
           </DescriptionBlock>
         </TalentInfoContent>
@@ -406,9 +410,10 @@ const DescriptionInner = styled.div`
   display: block;
   flex: 1;
   min-width: 0;
+  position: relative;
 `;
 
-const TalentDescription = styled.p<{ $clamped: boolean; $maxHeight: number }>`
+const TalentDescription = styled.p<{ $clamped: boolean; $isExpanded: boolean; $maxHeight: number }>`
   font-family: 'Montserrat', sans-serif;
   font-weight: ${typography.fontWeight.normal};
   font-size: 16px;
@@ -419,42 +424,54 @@ const TalentDescription = styled.p<{ $clamped: boolean; $maxHeight: number }>`
   word-break: break-word;
   overflow-wrap: break-word;
 
-  ${({ $clamped, $maxHeight }) =>
-    $clamped &&
-    css`
+  ${({ $clamped, $isExpanded, $maxHeight }) =>
+    $clamped ? css`
       overflow: hidden;
       max-height: ${$maxHeight}px;
       /* Webkit line clamp as progressive enhancement */
       display: -webkit-box;
       -webkit-box-orient: vertical;
       -webkit-line-clamp: 4;
-    `}
-
-  /* When expanded, reset the clamp */
-  ${({ $clamped }) =>
-    !$clamped &&
-    css`
-      display: block;
+    ` : css`
+      display: ${$isExpanded ? 'inline' : 'block'};
       max-height: none;
       overflow: visible;
     `}
 `;
 
-const ReadMoreButton = styled.button`
+const ReadMoreButton = styled.button<{ $clamped?: boolean }>`
   background: none;
   border: none;
   padding: 0;
-  display: inline;
+  display: inline-block;
   margin-left: 8px;
   font-family: 'Montserrat', sans-serif;
   font-weight: ${typography.fontWeight.bold};
   font-size: 16px;
-  line-height: 150%;
+  line-height: inherit;
   color: ${colors.white};
   cursor: pointer;
   text-align: left;
   transition: opacity ${motion.duration.base} ease;
   vertical-align: baseline;
+
+  ${({ $clamped }) =>
+    $clamped &&
+    css`
+      position: absolute;
+      right: 0;
+      bottom: 0px;
+      padding-left: 40px;
+      /* Gradient to hide text behind the button */
+      background: linear-gradient(to right, rgba(6, 21, 48, 0), #061530 40%);
+      margin-left: 0;
+
+      &::before {
+        content: '... ';
+        color: rgba(255, 255, 255, 0.6);
+        font-weight: normal;
+      }
+    `}
 
   &:hover {
     opacity: 0.7;
