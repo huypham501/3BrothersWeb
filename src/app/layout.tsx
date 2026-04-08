@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { poppins } from "@/lib/fonts";
+import { poppins, montserrat } from "@/lib/fonts";
 import ClientProviders from "@/components/ClientProviders";
 
 // Import Swiper styles
@@ -24,7 +24,7 @@ export default function RootLayout({
           type="video/mp4"
         />
       </head>
-      <body className={poppins.variable}>
+      <body className={`${poppins.variable} ${montserrat.variable}`}>
         <ClientProviders>
           {children}
         </ClientProviders>

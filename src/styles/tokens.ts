@@ -93,6 +93,7 @@ export const typography = {
     gradual: "'BwGradual-Medium', sans-serif",
     founders: "'FoundersGrotesk-Regular', sans-serif",
     poppins: "var(--font-poppins, 'Poppins', sans-serif)",
+    montserrat: "var(--font-montserrat, 'Montserrat', sans-serif)",
     mono: 'var(--bs-font-monospace)',
   },
 
@@ -146,6 +147,7 @@ export const breakpoints = {
   xl: '1200px',
   xxl: '1400px',
   custom: '1300px',
+  minWidth: '576px',
 } as const;
 
 export const mediaQueries = {

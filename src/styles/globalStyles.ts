@@ -43,7 +43,8 @@ export const GlobalStyles = createGlobalStyle`
   /* Root/body */
   body {
     margin: 0;
-    font-family: ${({ theme }) => theme.typography.fontFamily.base};
+    min-width: ${({ theme }) => theme.breakpoints.minWidth};
+    font-family: ${({ theme }) => theme.typography.fontFamily.montserrat};
     font-size: ${({ theme }) => theme.typography.fontSize.base};
     font-weight: ${({ theme }) => theme.typography.fontWeight.normal};
     line-height: ${({ theme }) => theme.typography.lineHeight.body};

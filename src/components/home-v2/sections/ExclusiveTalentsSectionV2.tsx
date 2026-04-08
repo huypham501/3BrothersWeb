@@ -85,6 +85,7 @@ export function ExclusiveTalentsSectionV2() {
       <GlowEllipse1 />
       <GlowEllipse2 />
       <GlowEllipseBottom />
+      <GlowEllipse12 />
 
       {/* Title: line — TALENTS ĐỘC QUYỀN — line */}
       <TitleRow>
@@ -171,7 +172,6 @@ const SectionContainer = styled.section`
   align-items: center;
   gap: 64px;
   color: ${colors.white};
-  margin-top: 40px;
   overflow: hidden;
   isolation: isolate;
 
@@ -217,11 +217,25 @@ const GlowEllipseBottom = styled.div`
   width: 1547px;
   height: 709px;
   left: -37px;
-  bottom: -300px;
+  top: 1098px;
   background: #003CA6;
   opacity: 0.4;
   filter: blur(60px);
   border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+`;
+
+const GlowEllipse12 = styled.div`
+  position: absolute;
+  width: 964.68px;
+  height: 76.66px;
+  left: calc(50% - 964.68px/2 + 32.34px);
+  top: 1013.43px;
+  background: #6395ED;
+  opacity: 0.4;
+  filter: blur(60px);
+  transform: rotate(-26.13deg);
   pointer-events: none;
   z-index: 0;
 `;

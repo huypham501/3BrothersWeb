@@ -22,9 +22,11 @@ export function HomeViewV2() {
         <PartnersSectionV2 />
       </HeroPartnersWrapper>
       <CoreCompetenciesSectionV2 />
-      <EfficiencySectionV2 />
-      <ExclusiveTalentsSectionV2 />
-      <ContactCTASectionV2 />
+      <BlueGroupWrapper>
+        <EfficiencySectionV2 />
+        <ExclusiveTalentsSectionV2 />
+        <ContactCTASectionV2 />
+      </BlueGroupWrapper>
       <TrendingSectionV2 />
 
       <FooterV2 />
@@ -37,7 +39,7 @@ const Wrapper = styled.div`
   width: 100%;
   margin: 0 auto;
   min-height: 100vh;
-  background: ${colors.brandLightBlue};
+  background: ${colors.primaryLight};
   box-shadow: 0px 4.5px 225px rgba(6, 21, 48, 0.6);
   overflow-x: hidden;
   font-family: 'Montserrat', 'Inter', sans-serif;
@@ -47,4 +49,13 @@ const HeroPartnersWrapper = styled.div`
   width: 100%;
   position: relative;
   background: linear-gradient(180deg, #000000 84.09%, #071E48 100%);
+`;
+
+const BlueGroupWrapper = styled.div`
+  width: 100%;
+  background: ${colors.primaryLight};
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  padding-bottom: 40px;
 `;

@@ -30,16 +30,16 @@ const STATS = [
 export function EfficiencySectionV2() {
   return (
     <SectionContainer>
-      {/* Background ambient blurs */}
-      <BgBlur style={{ width: '1547px', height: '709px', left: '-54px', top: '120px', background: colors.primary, opacity: 0.4, filter: 'blur(60px)' }} />
-      <BgBlur style={{ width: '741px', height: '745px', left: '39px', top: '233px', background: colors.primary, opacity: 0.4, filter: 'blur(60px)' }} />
-      <BgBlur style={{ width: '637px', height: '641px', left: '91px', top: '285px', background: colors.primary, opacity: 0.4, filter: 'blur(60px)' }} />
+      {/* Background ambient blurs - subtle darker blues on the blue bg */}
+      <BgBlur style={{ width: '1547px', height: '709px', left: '-54px', top: '120px', background: '#003CA6', opacity: 0.4, filter: 'blur(60px)' }} />
+      <BgBlur style={{ width: '741px', height: '745px', left: '39px', top: '233px', background: '#003CA6', opacity: 0.3, filter: 'blur(60px)' }} />
+      <BgBlur style={{ width: '637px', height: '641px', left: '91px', top: '285px', background: '#003CA6', opacity: 0.3, filter: 'blur(60px)' }} />
 
       <ContentWrapper>
-        {/* Top header row */}
+        <Title>Hiệu quả thực thi</Title>
+
         <TopHeader>
           <TextContent>
-            <Title>Hiệu quả<br />thực thi</Title>
             <Description>
               Chúng tôi cung cấp giải pháp Influencer Marketing &amp; Talent Management chuyên nghiệp, giúp thương hiệu triển khai hiệu quả và xây dựng giá trị dài hạn.
             </Description>
@@ -81,13 +81,12 @@ export function EfficiencySectionV2() {
 const SectionContainer = styled.section`
   position: relative;
   width: 100%;
-  background: ${colors.secondaryDark};
-  border-radius: 120px;
+  background: transparent;
   overflow: hidden;
   font-family: 'Montserrat', 'Inter', sans-serif;
 
   ${mediaQueries.down.md} {
-    border-radius: 48px;
+    /* no border-radius needed */
   }
 `;
 
@@ -104,8 +103,8 @@ const ContentWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding: 120px 84px 80px;
-  gap: 64px;
+  padding: 120px 125px 80px 138px;
+  gap: 16px;
 
   ${mediaQueries.down.md} {
     padding: 60px ${spacing.xl};
@@ -146,6 +145,13 @@ const Title = styled.h2`
   text-transform: uppercase;
   color: ${colors.white};
   margin: 0;
+  width: 100%;
+  max-width: 1177px;
+  white-space: normal;
+
+  ${mediaQueries.up.md} {
+    white-space: nowrap;
+  }
 
   ${mediaQueries.down.md} {
     font-size: 48px;
@@ -238,6 +244,7 @@ const StatsRow = styled.div`
   align-items: center;
   width: 100%;
   gap: 40px;
+  margin-top: 48px;
 
   ${mediaQueries.down.md} {
     flex-direction: column;

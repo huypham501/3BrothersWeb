@@ -3,7 +3,7 @@
  * next/font optimized Google Fonts setup
  */
 
-import { Poppins } from 'next/font/google';
+import { Poppins, Montserrat } from 'next/font/google';
 
 /**
  * Poppins - Primary font family
@@ -15,5 +15,16 @@ export const poppins = Poppins({
   subsets: ['latin', 'latin-ext'],
   display: 'swap',
   variable: '--font-poppins',
+  fallback: ['sans-serif'],
+});
+
+/**
+ * Montserrat - Secondary font family for V2 components
+ */
+export const montserrat = Montserrat({
+  weight: ['400', '500', '600', '700', '800', '900'],
+  subsets: ['latin', 'latin-ext'],
+  display: 'swap',
+  variable: '--font-montserrat',
   fallback: ['sans-serif'],
 });
