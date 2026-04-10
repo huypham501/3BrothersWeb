@@ -6,6 +6,11 @@ import ClientProviders from "@/components/ClientProviders";
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
+import { Geist } from "next/font/google";
+import { cn } from "@/lib/utils";
+
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
+
 
 export default function RootLayout({
   children
@@ -13,7 +18,7 @@ export default function RootLayout({
   children: ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className={cn("font-sans", geist.variable)}>
       <head>
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-512x512.png" />
         <link rel="apple-touch-icon" sizes="180x180" href="/favicon-512x512.png" />
