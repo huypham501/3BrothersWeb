@@ -1,5 +1,6 @@
 import { getForCreatorsPageData } from '../queries';
-import {
+import { SCHEMA_KEYS } from '../constants/schema-keys';
+import type {
   ForCreatorsHeroPayload,
   ForCreatorsBenefitPayload,
   ForCreatorsTestimonialsPayload,
@@ -9,6 +10,11 @@ import {
   GlobalHeaderPayload,
   GlobalFooterPayload,
 } from '../types';
+import {
+  findSectionContentBySchemaKey,
+  resolveGlobalContentBySchemaKey,
+  resolveSharedContentBySchemaKey,
+} from './utils/cms-content';
 
 export interface ForCreatorsViewModel {
   pageMeta: {
@@ -37,11 +43,6 @@ export async function resolveForCreatorsPageData(): Promise<ForCreatorsViewModel
   const data = await getForCreatorsPageData();
   if (!data || !data.page) return null;
 
-  const findSectionData = (schemaKey: string) => {
-    const section = data.sections.find((s) => s.schema_key === schemaKey);
-    return section && section.published_enabled ? section.published_content : null;
-  };
-
   return {
     pageMeta: {
       title: data.page.published_seo_title || 'For Creators | 3BROTHERS NETWORK',
@@ -54,17 +55,21 @@ export async function resolveForCreatorsPageData(): Promise<ForCreatorsViewModel
           ? data.page.published_keywords
           : ['creator', 'creators', 'creator program', '3brothers network'],
     },
-    hero: findSectionData('for_creators.hero.v1') as ForCreatorsHeroPayload | null,
-    benefit: findSectionData('for_creators.benefit.v1') as ForCreatorsBenefitPayload | null,
-    testimonials: findSectionData('for_creators.testimonials.v1') as ForCreatorsTestimonialsPayload | null,
-    cta: findSectionData('for_creators.cta.v1') as ForCreatorsCtaPayload | null,
+    hero: findSectionContentBySchemaKey(data.sections, SCHEMA_KEYS.FOR_CREATORS_HERO),
+    benefit: findSectionContentBySchemaKey(data.sections, SCHEMA_KEYS.FOR_CREATORS_BENEFIT),
+    testimonials: findSectionContentBySchemaKey(data.sections, SCHEMA_KEYS.FOR_CREATORS_TESTIMONIALS),
+    cta: findSectionContentBySchemaKey(data.sections, SCHEMA_KEYS.FOR_CREATORS_CTA),
     shared: {
-      exclusiveTalents: (data.shared.exclusiveTalents?.published_enabled ? data.shared.exclusiveTalents.published_content : null) as SharedExclusiveTalentsPayload | null,
-      contactCta: (data.shared.contactCta?.published_enabled ? data.shared.contactCta.published_content : null) as SharedContactCtaPayload | null,
+      exclusiveTalents: resolveSharedContentBySchemaKey<typeof SCHEMA_KEYS.SHARED_EXCLUSIVE_TALENTS>(
+        data.shared.exclusiveTalents
+      ),
+      contactCta: resolveSharedContentBySchemaKey<typeof SCHEMA_KEYS.SHARED_CONTACT_CTA>(
+        data.shared.contactCta
+      ),
     },
     globals: {
-      header: (data.globals.header?.published_enabled ? data.globals.header.published_content : null) as GlobalHeaderPayload | null,
-      footer: (data.globals.footer?.published_enabled ? data.globals.footer.published_content : null) as GlobalFooterPayload | null,
+      header: resolveGlobalContentBySchemaKey<typeof SCHEMA_KEYS.GLOBAL_HEADER>(data.globals.header),
+      footer: resolveGlobalContentBySchemaKey<typeof SCHEMA_KEYS.GLOBAL_FOOTER>(data.globals.footer),
     },
   };
 }

@@ -3,14 +3,21 @@
 import * as React from 'react';
 import { useTransition } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 import styled from 'styled-components';
 import { CmsPage, CmsPageSection, CmsSharedSection } from '@/lib/cms';
 import { publishHomePage } from '@/lib/cms/actions';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/Button';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/admin/controls/AdminAccordion';
+import {
+  AdminAlert,
+  AdminAlertDescription,
+  AdminAlertTitle,
+  AdminBadge,
+  AdminButton,
+  AdminCard,
+  AdminCardContent,
+  AdminCardHeader,
+  AdminCardTitle,
+} from '@/components/admin/layout/AdminPrimitives';
 import { HomePageSettingsEditor } from './editors/HomePageSettingsEditor';
 import { HomeHeroEditor } from './editors/HomeHeroEditor';
 import { HomePartnersEditor } from './editors/HomePartnersEditor';
@@ -123,63 +130,63 @@ export function HomePageEditor({
     <EditorContainer>
       <TopActionBar>
         <div>
-          <h2 className="text-lg font-bold">Home Page Editor</h2>
-          <p className="text-sm text-gray-500">
+          <Title>Home Page Editor</Title>
+          <SubText>
             {hasUnpublished 
               ? "You have unpublished draft changes." 
               : "All changes are published."}
-          </p>
-          <p className="mt-1 text-xs text-muted-foreground">Your role: {role}</p>
-          <p className="mt-1 text-xs text-muted-foreground">
+          </SubText>
+          <MetaText>Your role: {role}</MetaText>
+          <MetaText>
             Last edited: {page.last_edited_by_identifier ?? 'N/A'} at {formatAuditDate(page.last_edited_at)}
-          </p>
-          <p className="text-xs text-muted-foreground">
+          </MetaText>
+          <MetaText>
             Last published: {page.last_published_by_identifier ?? 'N/A'} at {formatAuditDate(page.last_published_at)}
-          </p>
+          </MetaText>
         </div>
-        <Button 
+        <AdminButton
           onClick={handlePublish} 
           disabled={!hasUnpublished || isPending || !canPublish}
-          variant={hasUnpublished ? 'default' : 'secondary'}
+          variant={hasUnpublished ? 'default' : 'outline'}
           title={canPublish ? undefined : 'Your role cannot publish.'}
         >
           {isPending ? 'Publishing...' : 'Publish Home'}
-        </Button>
+        </AdminButton>
       </TopActionBar>
 
-      <Alert>
-        <AlertTitle>Shared Sections Ownership</AlertTitle>
-        <AlertDescription>
+      <AdminAlert>
+        <AdminAlertTitle>Shared Sections Ownership</AdminAlertTitle>
+        <AdminAlertDescription>
           Exclusive Talents and Contact CTA are now managed in the dedicated Shared Sections module.
           Canonical ownership is under `/admin/content/shared`.
-        </AlertDescription>
+        </AdminAlertDescription>
         {!canManageShared && (
-          <p className="mt-2 text-xs text-muted-foreground">
+          <MetaText>
             Your role cannot edit shared sections from this page.
-          </p>
+          </MetaText>
         )}
-        <div className="mt-3 flex gap-2">
-          <Button asChild size="sm" variant="outline">
-            <Link href="/admin/content/shared">Open Shared Sections</Link>
-          </Button>
-        </div>
-      </Alert>
+        <ButtonRow>
+          <AdminButton href="/admin/content/shared" size="sm" variant="outline">
+            Open Shared Sections
+          </AdminButton>
+        </ButtonRow>
+      </AdminAlert>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Page Settings</CardTitle>
-        </CardHeader>
-        <CardContent>
+      <AdminCard>
+        <AdminCardHeader>
+          <AdminCardTitle>Page Settings</AdminCardTitle>
+        </AdminCardHeader>
+        <AdminCardContent>
           <HomePageSettingsEditor page={page} />
-        </CardContent>
-      </Card>
+        </AdminCardContent>
+      </AdminCard>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Section Editors</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Accordion collapsible className="w-full">
+      <AdminCard>
+        <AdminCardHeader>
+          <AdminCardTitle>Section Editors</AdminCardTitle>
+        </AdminCardHeader>
+        <AdminCardContent>
+          <Accordion collapsible>
             {heroSection && (
               <AccordionItem value="hero">
                 <AccordionTrigger>
@@ -257,8 +264,33 @@ export function HomePageEditor({
               </AccordionItem>
             )}
           </Accordion>
-        </CardContent>
-      </Card>
+        </AdminCardContent>
+      </AdminCard>
     </EditorContainer>
   );
 }
+
+const Title = styled.h2`
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #0f172a;
+`;
+
+const SubText = styled.p`
+  margin: 4px 0 0;
+  font-size: 0.875rem;
+  color: #64748b;
+`;
+
+const MetaText = styled.p`
+  margin: 4px 0 0;
+  font-size: 0.75rem;
+  color: #64748b;
+`;
+
+const ButtonRow = styled.div`
+  margin-top: 8px;
+  display: flex;
+  gap: 8px;
+`;

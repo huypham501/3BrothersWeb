@@ -1,5 +1,6 @@
 import { createSupabaseServerClient } from '../../supabase/server';
-import { 
+import { SCHEMA_KEYS } from '../constants/schema-keys';
+import type {
   CmsPage, 
   CmsPageSection, 
   CmsSharedSection, 
@@ -113,45 +114,39 @@ export async function getRecentCmsAuditLogs(limit = 50): Promise<CmsAuditLog[]> 
   return data;
 }
 
-export async function getHomePageData() {
-  const page = await getPageBySlug('home');
-  if (!page) return null;
-
-  const sections = await getPageSections(page.id);
-
-  // Home specifically needs these shared / global records according to spec
-  const [header, footer, exclusiveTalents, contactCta] = await Promise.all([
-    getGlobalSetting('global.header.v1'),
-    getGlobalSetting('global.footer.v1'),
-    getSharedSection('shared.exclusive_talents.v1'),
-    getSharedSection('shared.contact_cta.v1'),
-  ]);
-
-  return {
-    page,
-    sections,
-    globals: {
-      header,
-      footer,
-    },
-    shared: {
-      exclusiveTalents,
-      contactCta,
-    }
+interface PageDataBundleOptions {
+  slug: string;
+  globalSchemaKeys?: {
+    header: string;
+    footer: string;
+  };
+  sharedSchemaKeys?: {
+    exclusiveTalents: string;
+    contactCta: string;
   };
 }
 
-export async function getForCreatorsPageData() {
-  const page = await getPageBySlug('for-creators');
+async function getPageDataBundle(options: PageDataBundleOptions) {
+  const page = await getPageBySlug(options.slug);
   if (!page) return null;
 
   const sections = await getPageSections(page.id);
 
+  const globalSchemaKeys = options.globalSchemaKeys ?? {
+    header: SCHEMA_KEYS.GLOBAL_HEADER,
+    footer: SCHEMA_KEYS.GLOBAL_FOOTER,
+  };
+
+  const sharedSchemaKeys = options.sharedSchemaKeys ?? {
+    exclusiveTalents: SCHEMA_KEYS.SHARED_EXCLUSIVE_TALENTS,
+    contactCta: SCHEMA_KEYS.SHARED_CONTACT_CTA,
+  };
+
   const [header, footer, exclusiveTalents, contactCta] = await Promise.all([
-    getGlobalSetting('global.header.v1'),
-    getGlobalSetting('global.footer.v1'),
-    getSharedSection('shared.exclusive_talents.v1'),
-    getSharedSection('shared.contact_cta.v1'),
+    getGlobalSetting(globalSchemaKeys.header),
+    getGlobalSetting(globalSchemaKeys.footer),
+    getSharedSection(sharedSchemaKeys.exclusiveTalents),
+    getSharedSection(sharedSchemaKeys.contactCta),
   ]);
 
   return {
@@ -166,4 +161,16 @@ export async function getForCreatorsPageData() {
       contactCta,
     },
   };
+}
+
+export async function getHomePageData() {
+  return getPageDataBundle({
+    slug: 'home',
+  });
+}
+
+export async function getForCreatorsPageData() {
+  return getPageDataBundle({
+    slug: 'for-creators',
+  });
 }

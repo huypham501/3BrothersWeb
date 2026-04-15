@@ -5,16 +5,20 @@ import { useRouter } from 'next/navigation';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import styled from 'styled-components';
 import { CmsSharedSection, sharedExclusiveTalentsSchema, SCHEMA_KEYS } from '@/lib/cms';
 import { saveSharedSection, publishSharedSection } from '@/lib/cms/actions';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Button } from '@/components/ui/Button';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
-import { Switch } from '@/components/ui/switch';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/admin/controls/AdminForm';
+import { AdminInput as Input } from '@/components/admin/controls/AdminInput';
+import { AdminTextarea as Textarea } from '@/components/admin/controls/AdminTextarea';
+import { AdminSwitch as Switch } from '@/components/admin/controls/AdminSwitch';
+import {
+  AdminAlert,
+  AdminAlertDescription,
+  AdminAlertTitle,
+  AdminBadge,
+  AdminButton,
+} from '@/components/admin/layout/AdminPrimitives';
 
 type FormValues = z.infer<typeof sharedExclusiveTalentsSchema> & { enabled: boolean };
 
@@ -119,86 +123,84 @@ export function SharedExclusiveTalentsManager({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSaveDraft)} className="space-y-6">
-        <Alert>
-          <AlertTitle>Cross-Page Impact Warning</AlertTitle>
-          <AlertDescription>
+      <FormRoot onSubmit={form.handleSubmit(onSaveDraft)}>
+        <AdminAlert>
+          <AdminAlertTitle>Cross-Page Impact Warning</AdminAlertTitle>
+          <AdminAlertDescription>
             This shared section is used by multiple routes. Publish will update all routes listed below.
-          </AlertDescription>
-          <div className="mt-3 flex flex-wrap gap-2">
+          </AdminAlertDescription>
+          <BadgeRow>
             {usageRoutes.map((route) => (
-              <Badge key={`exclusive-${route}`} variant="outline">
-                {route}
-              </Badge>
+              <AdminBadge key={`exclusive-${route}`}>{route}</AdminBadge>
             ))}
-          </div>
-        </Alert>
+          </BadgeRow>
+        </AdminAlert>
 
         {errorMsg && (
-          <Alert variant="destructive">
-            <AlertDescription>{errorMsg}</AlertDescription>
-          </Alert>
+          <AdminAlert tone="destructive">
+            <AdminAlertDescription>{errorMsg}</AdminAlertDescription>
+          </AdminAlert>
         )}
 
         {successMsg && (
-          <Alert variant="success">
-            <AlertDescription>{successMsg}</AlertDescription>
-          </Alert>
+          <AdminAlert>
+            <AdminAlertDescription>{successMsg}</AdminAlertDescription>
+          </AdminAlert>
         )}
 
-        <div className="rounded-md border bg-card p-4">
-          <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-            <div className="space-y-2">
-              <div className="flex flex-wrap items-center gap-2">
-                <Badge variant="outline">{section.schema_key}</Badge>
-                <Badge variant={section.published_enabled ? 'default' : 'outline'}>
+        <SectionCard>
+          <ActionHeader>
+            <MetaGroup>
+              <BadgeRow>
+                <AdminBadge>{section.schema_key}</AdminBadge>
+                <AdminBadge tone={section.published_enabled ? 'success' : 'neutral'}>
                   {section.published_enabled ? 'Published: Enabled' : 'Published: Disabled'}
-                </Badge>
-                <Badge variant={section.has_unpublished_changes ? 'secondary' : 'outline'}>
+                </AdminBadge>
+                <AdminBadge tone={section.has_unpublished_changes ? 'warning' : 'neutral'}>
                   {section.has_unpublished_changes ? 'Has Unpublished Changes' : 'No Unpublished Changes'}
-                </Badge>
-              </div>
-              <p className="text-xs text-muted-foreground">Your role: {role}</p>
-              <p className="text-xs text-muted-foreground">
+                </AdminBadge>
+              </BadgeRow>
+              <MetaText>Your role: {role}</MetaText>
+              <MetaText>
                 Last edited: {section.last_edited_by_identifier ?? 'N/A'} at {formatAuditDate(section.last_edited_at)}
-              </p>
-              <p className="text-xs text-muted-foreground">
+              </MetaText>
+              <MetaText>
                 Last published: {section.last_published_by_identifier ?? 'N/A'} at {formatAuditDate(section.last_published_at)}
-              </p>
-            </div>
+              </MetaText>
+            </MetaGroup>
 
-            <div className="flex items-center gap-2">
-              <Button type="submit" variant="outline" disabled={isSaving || isPublishing || !form.formState.isDirty}>
+            <ButtonGroup>
+              <AdminButton type="submit" variant="outline" disabled={isSaving || isPublishing || !form.formState.isDirty}>
                 {isSaving ? 'Saving Draft...' : 'Save Draft'}
-              </Button>
-              <Button
+              </AdminButton>
+              <AdminButton
                 type="button"
                 onClick={handlePublish}
                 disabled={isSaving || isPublishing || !canPublish}
                 title={canPublish ? undefined : 'Your role cannot publish.'}
               >
                 {isPublishing ? 'Publishing...' : 'Publish'}
-              </Button>
-            </div>
-          </div>
+              </AdminButton>
+            </ButtonGroup>
+          </ActionHeader>
 
-          <Separator className="my-4" />
+          <Divider />
 
           <FormField
             control={form.control}
             name="enabled"
             render={({ field }) => (
-              <FormItem className="flex items-center justify-between rounded-md border p-3">
+              <ToggleFormItem>
                 <div>
                   <FormLabel>Enable Shared Section</FormLabel>
                 </div>
                 <FormControl>
                   <Switch checked={field.value} onCheckedChange={field.onChange} />
                 </FormControl>
-              </FormItem>
+              </ToggleFormItem>
             )}
           />
-        </div>
+        </SectionCard>
 
         <FormField
           control={form.control}
@@ -214,10 +216,10 @@ export function SharedExclusiveTalentsManager({
           )}
         />
 
-        <div className="space-y-4 rounded-md border p-4">
-          <h3 className="text-base font-semibold">Featured Talent</h3>
+        <BlockCard>
+          <BlockTitle>Featured Talent</BlockTitle>
 
-          <div className="grid gap-4 md:grid-cols-2">
+          <TwoColumnGrid>
             <FormField
               control={form.control}
               name="featured_name"
@@ -245,9 +247,9 @@ export function SharedExclusiveTalentsManager({
                 </FormItem>
               )}
             />
-          </div>
+          </TwoColumnGrid>
 
-          <div className="grid gap-4 md:grid-cols-2">
+          <TwoColumnGrid>
             <FormField
               control={form.control}
               name="featured_photo"
@@ -275,7 +277,7 @@ export function SharedExclusiveTalentsManager({
                 </FormItem>
               )}
             />
-          </div>
+          </TwoColumnGrid>
 
           <FormField
             control={form.control}
@@ -291,11 +293,11 @@ export function SharedExclusiveTalentsManager({
             )}
           />
 
-          <div className="space-y-3">
-            <h4 className="text-sm font-semibold">Featured Stats (exactly 2)</h4>
-            <div className="grid gap-3 md:grid-cols-2">
+          <Block>
+            <SubTitle>Featured Stats (exactly 2)</SubTitle>
+            <StatsGrid>
               {statFields.map((stat, index) => (
-                <div key={stat.id} className="rounded-md border p-3">
+                <EditableRow key={stat.id}>
                   <FormField
                     control={form.control}
                     name={`featured_stats.${index}.label`}
@@ -323,19 +325,19 @@ export function SharedExclusiveTalentsManager({
                       </FormItem>
                     )}
                   />
-                </div>
+                </EditableRow>
               ))}
-            </div>
-          </div>
-        </div>
+            </StatsGrid>
+          </Block>
+        </BlockCard>
 
-        <div className="space-y-4 rounded-md border p-4">
-          <div className="flex items-center justify-between">
-            <h3 className="text-base font-semibold">Talent Grid Items</h3>
-            <Button type="button" variant="outline" onClick={() => appendTalent({ name: '', photo: '', photo_alt: '' })}>
+        <BlockCard>
+          <BlockHeader>
+            <BlockTitle>Talent Grid Items</BlockTitle>
+            <AdminButton type="button" variant="outline" onClick={() => appendTalent({ name: '', photo: '', photo_alt: '' })}>
               Add Talent
-            </Button>
-          </div>
+            </AdminButton>
+          </BlockHeader>
 
           <FormField
             control={form.control}
@@ -352,7 +354,7 @@ export function SharedExclusiveTalentsManager({
           />
 
           {talentFields.map((talent, index) => (
-            <div key={talent.id} className="grid gap-3 rounded-md border p-3 md:grid-cols-[1fr_1fr_1fr_auto]">
+            <TalentRow key={talent.id}>
               <FormField
                 control={form.control}
                 name={`talents.${index}.name`}
@@ -395,20 +397,161 @@ export function SharedExclusiveTalentsManager({
                 )}
               />
 
-              <div className="flex items-end">
-                <Button
+              <RowActions>
+                <AdminButton
                   type="button"
-                  variant="destructive"
+                  variant="outline"
                   onClick={() => removeTalent(index)}
                   disabled={talentFields.length <= 1}
                 >
                   Remove
-                </Button>
-              </div>
-            </div>
+                </AdminButton>
+              </RowActions>
+            </TalentRow>
           ))}
-        </div>
-      </form>
+        </BlockCard>
+      </FormRoot>
     </Form>
   );
 }
+
+const FormRoot = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+`;
+
+const SectionCard = styled.div`
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  background: #ffffff;
+  padding: 16px;
+`;
+
+const ActionHeader = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+`;
+
+const MetaGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+`;
+
+const BadgeRow = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+`;
+
+const MetaText = styled.p`
+  margin: 0;
+  font-size: 0.75rem;
+  color: #64748b;
+`;
+
+const ButtonGroup = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+`;
+
+const Divider = styled.hr`
+  margin: 16px 0;
+  border: 0;
+  border-top: 1px solid #e2e8f0;
+`;
+
+const ToggleFormItem = styled(FormItem)`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 12px;
+`;
+
+const BlockCard = styled.div`
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  background: #ffffff;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+`;
+
+const Block = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+`;
+
+const BlockHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+`;
+
+const BlockTitle = styled.h3`
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #0f172a;
+`;
+
+const SubTitle = styled.h4`
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #0f172a;
+`;
+
+const TwoColumnGrid = styled.div`
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+`;
+
+const StatsGrid = styled.div`
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+`;
+
+const EditableRow = styled.div`
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 12px;
+`;
+
+const TalentRow = styled.div`
+  display: grid;
+  gap: 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 12px;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+
+  @media (min-width: 768px) {
+    grid-template-columns: 1fr 1fr 1fr auto;
+  }
+`;
+
+const RowActions = styled.div`
+  display: flex;
+  align-items: flex-end;
+`;

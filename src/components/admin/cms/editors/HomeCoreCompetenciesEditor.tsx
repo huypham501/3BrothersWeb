@@ -5,12 +5,24 @@ import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CmsPageSection, homeCoreCompetenciesSchema } from '@/lib/cms';
 import { savePageSection } from '@/lib/cms/actions';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Button } from '@/components/ui/Button';
-import { Switch } from '@/components/ui/switch';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/admin/controls/AdminForm';
+import { AdminInput as Input } from '@/components/admin/controls/AdminInput';
+import { AdminTextarea as Textarea } from '@/components/admin/controls/AdminTextarea';
+import { AdminButton as Button } from '@/components/admin/layout/AdminPrimitives';
+import { AdminSwitch as Switch } from '@/components/admin/controls/AdminSwitch';
+import { AdminAlert as Alert, AdminAlertDescription as AlertDescription, AdminAlertTitle as AlertTitle } from '@/components/admin/layout/AdminPrimitives';
+import {
+  ErrorText,
+  FooterRow,
+  FormStack,
+  HeaderRow,
+  ItemCard,
+  SectionHeaderRow,
+  SectionStack,
+  SectionTitle,
+  ToggleFormItem,
+  TwoColumnGrid,
+} from './EditorLayout';
 import { z } from 'zod';
 
 
@@ -56,27 +68,27 @@ export function HomeCoreCompetenciesEditor({ pageId, section }: { pageId: string
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-6">
+      <FormStack onSubmit={form.handleSubmit(onSubmit)}>
         {errorMsg && <Alert variant="destructive"><AlertDescription>{errorMsg}</AlertDescription></Alert>}
         {success && <Alert variant="success"><AlertDescription>Core Competencies saved successfully.</AlertDescription></Alert>}
 
-        <div className="flex justify-between items-center mb-6">
+        <HeaderRow>
           <FormField
             control={form.control}
             name="enabled"
             render={({ field }) => (
-              <FormItem className="flex items-center gap-3 space-y-0">
-                <FormLabel className="col-span-full md:col-span-6">Enable Section</FormLabel>
+              <ToggleFormItem>
+                <FormLabel>Enable Section</FormLabel>
                 <FormControl>
                   <Switch checked={field.value} onCheckedChange={field.onChange} />
                 </FormControl>
-              </FormItem>
+              </ToggleFormItem>
             )}
           />
           <Button type="submit" disabled={isSaving || !form.formState.isDirty}>
             {isSaving ? 'Saving...' : 'Save Section'}
           </Button>
-        </div>
+        </HeaderRow>
 
         <FormField
           control={form.control}
@@ -92,21 +104,21 @@ export function HomeCoreCompetenciesEditor({ pageId, section }: { pageId: string
           )}
         />
         
-        <div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-            <h5 style={{ fontSize: '1rem', fontWeight: 600, margin: 0 }}>Services ({fields.length})</h5>
+        <SectionStack>
+          <SectionHeaderRow>
+            <SectionTitle>Services ({fields.length})</SectionTitle>
             <Button type="button" variant="outline" size="sm" onClick={() => append({ title: '', description: '', image: '', link_url: '#' })}>
               + Add Service
             </Button>
-          </div>
+          </SectionHeaderRow>
           
           {fields.map((item, index) => (
-            <div className="flex flex-col md:grid md:grid-cols-12 gap-4 p-4 border border-slate-200 rounded-lg mb-4 bg-slate-50 items-end" key={item.id}>
+            <ItemCard key={item.id}>
               <FormField
                 control={form.control}
                 name={`services.${index}.title`}
                 render={({ field }) => (
-                  <FormItem className="col-span-full md:col-span-6">
+                  <FormItem>
                     <FormLabel>Title</FormLabel>
                     <FormControl>
                       <Input {...field} />
@@ -119,7 +131,7 @@ export function HomeCoreCompetenciesEditor({ pageId, section }: { pageId: string
                 control={form.control}
                 name={`services.${index}.description`}
                 render={({ field }) => (
-                  <FormItem className="col-span-full md:col-span-6">
+                  <FormItem>
                     <FormLabel>Description</FormLabel>
                     <FormControl>
                       <Textarea {...field} />
@@ -128,12 +140,12 @@ export function HomeCoreCompetenciesEditor({ pageId, section }: { pageId: string
                   </FormItem>
                 )}
               />
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <TwoColumnGrid>
                 <FormField
                   control={form.control}
                   name={`services.${index}.image`}
                   render={({ field }) => (
-                    <FormItem className="col-span-full md:col-span-6">
+                    <FormItem>
                       <FormLabel>Image URL (Optional)</FormLabel>
                       <FormControl>
                         <Input {...field} />
@@ -146,7 +158,7 @@ export function HomeCoreCompetenciesEditor({ pageId, section }: { pageId: string
                   control={form.control}
                   name={`services.${index}.link_url`}
                   render={({ field }) => (
-                    <FormItem className="col-span-full md:col-span-6">
+                    <FormItem>
                       <FormLabel>Link URL (Optional)</FormLabel>
                       <FormControl>
                         <Input {...field} />
@@ -155,17 +167,17 @@ export function HomeCoreCompetenciesEditor({ pageId, section }: { pageId: string
                     </FormItem>
                   )}
                 />
-              </div>
-              <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+              </TwoColumnGrid>
+              <FooterRow>
                 <Button type="button" variant="destructive" size="sm" onClick={() => remove(index)}>
                   Remove Service
                 </Button>
-              </div>
-            </div>
+              </FooterRow>
+            </ItemCard>
           ))}
-          {form.formState.errors.services && <p style={{ color: '#ef4444', fontSize: '0.875rem' }}>{form.formState.errors.services.message}</p>}
-        </div>
-      </form>
+          {form.formState.errors.services && <ErrorText>{form.formState.errors.services.message}</ErrorText>}
+        </SectionStack>
+      </FormStack>
     </Form>
   );
 }

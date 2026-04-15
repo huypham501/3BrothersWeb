@@ -1,6 +1,12 @@
+import styled from 'styled-components';
 import { CmsAuditLog } from '@/lib/cms';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  AdminBadge,
+  AdminCard,
+  AdminCardContent,
+  AdminCardHeader,
+  AdminCardTitle,
+} from '@/components/admin/layout/AdminPrimitives';
 
 function formatDate(value: string) {
   return new Date(value).toLocaleString();
@@ -9,39 +15,73 @@ function formatDate(value: string) {
 export function CmsAuditLogList({ logs }: { logs: CmsAuditLog[] }) {
   if (!logs.length) {
     return (
-      <Card>
-        <CardHeader>
-          <CardTitle>Recent CMS Activity</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm text-muted-foreground">No audit activity found yet.</p>
-        </CardContent>
-      </Card>
+      <AdminCard>
+        <AdminCardHeader>
+          <AdminCardTitle>Recent CMS Activity</AdminCardTitle>
+        </AdminCardHeader>
+        <AdminCardContent>
+          <MetaText>No audit activity found yet.</MetaText>
+        </AdminCardContent>
+      </AdminCard>
     );
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Recent CMS Activity</CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-3">
+    <AdminCard>
+      <AdminCardHeader>
+        <AdminCardTitle>Recent CMS Activity</AdminCardTitle>
+      </AdminCardHeader>
+      <AdminCardContent>
+        <Rows>
         {logs.map((log) => (
-          <div key={log.id} className="rounded-md border p-3">
-            <div className="mb-2 flex flex-wrap items-center gap-2">
-              <Badge variant={log.action_type === 'publish' ? 'default' : 'secondary'}>
+          <Row key={log.id}>
+            <TopRow>
+              <AdminBadge tone={log.action_type === 'publish' ? 'success' : 'warning'}>
                 {log.action_type === 'publish' ? 'Publish' : 'Save Draft'}
-              </Badge>
-              <Badge variant="outline">{log.entity_type}</Badge>
-              <Badge variant="outline">{log.entity_key_or_id}</Badge>
-            </div>
-            <p className="text-sm">{log.summary}</p>
-            <p className="mt-1 text-xs text-muted-foreground">
+              </AdminBadge>
+              <AdminBadge>{log.entity_type}</AdminBadge>
+              <AdminBadge>{log.entity_key_or_id}</AdminBadge>
+            </TopRow>
+            <Summary>{log.summary}</Summary>
+            <MetaText>
               {log.actor_email_or_identifier} ({log.actor_role}) at {formatDate(log.created_at)}
-            </p>
-          </div>
+            </MetaText>
+          </Row>
         ))}
-      </CardContent>
-    </Card>
+        </Rows>
+      </AdminCardContent>
+    </AdminCard>
   );
 }
+
+const Rows = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+`;
+
+const Row = styled.div`
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 12px;
+`;
+
+const TopRow = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+`;
+
+const Summary = styled.p`
+  margin: 0;
+  font-size: 0.875rem;
+  color: #0f172a;
+`;
+
+const MetaText = styled.p`
+  margin: 6px 0 0;
+  font-size: 0.75rem;
+  color: #64748b;
+`;

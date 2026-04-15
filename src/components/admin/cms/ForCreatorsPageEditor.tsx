@@ -3,14 +3,20 @@
 import * as React from 'react';
 import { useTransition } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 import styled from 'styled-components';
 import { CmsPage, CmsPageSection, CmsSharedSection, CmsGlobalSetting } from '@/lib/cms';
 import { publishForCreatorsPage } from '@/lib/cms/actions';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/Button';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/admin/controls/AdminAccordion';
+import {
+  AdminAlert,
+  AdminAlertDescription,
+  AdminAlertTitle,
+  AdminButton,
+  AdminCard,
+  AdminCardContent,
+  AdminCardHeader,
+  AdminCardTitle,
+} from '@/components/admin/layout/AdminPrimitives';
 import { HomePageSettingsEditor } from './editors/HomePageSettingsEditor';
 import { ForCreatorsHeroEditor } from './editors/ForCreatorsHeroEditor';
 import { ForCreatorsBenefitEditor } from './editors/ForCreatorsBenefitEditor';
@@ -119,54 +125,54 @@ export function ForCreatorsPageEditor({
     <EditorContainer>
       <TopActionBar>
         <div>
-          <h2 className="text-lg font-bold">For Creators Editor</h2>
-          <p className="text-sm text-gray-500">
+          <Title>For Creators Editor</Title>
+          <SubText>
             {hasUnpublished ? 'You have unpublished draft changes.' : 'All changes are published.'}
-          </p>
-          <p className="mt-1 text-xs text-muted-foreground">Your role: {role}</p>
-          <p className="mt-1 text-xs text-muted-foreground">
+          </SubText>
+          <MetaText>Your role: {role}</MetaText>
+          <MetaText>
             Last edited: {page.last_edited_by_identifier ?? 'N/A'} at {formatAuditDate(page.last_edited_at)}
-          </p>
-          <p className="text-xs text-muted-foreground">
+          </MetaText>
+          <MetaText>
             Last published: {page.last_published_by_identifier ?? 'N/A'} at {formatAuditDate(page.last_published_at)}
-          </p>
+          </MetaText>
         </div>
-        <Button
+        <AdminButton
           onClick={handlePublish}
           disabled={!hasUnpublished || isPending || !canPublish}
-          variant={hasUnpublished ? 'default' : 'secondary'}
+          variant={hasUnpublished ? 'default' : 'outline'}
           title={canPublish ? undefined : 'Your role cannot publish.'}
         >
           {isPending ? 'Publishing...' : 'Publish For Creators'}
-        </Button>
+        </AdminButton>
       </TopActionBar>
 
-      <Alert>
-        <AlertTitle>Shared/Global Ownership</AlertTitle>
-        <AlertDescription>
+      <AdminAlert>
+        <AdminAlertTitle>Shared/Global Ownership</AdminAlertTitle>
+        <AdminAlertDescription>
           Header/Footer are managed in Global Settings, and Exclusive Talents/Contact CTA are managed in Shared Sections.
-        </AlertDescription>
-        <div className="mt-3 flex gap-2">
-          <Button asChild size="sm" variant="outline"><Link href="/admin/content/settings">Open Global Settings</Link></Button>
-          <Button asChild size="sm" variant="outline"><Link href="/admin/content/shared">Open Shared Sections</Link></Button>
-        </div>
-      </Alert>
+        </AdminAlertDescription>
+        <ButtonRow>
+          <AdminButton href="/admin/content/settings" size="sm" variant="outline">Open Global Settings</AdminButton>
+          <AdminButton href="/admin/content/shared" size="sm" variant="outline">Open Shared Sections</AdminButton>
+        </ButtonRow>
+      </AdminAlert>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Page Settings</CardTitle>
-        </CardHeader>
-        <CardContent>
+      <AdminCard>
+        <AdminCardHeader>
+          <AdminCardTitle>Page Settings</AdminCardTitle>
+        </AdminCardHeader>
+        <AdminCardContent>
           <HomePageSettingsEditor page={page} />
-        </CardContent>
-      </Card>
+        </AdminCardContent>
+      </AdminCard>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Local Section Editors</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Accordion collapsible className="w-full">
+      <AdminCard>
+        <AdminCardHeader>
+          <AdminCardTitle>Local Section Editors</AdminCardTitle>
+        </AdminCardHeader>
+        <AdminCardContent>
+          <Accordion collapsible>
             {heroSection && (
               <AccordionItem value="hero">
                 <AccordionTrigger><SectionHeader>Hero <Badge $variant="local">Local</Badge></SectionHeader></AccordionTrigger>
@@ -195,20 +201,57 @@ export function ForCreatorsPageEditor({
               </AccordionItem>
             )}
           </Accordion>
-        </CardContent>
-      </Card>
+        </AdminCardContent>
+      </AdminCard>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Dependencies</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-col gap-3">
-            <div><strong>Global:</strong> {globals.header ? 'Header connected' : 'Header missing'} / {globals.footer ? 'Footer connected' : 'Footer missing'}</div>
-            <div><strong>Shared:</strong> {shared.exclusiveTalents ? 'Exclusive Talents connected' : 'Exclusive Talents missing'} / {shared.contactCta ? 'Contact CTA connected' : 'Contact CTA missing'}</div>
-          </div>
-        </CardContent>
-      </Card>
+      <AdminCard>
+        <AdminCardHeader>
+          <AdminCardTitle>Dependencies</AdminCardTitle>
+        </AdminCardHeader>
+        <AdminCardContent>
+          <DependencyList>
+            <DependencyText><strong>Global:</strong> {globals.header ? 'Header connected' : 'Header missing'} / {globals.footer ? 'Footer connected' : 'Footer missing'}</DependencyText>
+            <DependencyText><strong>Shared:</strong> {shared.exclusiveTalents ? 'Exclusive Talents connected' : 'Exclusive Talents missing'} / {shared.contactCta ? 'Contact CTA connected' : 'Contact CTA missing'}</DependencyText>
+          </DependencyList>
+        </AdminCardContent>
+      </AdminCard>
     </EditorContainer>
   );
 }
+
+const Title = styled.h2`
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #0f172a;
+`;
+
+const SubText = styled.p`
+  margin: 4px 0 0;
+  font-size: 0.875rem;
+  color: #64748b;
+`;
+
+const MetaText = styled.p`
+  margin: 4px 0 0;
+  font-size: 0.75rem;
+  color: #64748b;
+`;
+
+const ButtonRow = styled.div`
+  margin-top: 8px;
+  display: flex;
+  gap: 8px;
+`;
+
+const DependencyList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+`;
+
+const DependencyText = styled.p`
+  margin: 0;
+  font-size: 0.9rem;
+  color: #334155;
+`;

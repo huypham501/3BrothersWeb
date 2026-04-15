@@ -5,11 +5,12 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CmsSharedSection, sharedContactCtaSchema } from '@/lib/cms';
 import { saveSharedSection } from '@/lib/cms/actions';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Button } from '@/components/ui/Button';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/admin/controls/AdminForm';
+import { AdminInput as Input } from '@/components/admin/controls/AdminInput';
+import { AdminTextarea as Textarea } from '@/components/admin/controls/AdminTextarea';
+import { AdminButton as Button } from '@/components/admin/layout/AdminPrimitives';
+import { AdminAlert as Alert, AdminAlertDescription as AlertDescription, AdminAlertTitle as AlertTitle } from '@/components/admin/layout/AdminPrimitives';
+import { FormStack, HeaderRow, TwoColumnGrid } from './EditorLayout';
 import { z } from 'zod';
 
 
@@ -49,7 +50,7 @@ export function SharedContactCtaEditor({ section }: { section: CmsSharedSection 
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-6">
+      <FormStack onSubmit={form.handleSubmit(onSubmit)}>
         <Alert variant="default" style={{ backgroundColor: '#fffbeb', borderColor: '#fcd34d' }}>
           <AlertTitle>Shared Content Warning</AlertTitle>
           <AlertDescription>
@@ -61,11 +62,11 @@ export function SharedContactCtaEditor({ section }: { section: CmsSharedSection 
         {errorMsg && <Alert variant="destructive"><AlertDescription>{errorMsg}</AlertDescription></Alert>}
         {success && <Alert variant="success"><AlertDescription>Shared section saved successfully.</AlertDescription></Alert>}
 
-        <div className="flex justify-between items-center mb-6">
+        <HeaderRow>
           <Button type="submit" disabled={isSaving || !form.formState.isDirty}>
             {isSaving ? 'Saving...' : 'Save Shared Section'}
           </Button>
-        </div>
+        </HeaderRow>
 
         <FormField
           control={form.control}
@@ -95,7 +96,7 @@ export function SharedContactCtaEditor({ section }: { section: CmsSharedSection 
           )}
         />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <TwoColumnGrid>
           <FormField
             control={form.control}
             name="cta_label"
@@ -122,8 +123,8 @@ export function SharedContactCtaEditor({ section }: { section: CmsSharedSection 
               </FormItem>
             )}
           />
-        </div>
-      </form>
+        </TwoColumnGrid>
+      </FormStack>
     </Form>
   );
 }

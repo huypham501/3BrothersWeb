@@ -1,12 +1,14 @@
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { requireAdminUser } from '@/lib/admin/require-admin-user';
 import { SCHEMA_KEYS } from '@/lib/cms/constants/schema-keys';
 import { getSharedSectionForAdmin } from '@/lib/cms/queries';
 import { resolveSharedSectionUsage } from '@/lib/cms/resolvers/shared-usage.resolver';
 import { SharedContactCtaManager } from '@/components/admin/cms/shared-sections/SharedContactCtaManager';
-import { Button } from '@/components/ui/Button';
 import { hasCmsCapability } from '@/lib/cms/constants/roles';
+import { AdminShell } from '@/components/admin/layout/AdminShell';
+import { AdminTopNav } from '@/components/admin/layout/AdminTopNav';
+import { AdminPageHeader } from '@/components/admin/layout/AdminPageHeader';
+import { SHARED_DETAIL_NAV } from '@/components/admin/layout/nav-items';
 
 export const dynamic = 'force-dynamic';
 
@@ -22,31 +24,18 @@ export default async function SharedContactCtaPage() {
   const usageRoutes = resolveSharedSectionUsage(SCHEMA_KEYS.SHARED_CONTACT_CTA);
 
   return (
-    <div className="min-h-screen bg-slate-100 p-8">
-      <div className="mx-auto max-w-5xl space-y-6">
-        <div className="flex flex-wrap items-center gap-2">
-          <Button asChild variant="outline" size="sm">
-            <Link href="/admin/content">Content Admin</Link>
-          </Button>
-          <Button asChild variant="outline" size="sm">
-            <Link href="/admin/content/shared">Shared Sections</Link>
-          </Button>
-        </div>
-
-        <div>
-          <h1 className="text-2xl font-semibold">Edit Contact CTA Shared Section</h1>
-          <p className="text-sm text-muted-foreground">
-            Configure `shared.contact_cta.v1` and publish independently across affected routes.
-          </p>
-        </div>
-
-        <SharedContactCtaManager
-          section={section}
-          usageRoutes={usageRoutes}
-          role={actor.role}
-          canPublish={hasCmsCapability(actor.role, 'publish')}
-        />
-      </div>
-    </div>
+    <AdminShell>
+      <AdminTopNav items={SHARED_DETAIL_NAV} activeHref="/admin/content/shared" />
+      <AdminPageHeader
+        title="Edit Contact CTA Shared Section"
+        description="Configure `shared.contact_cta.v1` and publish independently across affected routes."
+      />
+      <SharedContactCtaManager
+        section={section}
+        usageRoutes={usageRoutes}
+        role={actor.role}
+        canPublish={hasCmsCapability(actor.role, 'publish')}
+      />
+    </AdminShell>
   );
 }

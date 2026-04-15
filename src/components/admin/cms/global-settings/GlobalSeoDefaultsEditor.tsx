@@ -5,15 +5,20 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import styled from 'styled-components';
 import { CmsGlobalSetting, globalSeoDefaultsSchema, SCHEMA_KEYS } from '@/lib/cms';
 import { saveGlobalSettingDraft, publishGlobalSetting } from '@/lib/cms/actions';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Button } from '@/components/ui/Button';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/admin/controls/AdminForm';
+import { AdminInput as Input } from '@/components/admin/controls/AdminInput';
+import { AdminTextarea as Textarea } from '@/components/admin/controls/AdminTextarea';
+import {
+  AdminAlert,
+  AdminAlertDescription,
+  AdminAlertTitle,
+  AdminBadge,
+  AdminButton,
+} from '@/components/admin/layout/AdminPrimitives';
+import { SelectInput } from '@/components/admin/cms/editors/EditorLayout';
 
 type FormValues = z.infer<typeof globalSeoDefaultsSchema>;
 
@@ -91,60 +96,60 @@ export function GlobalSeoDefaultsEditor({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSaveDraft)} className="space-y-6">
-        <Alert>
-          <AlertTitle>Global Metadata Impact</AlertTitle>
-          <AlertDescription>
+      <FormRoot onSubmit={form.handleSubmit(onSaveDraft)}>
+        <AdminAlert>
+          <AdminAlertTitle>Global Metadata Impact</AdminAlertTitle>
+          <AdminAlertDescription>
             SEO defaults affect metadata fallback across CMS-driven pages. Draft changes are safe until publish.
-          </AlertDescription>
-        </Alert>
+          </AdminAlertDescription>
+        </AdminAlert>
 
-        {errorMsg && <Alert variant="destructive"><AlertDescription>{errorMsg}</AlertDescription></Alert>}
-        {successMsg && <Alert variant="success"><AlertDescription>{successMsg}</AlertDescription></Alert>}
+        {errorMsg && <AdminAlert tone="destructive"><AdminAlertDescription>{errorMsg}</AdminAlertDescription></AdminAlert>}
+        {successMsg && <AdminAlert><AdminAlertDescription>{successMsg}</AdminAlertDescription></AdminAlert>}
 
-        <div className="rounded-md border bg-card p-4">
-          <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-            <div className="flex flex-wrap items-center gap-2">
-              <Badge variant="outline">{setting.schema_key}</Badge>
-              <Badge variant={setting.published_enabled ? 'default' : 'outline'}>
+        <SectionCard>
+          <ActionHeader>
+            <BadgeRow>
+              <AdminBadge>{setting.schema_key}</AdminBadge>
+              <AdminBadge tone={setting.published_enabled ? 'success' : 'neutral'}>
                 {setting.published_enabled ? 'Published: Enabled' : 'Published: Disabled'}
-              </Badge>
-              <Badge variant={setting.has_unpublished_changes ? 'secondary' : 'outline'}>
+              </AdminBadge>
+              <AdminBadge tone={setting.has_unpublished_changes ? 'warning' : 'neutral'}>
                 {setting.has_unpublished_changes ? 'Has Unpublished Changes' : 'No Unpublished Changes'}
-              </Badge>
-            </div>
-            <p className="text-xs text-muted-foreground">Your role: {role}</p>
-            <p className="text-xs text-muted-foreground">
+              </AdminBadge>
+            </BadgeRow>
+            <MetaText>Your role: {role}</MetaText>
+            <MetaText>
               Last edited: {setting.last_edited_by_identifier ?? 'N/A'} at {formatAuditDate(setting.last_edited_at)}
-            </p>
-            <p className="text-xs text-muted-foreground">
+            </MetaText>
+            <MetaText>
               Last published: {setting.last_published_by_identifier ?? 'N/A'} at {formatAuditDate(setting.last_published_at)}
-            </p>
-            <div className="flex items-center gap-2">
-              <Button type="submit" variant="outline" disabled={isSaving || isPublishing || !form.formState.isDirty}>
+            </MetaText>
+            <ButtonGroup>
+              <AdminButton type="submit" variant="outline" disabled={isSaving || isPublishing || !form.formState.isDirty}>
                 {isSaving ? 'Saving Draft...' : 'Save Draft'}
-              </Button>
-              <Button
+              </AdminButton>
+              <AdminButton
                 type="button"
                 onClick={handlePublish}
                 disabled={isSaving || isPublishing || !canPublish}
                 title={canPublish ? undefined : 'Your role cannot publish.'}
               >
                 {isPublishing ? 'Publishing...' : 'Publish'}
-              </Button>
-            </div>
-          </div>
-          <Separator className="my-4" />
-          <p className="text-sm text-muted-foreground">Revalidation scope: `/`, `/for-creators`</p>
-        </div>
+              </AdminButton>
+            </ButtonGroup>
+          </ActionHeader>
+          <Divider />
+          <ScopeText>Revalidation scope: `/`, `/for-creators`</ScopeText>
+        </SectionCard>
 
         <FormField control={form.control} name="default_title_template" render={({ field }) => (
           <FormItem>
             <FormLabel>Default Title Template</FormLabel>
             <FormControl><Input {...field} /></FormControl>
-            <p className="text-xs text-muted-foreground">
+            <MetaText>
               Supported placeholders: <code>{'{{page_title}}'}</code>, <code>{'{{site_name}}'}</code>, <code>{'{{brand_name}}'}</code>
-            </p>
+            </MetaText>
             <FormMessage />
           </FormItem>
         )} />
@@ -173,28 +178,27 @@ export function GlobalSeoDefaultsEditor({
           )}
         />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <TwoColumnGrid>
           <FormField control={form.control} name="default_og_image" render={({ field }) => (
             <FormItem><FormLabel>Default OG Image</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
           )} />
           <FormField control={form.control} name="default_og_image_alt" render={({ field }) => (
             <FormItem><FormLabel>Default OG Image Alt</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
           )} />
-        </div>
+        </TwoColumnGrid>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <TwoColumnGrid>
           <FormField control={form.control} name="default_twitter_card_type" render={({ field }) => (
             <FormItem>
               <FormLabel>Default Twitter Card Type</FormLabel>
               <FormControl>
-                <select
-                  className="flex h-10 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm"
+                <SelectInput
                   value={field.value}
                   onChange={(e) => field.onChange(e.target.value)}
                 >
                   <option value="summary">summary</option>
                   <option value="summary_large_image">summary_large_image</option>
-                </select>
+                </SelectInput>
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -202,8 +206,68 @@ export function GlobalSeoDefaultsEditor({
           <FormField control={form.control} name="default_robots" render={({ field }) => (
             <FormItem><FormLabel>Default Robots</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
           )} />
-        </div>
-      </form>
+        </TwoColumnGrid>
+      </FormRoot>
     </Form>
   );
 }
+
+const FormRoot = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+`;
+
+const SectionCard = styled.div`
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  background: #ffffff;
+  padding: 16px;
+`;
+
+const ActionHeader = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+`;
+
+const BadgeRow = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+`;
+
+const MetaText = styled.p`
+  margin: 0;
+  font-size: 0.75rem;
+  color: #64748b;
+`;
+
+const ButtonGroup = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 6px;
+`;
+
+const Divider = styled.hr`
+  margin: 16px 0;
+  border: 0;
+  border-top: 1px solid #e2e8f0;
+`;
+
+const ScopeText = styled.p`
+  margin: 0;
+  font-size: 0.875rem;
+  color: #64748b;
+`;
+
+const TwoColumnGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 24px;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+`;

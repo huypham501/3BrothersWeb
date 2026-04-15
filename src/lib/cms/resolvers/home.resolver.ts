@@ -1,5 +1,6 @@
 import { getHomePageData } from '../queries';
-import { 
+import { SCHEMA_KEYS } from '../constants/schema-keys';
+import type {
   HomeHeroPayload, 
   HomePartnersPayload, 
   HomeCoreCompetenciesPayload, 
@@ -10,6 +11,12 @@ import {
   GlobalHeaderPayload,
   GlobalFooterPayload
 } from '../types';
+import {
+  findSectionContentBySchemaKey,
+  resolveGlobalContentBySchemaKey,
+  resolveSharedContentBySchemaKey,
+  validateCmsPayloadBySchemaKey,
+} from './utils/cms-content';
 
 export interface HomeViewModel {
   pageMeta: {
@@ -39,11 +46,61 @@ export async function resolveHomePageData(): Promise<HomeViewModel | null> {
   const data = await getHomePageData();
   if (!data || !data.page) return null;
 
-  const findSectionData = (schemaKey: string) => {
-    const section = data.sections.find(s => s.schema_key === schemaKey);
-    // Use published_enabled and published_content. If not yet published, fallback to empty/null
-    return section && section.published_enabled ? section.published_content : null;
-  };
+  const hero = validateCmsPayloadBySchemaKey(
+    SCHEMA_KEYS.HOME_HERO,
+    findSectionContentBySchemaKey(data.sections, SCHEMA_KEYS.HOME_HERO),
+    'home.sections.hero'
+  );
+
+  const partners = validateCmsPayloadBySchemaKey(
+    SCHEMA_KEYS.HOME_PARTNERS,
+    findSectionContentBySchemaKey(data.sections, SCHEMA_KEYS.HOME_PARTNERS),
+    'home.sections.partners'
+  );
+
+  const coreCompetencies = validateCmsPayloadBySchemaKey(
+    SCHEMA_KEYS.HOME_CORE_COMPETENCIES,
+    findSectionContentBySchemaKey(data.sections, SCHEMA_KEYS.HOME_CORE_COMPETENCIES),
+    'home.sections.core_competencies'
+  );
+
+  const efficiency = validateCmsPayloadBySchemaKey(
+    SCHEMA_KEYS.HOME_EFFICIENCY,
+    findSectionContentBySchemaKey(data.sections, SCHEMA_KEYS.HOME_EFFICIENCY),
+    'home.sections.efficiency'
+  );
+
+  const trending = validateCmsPayloadBySchemaKey(
+    SCHEMA_KEYS.HOME_TRENDING,
+    findSectionContentBySchemaKey(data.sections, SCHEMA_KEYS.HOME_TRENDING),
+    'home.sections.trending'
+  );
+
+  const sharedExclusiveTalents = validateCmsPayloadBySchemaKey(
+    SCHEMA_KEYS.SHARED_EXCLUSIVE_TALENTS,
+    resolveSharedContentBySchemaKey<typeof SCHEMA_KEYS.SHARED_EXCLUSIVE_TALENTS>(
+      data.shared.exclusiveTalents
+    ),
+    'home.shared.exclusive_talents'
+  );
+
+  const sharedContactCta = validateCmsPayloadBySchemaKey(
+    SCHEMA_KEYS.SHARED_CONTACT_CTA,
+    resolveSharedContentBySchemaKey<typeof SCHEMA_KEYS.SHARED_CONTACT_CTA>(data.shared.contactCta),
+    'home.shared.contact_cta'
+  );
+
+  const globalHeader = validateCmsPayloadBySchemaKey(
+    SCHEMA_KEYS.GLOBAL_HEADER,
+    resolveGlobalContentBySchemaKey<typeof SCHEMA_KEYS.GLOBAL_HEADER>(data.globals.header),
+    'home.globals.header'
+  );
+
+  const globalFooter = validateCmsPayloadBySchemaKey(
+    SCHEMA_KEYS.GLOBAL_FOOTER,
+    resolveGlobalContentBySchemaKey<typeof SCHEMA_KEYS.GLOBAL_FOOTER>(data.globals.footer),
+    'home.globals.footer'
+  );
 
   return {
     pageMeta: {
@@ -55,18 +112,18 @@ export async function resolveHomePageData(): Promise<HomeViewModel | null> {
       keywords: data.page.published_keywords && data.page.published_keywords.length > 0 ? data.page.published_keywords : 
                 (data.page.keywords && data.page.keywords.length > 0 ? data.page.keywords : ["youtube", "creators", "creator economy", "3brothers network"]),
     },
-    hero: findSectionData('home.hero.v1') as HomeHeroPayload | null,
-    partners: findSectionData('home.partners.v1') as HomePartnersPayload | null,
-    coreCompetencies: findSectionData('home.core_competencies.v1') as HomeCoreCompetenciesPayload | null,
-    efficiency: findSectionData('home.efficiency.v1') as HomeEfficiencyPayload | null,
-    trending: findSectionData('home.trending.v1') as HomeTrendingPayload | null,
+    hero,
+    partners,
+    coreCompetencies,
+    efficiency,
+    trending,
     shared: {
-      exclusiveTalents: (data.shared.exclusiveTalents?.published_enabled ? data.shared.exclusiveTalents.published_content : null) as SharedExclusiveTalentsPayload | null,
-      contactCta: (data.shared.contactCta?.published_enabled ? data.shared.contactCta.published_content : null) as SharedContactCtaPayload | null,
+      exclusiveTalents: sharedExclusiveTalents,
+      contactCta: sharedContactCta,
     },
     globals: {
-      header: (data.globals.header?.published_enabled ? data.globals.header.published_content : null) as GlobalHeaderPayload | null,
-      footer: (data.globals.footer?.published_enabled ? data.globals.footer.published_content : null) as GlobalFooterPayload | null,
+      header: globalHeader,
+      footer: globalFooter,
     }
   };
 }

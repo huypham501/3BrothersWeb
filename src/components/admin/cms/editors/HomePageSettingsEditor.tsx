@@ -6,11 +6,12 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CmsPage, homePageSchema } from '@/lib/cms';
 import { saveHomePageSettings } from '@/lib/cms/actions';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Button } from '@/components/ui/Button';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/admin/controls/AdminForm';
+import { AdminInput as Input } from '@/components/admin/controls/AdminInput';
+import { AdminTextarea as Textarea } from '@/components/admin/controls/AdminTextarea';
+import { AdminButton as Button } from '@/components/admin/layout/AdminPrimitives';
+import { AdminAlert as Alert, AdminAlertDescription as AlertDescription } from '@/components/admin/layout/AdminPrimitives';
+import { FooterRow, FormStack, SelectInput } from './EditorLayout';
 import { z } from 'zod';
 
 const FormGrid = styled.div`
@@ -70,7 +71,7 @@ export function HomePageSettingsEditor({ page }: { page: CmsPage }) {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+      <FormStack onSubmit={form.handleSubmit(onSubmit)}>
         {errorMsg && <Alert variant="destructive"><AlertDescription>{errorMsg}</AlertDescription></Alert>}
         {success && <Alert variant="success"><AlertDescription>Settings saved successfully.</AlertDescription></Alert>}
 
@@ -97,14 +98,10 @@ export function HomePageSettingsEditor({ page }: { page: CmsPage }) {
                 <FormItem>
                   <FormLabel>Status</FormLabel>
                   <FormControl>
-                    <select
-                      className="flex h-10 w-full rounded-md border border-[#e2e8f0] bg-transparent px-3 py-2 text-sm focus:outline-none focus:border-[#003CA6] focus:ring-2 focus:ring-[rgba(0,60,166,0.2)]"
-                      style={{ height: '2.5rem', width: '100%', borderRadius: '0.375rem', border: '1px solid #e2e8f0', padding: '0.5rem 0.75rem', fontSize: '0.875rem' }}
-                      {...field}
-                    >
+                      <SelectInput {...field}>
                       <option value="draft">Draft</option>
                       <option value="published">Published</option>
-                    </select>
+                      </SelectInput>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -209,12 +206,12 @@ export function HomePageSettingsEditor({ page }: { page: CmsPage }) {
           />
         </div>
 
-        <div style={{ display: 'flex', justifyContent: 'flex-end', paddingTop: '16px' }}>
+        <FooterRow>
           <Button type="submit" disabled={isSaving || !form.formState.isDirty}>
             {isSaving ? 'Saving...' : 'Save Page Settings'}
           </Button>
-        </div>
-      </form>
+        </FooterRow>
+      </FormStack>
     </Form>
   );
 }

@@ -5,12 +5,13 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CmsPageSection, homeHeroSchema } from '@/lib/cms';
 import { savePageSection } from '@/lib/cms/actions';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Button } from '@/components/ui/Button';
-import { Switch } from '@/components/ui/switch';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/admin/controls/AdminForm';
+import { AdminInput as Input } from '@/components/admin/controls/AdminInput';
+import { AdminTextarea as Textarea } from '@/components/admin/controls/AdminTextarea';
+import { AdminButton as Button } from '@/components/admin/layout/AdminPrimitives';
+import { AdminSwitch as Switch } from '@/components/admin/controls/AdminSwitch';
+import { AdminAlert as Alert, AdminAlertDescription as AlertDescription, AdminAlertTitle as AlertTitle } from '@/components/admin/layout/AdminPrimitives';
+import { FormStack, HeaderRow, ToggleFormItem, TwoColumnGrid } from './EditorLayout';
 import { z } from 'zod';
 
 
@@ -56,27 +57,27 @@ export function HomeHeroEditor({ pageId, section }: { pageId: string, section: C
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-6">
+      <FormStack onSubmit={form.handleSubmit(onSubmit)}>
         {errorMsg && <Alert variant="destructive"><AlertDescription>{errorMsg}</AlertDescription></Alert>}
         {success && <Alert variant="success"><AlertDescription>Hero section saved successfully.</AlertDescription></Alert>}
 
-        <div className="flex justify-between items-center mb-6">
+        <HeaderRow>
           <FormField
             control={form.control}
             name="enabled"
             render={({ field }) => (
-              <FormItem className="flex items-center gap-3 space-y-0">
-                <FormLabel className="col-span-full md:col-span-6">Enable Section</FormLabel>
+              <ToggleFormItem>
+                <FormLabel>Enable Section</FormLabel>
                 <FormControl>
                   <Switch checked={field.value} onCheckedChange={field.onChange} />
                 </FormControl>
-              </FormItem>
+              </ToggleFormItem>
             )}
           />
           <Button type="submit" disabled={isSaving || !form.formState.isDirty}>
             {isSaving ? 'Saving...' : 'Save Section'}
           </Button>
-        </div>
+        </HeaderRow>
 
         <FormField
           control={form.control}
@@ -106,7 +107,7 @@ export function HomeHeroEditor({ pageId, section }: { pageId: string, section: C
           )}
         />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <TwoColumnGrid>
           <FormField
             control={form.control}
             name="primary_cta_label"
@@ -133,9 +134,9 @@ export function HomeHeroEditor({ pageId, section }: { pageId: string, section: C
               </FormItem>
             )}
           />
-        </div>
+        </TwoColumnGrid>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <TwoColumnGrid>
           <FormField
             control={form.control}
             name="secondary_cta_label"
@@ -162,9 +163,9 @@ export function HomeHeroEditor({ pageId, section }: { pageId: string, section: C
               </FormItem>
             )}
           />
-        </div>
+        </TwoColumnGrid>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <TwoColumnGrid>
           <FormField
             control={form.control}
             name="media_image"
@@ -191,8 +192,8 @@ export function HomeHeroEditor({ pageId, section }: { pageId: string, section: C
               </FormItem>
             )}
           />
-        </div>
-      </form>
+        </TwoColumnGrid>
+      </FormStack>
     </Form>
   );
 }

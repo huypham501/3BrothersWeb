@@ -1,10 +1,19 @@
 import Link from 'next/link';
+import styled from 'styled-components';
 import { CmsGlobalSetting } from '@/lib/cms/types';
 import { SUPPORTED_GLOBAL_SETTINGS } from '@/lib/cms/constants/global-settings';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/Button';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import {
+  AdminAlert,
+  AdminAlertDescription,
+  AdminAlertTitle,
+  AdminBadge,
+  AdminButton,
+  AdminCard,
+  AdminCardContent,
+  AdminCardDescription,
+  AdminCardHeader,
+  AdminCardTitle,
+} from '@/components/admin/layout/AdminPrimitives';
 
 interface GlobalSettingsIndexProps {
   settings: CmsGlobalSetting[];
@@ -13,70 +22,111 @@ interface GlobalSettingsIndexProps {
 
 export function GlobalSettingsIndex({ settings, role }: GlobalSettingsIndexProps) {
   return (
-    <div className="space-y-6">
-      <Alert>
-        <AlertTitle>Global Impact Warning</AlertTitle>
-        <AlertDescription>
+    <Wrapper>
+      <AdminAlert>
+        <AdminAlertTitle>Global Impact Warning</AdminAlertTitle>
+        <AdminAlertDescription>
           Changes to global settings affect multiple public pages and metadata surfaces across the site. Save drafts safely, then publish when ready.
-        </AlertDescription>
-        <p className="mt-2 text-xs text-muted-foreground">Your role: {role}</p>
-      </Alert>
+        </AdminAlertDescription>
+        <MetaText>Your role: {role}</MetaText>
+      </AdminAlert>
 
-      <div className="grid gap-4 md:grid-cols-2">
+      <CardsGrid>
         {SUPPORTED_GLOBAL_SETTINGS.map((item) => {
           const setting = settings.find((entry) => entry.schema_key === item.schemaKey);
           const isFound = Boolean(setting);
 
           return (
-            <Card key={item.schemaKey}>
-              <CardHeader>
-                <CardTitle className="flex items-center justify-between gap-2">
-                  <span>{item.title}</span>
+            <AdminCard key={item.schemaKey}>
+              <AdminCardHeader>
+                <TitleRow>
+                  <TitleText>{item.title}</TitleText>
                   {setting?.has_unpublished_changes ? (
-                    <Badge variant="secondary">Has Unpublished Changes</Badge>
+                    <AdminBadge tone="warning">Has Unpublished Changes</AdminBadge>
                   ) : (
-                    <Badge variant="outline">No Unpublished Changes</Badge>
+                    <AdminBadge>No Unpublished Changes</AdminBadge>
                   )}
-                </CardTitle>
-                <CardDescription>{item.description}</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
-                  <Badge variant="outline">{item.schemaKey}</Badge>
-                  <Badge variant={setting?.published_enabled ? 'default' : 'outline'}>
+                </TitleRow>
+                <AdminCardDescription>{item.description}</AdminCardDescription>
+              </AdminCardHeader>
+              <AdminCardContent>
+                <InfoRow>
+                  <AdminBadge>{item.schemaKey}</AdminBadge>
+                  <AdminBadge tone={setting?.published_enabled ? 'success' : 'neutral'}>
                     {setting?.published_enabled ? 'Published: Enabled' : 'Published: Disabled'}
-                  </Badge>
-                  <Badge variant={setting?.enabled ? 'default' : 'outline'}>
+                  </AdminBadge>
+                  <AdminBadge tone={setting?.enabled ? 'info' : 'neutral'}>
                     {setting?.enabled ? 'Draft: Enabled' : 'Draft: Disabled'}
-                  </Badge>
-                </div>
-                <p className="text-xs text-muted-foreground">
+                  </AdminBadge>
+                </InfoRow>
+                <MetaText>
                   Last edited: {setting?.last_edited_by_identifier ?? 'N/A'}
-                </p>
-                <p className="text-xs text-muted-foreground">
+                </MetaText>
+                <MetaText>
                   Last published: {setting?.last_published_by_identifier ?? 'N/A'}
-                </p>
+                </MetaText>
 
                 {!isFound && (
-                  <Alert variant="destructive">
-                    <AlertDescription>
+                  <AdminAlert tone="destructive">
+                    <AdminAlertDescription>
                       This global setting record was not found. Seed data may be missing.
-                    </AlertDescription>
-                  </Alert>
+                    </AdminAlertDescription>
+                  </AdminAlert>
                 )}
 
                 {isFound ? (
-                  <Button asChild>
-                    <Link href={item.editorPath}>Edit</Link>
-                  </Button>
+                  <AdminButton href={item.editorPath}>Edit</AdminButton>
                 ) : (
-                  <Button disabled>Edit</Button>
+                  <AdminButton disabled>Edit</AdminButton>
                 )}
-              </CardContent>
-            </Card>
+              </AdminCardContent>
+            </AdminCard>
           );
         })}
-      </div>
-    </div>
+      </CardsGrid>
+    </Wrapper>
   );
 }
+
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+`;
+
+const CardsGrid = styled.div`
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+`;
+
+const TitleRow = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+`;
+
+const TitleText = styled.span`
+  font-size: 1rem;
+  font-weight: 700;
+  color: #0f172a;
+`;
+
+const InfoRow = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+`;
+
+const MetaText = styled.p`
+  margin: 0 0 8px;
+  font-size: 0.75rem;
+  color: #64748b;
+`;

@@ -29,7 +29,7 @@ export default function RootLayout({
           type="video/mp4"
         />
       </head>
-      <body className={`${poppins.variable} ${montserrat.variable}`}>
+      <body suppressHydrationWarning className={`${poppins.variable} ${montserrat.variable}`}>
         <ClientProviders>
           {children}
         </ClientProviders>

@@ -1,10 +1,18 @@
 import Link from 'next/link';
+import styled from 'styled-components';
 import { CmsSharedSection } from '@/lib/cms/types';
 import { SUPPORTED_SHARED_SECTIONS, SupportedSharedSchemaKey } from '@/lib/cms/constants/shared-sections';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/Button';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import {
+  AdminAlert,
+  AdminAlertDescription,
+  AdminAlertTitle,
+  AdminBadge,
+  AdminButton,
+  AdminCard,
+  AdminCardContent,
+  AdminCardDescription,
+  AdminCardHeader,
+} from '@/components/admin/layout/AdminPrimitives';
 
 interface SharedSectionsIndexProps {
   sections: CmsSharedSection[];
@@ -14,81 +22,129 @@ interface SharedSectionsIndexProps {
 
 export function SharedSectionsIndex({ sections, usageMap, role }: SharedSectionsIndexProps) {
   return (
-    <div className="space-y-6">
-      <Alert>
-        <AlertTitle>Cross-Page Impact Warning</AlertTitle>
-        <AlertDescription>
+    <Wrapper>
+      <AdminAlert>
+        <AdminAlertTitle>Cross-Page Impact Warning</AdminAlertTitle>
+        <AdminAlertDescription>
           Shared sections are reused by multiple routes. Saving keeps changes in draft only; publishing updates every affected route.
-        </AlertDescription>
-        <p className="mt-2 text-xs text-muted-foreground">Your role: {role}</p>
-      </Alert>
+        </AdminAlertDescription>
+        <MetaText>Your role: {role}</MetaText>
+      </AdminAlert>
 
-      <div className="grid gap-4 md:grid-cols-2">
+      <CardsGrid>
         {SUPPORTED_SHARED_SECTIONS.map((item) => {
           const section = sections.find((entry) => entry.schema_key === item.schemaKey);
           const affectedRoutes = usageMap[item.schemaKey] ?? [];
           const isFound = Boolean(section);
 
           return (
-            <Card key={item.schemaKey}>
-              <CardHeader>
-                <CardTitle className="flex items-center justify-between gap-2">
-                  <span>{item.title}</span>
+            <AdminCard key={item.schemaKey}>
+              <AdminCardHeader>
+                <TitleRow>
+                  <TitleText>{item.title}</TitleText>
                   {section?.has_unpublished_changes ? (
-                    <Badge variant="secondary">Has Unpublished Changes</Badge>
+                    <AdminBadge tone="warning">Has Unpublished Changes</AdminBadge>
                   ) : (
-                    <Badge variant="outline">No Unpublished Changes</Badge>
+                    <AdminBadge>No Unpublished Changes</AdminBadge>
                   )}
-                </CardTitle>
-                <CardDescription>{item.description}</CardDescription>
-              </CardHeader>
+                </TitleRow>
+                <AdminCardDescription>{item.description}</AdminCardDescription>
+              </AdminCardHeader>
 
-              <CardContent className="space-y-4">
-                <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
-                  <Badge variant="outline">{item.schemaKey}</Badge>
-                  <Badge variant={section?.published_enabled ? 'default' : 'outline'}>
+              <AdminCardContent>
+                <InfoRow>
+                  <AdminBadge>{item.schemaKey}</AdminBadge>
+                  <AdminBadge tone={section?.published_enabled ? 'success' : 'neutral'}>
                     {section?.published_enabled ? 'Published: Enabled' : 'Published: Disabled'}
-                  </Badge>
-                  <Badge variant={section?.enabled ? 'default' : 'outline'}>
+                  </AdminBadge>
+                  <AdminBadge tone={section?.enabled ? 'info' : 'neutral'}>
                     {section?.enabled ? 'Draft: Enabled' : 'Draft: Disabled'}
-                  </Badge>
-                  <Badge variant="outline">{affectedRoutes.length} affected routes</Badge>
-                </div>
-                <p className="text-xs text-muted-foreground">
+                  </AdminBadge>
+                  <AdminBadge>{affectedRoutes.length} affected routes</AdminBadge>
+                </InfoRow>
+                <MetaText>
                   Last edited: {section?.last_edited_by_identifier ?? 'N/A'}
-                </p>
-                <p className="text-xs text-muted-foreground">
+                </MetaText>
+                <MetaText>
                   Last published: {section?.last_published_by_identifier ?? 'N/A'}
-                </p>
+                </MetaText>
 
-                <div className="flex flex-wrap gap-2">
+                <RouteList>
                   {affectedRoutes.map((route) => (
-                    <Badge key={`${item.schemaKey}-${route}`} variant="outline">
+                    <AdminBadge key={`${item.schemaKey}-${route}`}>
                       {route}
-                    </Badge>
+                    </AdminBadge>
                   ))}
-                </div>
+                </RouteList>
 
                 {!isFound && (
-                  <Alert variant="destructive">
-                    <AlertDescription>
+                  <AdminAlert tone="destructive">
+                    <AdminAlertDescription>
                       This shared section record was not found. Seed data may be missing.
-                    </AlertDescription>
-                  </Alert>
+                    </AdminAlertDescription>
+                  </AdminAlert>
                 )}
 
                 {isFound ? (
-                  <Button asChild>
-                    <Link href={item.editorPath}>Edit</Link>
-                  </Button>
+                  <AdminButton href={item.editorPath}>Edit</AdminButton>
                 ) : (
-                  <Button disabled>Edit</Button>
+                  <AdminButton disabled>Edit</AdminButton>
                 )}
-              </CardContent>
-            </Card>
+              </AdminCardContent>
+            </AdminCard>
           );
         })}
-      </div>
-    </div>
+      </CardsGrid>
+    </Wrapper>
   );
 }
+
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+`;
+
+const CardsGrid = styled.div`
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+`;
+
+const TitleRow = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+`;
+
+const TitleText = styled.span`
+  font-size: 1rem;
+  font-weight: 700;
+  color: #0f172a;
+`;
+
+const InfoRow = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+`;
+
+const MetaText = styled.p`
+  margin: 0 0 8px;
+  font-size: 0.75rem;
+  color: #64748b;
+`;
+
+const RouteList = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 4px 0 12px;
+`;

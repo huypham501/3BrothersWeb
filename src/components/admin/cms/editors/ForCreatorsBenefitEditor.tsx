@@ -5,12 +5,21 @@ import { useFieldArray, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CmsPageSection, forCreatorsBenefitSchema } from '@/lib/cms';
 import { savePageSection } from '@/lib/cms/actions';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Button } from '@/components/ui/Button';
-import { Switch } from '@/components/ui/switch';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/admin/controls/AdminForm';
+import { AdminInput as Input } from '@/components/admin/controls/AdminInput';
+import { AdminTextarea as Textarea } from '@/components/admin/controls/AdminTextarea';
+import { AdminButton as Button } from '@/components/admin/layout/AdminPrimitives';
+import { AdminSwitch as Switch } from '@/components/admin/controls/AdminSwitch';
+import { AdminAlert as Alert, AdminAlertDescription as AlertDescription } from '@/components/admin/layout/AdminPrimitives';
+import {
+  FormStack,
+  HeaderRow,
+  ItemCard,
+  SectionStack,
+  SectionTitle,
+  ToggleFormItem,
+  TwoColumnGrid,
+} from './EditorLayout';
 import { z } from 'zod';
 
 type FormValues = z.infer<typeof forCreatorsBenefitSchema> & { enabled: boolean };
@@ -59,27 +68,27 @@ export function ForCreatorsBenefitEditor({ pageId, section }: { pageId: string; 
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-6">
+      <FormStack onSubmit={form.handleSubmit(onSubmit)}>
         {errorMsg && <Alert variant="destructive"><AlertDescription>{errorMsg}</AlertDescription></Alert>}
         {success && <Alert variant="success"><AlertDescription>For Creators Benefit saved successfully.</AlertDescription></Alert>}
 
-        <div className="flex justify-between items-center mb-6">
+        <HeaderRow>
           <FormField
             control={form.control}
             name="enabled"
             render={({ field }) => (
-              <FormItem className="flex items-center gap-3 space-y-0">
+              <ToggleFormItem>
                 <FormLabel>Enable Section</FormLabel>
                 <FormControl>
                   <Switch checked={field.value} onCheckedChange={field.onChange} />
                 </FormControl>
-              </FormItem>
+              </ToggleFormItem>
             )}
           />
           <Button type="submit" disabled={isSaving || !form.formState.isDirty}>
             {isSaving ? 'Saving...' : 'Save Section'}
           </Button>
-        </div>
+        </HeaderRow>
 
         <FormField control={form.control} name="section_title" render={({ field }) => (
           <FormItem><FormLabel>Section Title</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
@@ -89,19 +98,19 @@ export function ForCreatorsBenefitEditor({ pageId, section }: { pageId: string; 
           <FormItem><FormLabel>Section Description</FormLabel><FormControl><Textarea {...field} rows={4} /></FormControl><FormMessage /></FormItem>
         )} />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <TwoColumnGrid>
           <FormField control={form.control} name="contact_cta_label" render={({ field }) => (
             <FormItem><FormLabel>Contact Button Label</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
           )} />
           <FormField control={form.control} name="contact_cta_url" render={({ field }) => (
             <FormItem><FormLabel>Contact Button URL</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
           )} />
-        </div>
+        </TwoColumnGrid>
 
-        <div className="space-y-4">
-          <h5 className="text-base font-semibold">Benefits</h5>
+        <SectionStack>
+          <SectionTitle>Benefits</SectionTitle>
           {fields.map((item, index) => (
-            <div key={item.id} className="rounded-lg border border-slate-200 bg-slate-50 p-4">
+            <ItemCard key={item.id}>
               <FormField control={form.control} name={`benefits.${index}.id`} render={({ field }) => (
                 <FormItem>
                   <FormLabel>Benefit Key</FormLabel>
@@ -111,18 +120,18 @@ export function ForCreatorsBenefitEditor({ pageId, section }: { pageId: string; 
                 </FormItem>
               )} />
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+              <TwoColumnGrid>
                 <FormField control={form.control} name={`benefits.${index}.title`} render={({ field }) => (
                   <FormItem><FormLabel>Title</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
                 )} />
                 <FormField control={form.control} name={`benefits.${index}.description`} render={({ field }) => (
                   <FormItem><FormLabel>Description</FormLabel><FormControl><Textarea {...field} rows={3} /></FormControl><FormMessage /></FormItem>
                 )} />
-              </div>
-            </div>
+              </TwoColumnGrid>
+            </ItemCard>
           ))}
-        </div>
-      </form>
+        </SectionStack>
+      </FormStack>
     </Form>
   );
 }

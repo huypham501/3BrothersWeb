@@ -5,15 +5,23 @@ import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CmsSharedSection, sharedExclusiveTalentsSchema } from '@/lib/cms';
 import { saveSharedSection } from '@/lib/cms/actions';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Button } from '@/components/ui/Button';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/admin/controls/AdminForm';
+import { AdminInput as Input } from '@/components/admin/controls/AdminInput';
+import { AdminTextarea as Textarea } from '@/components/admin/controls/AdminTextarea';
+import { AdminButton as Button } from '@/components/admin/layout/AdminPrimitives';
+import { AdminAlert as Alert, AdminAlertDescription as AlertDescription, AdminAlertTitle as AlertTitle } from '@/components/admin/layout/AdminPrimitives';
+import {
+  BorderedPanel,
+  ErrorText,
+  FormStack,
+  HeaderRow,
+  ItemCard,
+  SectionHeaderRow,
+  SectionStack,
+  SectionTitle,
+  TwoColumnGrid,
+} from './EditorLayout';
 import { z } from 'zod';
-
-
-
 
 export function SharedExclusiveTalentsEditor({ section }: { section: CmsSharedSection }) {
   const [isSaving, setIsSaving] = React.useState(false);
@@ -65,7 +73,7 @@ export function SharedExclusiveTalentsEditor({ section }: { section: CmsSharedSe
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-6">
+      <FormStack onSubmit={form.handleSubmit(onSubmit)}>
         <Alert variant="default" style={{ backgroundColor: '#fffbeb', borderColor: '#fcd34d' }}>
           <AlertTitle>Shared Content Warning</AlertTitle>
           <AlertDescription>
@@ -76,11 +84,11 @@ export function SharedExclusiveTalentsEditor({ section }: { section: CmsSharedSe
         {errorMsg && <Alert variant="destructive"><AlertDescription>{errorMsg}</AlertDescription></Alert>}
         {success && <Alert variant="success"><AlertDescription>Shared talents saved successfully.</AlertDescription></Alert>}
 
-        <div className="flex justify-between items-center mb-6">
+        <HeaderRow>
           <Button type="submit" disabled={isSaving || !form.formState.isDirty}>
             {isSaving ? 'Saving...' : 'Save Shared Section'}
           </Button>
-        </div>
+        </HeaderRow>
 
         <FormField
           control={form.control}
@@ -96,76 +104,76 @@ export function SharedExclusiveTalentsEditor({ section }: { section: CmsSharedSe
           )}
         />
 
-        <div style={{ padding: '16px', border: '1px solid #e2e8f0', borderRadius: '8px' }}>
-          <h5 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '16px' }}>Featured Talent</h5>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <BorderedPanel>
+          <SectionTitle>Featured Talent</SectionTitle>
+          <TwoColumnGrid>
             <FormField control={form.control} name="featured_name" render={({ field }) => (
               <FormItem><FormLabel>Name</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
             )} />
             <FormField control={form.control} name="featured_handle" render={({ field }) => (
               <FormItem><FormLabel>Handle (e.g. @username)</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
             )} />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          </TwoColumnGrid>
+          <TwoColumnGrid>
             <FormField control={form.control} name="featured_photo" render={({ field }) => (
               <FormItem><FormLabel>Photo URL</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
             )} />
             <FormField control={form.control} name="featured_photo_alt" render={({ field }) => (
               <FormItem><FormLabel>Photo Alt Text</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
             )} />
-          </div>
+          </TwoColumnGrid>
           <FormField control={form.control} name="featured_description" render={({ field }) => (
             <FormItem><FormLabel>Description</FormLabel><FormControl><Textarea {...field} /></FormControl><FormMessage /></FormItem>
           )} />
-          
-          <div style={{ marginTop: '16px' }}>
-            <FormLabel style={{ display: 'block', marginBottom: '8px' }}>Featured Stats (exactly 2 required)</FormLabel>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+          <SectionStack>
+            <SectionTitle>Featured Stats (exactly 2 required)</SectionTitle>
+            <TwoColumnGrid>
               {statFields.map((item, index) => (
-                <div key={item.id} style={{ padding: '12px', background: '#f8fafc', borderRadius: '4px' }}>
+                <ItemCard key={item.id}>
                   <FormField control={form.control} name={`featured_stats.${index}.label`} render={({ field }) => (
-                    <FormItem style={{ marginBottom: '8px' }}><FormLabel>Stat Label</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                    <FormItem><FormLabel>Stat Label</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
                   )} />
                   <FormField control={form.control} name={`featured_stats.${index}.value`} render={({ field }) => (
-                    <FormItem className="col-span-full md:col-span-6"><FormLabel>Stat Value</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                    <FormItem><FormLabel>Stat Value</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
                   )} />
-                </div>
+                </ItemCard>
               ))}
-            </div>
-          </div>
-        </div>
-        
-        <div>
+            </TwoColumnGrid>
+          </SectionStack>
+        </BorderedPanel>
+
+        <SectionStack>
           <FormField control={form.control} name="talent_count_label" render={({ field }) => (
             <FormItem><FormLabel>Talent Count Label</FormLabel><FormControl><Input {...field} placeholder="50+ TALENTS" /></FormControl><FormMessage /></FormItem>
           )} />
 
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-            <h5 style={{ fontSize: '1rem', fontWeight: 600, margin: 0 }}>Talent Grid List ({talentFields.length})</h5>
+          <SectionHeaderRow>
+            <SectionTitle>Talent Grid List ({talentFields.length})</SectionTitle>
             <Button type="button" variant="outline" size="sm" onClick={() => appendTalent({ name: '', photo: '', photo_alt: '' })}>
               + Add Talent Item
             </Button>
-          </div>
-          
+          </SectionHeaderRow>
+
           {talentFields.map((item, index) => (
-            <div className="flex flex-col md:grid md:grid-cols-12 gap-4 p-4 border border-slate-200 rounded-lg mb-4 bg-slate-50 items-end" key={item.id}>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <ItemCard key={item.id}>
+              <TwoColumnGrid>
                 <FormField control={form.control} name={`talents.${index}.name`} render={({ field }) => (
-                  <FormItem className="col-span-full md:col-span-6"><FormLabel>Name</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                  <FormItem><FormLabel>Name</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
                 )} />
-                <div style={{ display: 'flex', gap: '8px', alignItems: 'flex-end' }}>
+                <HeaderRow>
                   <FormField control={form.control} name={`talents.${index}.photo`} render={({ field }) => (
-                    <FormItem style={{ marginBottom: 0, flex: 1 }}><FormLabel>Photo URL</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                    <FormItem><FormLabel>Photo URL</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
                   )} />
                   <Button type="button" variant="destructive" size="sm" onClick={() => removeTalent(index)}>Remove</Button>
-                </div>
-              </div>
-            </div>
+                </HeaderRow>
+              </TwoColumnGrid>
+            </ItemCard>
           ))}
-          {form.formState.errors.talents && <p style={{ color: '#ef4444', fontSize: '0.875rem' }}>{form.formState.errors.talents.message}</p>}
-        </div>
+          {form.formState.errors.talents && <ErrorText>{form.formState.errors.talents.message}</ErrorText>}
+        </SectionStack>
 
-      </form>
+      </FormStack>
     </Form>
   );
 }

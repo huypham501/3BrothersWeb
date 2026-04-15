@@ -28,7 +28,7 @@ export interface CmsPage {
   updated_at: string;
 }
 
-export interface CmsPageSection<TPayload = any> {
+export interface CmsPageSection<TPayload = unknown> {
   id: string;
   page_id: string;
   schema_key: string;
@@ -49,7 +49,7 @@ export interface CmsPageSection<TPayload = any> {
   updated_at: string;
 }
 
-export interface CmsSharedSection<TPayload = any> {
+export interface CmsSharedSection<TPayload = unknown> {
   id: string;
   schema_key: string;
   section_key: string;
@@ -68,7 +68,7 @@ export interface CmsSharedSection<TPayload = any> {
   updated_at: string;
 }
 
-export interface CmsGlobalSetting<TPayload = any> {
+export interface CmsGlobalSetting<TPayload = unknown> {
   id: string;
   schema_key: string;
   setting_key: string;

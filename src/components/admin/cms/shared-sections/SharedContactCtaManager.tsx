@@ -5,16 +5,20 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import styled from 'styled-components';
 import { CmsSharedSection, sharedContactCtaSchema, SCHEMA_KEYS } from '@/lib/cms';
 import { saveSharedSection, publishSharedSection } from '@/lib/cms/actions';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Button } from '@/components/ui/Button';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
-import { Switch } from '@/components/ui/switch';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/admin/controls/AdminForm';
+import { AdminInput as Input } from '@/components/admin/controls/AdminInput';
+import { AdminTextarea as Textarea } from '@/components/admin/controls/AdminTextarea';
+import { AdminSwitch as Switch } from '@/components/admin/controls/AdminSwitch';
+import {
+  AdminAlert,
+  AdminAlertDescription,
+  AdminAlertTitle,
+  AdminBadge,
+  AdminButton,
+} from '@/components/admin/layout/AdminPrimitives';
 
 type FormValues = z.infer<typeof sharedContactCtaSchema> & { enabled: boolean };
 
@@ -99,86 +103,86 @@ export function SharedContactCtaManager({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSaveDraft)} className="space-y-6">
-        <Alert>
-          <AlertTitle>Cross-Page Impact Warning</AlertTitle>
-          <AlertDescription>
+      <FormRoot onSubmit={form.handleSubmit(onSaveDraft)}>
+        <AdminAlert>
+          <AdminAlertTitle>Cross-Page Impact Warning</AdminAlertTitle>
+          <AdminAlertDescription>
             This shared section is used by multiple routes. Publish will update all routes listed below.
-          </AlertDescription>
-          <div className="mt-3 flex flex-wrap gap-2">
+          </AdminAlertDescription>
+          <BadgeRow>
             {usageRoutes.map((route) => (
-              <Badge key={`contact-cta-${route}`} variant="outline">
+              <AdminBadge key={`contact-cta-${route}`}>
                 {route}
-              </Badge>
+              </AdminBadge>
             ))}
-          </div>
-        </Alert>
+          </BadgeRow>
+        </AdminAlert>
 
         {errorMsg && (
-          <Alert variant="destructive">
-            <AlertDescription>{errorMsg}</AlertDescription>
-          </Alert>
+          <AdminAlert tone="destructive">
+            <AdminAlertDescription>{errorMsg}</AdminAlertDescription>
+          </AdminAlert>
         )}
 
         {successMsg && (
-          <Alert variant="success">
-            <AlertDescription>{successMsg}</AlertDescription>
-          </Alert>
+          <AdminAlert>
+            <AdminAlertDescription>{successMsg}</AdminAlertDescription>
+          </AdminAlert>
         )}
 
-        <div className="rounded-md border bg-card p-4">
-          <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-            <div className="space-y-2">
-              <div className="flex flex-wrap items-center gap-2">
-                <Badge variant="outline">{section.schema_key}</Badge>
-                <Badge variant={section.published_enabled ? 'default' : 'outline'}>
+        <SectionCard>
+          <ActionHeader>
+            <MetaGroup>
+              <BadgeRow>
+                <AdminBadge>{section.schema_key}</AdminBadge>
+                <AdminBadge tone={section.published_enabled ? 'success' : 'neutral'}>
                   {section.published_enabled ? 'Published: Enabled' : 'Published: Disabled'}
-                </Badge>
-                <Badge variant={section.has_unpublished_changes ? 'secondary' : 'outline'}>
+                </AdminBadge>
+                <AdminBadge tone={section.has_unpublished_changes ? 'warning' : 'neutral'}>
                   {section.has_unpublished_changes ? 'Has Unpublished Changes' : 'No Unpublished Changes'}
-                </Badge>
-              </div>
-              <p className="text-xs text-muted-foreground">Your role: {role}</p>
-              <p className="text-xs text-muted-foreground">
+                </AdminBadge>
+              </BadgeRow>
+              <MetaText>Your role: {role}</MetaText>
+              <MetaText>
                 Last edited: {section.last_edited_by_identifier ?? 'N/A'} at {formatAuditDate(section.last_edited_at)}
-              </p>
-              <p className="text-xs text-muted-foreground">
+              </MetaText>
+              <MetaText>
                 Last published: {section.last_published_by_identifier ?? 'N/A'} at {formatAuditDate(section.last_published_at)}
-              </p>
-            </div>
+              </MetaText>
+            </MetaGroup>
 
-            <div className="flex items-center gap-2">
-              <Button type="submit" variant="outline" disabled={isSaving || isPublishing || !form.formState.isDirty}>
+            <ButtonGroup>
+              <AdminButton type="submit" variant="outline" disabled={isSaving || isPublishing || !form.formState.isDirty}>
                 {isSaving ? 'Saving Draft...' : 'Save Draft'}
-              </Button>
-              <Button
+              </AdminButton>
+              <AdminButton
                 type="button"
                 onClick={handlePublish}
                 disabled={isSaving || isPublishing || !canPublish}
                 title={canPublish ? undefined : 'Your role cannot publish.'}
               >
                 {isPublishing ? 'Publishing...' : 'Publish'}
-              </Button>
-            </div>
-          </div>
+              </AdminButton>
+            </ButtonGroup>
+          </ActionHeader>
 
-          <Separator className="my-4" />
+          <Divider />
 
           <FormField
             control={form.control}
             name="enabled"
             render={({ field }) => (
-              <FormItem className="flex items-center justify-between rounded-md border p-3">
+              <ToggleFormItem>
                 <div>
                   <FormLabel>Enable Shared Section</FormLabel>
                 </div>
                 <FormControl>
                   <Switch checked={field.value} onCheckedChange={field.onChange} />
                 </FormControl>
-              </FormItem>
+              </ToggleFormItem>
             )}
           />
-        </div>
+        </SectionCard>
 
         <FormField
           control={form.control}
@@ -208,7 +212,7 @@ export function SharedContactCtaManager({
           )}
         />
 
-        <div className="grid gap-4 md:grid-cols-2">
+        <TwoColumnGrid>
           <FormField
             control={form.control}
             name="cta_label"
@@ -236,8 +240,78 @@ export function SharedContactCtaManager({
               </FormItem>
             )}
           />
-        </div>
-      </form>
+        </TwoColumnGrid>
+      </FormRoot>
     </Form>
   );
 }
+
+const FormRoot = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+`;
+
+const SectionCard = styled.div`
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  background: #ffffff;
+  padding: 16px;
+`;
+
+const ActionHeader = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+`;
+
+const MetaGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+`;
+
+const BadgeRow = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+`;
+
+const MetaText = styled.p`
+  margin: 0;
+  font-size: 0.75rem;
+  color: #64748b;
+`;
+
+const ButtonGroup = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+`;
+
+const Divider = styled.hr`
+  margin: 16px 0;
+  border: 0;
+  border-top: 1px solid #e2e8f0;
+`;
+
+const ToggleFormItem = styled(FormItem)`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 12px;
+`;
+
+const TwoColumnGrid = styled.div`
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+`;

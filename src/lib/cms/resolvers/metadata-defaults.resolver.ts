@@ -1,6 +1,7 @@
 import { getGlobalSetting } from '../queries';
 import { SCHEMA_KEYS } from '../constants/schema-keys';
 import type { CmsPage, GlobalSeoDefaultsPayload, GlobalSiteMetadataPayload } from '../types';
+import { resolveGlobalContentBySchemaKey, validateCmsPayloadBySchemaKey } from './utils/cms-content';
 
 export interface ResolvedMetadataModel {
   title: string;
@@ -38,8 +39,17 @@ export async function resolvePublishedMetadataDefaults() {
     getGlobalSetting(SCHEMA_KEYS.GLOBAL_SITE_METADATA),
   ]);
 
-  const seo = seoRecord?.published_enabled ? (seoRecord.published_content as GlobalSeoDefaultsPayload) : null;
-  const site = siteRecord?.published_enabled ? (siteRecord.published_content as GlobalSiteMetadataPayload) : null;
+  const seo = validateCmsPayloadBySchemaKey(
+    SCHEMA_KEYS.GLOBAL_SEO_DEFAULTS,
+    resolveGlobalContentBySchemaKey<typeof SCHEMA_KEYS.GLOBAL_SEO_DEFAULTS>(seoRecord),
+    'metadata.defaults.seo'
+  );
+
+  const site = validateCmsPayloadBySchemaKey(
+    SCHEMA_KEYS.GLOBAL_SITE_METADATA,
+    resolveGlobalContentBySchemaKey<typeof SCHEMA_KEYS.GLOBAL_SITE_METADATA>(siteRecord),
+    'metadata.defaults.site'
+  );
 
   return { seo, site };
 }

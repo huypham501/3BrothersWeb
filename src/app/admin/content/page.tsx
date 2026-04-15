@@ -1,11 +1,22 @@
 import Link from 'next/link';
+import styled from 'styled-components';
 import { requireAdminUser } from '@/lib/admin/require-admin-user';
 import { hasCmsCapability } from '@/lib/cms/constants/roles';
 import { getRecentCmsAuditLogs } from '@/lib/cms/queries';
 import { CmsAuditLogList } from '@/components/admin/cms/audit/CmsAuditLogList';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/Button';
-import { Badge } from '@/components/ui/badge';
+import { AdminShell } from '@/components/admin/layout/AdminShell';
+import { AdminTopNav } from '@/components/admin/layout/AdminTopNav';
+import { AdminPageHeader } from '@/components/admin/layout/AdminPageHeader';
+import { CONTENT_MODULE_NAV } from '@/components/admin/layout/nav-items';
+import {
+  AdminBadge,
+  AdminButton,
+  AdminCard,
+  AdminCardContent,
+  AdminCardDescription,
+  AdminCardHeader,
+  AdminCardTitle,
+} from '@/components/admin/layout/AdminPrimitives';
 
 export const dynamic = 'force-dynamic';
 
@@ -17,87 +28,92 @@ export default async function AdminContentIndexPage() {
   const canEditDraft = hasCmsCapability(actor.role, 'edit_draft');
 
   return (
-    <div className="min-h-screen bg-slate-100 p-8">
-      <div className="mx-auto max-w-5xl space-y-6">
-        <div>
-          <h1 className="text-2xl font-semibold">Content Admin</h1>
-          <p className="text-sm text-muted-foreground">Manage page content and site-wide global settings.</p>
-          <div className="mt-2 flex items-center gap-2">
-            <Badge variant="outline">Role: {actor.role}</Badge>
-            <Button asChild size="sm" variant="outline">
-              <Link href="/admin/content/audit">Open Audit Log</Link>
-            </Button>
-          </div>
-        </div>
+    <AdminShell>
+      <AdminTopNav items={CONTENT_MODULE_NAV} activeHref="/admin/content" />
+      <AdminPageHeader
+        title="Content Admin"
+        description="Manage page content and site-wide global settings."
+      >
+        <AdminBadge>Role: {actor.role}</AdminBadge>
+        <AdminButton href="/admin/content/audit" size="sm" variant="outline">
+          Open Audit Log
+        </AdminButton>
+      </AdminPageHeader>
 
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Home CMS</CardTitle>
-              <CardDescription>Manage Home page local sections and related shared modules.</CardDescription>
-            </CardHeader>
-            <CardContent>
+      <CardsGrid>
+          <AdminCard>
+            <AdminCardHeader>
+              <AdminCardTitle>Home CMS</AdminCardTitle>
+              <AdminCardDescription>Manage Home page local sections and related shared modules.</AdminCardDescription>
+            </AdminCardHeader>
+            <AdminCardContent>
               {canEditDraft ? (
-                <Button asChild>
-                  <Link href="/admin/content/pages/home">Open Home Editor</Link>
-                </Button>
+                <AdminButton href="/admin/content/pages/home">Open Home Editor</AdminButton>
               ) : (
-                <Button disabled>Requires `edit_draft`</Button>
+                <AdminButton disabled>Requires `edit_draft`</AdminButton>
               )}
-            </CardContent>
-          </Card>
+            </AdminCardContent>
+          </AdminCard>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Shared Sections</CardTitle>
-              <CardDescription>Manage reusable shared content with usage map and independent publish.</CardDescription>
-            </CardHeader>
-            <CardContent>
+          <AdminCard>
+            <AdminCardHeader>
+              <AdminCardTitle>Shared Sections</AdminCardTitle>
+              <AdminCardDescription>Manage reusable shared content with usage map and independent publish.</AdminCardDescription>
+            </AdminCardHeader>
+            <AdminCardContent>
               {canManageShared ? (
-                <Button asChild>
-                  <Link href="/admin/content/shared">Open Shared Sections</Link>
-                </Button>
+                <AdminButton href="/admin/content/shared">Open Shared Sections</AdminButton>
               ) : (
-                <Button disabled>Requires `manage_shared_sections`</Button>
+                <AdminButton disabled>Requires `manage_shared_sections`</AdminButton>
               )}
-            </CardContent>
-          </Card>
+            </AdminCardContent>
+          </AdminCard>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>For Creators CMS</CardTitle>
-              <CardDescription>Manage For Creators page-level and local section content.</CardDescription>
-            </CardHeader>
-            <CardContent>
+          <AdminCard>
+            <AdminCardHeader>
+              <AdminCardTitle>For Creators CMS</AdminCardTitle>
+              <AdminCardDescription>Manage For Creators page-level and local section content.</AdminCardDescription>
+            </AdminCardHeader>
+            <AdminCardContent>
               {canEditDraft ? (
-                <Button asChild>
-                  <Link href="/admin/content/pages/for-creators">Open For Creators Editor</Link>
-                </Button>
+                <AdminButton href="/admin/content/pages/for-creators">Open For Creators Editor</AdminButton>
               ) : (
-                <Button disabled>Requires `edit_draft`</Button>
+                <AdminButton disabled>Requires `edit_draft`</AdminButton>
               )}
-            </CardContent>
-          </Card>
+            </AdminCardContent>
+          </AdminCard>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Global Settings</CardTitle>
-              <CardDescription>Manage site-wide Header and Footer with independent draft/publish workflow.</CardDescription>
-            </CardHeader>
-            <CardContent>
+          <AdminCard>
+            <AdminCardHeader>
+              <AdminCardTitle>Global Settings</AdminCardTitle>
+              <AdminCardDescription>Manage site-wide Header and Footer with independent draft/publish workflow.</AdminCardDescription>
+            </AdminCardHeader>
+            <AdminCardContent>
               {canManageGlobal ? (
-                <Button asChild>
-                  <Link href="/admin/content/settings">Open Global Settings</Link>
-                </Button>
+                <AdminButton href="/admin/content/settings">Open Global Settings</AdminButton>
               ) : (
-                <Button disabled>Requires `manage_global_settings`</Button>
+                <AdminButton disabled>Requires `manage_global_settings`</AdminButton>
               )}
-            </CardContent>
-          </Card>
-        </div>
+            </AdminCardContent>
+          </AdminCard>
 
-        <CmsAuditLogList logs={recentLogs} />
-      </div>
-    </div>
+      </CardsGrid>
+
+      <CmsAuditLogList logs={recentLogs} />
+    </AdminShell>
   );
 }
+
+const CardsGrid = styled.div`
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @media (min-width: 1280px) {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+`;

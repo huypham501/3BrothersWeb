@@ -5,15 +5,19 @@ import { useRouter } from 'next/navigation';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import styled from 'styled-components';
 import { CmsGlobalSetting, globalFooterSchema, SCHEMA_KEYS } from '@/lib/cms';
 import { saveGlobalSettingDraft, publishGlobalSetting } from '@/lib/cms/actions';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/Button';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Badge } from '@/components/ui/badge';
-import { Switch } from '@/components/ui/switch';
-import { Separator } from '@/components/ui/separator';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/admin/controls/AdminForm';
+import { AdminInput as Input } from '@/components/admin/controls/AdminInput';
+import { AdminSwitch as Switch } from '@/components/admin/controls/AdminSwitch';
+import {
+  AdminAlert,
+  AdminAlertDescription,
+  AdminAlertTitle,
+  AdminBadge,
+  AdminButton,
+} from '@/components/admin/layout/AdminPrimitives';
 
 type FormValues = z.infer<typeof globalFooterSchema> & { enabled: boolean };
 
@@ -108,79 +112,79 @@ export function GlobalFooterEditor({ setting, role, canPublish }: GlobalFooterEd
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSaveDraft)} className="space-y-6">
-        <Alert>
-          <AlertTitle>Global Impact Warning</AlertTitle>
-          <AlertDescription>
+      <FormRoot onSubmit={form.handleSubmit(onSaveDraft)}>
+        <AdminAlert>
+          <AdminAlertTitle>Global Impact Warning</AdminAlertTitle>
+          <AdminAlertDescription>
             This Footer configuration is shared across multiple pages. Draft first, then publish when you are ready to update site-wide chrome.
-          </AlertDescription>
-        </Alert>
+          </AdminAlertDescription>
+        </AdminAlert>
 
         {errorMsg && (
-          <Alert variant="destructive">
-            <AlertDescription>{errorMsg}</AlertDescription>
-          </Alert>
+          <AdminAlert tone="destructive">
+            <AdminAlertDescription>{errorMsg}</AdminAlertDescription>
+          </AdminAlert>
         )}
 
         {successMsg && (
-          <Alert variant="success">
-            <AlertDescription>{successMsg}</AlertDescription>
-          </Alert>
+          <AdminAlert>
+            <AdminAlertDescription>{successMsg}</AdminAlertDescription>
+          </AdminAlert>
         )}
 
-        <div className="rounded-md border bg-card p-4">
-          <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-            <div className="space-y-2">
-              <div className="flex flex-wrap items-center gap-2">
-                <Badge variant="outline">{setting.schema_key}</Badge>
-                <Badge variant={setting.published_enabled ? 'default' : 'outline'}>
+        <SectionCard>
+          <ActionHeader>
+            <MetaGroup>
+              <BadgeRow>
+                <AdminBadge>{setting.schema_key}</AdminBadge>
+                <AdminBadge tone={setting.published_enabled ? 'success' : 'neutral'}>
                   {setting.published_enabled ? 'Published: Enabled' : 'Published: Disabled'}
-                </Badge>
-                <Badge variant={setting.has_unpublished_changes ? 'secondary' : 'outline'}>
+                </AdminBadge>
+                <AdminBadge tone={setting.has_unpublished_changes ? 'warning' : 'neutral'}>
                   {setting.has_unpublished_changes ? 'Has Unpublished Changes' : 'No Unpublished Changes'}
-                </Badge>
-              </div>
-              <p className="text-xs text-muted-foreground">Your role: {role}</p>
-              <p className="text-xs text-muted-foreground">
+                </AdminBadge>
+              </BadgeRow>
+              <MetaText>Your role: {role}</MetaText>
+              <MetaText>
                 Last edited: {setting.last_edited_by_identifier ?? 'N/A'} at {formatAuditDate(setting.last_edited_at)}
-              </p>
-              <p className="text-xs text-muted-foreground">
+              </MetaText>
+              <MetaText>
                 Last published: {setting.last_published_by_identifier ?? 'N/A'} at {formatAuditDate(setting.last_published_at)}
-              </p>
-            </div>
+              </MetaText>
+            </MetaGroup>
 
-            <div className="flex items-center gap-2">
-              <Button type="submit" disabled={isSaving || isPublishing || !form.formState.isDirty} variant="outline">
+            <ButtonGroup>
+              <AdminButton type="submit" disabled={isSaving || isPublishing || !form.formState.isDirty} variant="outline">
                 {isSaving ? 'Saving Draft...' : 'Save Draft'}
-              </Button>
-              <Button
+              </AdminButton>
+              <AdminButton
                 type="button"
                 onClick={handlePublish}
                 disabled={isSaving || isPublishing || !canPublish}
                 title={canPublish ? undefined : 'Your role cannot publish.'}
               >
                 {isPublishing ? 'Publishing...' : 'Publish'}
-              </Button>
-            </div>
-          </div>
+              </AdminButton>
+            </ButtonGroup>
+          </ActionHeader>
 
-          <Separator className="my-4" />
+          <Divider />
 
           <FormField
             control={form.control}
             name="enabled"
             render={({ field }) => (
-              <FormItem className="flex items-center justify-between rounded-md border p-3">
+              <ToggleFormItem>
                 <div>
                   <FormLabel>Enable Footer</FormLabel>
                 </div>
                 <FormControl>
                   <Switch checked={field.value} onCheckedChange={field.onChange} />
                 </FormControl>
-              </FormItem>
+              </ToggleFormItem>
             )}
           />
-        </div>
+        </SectionCard>
 
         <FormField
           control={form.control}
@@ -196,7 +200,7 @@ export function GlobalFooterEditor({ setting, role, canPublish }: GlobalFooterEd
           )}
         />
 
-        <div className="grid gap-4 md:grid-cols-2">
+        <TwoColumnGrid>
           <FormField
             control={form.control}
             name="email"
@@ -224,23 +228,23 @@ export function GlobalFooterEditor({ setting, role, canPublish }: GlobalFooterEd
               </FormItem>
             )}
           />
-        </div>
+        </TwoColumnGrid>
 
-        <div className="space-y-3">
-          <div className="flex items-center justify-between">
-            <h3 className="text-base font-semibold">Menu Links</h3>
-            <Button
+        <Block>
+          <BlockHeader>
+            <BlockTitle>Menu Links</BlockTitle>
+            <AdminButton
               type="button"
               variant="outline"
               onClick={() => menuLinksArray.append({ label: '', url: '/' })}
               disabled={menuLinksArray.fields.length >= 10}
             >
               Add Menu Link
-            </Button>
-          </div>
+            </AdminButton>
+          </BlockHeader>
 
           {menuLinksArray.fields.map((field, index) => (
-            <div key={field.id} className="grid gap-3 rounded-md border p-3 md:grid-cols-[1fr_1fr_auto]">
+            <EditableRow key={field.id}>
               <FormField
                 control={form.control}
                 name={`menu_links.${index}.label`}
@@ -269,35 +273,35 @@ export function GlobalFooterEditor({ setting, role, canPublish }: GlobalFooterEd
                 )}
               />
 
-              <div className="flex items-end">
-                <Button
+              <RowActions>
+                <AdminButton
                   type="button"
-                  variant="destructive"
+                  variant="outline"
                   onClick={() => menuLinksArray.remove(index)}
                   disabled={menuLinksArray.fields.length <= 1}
                 >
                   Remove
-                </Button>
-              </div>
-            </div>
+                </AdminButton>
+              </RowActions>
+            </EditableRow>
           ))}
-        </div>
+        </Block>
 
-        <div className="space-y-3">
-          <div className="flex items-center justify-between">
-            <h3 className="text-base font-semibold">Social Links</h3>
-            <Button
+        <Block>
+          <BlockHeader>
+            <BlockTitle>Social Links</BlockTitle>
+            <AdminButton
               type="button"
               variant="outline"
               onClick={() => socialLinksArray.append({ label: '', url: '#' })}
               disabled={socialLinksArray.fields.length >= 8}
             >
               Add Social Link
-            </Button>
-          </div>
+            </AdminButton>
+          </BlockHeader>
 
           {socialLinksArray.fields.map((field, index) => (
-            <div key={field.id} className="grid gap-3 rounded-md border p-3 md:grid-cols-[1fr_1fr_auto]">
+            <EditableRow key={field.id}>
               <FormField
                 control={form.control}
                 name={`social_links.${index}.label`}
@@ -326,19 +330,19 @@ export function GlobalFooterEditor({ setting, role, canPublish }: GlobalFooterEd
                 )}
               />
 
-              <div className="flex items-end">
-                <Button
+              <RowActions>
+                <AdminButton
                   type="button"
-                  variant="destructive"
+                  variant="outline"
                   onClick={() => socialLinksArray.remove(index)}
                   disabled={socialLinksArray.fields.length <= 1}
                 >
                   Remove
-                </Button>
-              </div>
-            </div>
+                </AdminButton>
+              </RowActions>
+            </EditableRow>
           ))}
-        </div>
+        </Block>
 
         <FormField
           control={form.control}
@@ -353,7 +357,115 @@ export function GlobalFooterEditor({ setting, role, canPublish }: GlobalFooterEd
             </FormItem>
           )}
         />
-      </form>
+      </FormRoot>
     </Form>
   );
 }
+
+const FormRoot = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+`;
+
+const SectionCard = styled.div`
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  background: #ffffff;
+  padding: 16px;
+`;
+
+const ActionHeader = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+`;
+
+const MetaGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+`;
+
+const BadgeRow = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+`;
+
+const MetaText = styled.p`
+  margin: 0;
+  font-size: 0.75rem;
+  color: #64748b;
+`;
+
+const ButtonGroup = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+`;
+
+const Divider = styled.hr`
+  margin: 16px 0;
+  border: 0;
+  border-top: 1px solid #e2e8f0;
+`;
+
+const ToggleFormItem = styled(FormItem)`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 12px;
+`;
+
+const TwoColumnGrid = styled.div`
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+`;
+
+const Block = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+`;
+
+const BlockHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+`;
+
+const BlockTitle = styled.h3`
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #0f172a;
+`;
+
+const EditableRow = styled.div`
+  display: grid;
+  gap: 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 12px;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+
+  @media (min-width: 768px) {
+    grid-template-columns: 1fr 1fr auto;
+  }
+`;
+
+const RowActions = styled.div`
+  display: flex;
+  align-items: flex-end;
+`;
