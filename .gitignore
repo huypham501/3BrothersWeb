@@ -20,5 +20,7 @@ pnpm-debug.log*
 
 # AI agents and design assets
 /design
+/docs
+walkthrough*
 .agent-state
 .chrome-profile

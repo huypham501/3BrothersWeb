@@ -1,39 +1,19 @@
 'use client';
 
 import * as React from 'react';
-import styled from 'styled-components';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CmsSharedSection, sharedExclusiveTalentsSchema } from '@/lib/cms';
 import { saveSharedSection } from '@/lib/cms/actions';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../../ui/Form';
-import { Input, Textarea } from '../../ui/Input';
-import { Button } from '../../ui/Button';
-import { Alert, AlertDescription, AlertTitle } from '../../ui/Alert';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/Button';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { z } from 'zod';
 
-const FormGrid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
-`;
 
-const ArrayItemGrid = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  padding: 16px;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  margin-bottom: 16px;
-  background: #f8fafc;
-`;
 
-const HeaderRow = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: 24px;
-`;
 
 export function SharedExclusiveTalentsEditor({ section }: { section: CmsSharedSection }) {
   const [isSaving, setIsSaving] = React.useState(false);
@@ -85,7 +65,7 @@ export function SharedExclusiveTalentsEditor({ section }: { section: CmsSharedSe
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-6">
         <Alert variant="default" style={{ backgroundColor: '#fffbeb', borderColor: '#fcd34d' }}>
           <AlertTitle>Shared Content Warning</AlertTitle>
           <AlertDescription>
@@ -96,11 +76,11 @@ export function SharedExclusiveTalentsEditor({ section }: { section: CmsSharedSe
         {errorMsg && <Alert variant="destructive"><AlertDescription>{errorMsg}</AlertDescription></Alert>}
         {success && <Alert variant="success"><AlertDescription>Shared talents saved successfully.</AlertDescription></Alert>}
 
-        <HeaderRow>
+        <div className="flex justify-between items-center mb-6">
           <Button type="submit" disabled={isSaving || !form.formState.isDirty}>
             {isSaving ? 'Saving...' : 'Save Shared Section'}
           </Button>
-        </HeaderRow>
+        </div>
 
         <FormField
           control={form.control}
@@ -118,40 +98,40 @@ export function SharedExclusiveTalentsEditor({ section }: { section: CmsSharedSe
 
         <div style={{ padding: '16px', border: '1px solid #e2e8f0', borderRadius: '8px' }}>
           <h5 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '16px' }}>Featured Talent</h5>
-          <FormGrid>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <FormField control={form.control} name="featured_name" render={({ field }) => (
               <FormItem><FormLabel>Name</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
             )} />
             <FormField control={form.control} name="featured_handle" render={({ field }) => (
               <FormItem><FormLabel>Handle (e.g. @username)</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
             )} />
-          </FormGrid>
-          <FormGrid>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <FormField control={form.control} name="featured_photo" render={({ field }) => (
               <FormItem><FormLabel>Photo URL</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
             )} />
             <FormField control={form.control} name="featured_photo_alt" render={({ field }) => (
               <FormItem><FormLabel>Photo Alt Text</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
             )} />
-          </FormGrid>
+          </div>
           <FormField control={form.control} name="featured_description" render={({ field }) => (
             <FormItem><FormLabel>Description</FormLabel><FormControl><Textarea {...field} /></FormControl><FormMessage /></FormItem>
           )} />
           
           <div style={{ marginTop: '16px' }}>
             <FormLabel style={{ display: 'block', marginBottom: '8px' }}>Featured Stats (exactly 2 required)</FormLabel>
-            <FormGrid>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {statFields.map((item, index) => (
                 <div key={item.id} style={{ padding: '12px', background: '#f8fafc', borderRadius: '4px' }}>
                   <FormField control={form.control} name={`featured_stats.${index}.label`} render={({ field }) => (
                     <FormItem style={{ marginBottom: '8px' }}><FormLabel>Stat Label</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
                   )} />
                   <FormField control={form.control} name={`featured_stats.${index}.value`} render={({ field }) => (
-                    <FormItem style={{ marginBottom: 0 }}><FormLabel>Stat Value</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                    <FormItem className="col-span-full md:col-span-6"><FormLabel>Stat Value</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
                   )} />
                 </div>
               ))}
-            </FormGrid>
+            </div>
           </div>
         </div>
         
@@ -168,10 +148,10 @@ export function SharedExclusiveTalentsEditor({ section }: { section: CmsSharedSe
           </div>
           
           {talentFields.map((item, index) => (
-            <ArrayItemGrid key={item.id}>
-              <FormGrid>
+            <div className="flex flex-col md:grid md:grid-cols-12 gap-4 p-4 border border-slate-200 rounded-lg mb-4 bg-slate-50 items-end" key={item.id}>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <FormField control={form.control} name={`talents.${index}.name`} render={({ field }) => (
-                  <FormItem style={{ marginBottom: 0 }}><FormLabel>Name</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                  <FormItem className="col-span-full md:col-span-6"><FormLabel>Name</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
                 )} />
                 <div style={{ display: 'flex', gap: '8px', alignItems: 'flex-end' }}>
                   <FormField control={form.control} name={`talents.${index}.photo`} render={({ field }) => (
@@ -179,8 +159,8 @@ export function SharedExclusiveTalentsEditor({ section }: { section: CmsSharedSe
                   )} />
                   <Button type="button" variant="destructive" size="sm" onClick={() => removeTalent(index)}>Remove</Button>
                 </div>
-              </FormGrid>
-            </ArrayItemGrid>
+              </div>
+            </div>
           ))}
           {form.formState.errors.talents && <p style={{ color: '#ef4444', fontSize: '0.875rem' }}>{form.formState.errors.talents.message}</p>}
         </div>

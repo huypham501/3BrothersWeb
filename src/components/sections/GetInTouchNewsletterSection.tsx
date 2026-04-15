@@ -76,7 +76,7 @@ export function GetInTouchNewsletterSection() {
                     href="#tab1"
                     role="tab"
                   >
-                    I'm a Creator
+                    I&apos;m a Creator
                   </NavLink>
                 </NavItem>
                 <NavItem className={activeTab === 'brand' ? 'active' : ''}>

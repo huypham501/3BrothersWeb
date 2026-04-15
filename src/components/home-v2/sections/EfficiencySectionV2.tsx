@@ -4,30 +4,11 @@ import React, { Fragment } from 'react';
 import styled from 'styled-components';
 import { colors, spacing, typography, mediaQueries, motion } from '@/styles/tokens';
 
-const STATS = [
-  {
-    title: 'Lượt tiếp cận',
-    description: 'Đa nền tảng, tiếp cận đa dạng tệp khách hàng',
-    number: '30M+',
-  },
-  {
-    title: 'Video được sản xuất',
-    description: 'Năng lực sản xuất, đảm bảo tiến độ',
-    number: '30M+',
-  },
-  {
-    title: 'Lượt tiếp cận',
-    description: 'Lượt tiếp cận',
-    number: '30M+',
-  },
-  {
-    title: 'Lượt tiếp cận',
-    description: 'Lượt tiếp cận',
-    number: '30M+',
-  },
-];
+import { HomeEfficiencyPayload } from '@/lib/cms/types';
 
-export function EfficiencySectionV2() {
+export function EfficiencySectionV2({ content }: { content: HomeEfficiencyPayload }) {
+  const STATS = content.stats || [];
+
   return (
     <SectionContainer>
       {/* Background ambient blurs - subtle darker blues on the blue bg */}
@@ -36,23 +17,23 @@ export function EfficiencySectionV2() {
       <BgBlur style={{ width: '637px', height: '641px', left: '91px', top: '285px', background: '#003CA6', opacity: 0.3, filter: 'blur(60px)' }} />
 
       <ContentWrapper>
-        <Title>Hiệu quả thực thi</Title>
+        <Title>{content.section_title}</Title>
 
         <TopHeader>
           <TextContent>
-            <Description>
-              Chúng tôi cung cấp giải pháp Influencer Marketing &amp; Talent Management chuyên nghiệp, giúp thương hiệu triển khai hiệu quả và xây dựng giá trị dài hạn.
-            </Description>
+            <Description>{content.description}</Description>
           </TextContent>
 
           <ButtonGroup>
-            <PrimaryButton href="#">
-              Liên hệ tư vấn
+            <PrimaryButton href={content.primary_cta_url}>
+              {content.primary_cta_label}
               <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14M12 5l7 7-7 7" />
               </svg>
             </PrimaryButton>
-            <SecondaryButton href="#">Xem portfolio</SecondaryButton>
+            {content.secondary_cta_label && content.secondary_cta_url && (
+              <SecondaryButton href={content.secondary_cta_url}>{content.secondary_cta_label}</SecondaryButton>
+            )}
           </ButtonGroup>
         </TopHeader>
 

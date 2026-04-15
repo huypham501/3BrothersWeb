@@ -3,7 +3,16 @@
 import styled from 'styled-components';
 import { colors, spacing, typography, mediaQueries, motion } from '@/styles/tokens';
 
-export function ContactCTASectionV2() {
+import { SharedContactCtaPayload } from '@/lib/cms/types';
+
+const DEFAULT_CONTACT_CTA_CONTENT: SharedContactCtaPayload = {
+  title: 'GET IN TOUCH',
+  subtitle: '',
+  cta_label: 'Contact us',
+  cta_url: '/',
+};
+
+export function ContactCTASectionV2({ content = DEFAULT_CONTACT_CTA_CONTENT }: { content?: SharedContactCtaPayload }) {
   // 22 beams as in the design (Rectangle 27 through 48)
   // Each beam is 134px wide, 590px tall, spaced 66px apart with a step-down in top
   const beams = Array.from({ length: 22 }, (_, i) => {
@@ -36,14 +45,13 @@ export function ContactCTASectionV2() {
       </BeamsOverlay>
 
       <ContentBlock>
-        <Title>Đừng ngần ngại&nbsp;liên hệ</Title>
+        <Title dangerouslySetInnerHTML={{ __html: content.title.replace(/\n/g, '<br />') }} />
         <Subtitle>
-          3Brothers Media với sứ mệnh trở thành cầu nối tin cậy giữa các nhãn hàng và các nhà sáng tạo nội dung (KOLs).
-          Chúng tôi tôn trọng cá tính, màu sắc riêng biệt của từng KOL.
+          {content.subtitle}
         </Subtitle>
         <ButtonWrapper>
-          <ContactButton href="#">
-            Liên hệ tư vấn
+          <ContactButton href={content.cta_url || '#'}>
+            {content.cta_label}
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14M12 5l7 7-7 7" />
             </svg>

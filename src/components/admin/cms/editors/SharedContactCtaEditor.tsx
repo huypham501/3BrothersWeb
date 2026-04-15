@@ -1,28 +1,18 @@
 'use client';
 
 import * as React from 'react';
-import styled from 'styled-components';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CmsSharedSection, sharedContactCtaSchema } from '@/lib/cms';
 import { saveSharedSection } from '@/lib/cms/actions';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../../ui/Form';
-import { Input, Textarea } from '../../ui/Input';
-import { Button } from '../../ui/Button';
-import { Alert, AlertDescription, AlertTitle } from '../../ui/Alert';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/Button';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { z } from 'zod';
 
-const FormGrid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
-`;
 
-const HeaderRow = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: 24px;
-`;
 
 export function SharedContactCtaEditor({ section }: { section: CmsSharedSection }) {
   const [isSaving, setIsSaving] = React.useState(false);
@@ -59,7 +49,7 @@ export function SharedContactCtaEditor({ section }: { section: CmsSharedSection 
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-6">
         <Alert variant="default" style={{ backgroundColor: '#fffbeb', borderColor: '#fcd34d' }}>
           <AlertTitle>Shared Content Warning</AlertTitle>
           <AlertDescription>
@@ -71,11 +61,11 @@ export function SharedContactCtaEditor({ section }: { section: CmsSharedSection 
         {errorMsg && <Alert variant="destructive"><AlertDescription>{errorMsg}</AlertDescription></Alert>}
         {success && <Alert variant="success"><AlertDescription>Shared section saved successfully.</AlertDescription></Alert>}
 
-        <HeaderRow>
+        <div className="flex justify-between items-center mb-6">
           <Button type="submit" disabled={isSaving || !form.formState.isDirty}>
             {isSaving ? 'Saving...' : 'Save Shared Section'}
           </Button>
-        </HeaderRow>
+        </div>
 
         <FormField
           control={form.control}
@@ -105,7 +95,7 @@ export function SharedContactCtaEditor({ section }: { section: CmsSharedSection 
           )}
         />
 
-        <FormGrid>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <FormField
             control={form.control}
             name="cta_label"
@@ -132,7 +122,7 @@ export function SharedContactCtaEditor({ section }: { section: CmsSharedSection 
               </FormItem>
             )}
           />
-        </FormGrid>
+        </div>
       </form>
     </Form>
   );

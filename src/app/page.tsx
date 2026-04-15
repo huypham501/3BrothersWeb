@@ -2,39 +2,61 @@ import type { Metadata } from "next";
 import { HomeViewV2 } from "@/components/home-v2/HomeViewV2";
 
 import { SITE_URL } from "@/lib/constants";
+import { getPageBySlug } from "@/lib/cms/queries";
+import { resolvePageMetadataModel } from "@/lib/cms/resolvers/metadata-defaults.resolver";
+import { resolveHomePageData } from "@/lib/cms/resolvers/home.resolver";
 
-export const metadata: Metadata = {
-  metadataBase: new URL(SITE_URL),
-  title: "3BROTHERS NETWORK | The Leading Creator Economy Platform",
-  description: "Make your passion your paycheck",
-  keywords: ["youtube", "creators", "creator economy", "3brothers network"],
-  alternates: {
-    canonical: SITE_URL,
-    languages: {
-      en: `${SITE_URL}/en`,
-      vi: `${SITE_URL}/vi`,
-    },
-  },
-  openGraph: {
-    title: "3BROTHERS NETWORK | The Leading Creator Economy Platform",
-    description: "Make your passion your paycheck",
-    url: SITE_URL,
-    type: "website",
-    images: [
-      {
-        url: "/3brothers.png",
-        alt: "3BROTHERS NETWORK",
+export async function generateMetadata(): Promise<Metadata> {
+  const page = await getPageBySlug('home');
+  const metadata = await resolvePageMetadataModel({
+    page,
+    pagePath: '/',
+    fallbackTitle: "3BROTHERS NETWORK | The Leading Creator Economy Platform",
+    fallbackDescription: "Make your passion your paycheck",
+    fallbackKeywords: ["youtube", "creators", "creator economy", "3brothers network"],
+    fallbackSiteUrl: SITE_URL,
+    fallbackOgImage: "/3brothers.png",
+    fallbackOgImageAlt: "3BROTHERS NETWORK",
+  });
+
+  return {
+    metadataBase: new URL(metadata.metadata_base_url),
+    title: metadata.title,
+    description: metadata.description,
+    keywords: metadata.keywords,
+    robots: metadata.robots,
+    alternates: {
+      canonical: metadata.canonical_url,
+      languages: {
+        en: `${SITE_URL}/en`,
+        vi: `${SITE_URL}/vi`,
       },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "3BROTHERS NETWORK | The Leading Creator Economy Platform",
-    description: "Make your passion your paycheck",
-    images: ["/3brothers.png"],
-  },
-};
+    },
+    openGraph: {
+      title: metadata.title,
+      description: metadata.description,
+      url: metadata.canonical_url,
+      siteName: metadata.site_name,
+      type: "website",
+      images: [
+        {
+          url: metadata.og_image,
+          alt: metadata.og_image_alt,
+        },
+      ],
+    },
+    twitter: {
+      card: metadata.twitter_card,
+      title: metadata.title,
+      description: metadata.description,
+      images: [metadata.og_image],
+    },
+  };
+}
 
-export default function HomePage() {
-  return <HomeViewV2 />;
+export default async function HomePage() {
+  const data = await resolveHomePageData();
+  
+  // If no CMS data exists yet, we could fallback, but we assume the admin seeded it
+  return <HomeViewV2 data={data} />;
 }

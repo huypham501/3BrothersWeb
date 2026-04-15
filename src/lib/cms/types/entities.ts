@@ -1,4 +1,5 @@
 export type CmsPublishStatus = 'draft' | 'published';
+export type CmsRole = 'super_admin' | 'content_admin' | 'editor' | 'viewer';
 
 export interface CmsPage {
   id: string;
@@ -11,6 +12,18 @@ export interface CmsPage {
   og_image_alt: string | null;
   canonical_url: string | null;
   keywords: string[];
+  
+  published_seo_title?: string;
+  published_seo_description?: string;
+  published_og_image?: string | null;
+  published_og_image_alt?: string | null;
+  published_keywords?: string[];
+  has_unpublished_changes?: boolean;
+  last_edited_by_identifier?: string | null;
+  last_edited_at?: string | null;
+  last_published_by_identifier?: string | null;
+  last_published_at?: string | null;
+
   created_at: string;
   updated_at: string;
 }
@@ -23,6 +36,15 @@ export interface CmsPageSection<TPayload = any> {
   sort_order: number;
   enabled: boolean;
   content: TPayload;
+
+  published_content?: TPayload;
+  published_enabled?: boolean;
+  has_unpublished_changes?: boolean;
+  last_edited_by_identifier?: string | null;
+  last_edited_at?: string | null;
+  last_published_by_identifier?: string | null;
+  last_published_at?: string | null;
+
   created_at: string;
   updated_at: string;
 }
@@ -33,6 +55,15 @@ export interface CmsSharedSection<TPayload = any> {
   section_key: string;
   enabled: boolean;
   content: TPayload;
+
+  published_content?: TPayload;
+  published_enabled?: boolean;
+  has_unpublished_changes?: boolean;
+  last_edited_by_identifier?: string | null;
+  last_edited_at?: string | null;
+  last_published_by_identifier?: string | null;
+  last_published_at?: string | null;
+
   created_at: string;
   updated_at: string;
 }
@@ -43,6 +74,29 @@ export interface CmsGlobalSetting<TPayload = any> {
   setting_key: string;
   enabled: boolean;
   content: TPayload;
+
+  published_content?: TPayload;
+  published_enabled?: boolean;
+  has_unpublished_changes?: boolean;
+  last_edited_by_identifier?: string | null;
+  last_edited_at?: string | null;
+  last_published_by_identifier?: string | null;
+  last_published_at?: string | null;
+
   created_at: string;
   updated_at: string;
+}
+
+export interface CmsAuditLog {
+  id: string;
+  actor_user_id: string;
+  actor_email_or_identifier: string;
+  actor_role: CmsRole;
+  action_type: 'save_draft' | 'publish';
+  entity_type: 'page' | 'page_section' | 'shared_section' | 'global_setting';
+  entity_id: string | null;
+  entity_key_or_id: string;
+  page_slug_or_schema_key: string | null;
+  summary: string;
+  created_at: string;
 }

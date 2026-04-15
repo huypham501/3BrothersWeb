@@ -1,34 +1,19 @@
 'use client';
 
 import * as React from 'react';
-import styled from 'styled-components';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CmsPageSection, homeHeroSchema } from '@/lib/cms';
 import { savePageSection } from '@/lib/cms/actions';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../../ui/Form';
-import { Input, Textarea } from '../../ui/Input';
-import { Button } from '../../ui/Button';
-import { Switch } from '../../ui/Switch';
-import { Alert, AlertDescription } from '../../ui/Alert';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/Button';
+import { Switch } from '@/components/ui/switch';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { z } from 'zod';
 
-const FormGrid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
-  
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-  }
-`;
 
-const HeaderRow = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24px;
-`;
 
 export function HomeHeroEditor({ pageId, section }: { pageId: string, section: CmsPageSection }) {
   const [isSaving, setIsSaving] = React.useState(false);
@@ -71,17 +56,17 @@ export function HomeHeroEditor({ pageId, section }: { pageId: string, section: C
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-6">
         {errorMsg && <Alert variant="destructive"><AlertDescription>{errorMsg}</AlertDescription></Alert>}
         {success && <Alert variant="success"><AlertDescription>Hero section saved successfully.</AlertDescription></Alert>}
 
-        <HeaderRow>
+        <div className="flex justify-between items-center mb-6">
           <FormField
             control={form.control}
             name="enabled"
             render={({ field }) => (
-              <FormItem style={{ marginBottom: 0, display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <FormLabel style={{ marginBottom: 0 }}>Enable Section</FormLabel>
+              <FormItem className="flex items-center gap-3 space-y-0">
+                <FormLabel className="col-span-full md:col-span-6">Enable Section</FormLabel>
                 <FormControl>
                   <Switch checked={field.value} onCheckedChange={field.onChange} />
                 </FormControl>
@@ -91,7 +76,7 @@ export function HomeHeroEditor({ pageId, section }: { pageId: string, section: C
           <Button type="submit" disabled={isSaving || !form.formState.isDirty}>
             {isSaving ? 'Saving...' : 'Save Section'}
           </Button>
-        </HeaderRow>
+        </div>
 
         <FormField
           control={form.control}
@@ -121,7 +106,7 @@ export function HomeHeroEditor({ pageId, section }: { pageId: string, section: C
           )}
         />
 
-        <FormGrid>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <FormField
             control={form.control}
             name="primary_cta_label"
@@ -148,9 +133,9 @@ export function HomeHeroEditor({ pageId, section }: { pageId: string, section: C
               </FormItem>
             )}
           />
-        </FormGrid>
+        </div>
 
-        <FormGrid>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <FormField
             control={form.control}
             name="secondary_cta_label"
@@ -177,9 +162,9 @@ export function HomeHeroEditor({ pageId, section }: { pageId: string, section: C
               </FormItem>
             )}
           />
-        </FormGrid>
+        </div>
 
-        <FormGrid>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <FormField
             control={form.control}
             name="media_image"
@@ -206,7 +191,7 @@ export function HomeHeroEditor({ pageId, section }: { pageId: string, section: C
               </FormItem>
             )}
           />
-        </FormGrid>
+        </div>
       </form>
     </Form>
   );

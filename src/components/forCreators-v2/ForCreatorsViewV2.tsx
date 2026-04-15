@@ -11,20 +11,23 @@ import { ForCreatorsBenefitSection } from './sections/ForCreatorsBenefitSection'
 import { ForCreatorsTestimonialsSection } from './sections/ForCreatorsTestimonialsSection';
 import { ExclusiveTalentsSectionV2 } from '@/components/home-v2/sections/ExclusiveTalentsSectionV2';
 import { ForCreatorsCTASection } from './sections/ForCreatorsCTASection';
+import type { ForCreatorsViewModel } from '@/lib/cms/resolvers/for-creators.resolver';
 
-export function ForCreatorsViewV2() {
+export function ForCreatorsViewV2({ data }: { data: ForCreatorsViewModel | null }) {
+  if (!data) return null;
+
   return (
     <Wrapper>
-      <HeaderV2 />
+      {data.globals.header && <HeaderV2 content={data.globals.header} />}
       <MainContent>
-        <ForCreatorsHeroSectionV2 />
-        <ForCreatorsBenefitSection />
-        <ForCreatorsTestimonialsSection />
-        <ExclusiveTalentsSectionV2 />
-        <ForCreatorsCTASection />
+        {data.hero && <ForCreatorsHeroSectionV2 content={data.hero} />}
+        {data.benefit && <ForCreatorsBenefitSection content={data.benefit} />}
+        {data.testimonials && <ForCreatorsTestimonialsSection content={data.testimonials} />}
+        {data.shared.exclusiveTalents && <ExclusiveTalentsSectionV2 content={data.shared.exclusiveTalents} />}
+        {data.cta && <ForCreatorsCTASection content={data.cta} />}
       </MainContent>
-      <ContactCTASectionV2 />
-      <FooterV2 />
+      {data.shared.contactCta && <ContactCTASectionV2 content={data.shared.contactCta} />}
+      {data.globals.footer && <FooterV2 content={data.globals.footer} />}
     </Wrapper>
   );
 }

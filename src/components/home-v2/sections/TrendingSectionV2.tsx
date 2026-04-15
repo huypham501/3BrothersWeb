@@ -3,47 +3,44 @@
 import styled from 'styled-components';
 import { colors, spacing, typography, mediaQueries, borderRadius, motion } from '@/styles/tokens';
 
-const NEWS_DATA = [
-  {
-    title: "2025 - Một năm tăng tốc Media trong hệ sinh thái Influence",
-    date: "12 JAN 2026"
-  },
-  {
-    title: "Đồng hành cùng chương trình 'Xuân Về Bản Em 2026'",
-    date: "12 JAN 2026"
-  },
-  {
-    title: "3BROTHERS MEDIA x WECHOICE AWARDS 2025",
-    date: "12 JAN 2026"
-  }
-];
+import { HomeTrendingPayload } from '@/lib/cms/types';
 
-export function TrendingSectionV2() {
+export function TrendingSectionV2({ content }: { content: HomeTrendingPayload }) {
+  const newsItems = (content.news_items || []).slice(0, content.news_limit || 3);
+
   return (
     <SectionContainer>
       <HeaderRow>
-        <Title>Xu hướng có gì?</Title>
+        <Title>{content.section_title}</Title>
         <DividerLine />
       </HeaderRow>
 
       <CardsGrid>
-        {NEWS_DATA.map((news, index) => (
-          <NewsCard key={index}>
-            <CardImage />
-            <CardContent>
-              <CardTitle>{news.title}</CardTitle>
-              <CardDate>{news.date}</CardDate>
-            </CardContent>
-          </NewsCard>
+        {newsItems.map((news, index) => (
+          <a key={index} href={news.url || '#'} style={{ display: 'contents', textDecoration: 'none' }}>
+            <NewsCard>
+              {news.image ? (
+                <img src={news.image} alt={news.image_alt || news.title} style={{ width: '100%', height: '268px', borderRadius: '24px', objectFit: 'cover', border: '1px solid white' }} />
+              ) : (
+                <CardImage />
+              )}
+              <CardContent>
+                <CardTitle>{news.title}</CardTitle>
+                <CardDate>{news.date}</CardDate>
+              </CardContent>
+            </NewsCard>
+          </a>
         ))}
       </CardsGrid>
 
-      <ViewAllLink href="#">
-        Xem tất cả
-        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.67} d="M5 12h14M12 5l7 7-7 7" />
-        </svg>
-      </ViewAllLink>
+      {content.view_all_label && content.view_all_url && (
+        <ViewAllLink href={content.view_all_url}>
+          {content.view_all_label}
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.67} d="M5 12h14M12 5l7 7-7 7" />
+          </svg>
+        </ViewAllLink>
+      )}
     </SectionContainer>
   );
 }

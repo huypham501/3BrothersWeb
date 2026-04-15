@@ -1,41 +1,19 @@
 'use client';
 
 import * as React from 'react';
-import styled from 'styled-components';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CmsPageSection, homePartnersSchema } from '@/lib/cms';
 import { savePageSection } from '@/lib/cms/actions';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../../ui/Form';
-import { Input } from '../../ui/Input';
-import { Button } from '../../ui/Button';
-import { Switch } from '../../ui/Switch';
-import { Alert, AlertDescription } from '../../ui/Alert';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/Button';
+import { Switch } from '@/components/ui/switch';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { z } from 'zod';
 
-const FormGrid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
-`;
 
-const HeaderRow = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24px;
-`;
 
-const ArrayItemGrid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr auto;
-  gap: 16px;
-  align-items: end;
-  padding: 16px;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  margin-bottom: 16px;
-`;
 
 export function HomePartnersEditor({ pageId, section }: { pageId: string, section: CmsPageSection }) {
   const [isSaving, setIsSaving] = React.useState(false);
@@ -77,17 +55,17 @@ export function HomePartnersEditor({ pageId, section }: { pageId: string, sectio
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-6">
         {errorMsg && <Alert variant="destructive"><AlertDescription>{errorMsg}</AlertDescription></Alert>}
         {success && <Alert variant="success"><AlertDescription>Partners section saved successfully.</AlertDescription></Alert>}
 
-        <HeaderRow>
+        <div className="flex justify-between items-center mb-6">
           <FormField
             control={form.control}
             name="enabled"
             render={({ field }) => (
-              <FormItem style={{ marginBottom: 0, display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <FormLabel style={{ marginBottom: 0 }}>Enable Section</FormLabel>
+              <FormItem className="flex items-center gap-3 space-y-0">
+                <FormLabel className="col-span-full md:col-span-6">Enable Section</FormLabel>
                 <FormControl>
                   <Switch checked={field.value} onCheckedChange={field.onChange} />
                 </FormControl>
@@ -97,7 +75,7 @@ export function HomePartnersEditor({ pageId, section }: { pageId: string, sectio
           <Button type="submit" disabled={isSaving || !form.formState.isDirty}>
             {isSaving ? 'Saving...' : 'Save Section'}
           </Button>
-        </HeaderRow>
+        </div>
 
         <FormField
           control={form.control}
@@ -122,12 +100,12 @@ export function HomePartnersEditor({ pageId, section }: { pageId: string, sectio
           </div>
           
           {fields.map((item, index) => (
-            <ArrayItemGrid key={item.id}>
+            <div className="flex flex-col md:grid md:grid-cols-12 gap-4 p-4 border border-slate-200 rounded-lg mb-4 bg-slate-50 items-end" key={item.id}>
               <FormField
                 control={form.control}
                 name={`partners.${index}.name`}
                 render={({ field }) => (
-                  <FormItem style={{ marginBottom: 0 }}>
+                  <FormItem className="col-span-full md:col-span-6">
                     <FormLabel>Name</FormLabel>
                     <FormControl>
                       <Input {...field} />
@@ -140,7 +118,7 @@ export function HomePartnersEditor({ pageId, section }: { pageId: string, sectio
                 control={form.control}
                 name={`partners.${index}.logo_image`}
                 render={({ field }) => (
-                  <FormItem style={{ marginBottom: 0 }}>
+                  <FormItem className="col-span-full md:col-span-6">
                     <FormLabel>Logo Image URL</FormLabel>
                     <FormControl>
                       <Input {...field} />
@@ -153,7 +131,7 @@ export function HomePartnersEditor({ pageId, section }: { pageId: string, sectio
                 control={form.control}
                 name={`partners.${index}.url`}
                 render={({ field }) => (
-                  <FormItem style={{ marginBottom: 0 }}>
+                  <FormItem className="col-span-full md:col-span-6">
                     <FormLabel>URL</FormLabel>
                     <FormControl>
                       <Input {...field} />
@@ -165,7 +143,7 @@ export function HomePartnersEditor({ pageId, section }: { pageId: string, sectio
               <Button type="button" variant="destructive" size="sm" onClick={() => remove(index)}>
                 Remove
               </Button>
-            </ArrayItemGrid>
+            </div>
           ))}
           {form.formState.errors.partners && <p style={{ color: '#ef4444', fontSize: '0.875rem' }}>{form.formState.errors.partners.message}</p>}
         </div>

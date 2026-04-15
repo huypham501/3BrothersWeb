@@ -6,10 +6,11 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CmsPage, homePageSchema } from '@/lib/cms';
 import { saveHomePageSettings } from '@/lib/cms/actions';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../../ui/Form';
-import { Input, Textarea } from '../../ui/Input';
-import { Button } from '../../ui/Button';
-import { Alert, AlertDescription } from '../../ui/Alert';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/Button';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { z } from 'zod';
 
 const FormGrid = styled.div`

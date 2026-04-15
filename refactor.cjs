@@ -1,102 +1,54 @@
 const fs = require('fs');
 const path = require('path');
 
-const srcDir = path.join(__dirname, 'src');
+const editorsDir = path.join(__dirname, 'src', 'components', 'admin', 'cms', 'editors');
 
-function getAllFiles(dirPath, arrayOfFiles) {
-  const files = fs.readdirSync(dirPath, { withFileTypes: true });
+const files = fs.readdirSync(editorsDir);
 
-  arrayOfFiles = arrayOfFiles || [];
+for (const file of files) {
+  if (!file.endsWith('.tsx')) continue;
+  
+  const filePath = path.join(editorsDir, file);
+  let content = fs.readFileSync(filePath, 'utf8');
 
-  files.forEach(function(file) {
-    if (file.isDirectory()) {
-      arrayOfFiles = getAllFiles(path.join(dirPath, file.name), arrayOfFiles);
-    } else {
-      if (file.name.endsWith('.tsx') || file.name.endsWith('.ts')) {
-         arrayOfFiles.push(path.join(dirPath, file.name));
-      }
-    }
+  // Replace imports
+  content = content.replace(/import\s+{\s*Form,\s*FormControl,\s*FormField,\s*FormItem,\s*FormLabel,\s*FormMessage\s*}\s*from\s*['"]\.\.\/\.\.\/ui\/Form['"];?/g, "import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';");
+  
+  content = content.replace(/import\s+{\s*Input(\s*,\s*Textarea)?\s*}\s*from\s*['"]\.\.\/\.\.\/ui\/Input['"];?/g, (match, hasTextarea) => {
+    let res = "import { Input } from '@/components/ui/input';";
+    if (hasTextarea) res += "\nimport { Textarea } from '@/components/ui/textarea';";
+    return res;
   });
+  
+  content = content.replace(/import\s+{\s*Button\s*}\s*from\s*['"]\.\.\/\.\.\/ui\/Button['"];?/g, "import { Button } from '@/components/ui/button';");
+  
+  content = content.replace(/import\s+{\s*Switch\s*}\s*from\s*['"]\.\.\/\.\.\/ui\/Switch['"];?/g, "import { Switch } from '@/components/ui/switch';");
+  
+  content = content.replace(/import\s+{\s*Alert(?:,\s*AlertDescription)?(?:,\s*AlertTitle)?\s*}\s*from\s*['"]\.\.\/\.\.\/ui\/Alert['"];?/g, "import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';");
 
-  return arrayOfFiles;
+  content = content.replace(/import\s+styled\s+from\s*['"]styled-components['"];?\n?/g, '');
+
+  // Remove styled components definitions
+  content = content.replace(/const\s+FormGrid\s*=\s*styled\.div`[\s\S]*?`;\n?/g, '');
+  content = content.replace(/const\s+HeaderRow\s*=\s*styled\.div`[\s\S]*?`;\n?/g, '');
+  content = content.replace(/const\s+ArrayItemGrid\s*=\s*styled\.div`[\s\S]*?`;\n?/g, '');
+
+  // Replace JSX Tags
+  content = content.replace(/<FormGrid>/g, '<div className="grid grid-cols-1 md:grid-cols-2 gap-6">');
+  content = content.replace(/<\/FormGrid>/g, '</div>');
+
+  content = content.replace(/<HeaderRow>/g, '<div className="flex justify-between items-center mb-6">');
+  content = content.replace(/<\/HeaderRow>/g, '</div>');
+
+  content = content.replace(/<ArrayItemGrid([^>]*)>/g, '<div className="flex flex-col md:grid md:grid-cols-12 gap-4 p-4 border border-slate-200 rounded-lg mb-4 bg-slate-50 items-end"$1>');
+  content = content.replace(/<\/ArrayItemGrid>/g, '</div>');
+
+  // Inline forms formatting
+  content = content.replace(/style=\{\{\s*display:\s*'flex',\s*flexDirection:\s*'column',\s*gap:\s*'24px'\s*\}\}/g, 'className="flex flex-col gap-6"');
+  content = content.replace(/style=\{\{\s*marginBottom:\s*0,\s*display:\s*'flex',\s*alignItems:\s*'center',\s*gap:\s*'12px'\s*\}\}/g, 'className="flex items-center gap-3 space-y-0"');
+  content = content.replace(/style=\{\{\s*marginBottom:\s*0\s*\}\}/g, 'className="col-span-full md:col-span-6"');
+  content = content.replace(/<FormLabel style=\{\{\s*marginBottom:\s*0\s*\}\}>/g, '<FormLabel>');
+
+  fs.writeFileSync(filePath, content, 'utf8');
+  console.log('Updated ' + file);
 }
-
-const allFiles = getAllFiles(srcDir);
-
-for (const file of allFiles) {
-  let content = fs.readFileSync(file, 'utf8');
-  if (!content.includes('styled-components')) continue;
-  
-  const regex = /^ *(?:export\s+)?const\s+[A-Za-z0-9_]+\s*=\s*(styled(?:\.[A-Za-z0-9_]+|(?:\([^)]+\)))?(?:<[^>]+>)?|css|keyframes)\s*`/gm;
-  
-  let match;
-  let matches = [];
-  while ((match = regex.exec(content)) !== null) {
-    let startIndex = match.index;
-    let i = startIndex + match[0].length - 1; // start of backtick
-    
-    let openBraces = 0;
-    i++;
-    
-    while(i < content.length) {
-       if (content[i] === '\\' && content[i+1] === '`') {
-          i += 2;
-          continue;
-       }
-       if (content[i] === '$' && content[i+1] === '{') {
-          openBraces++;
-          i += 2;
-          continue;
-       }
-       if (content[i] === '{' && openBraces > 0) {
-          openBraces++;
-       }
-       if (content[i] === '}' && openBraces > 0) {
-          openBraces--;
-       }
-       
-       if (content[i] === '`') {
-          if (openBraces === 0) {
-             break;
-          }
-       }
-       i++;
-    }
-    
-    let endIndex = i;
-    // Consume trailing semicolons and whitespace
-    while(endIndex + 1 < content.length && (content[endIndex+1] === ';' || content[endIndex+1] === ' ' || content[endIndex+1] === '\n' || content[endIndex+1] === '\r')) {
-       endIndex++;
-    }
-    
-    matches.push({
-       start: startIndex,
-       end: endIndex + 1,
-       text: content.substring(startIndex, endIndex + 1).trim()
-    });
-  }
-  
-  if (matches.length > 0) {
-    // Only move if there is a component logic block / other stuff *after* the first styled component
-    // We can just safely move them all to the bottom.
-    let newContent = content;
-    let textsToAppend = [];
-    for (let j = 0; j < matches.length; j++) {
-       textsToAppend.push(matches[j].text);
-    }
-    
-    for (let j = matches.length - 1; j >= 0; j--) {
-       const m = matches[j];
-       newContent = newContent.substring(0, m.start) + newContent.substring(m.end);
-    }
-    
-    newContent = newContent.replace(/\n\s*\n\s*\n/g, '\n\n');
-    
-    if (!newContent.endsWith('\n')) newContent += '\n';
-    newContent += '\n' + textsToAppend.join('\n\n') + '\n';
-    
-    console.log(`Refactoring ${file}`);
-    fs.writeFileSync(file, newContent, 'utf8');
-  }
-}
-console.log('Script done');

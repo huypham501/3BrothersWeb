@@ -12,11 +12,11 @@ const CLAMP_MAX_HEIGHT = DESCRIPTION_LINE_HEIGHT_PX * CLAMP_LINES; // 96px
 const FULL_DESCRIPTION =
   'Là một trong những gương mặt gắn bó cùng 3Brothers từ những ngày đầu, Nguyệt Busi đang từng bước xây dựng dấu ấn trong cộng đồng làm đẹp thông qua những nội dung được chia sẻ từ trải nghiệm thực tế. Không chỉ dừng lại ở các chuyên mục về skincare hay trang điểm, "Thánh mặt nạ dẻo" Nguyệt Busi còn ghi dấu ấn bằng các series đắp mặt nạ siêu vui nhộn, thu hút hàng triệu lượt xem mỗi tập. Cô nàng hiện đang là một trong những beauty creator được yêu thích nhất trên nền tảng TikTok và Instagram tại Việt Nam.';
 
+import { SharedExclusiveTalentsPayload } from '@/lib/cms/types';
+
 // ── Component ────────────────────────────────────────────────────────────────
-export function ExclusiveTalentsSectionV2() {
-  const talents = [
-    'PUPU HOEHOE', 'Phương Kin', 'Phúc Nhân', 'Kiều Lan', 'Phương ...', 'Nguyệt Busi', 'Hồng Anh',
-  ];
+export function ExclusiveTalentsSectionV2({ content }: { content: SharedExclusiveTalentsPayload }) {
+  const talents = content.talents || [];
 
   // ── Read-more state ──────────────────────────────────────────────────────
   const descRef = useRef<HTMLParagraphElement>(null);
@@ -90,27 +90,31 @@ export function ExclusiveTalentsSectionV2() {
       {/* Title: line — TALENTS ĐỘC QUYỀN — line */}
       <TitleRow>
         <TitleLine />
-        <Title>TALENTS độc quyền</Title>
+        <Title>{content.section_title}</Title>
         <TitleLine />
       </TitleRow>
 
       {/* Main area: photo LEFT, info RIGHT */}
       <MainTalentArea>
-        <TalentPhotoMain />
+        {content.featured_photo ? (
+           <img src={content.featured_photo} alt={content.featured_photo_alt || 'Featured Talent'} style={{
+             flex: 'none', width: '560px', height: '560px', objectFit: 'cover', borderRadius: '16px'
+           }} />
+        ) : (
+          <TalentPhotoMain />
+        )}
 
         <TalentInfoContent>
-          <TalentName>Nguyệt Busi</TalentName>
-          <TalentHandle>@nguyetbusine</TalentHandle>
+          <TalentName>{content.featured_name}</TalentName>
+          <TalentHandle>{content.featured_handle}</TalentHandle>
 
           <StatsBlock>
-            <Stat>
-              <StatValue>3.5M+</StatValue>
-              <StatLabel>Followers</StatLabel>
-            </Stat>
-            <Stat>
-              <StatValue>71.2M+</StatValue>
-              <StatLabel>Likes</StatLabel>
-            </Stat>
+            {content.featured_stats?.map((stat, idx) => (
+              <Stat key={`stat-${idx}`}>
+                <StatValue>{stat.value}</StatValue>
+                <StatLabel>{stat.label}</StatLabel>
+              </Stat>
+            ))}
           </StatsBlock>
 
           <DescriptionBlock>
@@ -121,7 +125,7 @@ export function ExclusiveTalentsSectionV2() {
                 $isExpanded={isExpanded}
                 $maxHeight={CLAMP_MAX_HEIGHT}
               >
-                {FULL_DESCRIPTION}
+                {content.featured_description}
               </TalentDescription>
               {isExpandable && (
                 <ReadMoreButton
@@ -138,14 +142,18 @@ export function ExclusiveTalentsSectionV2() {
 
       {/* Bottom: 50+ TALENTS + scrollable thumbnails */}
       <BottomSlidersArea>
-        <VerticalText>50+ TALENTS</VerticalText>
+        <VerticalText>{content.talent_count_label}</VerticalText>
 
         <SliderTrack>
           <ThumbnailsRow ref={rowRef}>
             {talents.map((t, idx) => (
               <TalentThumb key={idx}>
-                <ThumbImagePlaceholder />
-                <ThumbName>{t}</ThumbName>
+                {t.photo ? (
+                  <img src={t.photo} alt={t.photo_alt || t.name} style={{ width: '240px', height: '240px', objectFit: 'cover', borderRadius: '8px', flex: 'none' }} />
+                ) : (
+                  <ThumbImagePlaceholder />
+                )}
+                <ThumbName>{t.name}</ThumbName>
               </TalentThumb>
             ))}
           </ThumbnailsRow>

@@ -3,20 +3,16 @@
 import styled, { keyframes } from 'styled-components';
 import Link from 'next/link';
 import { colors, spacing, typography, mediaQueries, motion } from '@/styles/tokens';
-
-// ── Animations ────────────────────────────────────────────────────────────────
+import { ForCreatorsHeroPayload } from '@/lib/cms/types';
 
 const fadeUp = keyframes`
   from { opacity: 0; transform: translateY(24px); }
   to   { opacity: 1; transform: translateY(0); }
 `;
 
-// ── Component ─────────────────────────────────────────────────────────────────
-
-export function ForCreatorsHeroSectionV2() {
+export function ForCreatorsHeroSectionV2({ content }: { content: ForCreatorsHeroPayload }) {
   return (
     <HeroWrapper>
-      {/* Multi-layer animated blue gradient blobs */}
       <BlobLayer>
         <Blob1 />
         <Blob2 />
@@ -25,19 +21,15 @@ export function ForCreatorsHeroSectionV2() {
       </BlobLayer>
 
       <ContentBox>
-        <HeroTitle>
-          Tỏa Sáng Cùng
-          <br />
-          3Brothers.Media
-        </HeroTitle>
+        <HeroTitle dangerouslySetInnerHTML={{ __html: content.title.replace(/\n/g, '<br />') }} />
 
         <HeroSubtitle>
-          Chúng tôi giúp bạn phát triển thương hiệu cá nhân, kết nối với các nhãn hàng hàng đầu và tối ưu hóa thu nhập từ nội dung sáng tạo.
+          {content.subtitle}
         </HeroSubtitle>
 
         <ButtonRow>
-          <PrimaryButton href="/contact">
-            Gia nhập ngay
+          <PrimaryButton href={content.primary_cta_url}>
+            {content.primary_cta_label}
             <ArrowIcon>
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                 <path d="M4.167 10h11.666M10 4.167 15.833 10 10 15.833" stroke="#061530" strokeWidth="1.67" strokeLinecap="round" strokeLinejoin="round" />
@@ -45,8 +37,8 @@ export function ForCreatorsHeroSectionV2() {
             </ArrowIcon>
           </PrimaryButton>
 
-          <SecondaryButton href="#benefit">
-            Tìm hiểu thêm
+          <SecondaryButton href={content.secondary_cta_url}>
+            {content.secondary_cta_label}
           </SecondaryButton>
         </ButtonRow>
       </ContentBox>
@@ -54,9 +46,6 @@ export function ForCreatorsHeroSectionV2() {
   );
 }
 
-// ── Styled components ─────────────────────────────────────────────────────────
-
-/* Full-bleed hero — white top fading into rich blue at centre */
 const HeroWrapper = styled.section`
   position: relative;
   width: 100%;
@@ -65,7 +54,6 @@ const HeroWrapper = styled.section`
   display: flex;
   align-items: center;
   justify-content: center;
-  /* white → blue gradient base matching design */
   background: radial-gradient(
     ellipse 120% 100% at 50% 60%,
     #0859EA 0%,
@@ -84,7 +72,6 @@ const HeroWrapper = styled.section`
   }
 `;
 
-/* Decorative blobs — white/light edges top-left, top-right */
 const BlobLayer = styled.div`
   position: absolute;
   inset: 0;
@@ -139,14 +126,13 @@ const Blob4 = styled.div`
   opacity: 0.6;
 `;
 
-/* Central content column */
 const ContentBox = styled.div`
   position: relative;
   z-index: 2;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: ${spacing.xl}; /* 32px */
+  gap: ${spacing.xl};
   max-width: 843px;
   width: 100%;
   padding: 0 ${spacing.xl};
@@ -158,7 +144,6 @@ const ContentBox = styled.div`
   }
 `;
 
-/* H1 — Montserrat 700 68px dark navy, uppercase */
 const HeroTitle = styled.h1`
   font-family: 'Montserrat', sans-serif;
   font-weight: ${typography.fontWeight.bold};
@@ -166,7 +151,7 @@ const HeroTitle = styled.h1`
   line-height: 120%;
   text-align: center;
   text-transform: uppercase;
-  color: ${colors.secondaryDark}; /* #061530 */
+  color: ${colors.secondaryDark};
   margin: 0;
 
   ${mediaQueries.down.lg} {
@@ -178,11 +163,10 @@ const HeroTitle = styled.h1`
   }
 `;
 
-/* Subtitle — Montserrat 500 16px */
 const HeroSubtitle = styled.p`
   font-family: 'Montserrat', sans-serif;
   font-weight: ${typography.fontWeight.medium};
-  font-size: ${typography.fontSize.md}; /* 16px */
+  font-size: ${typography.fontSize.md};
   line-height: 150%;
   text-align: center;
   color: ${colors.secondaryDark};
@@ -194,7 +178,6 @@ const HeroSubtitle = styled.p`
   }
 `;
 
-/* CTA row */
 const ButtonRow = styled.div`
   display: flex;
   flex-direction: row;
@@ -204,7 +187,6 @@ const ButtonRow = styled.div`
   flex-wrap: wrap;
 `;
 
-/* Yellow pill CTA — "Gia nhập ngay →" */
 const PrimaryButton = styled(Link)`
   display: flex;
   flex-direction: row;
@@ -212,7 +194,7 @@ const PrimaryButton = styled(Link)`
   padding: 16px 32px;
   gap: 12px;
   height: 54px;
-  background: ${colors.secondary}; /* #FFE773 */
+  background: ${colors.secondary};
   border-radius: 48px;
   text-decoration: none;
   cursor: pointer;
@@ -238,7 +220,6 @@ const ArrowIcon = styled.span`
   height: 20px;
 `;
 
-/* White outline pill — "Tìm hiểu thêm" */
 const SecondaryButton = styled(Link)`
   display: flex;
   flex-direction: row;

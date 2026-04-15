@@ -47,6 +47,24 @@ export const globalFooterSchema = z.object({
   brand_watermark: z.string().max(30),
 });
 
+export const globalSeoDefaultsSchema = z.object({
+  default_title_template: z.string().max(120),
+  default_meta_description: z.string().max(160),
+  default_keywords: z.array(z.string().max(40)).max(15),
+  default_og_image: z.string().max(1024),
+  default_og_image_alt: z.string().max(125),
+  default_twitter_card_type: z.enum(['summary', 'summary_large_image']),
+  default_robots: z.string().max(80),
+});
+
+export const globalSiteMetadataSchema = z.object({
+  site_name: z.string().max(80),
+  site_url: z.url().max(500),
+  default_canonical_base: z.url().max(500),
+  brand_name: z.string().max(80),
+  publisher_name: z.string().max(80),
+});
+
 export const sharedExclusiveTalentsSchema = z.object({
   section_title: z.string().max(80),
   featured_name: z.string().max(60),
@@ -144,9 +162,53 @@ export const homeTrendingSchema = z.object({
   ).min(1).max(6).nullable().optional(),
 });
 
+export const forCreatorsHeroSchema = z.object({
+  title: z.string().max(120),
+  subtitle: z.string().max(500),
+  primary_cta_label: z.string().max(40),
+  primary_cta_url: urlOrHash,
+  secondary_cta_label: z.string().max(40),
+  secondary_cta_url: urlOrHash,
+});
+
+export const forCreatorsBenefitSchema = z.object({
+  section_title: z.string().max(120),
+  section_description: z.string().max(500),
+  contact_cta_label: z.string().max(40),
+  contact_cta_url: urlOrHash,
+  benefits: z.array(
+    z.object({
+      id: z.enum(['income', 'brand', 'management', 'content']),
+      title: z.string().max(80),
+      description: z.string().max(300),
+    })
+  ).length(4),
+});
+
+export const forCreatorsTestimonialsSchema = z.object({
+  superlabel: z.string().max(120),
+  section_title: z.string().max(120),
+  testimonials: z.array(
+    z.object({
+      quote: z.string().max(400),
+      name: z.string().max(60),
+      role: z.string().max(120),
+    })
+  ).min(1).max(6),
+});
+
+export const forCreatorsCtaSchema = z.object({
+  heading: z.string().max(180),
+  subtitle: z.string().max(300),
+  cta_label: z.string().max(40),
+  cta_url: urlOrHash,
+});
+
 export const CMS_REGISTRY = {
   [SCHEMA_KEYS.GLOBAL_HEADER]: globalHeaderSchema,
   [SCHEMA_KEYS.GLOBAL_FOOTER]: globalFooterSchema,
+  [SCHEMA_KEYS.GLOBAL_SEO_DEFAULTS]: globalSeoDefaultsSchema,
+  [SCHEMA_KEYS.GLOBAL_SITE_METADATA]: globalSiteMetadataSchema,
   [SCHEMA_KEYS.SHARED_EXCLUSIVE_TALENTS]: sharedExclusiveTalentsSchema,
   [SCHEMA_KEYS.SHARED_CONTACT_CTA]: sharedContactCtaSchema,
   [SCHEMA_KEYS.HOME_HERO]: homeHeroSchema,
@@ -154,4 +216,8 @@ export const CMS_REGISTRY = {
   [SCHEMA_KEYS.HOME_CORE_COMPETENCIES]: homeCoreCompetenciesSchema,
   [SCHEMA_KEYS.HOME_EFFICIENCY]: homeEfficiencySchema,
   [SCHEMA_KEYS.HOME_TRENDING]: homeTrendingSchema,
+  [SCHEMA_KEYS.FOR_CREATORS_HERO]: forCreatorsHeroSchema,
+  [SCHEMA_KEYS.FOR_CREATORS_BENEFIT]: forCreatorsBenefitSchema,
+  [SCHEMA_KEYS.FOR_CREATORS_TESTIMONIALS]: forCreatorsTestimonialsSchema,
+  [SCHEMA_KEYS.FOR_CREATORS_CTA]: forCreatorsCtaSchema,
 };

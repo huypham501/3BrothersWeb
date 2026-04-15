@@ -24,6 +24,24 @@ export interface GlobalFooterPayload {
   brand_watermark: string;
 }
 
+export interface GlobalSeoDefaultsPayload {
+  default_title_template: string;
+  default_meta_description: string;
+  default_keywords: string[];
+  default_og_image: string;
+  default_og_image_alt: string;
+  default_twitter_card_type: 'summary' | 'summary_large_image';
+  default_robots: string;
+}
+
+export interface GlobalSiteMetadataPayload {
+  site_name: string;
+  site_url: string;
+  default_canonical_base: string;
+  brand_name: string;
+  publisher_name: string;
+}
+
 export interface HomeHeroPayload {
   title: string;
   subtext: string;
@@ -104,6 +122,44 @@ export interface SharedExclusiveTalentsPayload {
 
 export interface SharedContactCtaPayload {
   title: string;
+  subtitle: string;
+  cta_label: string;
+  cta_url: string;
+}
+
+export interface ForCreatorsHeroPayload {
+  title: string;
+  subtitle: string;
+  primary_cta_label: string;
+  primary_cta_url: string;
+  secondary_cta_label: string;
+  secondary_cta_url: string;
+}
+
+export interface ForCreatorsBenefitPayload {
+  section_title: string;
+  section_description: string;
+  contact_cta_label: string;
+  contact_cta_url: string;
+  benefits: Array<{
+    id: 'income' | 'brand' | 'management' | 'content';
+    title: string;
+    description: string;
+  }>;
+}
+
+export interface ForCreatorsTestimonialsPayload {
+  superlabel: string;
+  section_title: string;
+  testimonials: Array<{
+    quote: string;
+    name: string;
+    role: string;
+  }>;
+}
+
+export interface ForCreatorsCtaPayload {
+  heading: string;
   subtitle: string;
   cta_label: string;
   cta_url: string;

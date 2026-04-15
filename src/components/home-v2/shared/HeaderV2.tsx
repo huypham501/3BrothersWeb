@@ -5,7 +5,17 @@ import styled from 'styled-components';
 import Link from 'next/link';
 import { HeaderContactButton } from '../components/HeaderContactButton';
 
-export function HeaderV2() {
+import { GlobalHeaderPayload } from '@/lib/cms/types';
+
+const DEFAULT_HEADER_CONTENT: GlobalHeaderPayload = {
+  logo_text: '3BROTHERS',
+  logo_image: null,
+  nav_links: [],
+  cta_label: 'Contact',
+  cta_url: '/',
+};
+
+export function HeaderV2({ content = DEFAULT_HEADER_CONTENT }: { content?: GlobalHeaderPayload }) {
   const [isFloating, setIsFloating] = useState(false);
 
   useEffect(() => {
@@ -25,18 +35,19 @@ export function HeaderV2() {
       <NavBarPill $isFloating={isFloating}>
         <LogoContainer>
           <Link href="/" style={{ textDecoration: 'none' }}>
-            <LogoText $isFloating={isFloating}>3BROTHERS</LogoText>
+            <LogoText $isFloating={isFloating}>
+              {content.logo_image && <img src={content.logo_image} alt="Logo" style={{ width: '40px', height: '40px', borderRadius: '20px', marginRight: '12px' }} />}
+              {!content.logo_image && content.logo_text}
+            </LogoText>
           </Link>
         </LogoContainer>
 
         <NavLinks>
-          <NavItem href="/for-creators" $isFloating={isFloating}>For Creators</NavItem>
-          <NavItem href="/for-brands" $isFloating={isFloating}>For Brands</NavItem>
-          <NavItem href="/our-brand" $isFloating={isFloating}>Our Brands</NavItem>
-          <NavItem href="/blogs" $isFloating={isFloating}>Blogs</NavItem>
-          <NavItem href="/careers" $isFloating={isFloating}>Careers</NavItem>
+          {content.nav_links?.map((link, idx) => (
+            <NavItem key={idx} href={link.url} $isFloating={isFloating}>{link.label}</NavItem>
+          ))}
 
-          <HeaderContactButton href="#" $isFloating={isFloating} />
+          <HeaderContactButton href={content.cta_url || "#"} label={content.cta_label} $isFloating={isFloating} />
         </NavLinks>
       </NavBarPill>
     </HeaderContainer>
@@ -93,17 +104,6 @@ const LogoText = styled.span<{ $isFloating: boolean }>`
   display: flex;
   align-items: center;
   transition: color 0.3s ease;
-  
-  // A simple placeholder for the exact 3Brothers logo
-  &::before {
-    content: '';
-    display: inline-block;
-    width: 40px;
-    height: 40px;
-    background: #6395ED;
-    border-radius: 20px;
-    margin-right: 12px;
-  }
 `;
 
 const NavLinks = styled.nav`
@@ -124,5 +124,4 @@ const NavItem = styled(Link) <{ $isFloating: boolean }>`
   color: ${({ $isFloating }) => $isFloating ? '#061530' : '#FFFFFF'};
   text-decoration: none;
 `;
-
 

@@ -1,40 +1,9 @@
 'use client';
 
-import { Fragment } from 'react';
 import styled from 'styled-components';
 import Link from 'next/link';
 import { colors, spacing, typography, mediaQueries, motion } from '@/styles/tokens';
-
-// ── Data ──────────────────────────────────────────────────────────────────────
-
-const BENEFITS = [
-  {
-    id: 'income',
-    icon: <IncomeIcon />,
-    title: 'Tăng trưởng thu nhập',
-    description: 'Tối ưu hoá thu nhập từ nhiều nguồn: Quảng Cáo, hợp tác thương thiệu và bán hàng trực tuyến',
-  },
-  {
-    id: 'brand',
-    icon: <BrandIcon />,
-    title: 'Kết nối nhãn hàng',
-    description: 'Tiếp cận với hàng trăm thương hiệu hàng đầu Việt Nam và quốc tế đang tìm kiếm KOLs phù hợp',
-  },
-  {
-    id: 'management',
-    icon: <ManagementIcon />,
-    title: 'Quản lý chuyên nghiệp',
-    description: 'Đội ngũ quản lý tận tâm, hỗ trợ bạn từ hợp đồng, lịch trình đến chiến lược phát triển dài hạn',
-  },
-  {
-    id: 'content',
-    icon: <ContentIcon />,
-    title: 'Hỗ trợ nội dung',
-    description: 'Studio chuyên nghiệp, đội ngũ sản xuất sáng tạo giúp nâng tầm chất lượng video và hình ảnh',
-  },
-];
-
-// ── Icons ─────────────────────────────────────────────────────────────────────
+import { ForCreatorsBenefitPayload } from '@/lib/cms/types';
 
 function IncomeIcon() {
   return (
@@ -70,42 +39,49 @@ function ContentIcon() {
   );
 }
 
-// ── Component ─────────────────────────────────────────────────────────────────
+function resolveBenefitIcon(id: ForCreatorsBenefitPayload['benefits'][number]['id']) {
+  switch (id) {
+    case 'income':
+      return <IncomeIcon />;
+    case 'brand':
+      return <BrandIcon />;
+    case 'management':
+      return <ManagementIcon />;
+    case 'content':
+      return <ContentIcon />;
+    default:
+      return <IncomeIcon />;
+  }
+}
 
-export function ForCreatorsBenefitSection() {
+export function ForCreatorsBenefitSection({ content }: { content: ForCreatorsBenefitPayload }) {
   return (
     <SectionContainer id="benefit">
       <Inner>
-        {/* Top row: heading + CTA button */}
         <TopRow>
           <HeadingGroup>
-            <SectionTitle>Lợi ích khi cùng đồng hành</SectionTitle>
-            <SectionDesc>
-              Chúng tôi cung cấp giải pháp Influencer Marketing &amp; Talent Management chuyên nghiệp, giúp thương hiệu triển khai hiệu quả và xây dựng giá trị dài hạn.
-            </SectionDesc>
+            <SectionTitle>{content.section_title}</SectionTitle>
+            <SectionDesc>{content.section_description}</SectionDesc>
           </HeadingGroup>
-          <ContactButton href="/contact">Liên hệ hỗ trợ</ContactButton>
+          <ContactButton href={content.contact_cta_url}>{content.contact_cta_label}</ContactButton>
         </TopRow>
 
-        {/* 4-column benefit grid */}
         <BenefitGrid>
-          {BENEFITS.map((item, idx) => [
+          {content.benefits.map((item, idx) => [
             <BenefitItem key={item.id}>
-              <IconBox>{item.icon}</IconBox>
+              <IconBox>{resolveBenefitIcon(item.id)}</IconBox>
               <BenefitText>
                 <BenefitTitle>{item.title}</BenefitTitle>
                 <BenefitDesc>{item.description}</BenefitDesc>
               </BenefitText>
             </BenefitItem>,
-            idx < BENEFITS.length - 1 && <Divider key={`sep-${item.id}`} />
+            idx < content.benefits.length - 1 && <Divider key={`sep-${item.id}`} />,
           ])}
         </BenefitGrid>
       </Inner>
     </SectionContainer>
   );
 }
-
-// ── Styled components ─────────────────────────────────────────────────────────
 
 const SectionContainer = styled.section`
   width: 100%;
@@ -141,7 +117,6 @@ const Inner = styled.div`
   }
 `;
 
-/* Top row */
 const TopRow = styled.div`
   display: flex;
   flex-direction: row;
@@ -166,7 +141,7 @@ const HeadingGroup = styled.div`
 const SectionTitle = styled.h2`
   font-family: 'Montserrat', sans-serif;
   font-weight: ${typography.fontWeight.bold};
-  font-size: ${typography.fontSize['6xl']}; /* 42px */
+  font-size: ${typography.fontSize['6xl']};
   line-height: 140%;
   text-transform: uppercase;
   color: ${colors.secondaryDark};
@@ -190,7 +165,6 @@ const SectionDesc = styled.p`
   margin: 0;
 `;
 
-/* Outline pill button */
 const ContactButton = styled(Link)`
   display: flex;
   flex-direction: row;
@@ -217,7 +191,6 @@ const ContactButton = styled(Link)`
   }
 `;
 
-/* 4-col benefit grid with dividers */
 const BenefitGrid = styled.div`
   display: flex;
   flex-direction: row;
@@ -231,7 +204,6 @@ const BenefitGrid = styled.div`
   }
 `;
 
-/* Vertical divider line */
 const Divider = styled.div`
   width: 1px;
   height: 320px;
@@ -258,7 +230,6 @@ const BenefitItem = styled.div`
   }
 `;
 
-/* Light blue icon box 96×96 */
 const IconBox = styled.div`
   width: 96px;
   height: 96px;

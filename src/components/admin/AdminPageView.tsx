@@ -1,6 +1,7 @@
 'use client';
 
 import styled from "styled-components";
+import Link from "next/link";
 import { SignOutButton } from "@/components/auth/SignOutButton";
 import { Container } from "@/components/primitives/Container";
 import { Footer } from "@/components/shared/Footer";
@@ -10,9 +11,10 @@ import { Text } from "@/components/ui/Text";
 
 type AdminPageViewProps = {
   userEmail: string;
+  forbidden?: boolean;
 };
 
-export function AdminPageView({ userEmail }: AdminPageViewProps) {
+export function AdminPageView({ userEmail, forbidden = false }: AdminPageViewProps) {
   return (
     <PageRoot>
       <Header />
@@ -21,8 +23,21 @@ export function AdminPageView({ userEmail }: AdminPageViewProps) {
           <Card>
             <H2>Admin</H2>
             <Text $color="muted">Signed in as {userEmail}.</Text>
+            {forbidden && (
+              <Text $color="muted">
+                You do not have permission to access the requested CMS module.
+              </Text>
+            )}
+            <Text>
+              <Link href="/admin/content">Open Content Admin</Link> to manage Home, For Creators, Shared Sections, and Global Settings.
+            </Text>
             <Actions>
               <SignOutButton />
+              <Link href="/admin/content">Content Admin</Link>
+              <Link href="/admin/content/audit">CMS Audit</Link>
+              <Link href="/admin/content/pages/for-creators">For Creators CMS</Link>
+              <Link href="/admin/content/shared">Shared Sections</Link>
+              <Link href="/admin/content/settings">Global Settings</Link>
             </Actions>
           </Card>
         </Container>
@@ -70,4 +85,10 @@ const Actions = styled.div`
   display: flex;
   align-items: center;
   gap: ${({ theme }) => theme.spacing.md};
+
+  a {
+    color: ${({ theme }) => theme.colors.primary};
+    font-weight: 600;
+    text-decoration: none;
+  }
 `;

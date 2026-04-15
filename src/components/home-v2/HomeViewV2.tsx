@@ -2,6 +2,7 @@
 
 import styled from 'styled-components';
 import { colors } from '@/styles/tokens';
+import { HomeViewModel } from '@/lib/cms/resolvers/home.resolver';
 
 import { HeaderV2 } from './shared/HeaderV2';
 import { HeroSectionV2 } from './sections/HeroSectionV2';
@@ -13,23 +14,29 @@ import { ContactCTASectionV2 } from './sections/ContactCTASectionV2';
 import { TrendingSectionV2 } from './sections/TrendingSectionV2';
 import { FooterV2 } from './shared/FooterV2';
 
-export function HomeViewV2() {
+export function HomeViewV2({ data }: { data: HomeViewModel | null }) {
+  if (!data) return null;
+
   return (
     <Wrapper>
-      <HeaderV2 />
+      {data.globals.header && <HeaderV2 content={data.globals.header} />}
+      
       <HeroPartnersWrapper>
-        <HeroSectionV2 />
-        <PartnersSectionV2 />
+        {data.hero && <HeroSectionV2 content={data.hero} />}
+        {data.partners && <PartnersSectionV2 content={data.partners} />}
       </HeroPartnersWrapper>
-      <CoreCompetenciesSectionV2 />
+      
+      {data.coreCompetencies && <CoreCompetenciesSectionV2 content={data.coreCompetencies} />}
+      
       <BlueGroupWrapper>
-        <EfficiencySectionV2 />
-        <ExclusiveTalentsSectionV2 />
-        <ContactCTASectionV2 />
+        {data.efficiency && <EfficiencySectionV2 content={data.efficiency} />}
+        {data.shared.exclusiveTalents && <ExclusiveTalentsSectionV2 content={data.shared.exclusiveTalents} />}
+        {data.shared.contactCta && <ContactCTASectionV2 content={data.shared.contactCta} />}
       </BlueGroupWrapper>
-      <TrendingSectionV2 />
+      
+      {data.trending && <TrendingSectionV2 content={data.trending} />}
 
-      <FooterV2 />
+      {data.globals.footer && <FooterV2 content={data.globals.footer} />}
     </Wrapper>
   );
 }

@@ -7,27 +7,37 @@ import { HeroMediaPlaceholder } from '../components/HeroMediaPlaceholder';
 import { PrimaryButton } from '../components/PrimaryButton';
 import { SecondaryButton } from '../components/SecondaryButton';
 
-export function HeroSectionV2() {
+import { HomeHeroPayload } from '@/lib/cms/types';
+
+export function HeroSectionV2({ content }: { content: HomeHeroPayload }) {
   return (
     <HeroContainer>
       <HeroBackgroundGraphics />
       <ContentWrapper>
         <TextBlock>
-          <Title>Đồng hành để<br />cùng thành<br />công</Title>
-          <SubText>
-            3Brothers Media cung cấp giải pháp phù hợp và hiệu quả cho nhãn hàng dựa trên sự thấu hiểu - tôn trọng màu sắc Talent.
-          </SubText>
+          <Title dangerouslySetInnerHTML={{ __html: content.title.replace(/\n/g, '<br />') }} />
+          <SubText>{content.subtext}</SubText>
           <ButtonGroup>
-            <PrimaryButton href="#">
-              Liên hệ tư vấn
+            <PrimaryButton href={content.primary_cta_url}>
+              {content.primary_cta_label}
               <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14M12 5l7 7-7 7" />
               </svg>
             </PrimaryButton>
-            <SecondaryButton href="#">Xem portfolio</SecondaryButton>
+            {content.secondary_cta_label && content.secondary_cta_url && (
+              <SecondaryButton href={content.secondary_cta_url}>{content.secondary_cta_label}</SecondaryButton>
+            )}
           </ButtonGroup>
         </TextBlock>
-        <HeroMediaPlaceholder />
+        {content.media_image ? (
+          <img 
+            src={content.media_image} 
+            alt={content.media_image_alt || "Hero media"} 
+            style={{ maxWidth: '600px', width: '100%', height: 'auto', borderRadius: '24px' }} 
+          />
+        ) : (
+          <HeroMediaPlaceholder />
+        )}
       </ContentWrapper>
     </HeroContainer>
   );

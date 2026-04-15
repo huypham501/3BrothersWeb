@@ -1,41 +1,60 @@
-import type { Metadata } from "next";
-import { ForCreatorsViewV2 } from "@/components/forCreators-v2/ForCreatorsViewV2";
+import type { Metadata } from 'next';
+import { ForCreatorsViewV2 } from '@/components/forCreators-v2/ForCreatorsViewV2';
 
-import { SITE_URL } from "@/lib/constants";
+import { SITE_URL } from '@/lib/constants';
+import { getPageBySlug } from '@/lib/cms/queries';
+import { resolvePageMetadataModel } from '@/lib/cms/resolvers/metadata-defaults.resolver';
+import { resolveForCreatorsPageData } from '@/lib/cms/resolvers/for-creators.resolver';
 
-export const metadata: Metadata = {
-  metadataBase: new URL(SITE_URL),
-  title: "For Creators | 3BROTHERS NETWORK",
-  description: "Grow your community. Maximize your opportunity.",
-  keywords: ["creator", "creators", "creator program", "3brothers network"],
-  alternates: {
-    canonical: `${SITE_URL}/for-creators`,
-    languages: {
-      en: `${SITE_URL}/en/for-creators`,
-      vi: `${SITE_URL}/vi/for-creators`,
-    },
-  },
-  openGraph: {
-    title: "For Creators | 3BROTHERS NETWORK",
-    description: "Grow your community. Maximize your opportunity.",
-    url: `${SITE_URL}/for-creators`,
-    type: "website",
-    images: [
-      {
-        url: "/3brothers.png",
-        alt: "3BROTHERS NETWORK",
+export async function generateMetadata(): Promise<Metadata> {
+  const page = await getPageBySlug('for-creators');
+  const metadata = await resolvePageMetadataModel({
+    page,
+    pagePath: '/for-creators',
+    fallbackTitle: 'For Creators | 3BROTHERS NETWORK',
+    fallbackDescription: 'Grow your community. Maximize your opportunity.',
+    fallbackKeywords: ['creator', 'creators', 'creator program', '3brothers network'],
+    fallbackSiteUrl: SITE_URL,
+    fallbackOgImage: '/3brothers.png',
+    fallbackOgImageAlt: '3BROTHERS NETWORK',
+  });
+
+  return {
+    metadataBase: new URL(metadata.metadata_base_url),
+    title: metadata.title,
+    description: metadata.description,
+    keywords: metadata.keywords,
+    robots: metadata.robots,
+    alternates: {
+      canonical: metadata.canonical_url,
+      languages: {
+        en: `${SITE_URL}/en/for-creators`,
+        vi: `${SITE_URL}/vi/for-creators`,
       },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "For Creators | 3BROTHERS NETWORK",
-    description: "Grow your community. Maximize your opportunity.",
-    images: ["/3brothers.png"],
-  },
-};
-
-export default function ForCreatorsPage() {
-  return <ForCreatorsViewV2 />;
+    },
+    openGraph: {
+      title: metadata.title,
+      description: metadata.description,
+      url: metadata.canonical_url,
+      siteName: metadata.site_name,
+      type: 'website',
+      images: [
+        {
+          url: metadata.og_image,
+          alt: metadata.og_image_alt,
+        },
+      ],
+    },
+    twitter: {
+      card: metadata.twitter_card,
+      title: metadata.title,
+      description: metadata.description,
+      images: [metadata.og_image],
+    },
+  };
 }
 
+export default async function ForCreatorsPage() {
+  const data = await resolveForCreatorsPageData();
+  return <ForCreatorsViewV2 data={data} />;
+}

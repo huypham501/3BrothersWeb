@@ -6,12 +6,13 @@ import Link from 'next/link';
 interface HeaderContactButtonProps {
   $isFloating: boolean;
   href: string;
+  label?: string;
 }
 
-export function HeaderContactButton({ $isFloating, href }: HeaderContactButtonProps) {
+export function HeaderContactButton({ $isFloating, href, label }: HeaderContactButtonProps) {
   return (
     <ContactButton href={href} $isFloating={$isFloating}>
-      Liên hệ ngay
+      {label || 'Liên hệ ngay'}
       <IconCircle $isFloating={$isFloating}>
         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 12h14M12 5l7 7-7 7" />

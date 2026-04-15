@@ -3,42 +3,50 @@
 import styled from 'styled-components';
 import Link from 'next/link';
 
+import { GlobalFooterPayload } from '@/lib/cms/types';
+
 // Simple radial gradient behind the huge text to give the glow effect
-export function FooterV2() {
+const DEFAULT_FOOTER_CONTENT: GlobalFooterPayload = {
+  thank_you_heading: 'THANK YOU!',
+  email: '',
+  address: '',
+  menu_links: [],
+  social_links: [],
+  brand_watermark: '3BROTHERS',
+};
+
+export function FooterV2({ content = DEFAULT_FOOTER_CONTENT }: { content?: GlobalFooterPayload }) {
   return (
     <FooterContainer>
       <GlowEffect />
       <TopRow>
         <LeftSide>
-          <Heading>CẢM ƠN SỰ TIN TƯỞNG CỦA QUÍ ĐỐI TÁC</Heading>
+          <Heading dangerouslySetInnerHTML={{ __html: content.thank_you_heading.replace(/\n/g, '<br />') }} />
           <ContactInfo>
-            <div><strong>EMAIL:</strong> work.3brothers@gmail.com</div>
-            <div><strong>ĐỊA CHỈ:</strong> 123 Phan Văn Giang, Phú Nhuận, Hồ Chí Minh</div>
+            <div><strong>EMAIL:</strong> {content.email}</div>
+            <div><strong>ĐỊA CHỈ:</strong> {content.address}</div>
           </ContactInfo>
         </LeftSide>
         
         <RightSide>
           <LinkGroup>
             <LinkTitle>MENU</LinkTitle>
-            <FooterLink href="/for-brands">For Brands</FooterLink>
-            <FooterLink href="/for-creators">For Creators</FooterLink>
-            <FooterLink href="#">About Us</FooterLink>
-            <FooterLink href="/careers">Careers</FooterLink>
-            <FooterLink href="/blogs">Blogs</FooterLink>
+            {content.menu_links?.map((link, idx) => (
+              <FooterLink key={idx} href={link.url}>{link.label}</FooterLink>
+            ))}
           </LinkGroup>
           
           <LinkGroup>
             <LinkTitle>CONTACT</LinkTitle>
-            <FooterLink href="#">Facebook</FooterLink>
-            <FooterLink href="#">Instagram</FooterLink>
-            <FooterLink href="#">Tiktok</FooterLink>
-            <FooterLink href="#">Thread</FooterLink>
+            {content.social_links?.map((link, idx) => (
+              <FooterLink key={idx} href={link.url}>{link.label}</FooterLink>
+            ))}
           </LinkGroup>
         </RightSide>
       </TopRow>
       
       <HugeTextContainer>
-        <HugeText>3BROTHERS.MEDIA</HugeText>
+        <HugeText>{content.brand_watermark}</HugeText>
       </HugeTextContainer>
     </FooterContainer>
   );

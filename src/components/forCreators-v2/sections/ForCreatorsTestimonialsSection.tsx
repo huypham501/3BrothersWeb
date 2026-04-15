@@ -2,49 +2,22 @@
 
 import styled from 'styled-components';
 import { colors, spacing, typography, mediaQueries } from '@/styles/tokens';
+import { ForCreatorsTestimonialsPayload } from '@/lib/cms/types';
 
-// ── Data ──────────────────────────────────────────────────────────────────────
-
-const TESTIMONIALS = [
-  {
-    id: 1,
-    quote: '"Tối ưu hoá thu nhập từ nhiều nguồn: Quảng Cáo, hợp tác thương thiệu và bán hàng trực tuyến"',
-    name: 'Minh Anh',
-    role: 'Beauty creator - 500K follows',
-  },
-  {
-    id: 2,
-    quote: '"Tối ưu hoá thu nhập từ nhiều nguồn: Quảng Cáo, hợp tác thương thiệu và bán hàng trực tuyến"',
-    name: 'Minh Anh',
-    role: 'Beauty creator - 500K follows',
-  },
-  {
-    id: 3,
-    quote: '"Tối ưu hoá thu nhập từ nhiều nguồn: Quảng Cáo, hợp tác thương thiệu và bán hàng trực tuyến"',
-    name: 'Minh Anh',
-    role: 'Beauty creator - 500K follows',
-  },
-];
-
-// ── Component ─────────────────────────────────────────────────────────────────
-
-export function ForCreatorsTestimonialsSection() {
+export function ForCreatorsTestimonialsSection({ content }: { content: ForCreatorsTestimonialsPayload }) {
   return (
     <SectionContainer>
-      {/* Diagonal stripe background (CSS-generated to match design) */}
       <StripeOverlay />
 
       <Inner>
-        {/* Superlabel + H2 */}
         <HeadingBlock>
-          <Superlabel>Creator nói gì về chúng tôi</Superlabel>
-          <SectionTitle>Câu Chuyện Thành Công</SectionTitle>
+          <Superlabel>{content.superlabel}</Superlabel>
+          <SectionTitle>{content.section_title}</SectionTitle>
         </HeadingBlock>
 
-        {/* 3-column testimonial cards */}
         <CardsRow>
-          {TESTIMONIALS.map((t) => (
-            <TestimonialCard key={t.id}>
+          {content.testimonials.map((t, idx) => (
+            <TestimonialCard key={`${t.name}-${idx}`}>
               <CardInner>
                 <QuoteText>{t.quote}</QuoteText>
                 <Divider />
@@ -60,8 +33,6 @@ export function ForCreatorsTestimonialsSection() {
     </SectionContainer>
   );
 }
-
-// ── Styled components ─────────────────────────────────────────────────────────
 
 const SectionContainer = styled.section`
   position: relative;
@@ -83,14 +54,12 @@ const SectionContainer = styled.section`
   }
 `;
 
-/* CSS-generated diagonal stripe pattern — pseudo-element overlay mimicking the design's slanted rectangles */
 const StripeOverlay = styled.div`
   position: absolute;
   inset: 0;
   pointer-events: none;
   overflow: hidden;
 
-  /* Multiple diagonal white stripes via repeating-linear-gradient */
   background: repeating-linear-gradient(
     -68deg,
     transparent 0px,
@@ -124,7 +93,6 @@ const Inner = styled.div`
   }
 `;
 
-/* Superlabel + Title stacked */
 const HeadingBlock = styled.div`
   display: flex;
   flex-direction: column;
@@ -133,13 +101,12 @@ const HeadingBlock = styled.div`
   text-align: center;
 `;
 
-/* "Creator nói gì về chúng tôi" — blue, 26px */
 const Superlabel = styled.p`
   font-family: 'Montserrat', sans-serif;
   font-weight: ${typography.fontWeight.normal};
   font-size: 26px;
   line-height: 140%;
-  color: ${colors.primary}; /* #003CA6 */
+  color: ${colors.primary};
   margin: 0;
 
   ${mediaQueries.down.sm} {
@@ -147,15 +114,14 @@ const Superlabel = styled.p`
   }
 `;
 
-/* "CÂU CHUYỆN THÀNH CÔNG" — navy, 42px, uppercase, bold */
 const SectionTitle = styled.h2`
   font-family: 'Montserrat', sans-serif;
   font-weight: ${typography.fontWeight.bold};
-  font-size: ${typography.fontSize['6xl']}; /* 42px */
+  font-size: ${typography.fontSize['6xl']};
   line-height: 140%;
   text-align: center;
   text-transform: uppercase;
-  color: ${colors.secondaryDark}; /* #061530 */
+  color: ${colors.secondaryDark};
   margin: 0;
 
   ${mediaQueries.down.lg} {
@@ -167,7 +133,6 @@ const SectionTitle = styled.h2`
   }
 `;
 
-/* Row of 3 cards */
 const CardsRow = styled.div`
   display: flex;
   flex-direction: row;
@@ -181,7 +146,6 @@ const CardsRow = styled.div`
   }
 `;
 
-/* Individual white card — 440px × 254px, padding 44px 56px */
 const TestimonialCard = styled.div`
   flex: 1;
   min-width: 0;
@@ -209,7 +173,6 @@ const CardInner = styled.div`
   }
 `;
 
-/* Quote paragraph */
 const QuoteText = styled.p`
   font-family: 'Montserrat', sans-serif;
   font-weight: ${typography.fontWeight.normal};
@@ -220,7 +183,6 @@ const QuoteText = styled.p`
   flex: 1;
 `;
 
-/* Short blue separator line */
 const Divider = styled.div`
   width: 80px;
   height: 1px;
@@ -228,7 +190,6 @@ const Divider = styled.div`
   flex-shrink: 0;
 `;
 
-/* Name + role group */
 const AuthorBlock = styled.div`
   display: flex;
   flex-direction: column;

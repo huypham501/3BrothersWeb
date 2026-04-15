@@ -4,30 +4,15 @@ import styled from 'styled-components';
 import { colors, spacing, typography, mediaQueries } from '@/styles/tokens';
 import { CoreCompetencyCard } from '../components/CoreCompetencyCard';
 
-const SERVICES = [
-  {
-    title: 'Influencer Management',
-    description: '3Brothers Media cung cấp nền tảng quản lý Influencer chuyên nghiệp với quy trình chọn lọc, đào tạo phát triển và tối ưu hình ảnh cá nhân cho từng talent.',
-  },
-  {
-    title: 'Campaign Strategy',
-    description: 'Tư vấn chiến lược triển khai campaign hiệu quả, đánh trúng insight khách hàng với phương pháp kết hợp sức mạnh mạng lưới Influencer rộng lớn.',
-  },
-  {
-    title: 'Content production',
-    description: 'Đội ngũ sản xuất nội dung giàu kinh nghiệm đảm bảo chất lượng hình ảnh, video với phong cách trending, thu hút tương tác tự nhiên cao nhất.',
-  },
-  {
-    title: 'Event planning',
-    description: 'Tổ chức các sự kiện quảng bá truyền thông chuyên nghiệp trong và ngoài nước, kết nối mạng lưới nhãn hàng cùng các content creators.',
-  }
-];
+import { HomeCoreCompetenciesPayload } from '@/lib/cms/types';
 
-export function CoreCompetenciesSectionV2() {
+export function CoreCompetenciesSectionV2({ content }: { content: HomeCoreCompetenciesPayload }) {
+  const SERVICES = content.services || [];
+
   return (
     <SectionContainer>
       <TitleWrapper>
-        <Title>Năng lực cốt lõi</Title>
+        <Title>{content.section_title}</Title>
         <TitleSlash />
       </TitleWrapper>
       <GridWrapper>

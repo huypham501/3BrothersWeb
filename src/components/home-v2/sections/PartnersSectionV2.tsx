@@ -3,18 +3,27 @@
 import styled from 'styled-components';
 import { colors, spacing, typography, mediaQueries, borderRadius, motion } from '@/styles/tokens';
 
-export function PartnersSectionV2() {
-  const partners = [
-    "Gillette", "Dior", "L'Oreal", "Klairs", "YSL", "MONO TALK", "Grab", "closeup"
-  ];
+import { HomePartnersPayload } from '@/lib/cms/types';
+
+export function PartnersSectionV2({ content }: { content: HomePartnersPayload }) {
+  const partners = content.partners || [];
 
   return (
     <PartnersContainer>
       <LogosWrapper>
         {partners.map((partner, index) => (
-          <LogoTextPlaceholder key={index}>
-            {partner}
-          </LogoTextPlaceholder>
+          partner.logo_image ? (
+            <img 
+              key={index} 
+              src={partner.logo_image} 
+              alt={partner.name} 
+              style={{ maxHeight: '40px', maxWidth: '120px', objectFit: 'contain' }}
+            />
+          ) : (
+            <LogoTextPlaceholder key={index}>
+              {partner.name}
+            </LogoTextPlaceholder>
+          )
         ))}
       </LogosWrapper>
     </PartnersContainer>
