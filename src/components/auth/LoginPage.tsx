@@ -246,8 +246,10 @@ const PageRoot = styled.div`
   flex-direction: row;
   width: 100%;
   min-height: 100vh;
+  /* Reverted to original neutral background */
   background: #F4F8FF;
   font-family: 'Montserrat', 'Inter', sans-serif;
+  overflow: hidden;
 
   ${mediaQueries.down.lg} {
     flex-direction: column;
@@ -257,7 +259,8 @@ const PageRoot = styled.div`
 /* ── LEFT: Hero panel ────────── */
 const HeroPanel = styled.div`
   position: relative;
-  flex: 1;
+  /* Increased flex to allow overlap underneath form */
+  flex: 1.1; 
   min-height: 100vh;
   background: linear-gradient(180deg, #061530 0%, #003CA6 100%);
   overflow: hidden;
@@ -265,9 +268,12 @@ const HeroPanel = styled.div`
   align-items: center;
   justify-content: center;
   filter: drop-shadow(0px 24px 40px rgba(0, 0, 0, 0.25));
+  z-index: 1;
 
   ${mediaQueries.down.lg} {
     min-height: 340px;
+    flex: none;
+    width: 100%;
   }
 
   ${mediaQueries.down.sm} {
@@ -352,39 +358,59 @@ const LogoWrapper = styled.div`
 /* ── RIGHT: Form panel ────────── */
 const FormPanel = styled.div`
   position: relative;
-  width: 736px;
+  flex: 1;
   min-height: 100vh;
-  background: ${colors.white};
-  border-radius: 80px 0px 0px 80px;
+  /* Removed background here to allow shadow behind pseudo-background */
+  background: transparent;
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 2;
+  margin-left: -80px; 
 
-  /* dark shadow behind the white panel to separate it from hero */
-  &::before {
+  /* White background layer - placed between shadow and content */
+  &::after {
     content: '';
     position: absolute;
-    width: calc(100% + 62px);
-    height: calc(100% + 76px);
-    left: -31px;
-    top: -38px;
-    background: #061530;
-    filter: blur(100px);
-    border-radius: 80px;
-    z-index: -1;
+    inset: 0;
+    background: ${colors.white};
+    border-radius: 80px 0px 0px 80px;
+    z-index: 1;
     pointer-events: none;
   }
 
-  ${mediaQueries.down.xl} {
-    width: 50%;
+  /* background shadow to match design (Rectangle 52) */
+  &::before {
+    content: '';
+    position: absolute;
+    width: 108%;
+    height: 108%;
+    left: -4%;
+    top: -4%;
+    background: #061530;
+    filter: blur(100px);
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.5;
+    border-radius: 80px;
   }
 
   ${mediaQueries.down.lg} {
     width: 100%;
-    border-radius: 40px 40px 0 0;
+    margin-left: 0;
     min-height: auto;
     padding: 60px 0;
+    flex: none;
+
+    &::after {
+      border-radius: 40px 40px 0 0;
+      border-left: none;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    &::before {
+      display: none; /* Hide glow on mobile/tablet to avoid layout issues */
+    }
   }
 
   ${mediaQueries.down.sm} {
@@ -394,6 +420,8 @@ const FormPanel = styled.div`
 `;
 
 const FormPanelInner = styled.div`
+  position: relative;
+  z-index: 2; /* Highest layer: above white background and shadow */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -673,7 +701,7 @@ const InlineAlert = styled.div<{ $tone: 'error' | 'success' }>`
     $tone === 'error' ? 'rgba(220, 38, 38, 0.08)' : 'rgba(22, 163, 74, 0.08)'};
   border: 1px solid
     ${({ $tone }) =>
-      $tone === 'error' ? 'rgba(220, 38, 38, 0.3)' : 'rgba(22, 163, 74, 0.3)'};
+    $tone === 'error' ? 'rgba(220, 38, 38, 0.3)' : 'rgba(22, 163, 74, 0.3)'};
   color: ${({ $tone }) => ($tone === 'error' ? '#dc2626' : '#16a34a')};
   font-family: 'Montserrat', sans-serif;
   font-size: 14px;
