@@ -3,17 +3,11 @@
 import { FormEvent, useEffect, useMemo, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import styled from 'styled-components';
+import Image from 'next/image';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
-import { Container } from '@/components/primitives/Container';
-import { Header } from '@/components/shared/Header';
-import { Footer } from '@/components/shared/Footer';
-import { H2 } from '@/components/ui/Heading';
-import { Text } from '@/components/ui/Text';
-import { Button } from '@/components/ui/Button';
-import { mq } from '@/styles/mediaQueries';
+import { colors, typography, mediaQueries, motion } from '@/styles/tokens';
 
 type LoginStatus = 'idle' | 'submitting';
-type AuthMode = 'sign-in' | 'sign-up';
 
 const DEFAULT_REDIRECT = '/admin';
 
@@ -29,9 +23,9 @@ export function LoginPage() {
   const searchParams = useSearchParams();
   const supabase = useMemo(() => createSupabaseBrowserClient(), []);
   const [status, setStatus] = useState<LoginStatus>('idle');
-  const [mode, setMode] = useState<AuthMode>('sign-in');
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
+  const [rememberMe, setRememberMe] = useState(false);
 
   const nextParam = searchParams?.get('next');
   const redirectPath = getSafeRedirectPath(nextParam);
@@ -68,36 +62,12 @@ export function LoginPage() {
     const password = String(formData.get('password') ?? '');
 
     if (!email || !password) {
-      setError('Email and password are required.');
+      setError('Vui lòng nhập email và mật khẩu.');
       setStatus('idle');
       return;
     }
 
     try {
-      if (mode === 'sign-up') {
-        const { data, error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            emailRedirectTo: buildCallbackUrl(),
-          },
-        });
-
-        if (error) {
-          throw error;
-        }
-
-        if (!data.session) {
-          setMessage(
-            "Check your inbox to confirm your email. We'll sign you in once it's verified."
-          );
-          return;
-        }
-
-        router.replace(redirectPath);
-        return;
-      }
-
       const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -112,7 +82,7 @@ export function LoginPage() {
       const fallbackMessage =
         authError instanceof Error
           ? authError.message
-          : "We couldn't process your request. Please try again.";
+          : 'Đã xảy ra lỗi. Vui lòng thử lại.';
       setError(fallbackMessage);
     } finally {
       setStatus('idle');
@@ -141,290 +111,571 @@ export function LoginPage() {
     }
   };
 
-  const toggleMode = () => {
-    setMode((current) => (current === 'sign-in' ? 'sign-up' : 'sign-in'));
-    setError(null);
-    setMessage(null);
-  };
-
   return (
     <PageRoot>
-      <div className="wrapper">
-        <Header />
-        <MainContent>
-          <Container $size="sm">
-            <Card>
-              <Eyebrow>{mode === 'sign-up' ? 'Create account' : 'Welcome back'}</Eyebrow>
-              <CardHeader>
-                <H2 $align="center">
-                  {mode === 'sign-in' ? 'Log in to 3brothers' : 'Create your account'}
-                </H2>
-                <Text $align="center" $color="muted">
-                  {mode === 'sign-in'
-                    ? 'Choose your preferred sign-in method to access your account.'
-                    : 'Sign up with your email or use Google to get started.'}
-                </Text>
-              </CardHeader>
+      {/* ── Left: Hero Panel ────────────────────────────────────────── */}
+      <HeroPanel>
+        {/* Layered blur blobs */}
+        <BlobA />
+        <BlobB />
+        <BlobC />
+        <BlobD />
 
-              {error && <InlineAlert $tone="error">{error}</InlineAlert>}
-              {message && <InlineAlert $tone="success">{message}</InlineAlert>}
+        {/* Logo centered */}
+        <LogoWrapper>
+          <Image
+            src="/metub/template/images/3brothers-logo-white.png"
+            alt="3BROTHERS"
+            width={386}
+            height={121}
+            priority
+            style={{ objectFit: 'contain' }}
+          />
+        </LogoWrapper>
+      </HeroPanel>
 
-              <Form onSubmit={handleSubmit}>
-                <Field>
-                  <Label htmlFor="email">Email</Label>
-                  <Input
-                    id="email"
-                    name="email"
-                    type="email"
-                    placeholder="you@example.com"
-                    autoComplete="email"
-                    required
-                  />
-                </Field>
-                <Field>
-                  <Label htmlFor="password">Password</Label>
-                  <Input
-                    id="password"
-                    name="password"
-                    type="password"
-                    placeholder={mode === 'sign-in' ? 'Enter your password' : 'Create a password'}
-                    autoComplete={mode === 'sign-in' ? 'current-password' : 'new-password'}
-                    required
-                  />
-                </Field>
-                <Actions>
-                  <Button type="submit" $variant="gradient" $fullWidth disabled={isSubmitting} $rounded>
-                    {isSubmitting
-                      ? mode === 'sign-in'
-                        ? 'Signing in…'
-                        : 'Creating account…'
-                      : mode === 'sign-in'
-                      ? 'Continue'
-                      : 'Create account'}
-                  </Button>
-                </Actions>
-              </Form>
+      {/* ── Right: Form Panel ───────────────────────────────────────── */}
+      <FormPanel>
+        <FormPanelInner>
+          {/* Header text group */}
+          <HeaderGroup>
+            <PageTitle>Đăng nhập</PageTitle>
+            <SubTitle>Nhập thông tin tài khoản để truy cập hệ thống quản trị</SubTitle>
+            <BrandName>3BROTHERS.MEDIA</BrandName>
+          </HeaderGroup>
 
-              <Divider>
-                <span>or</span>
-              </Divider>
+          {/* Error / message alerts */}
+          {error && <InlineAlert $tone="error">{error}</InlineAlert>}
+          {message && <InlineAlert $tone="success">{message}</InlineAlert>}
 
-              <Actions>
-                <Button
-                  type="button"
-                  $variant="outline"
-                  $fullWidth
-                  onClick={handleGoogleLogin}
+          {/* Form fields */}
+          <StyledForm onSubmit={handleSubmit}>
+            <FieldsContainer>
+              <InputGroup>
+                <StyledInput
+                  id="login-email"
+                  name="email"
+                  type="email"
+                  placeholder="Email"
+                  autoComplete="email"
+                  required
                   disabled={isSubmitting}
-                >
-                  <ButtonContent>
-                    <GoogleBadge aria-hidden="true">G</GoogleBadge>
-                    <span>{isSubmitting ? 'Connecting…' : 'Continue with Google'}</span>
-                  </ButtonContent>
-                </Button>
-              </Actions>
+                />
+              </InputGroup>
 
-              <HelperText>
-                {mode === 'sign-in' ? 'New to 3brothers?' : 'Already have an account?'}{' '}
-                <ModeSwitch type="button" onClick={toggleMode} disabled={isSubmitting}>
-                  {mode === 'sign-in' ? 'Create an account' : 'Sign in instead'}
-                </ModeSwitch>
-              </HelperText>
-              <HelperText>
-                Trouble signing in? <a href="mailto:support@3brothers.net">Contact support</a>
-              </HelperText>
-            </Card>
-          </Container>
-        </MainContent>
-        <Footer />
-      </div>
+              <InputGroup>
+                <StyledInput
+                  id="login-password"
+                  name="password"
+                  type="password"
+                  placeholder="Mật khẩu"
+                  autoComplete="current-password"
+                  required
+                  disabled={isSubmitting}
+                />
+              </InputGroup>
+
+              {/* Remember + Forgot row */}
+              <RememberRow>
+                <CheckboxLabel>
+                  <Checkbox
+                    type="checkbox"
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
+                  />
+                  Ghi nhớ mật khẩu
+                </CheckboxLabel>
+                <ForgotLink href="#">Quên mật khẩu?</ForgotLink>
+              </RememberRow>
+            </FieldsContainer>
+
+            {/* Submit button */}
+            <SubmitButton type="submit" disabled={isSubmitting}>
+              {isSubmitting ? 'Đang đăng nhập...' : 'Đăng nhập'}
+            </SubmitButton>
+          </StyledForm>
+
+          {/* Divider: "Hoặc" */}
+          <Divider>
+            <DividerLine />
+            <DividerText>Hoặc</DividerText>
+            <DividerLine />
+          </Divider>
+
+          {/* Google Sign-in */}
+          <GoogleButton type="button" onClick={handleGoogleLogin} disabled={isSubmitting}>
+            <GoogleIcon />
+            <span>{isSubmitting ? 'Connecting…' : 'Đăng nhập với Google'}</span>
+          </GoogleButton>
+        </FormPanelInner>
+      </FormPanel>
     </PageRoot>
   );
 }
 
+// ── SVG: Google "G" icon ──────────────────────────────────────────────────────
 
-const PageRoot = styled.div`
-  min-height: 100vh;
-  background: linear-gradient(
-    180deg,
-    ${({ theme }) => theme.colors.bgDark} 0%,
-    ${({ theme }) => theme.colors.bgSecondary} 35%,
-    ${({ theme }) => theme.colors.bgLight} 72%,
-    ${({ theme }) => theme.colors.white} 100%
+function GoogleIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+      <path
+        d="M19.6 10.23c0-.68-.06-1.36-.17-2.01H10v3.8h5.38a4.6 4.6 0 0 1-2 3.02v2.5h3.24c1.89-1.74 2.98-4.3 2.98-7.31z"
+        fill="#4285F4"
+      />
+      <path
+        d="M10 20c2.7 0 4.96-.9 6.62-2.43l-3.24-2.5c-.9.6-2.04.96-3.38.96-2.6 0-4.8-1.76-5.59-4.12H1.07v2.58A10 10 0 0 0 10 20z"
+        fill="#34A853"
+      />
+      <path
+        d="M4.41 11.9A6.01 6.01 0 0 1 4.1 10c0-.66.11-1.3.31-1.9V5.52H1.07A10 10 0 0 0 0 10c0 1.61.39 3.14 1.07 4.48l3.34-2.58z"
+        fill="#FBBC05"
+      />
+      <path
+        d="M10 3.96c1.47 0 2.78.5 3.82 1.5l2.86-2.87C14.96.99 12.7 0 10 0A10 10 0 0 0 1.07 5.52l3.34 2.58C5.2 5.72 7.4 3.96 10 3.96z"
+        fill="#EA4335"
+      />
+    </svg>
   );
+}
+
+// ── Styled components ─────────────────────────────────────────────────────────
+
+/* Full-page split layout: hero left, form right. 1440×1024 from design */
+const PageRoot = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  width: 100%;
+  min-height: 100vh;
+  background: #F4F8FF;
+  font-family: 'Montserrat', 'Inter', sans-serif;
+
+  ${mediaQueries.down.lg} {
+    flex-direction: column;
+  }
 `;
 
-const MainContent = styled.main`
+/* ── LEFT: Hero panel ────────── */
+const HeroPanel = styled.div`
+  position: relative;
   flex: 1;
-  padding: ${({ theme }) => theme.spacing['5xl']} 0 ${({ theme }) => theme.spacing['6xl']};
+  min-height: 100vh;
+  background: linear-gradient(180deg, #061530 0%, #003CA6 100%);
+  overflow: hidden;
   display: flex;
   align-items: center;
+  justify-content: center;
+  filter: drop-shadow(0px 24px 40px rgba(0, 0, 0, 0.25));
 
-  ${mq.md} {
-    padding: ${({ theme }) => theme.spacing['6xl']} 0 ${({ theme }) => theme.spacing['7xl']};
+  ${mediaQueries.down.lg} {
+    min-height: 340px;
+  }
+
+  ${mediaQueries.down.sm} {
+    min-height: 260px;
   }
 `;
 
-const Card = styled.div`
-  background: ${({ theme }) => theme.colors.white};
-  border-radius: ${({ theme }) => theme.borderRadius.lg};
-  padding: ${({ theme }) => theme.spacing['3xl']} ${({ theme }) => theme.spacing.xl};
-  box-shadow: ${({ theme }) => theme.shadows.sm};
-  border: 1px solid ${({ theme }) => theme.colors.border};
-  max-width: ${({ theme }) => theme.containerWidths.sm};
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: ${({ theme }) => theme.spacing['2xl']};
+/* Deep navy blob — top-right glow */
+const BlobA = styled.div`
+  position: absolute;
+  width: 130%;
+  height: 1036px;
+  left: -20%;
+  top: 2%;
+  background: #00328A;
+  filter: blur(50px);
+  transform: matrix(0.85, -0.53, 0.4, 0.92, 0, 0);
+  pointer-events: none;
+`;
 
-  ${mq.md} {
-    padding: ${({ theme }) => theme.spacing['4xl']} ${({ theme }) => theme.spacing['2xl']};
-    border-radius: ${({ theme }) => theme.borderRadius.xl};
+/* Blue glow — upper-left */
+const BlobB = styled.div`
+  position: absolute;
+  width: 110%;
+  height: 794px;
+  left: -40%;
+  top: -60%;
+  background: #003CA6;
+  filter: blur(50px);
+  transform: matrix(-0.88, 0.47, 0.44, 0.9, 0, 0);
+  pointer-events: none;
+`;
+
+/* Accent — mid-left, brighter blue */
+const BlobC = styled.div`
+  position: absolute;
+  width: 80%;
+  height: 482px;
+  left: -10%;
+  bottom: 10%;
+  background: #639CFF;
+  filter: blur(32px);
+  transform: matrix(0.85, -0.53, 0.4, 0.92, 0, 0);
+  pointer-events: none;
+`;
+
+/* Lighter accent */
+const BlobD = styled.div`
+  position: absolute;
+  width: 60%;
+  height: 370px;
+  right: -5%;
+  top: -35%;
+  background: #6395ED;
+  filter: blur(48px);
+  transform: matrix(-0.88, 0.47, 0.44, 0.9, 0, 0);
+  pointer-events: none;
+`;
+
+const LogoWrapper = styled.div`
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  ${mediaQueries.down.lg} {
+    img {
+      width: 240px !important;
+      height: auto !important;
+    }
+  }
+
+  ${mediaQueries.down.sm} {
+    img {
+      width: 180px !important;
+      height: auto !important;
+    }
   }
 `;
 
-const CardHeader = styled.div`
-  text-align: center;
+/* ── RIGHT: Form panel ────────── */
+const FormPanel = styled.div`
+  position: relative;
+  width: 736px;
+  min-height: 100vh;
+  background: ${colors.white};
+  border-radius: 80px 0px 0px 80px;
   display: flex;
-  flex-direction: column;
-  gap: ${({ theme }) => theme.spacing.sm};
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
 
-  p {
-    margin: 0;
+  /* dark shadow behind the white panel to separate it from hero */
+  &::before {
+    content: '';
+    position: absolute;
+    width: calc(100% + 62px);
+    height: calc(100% + 76px);
+    left: -31px;
+    top: -38px;
+    background: #061530;
+    filter: blur(100px);
+    border-radius: 80px;
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  ${mediaQueries.down.xl} {
+    width: 50%;
+  }
+
+  ${mediaQueries.down.lg} {
+    width: 100%;
+    border-radius: 40px 40px 0 0;
+    min-height: auto;
+    padding: 60px 0;
+  }
+
+  ${mediaQueries.down.sm} {
+    border-radius: 32px 32px 0 0;
+    padding: 40px 0;
   }
 `;
 
-const Eyebrow = styled.span`
-  display: inline-flex;
-  align-self: center;
-  padding: ${({ theme }) => `${theme.spacing[1]} ${theme.spacing.md}`};
-  border-radius: ${({ theme }) => theme.borderRadius.round};
-  background: ${({ theme }) => theme.colors.secondaryLight};
-  color: ${({ theme }) => theme.colors.textSecondary};
-  font-size: ${({ theme }) => theme.typography.fontSize.sm};
-  font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
-  text-transform: uppercase;
-  letter-spacing: 0.02em;
-`;
-
-const Form = styled.form`
+const FormPanelInner = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${({ theme }) => theme.spacing.lg};
+  align-items: center;
+  gap: 24px;
+  width: 576px;
+  max-width: 90%;
 `;
 
-const Field = styled.div`
+/* ── Header text group ────── */
+const HeaderGroup = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${({ theme }) => theme.spacing.xs};
-`;
-
-const Label = styled.label`
-  font-size: ${({ theme }) => theme.typography.fontSize.sm};
-  font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
-  color: ${({ theme }) => theme.colors.textSecondary};
-`;
-
-const Input = styled.input`
+  align-items: center;
+  gap: 8px;
   width: 100%;
-  padding: ${({ theme }) => `${theme.spacing[3]} ${theme.spacing[4]}`};
-  border: 1px solid ${({ theme }) => theme.colors.borderInput};
-  border-radius: ${({ theme }) => theme.borderRadius.md};
-  font-size: ${({ theme }) => theme.typography.fontSize.md};
-  color: ${({ theme }) => theme.colors.textPrimary};
-  background-color: ${({ theme }) => theme.colors.white};
-  transition: border-color ${({ theme }) => theme.motion.duration.base}
-      ${({ theme }) => theme.motion.easing.easeInOut},
-    box-shadow ${({ theme }) => theme.motion.duration.base}
-      ${({ theme }) => theme.motion.easing.easeInOut};
+`;
+
+/* "Đăng nhập" — 42px bold #061530 */
+const PageTitle = styled.h1`
+  font-family: 'Montserrat', sans-serif;
+  font-weight: ${typography.fontWeight.bold};
+  font-size: 42px;
+  line-height: 140%;
+  text-align: center;
+  color: #061530;
+  margin: 0;
+
+  ${mediaQueries.down.sm} {
+    font-size: 32px;
+  }
+`;
+
+/* "Nhập thông tin..." — 16px regular #454545 */
+const SubTitle = styled.p`
+  font-family: 'Montserrat', sans-serif;
+  font-weight: ${typography.fontWeight.normal};
+  font-size: 16px;
+  line-height: 140%;
+  text-align: center;
+  color: #454545;
+  margin: 0;
+`;
+
+/* "3BROTHERS.MEDIA" — 26px bold uppercase #003CA6 */
+const BrandName = styled.span`
+  font-family: 'Montserrat', sans-serif;
+  font-weight: ${typography.fontWeight.bold};
+  font-size: 26px;
+  line-height: 140%;
+  text-align: center;
+  text-transform: uppercase;
+  color: ${colors.primary};
+
+  ${mediaQueries.down.sm} {
+    font-size: 20px;
+  }
+`;
+
+/* ── Form ────── */
+const StyledForm = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+`;
+
+const FieldsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  width: 100%;
+`;
+
+const InputGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+`;
+
+/* Flat underline input matching design exactly — bottom border only */
+const StyledInput = styled.input`
+  width: 100%;
+  padding: 12px 0 24px;
+  border: none;
+  border-bottom: 1px solid #CACACA;
+  background: transparent;
+  outline: none;
+
+  font-family: 'Montserrat', sans-serif;
+  font-weight: ${typography.fontWeight.normal};
+  font-size: 16px;
+  line-height: 140%;
+  color: #061530;
+
+  transition: border-color ${motion.duration.base} ease;
 
   &::placeholder {
-    color: ${({ theme }) => theme.colors.textPlaceholder};
+    color: #061530;
   }
 
   &:focus {
-    outline: none;
-    border-color: ${({ theme }) => theme.colors.primary};
-    box-shadow: 0 0 0 ${({ theme }) => theme.spacing[1]} rgba(0, 60, 166, 0.12);
+    border-bottom-color: ${colors.primary};
   }
-`;
-
-const Actions = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: ${({ theme }) => theme.spacing.sm};
-`;
-
-const Divider = styled.div`
-  display: flex;
-  align-items: center;
-  gap: ${({ theme }) => theme.spacing.md};
-  color: ${({ theme }) => theme.colors.textMuted};
-  font-size: ${({ theme }) => theme.typography.fontSize.sm};
-
-  &::before,
-  &::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: ${({ theme }) => theme.colors.borderLight};
-  }
-`;
-
-const ButtonContent = styled.span`
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: ${({ theme }) => theme.spacing.sm};
-`;
-
-const GoogleBadge = styled.span`
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: ${({ theme }) => theme.spacing['2xl']};
-  height: ${({ theme }) => theme.spacing['2xl']};
-  border-radius: ${({ theme }) => theme.borderRadius.full};
-  border: 1px solid ${({ theme }) => theme.colors.border};
-  background: ${({ theme }) => theme.colors.white};
-  color: ${({ theme }) => theme.colors.textSecondary};
-  font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
-  font-size: ${({ theme }) => theme.typography.fontSize.md};
-`;
-
-const HelperText = styled(Text)`
-  margin: 0;
-  text-align: center;
-`;
-
-const InlineAlert = styled.div<{ $tone: 'error' | 'success' }>`
-  border-radius: ${({ theme }) => theme.borderRadius.md};
-  padding: ${({ theme }) => `${theme.spacing[3]} ${theme.spacing[4]}`};
-  background: ${({ theme, $tone }) =>
-    $tone === 'error' ? theme.colors.errorBg : theme.colors.successBg};
-  border: 1px solid
-    ${({ theme, $tone }) =>
-      $tone === 'error' ? theme.colors.errorBorder : theme.colors.successBorder};
-  color: ${({ theme, $tone }) =>
-    $tone === 'error' ? theme.colors.errorText : theme.colors.successText};
-  font-size: ${({ theme }) => theme.typography.fontSize.sm};
-`;
-
-const ModeSwitch = styled.button`
-  border: none;
-  background: none;
-  color: ${({ theme }) => theme.colors.primary};
-  font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
-  cursor: pointer;
-  padding: 0;
-  transition: color ${({ theme }) => theme.motion.duration.base}
-    ${({ theme }) => theme.motion.easing.easeInOut};
-  font-size: ${({ theme }) => theme.typography.fontSize.sm};
 
   &:disabled {
-    color: ${({ theme }) => theme.colors.textDisabled};
+    opacity: 0.6;
+  }
+`;
+
+/* Remember me + Forgot password row */
+const RememberRow = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+`;
+
+const CheckboxLabel = styled.label`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  cursor: pointer;
+
+  font-family: 'Montserrat', sans-serif;
+  font-weight: ${typography.fontWeight.normal};
+  font-size: 16px;
+  line-height: 140%;
+  color: #061530;
+`;
+
+const Checkbox = styled.input`
+  width: 20px;
+  height: 20px;
+  border: 2px solid ${colors.primary};
+  border-radius: 4px;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  position: relative;
+
+  &:checked {
+    background: ${colors.primary};
+
+    &::after {
+      content: '✓';
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 12px;
+      font-weight: bold;
+    }
+  }
+`;
+
+/* "Quên mật khẩu?" — 16px semibold #003CA6 */
+const ForgotLink = styled.a`
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 140%;
+  color: ${colors.primary};
+  text-decoration: none;
+  white-space: nowrap;
+  transition: opacity ${motion.duration.base} ease;
+
+  &:hover {
+    opacity: 0.8;
+  }
+`;
+
+/* Navy submit button — 576×56, border-radius 48 */
+const SubmitButton = styled.button`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 16px 32px;
+  width: 100%;
+  height: 56px;
+  background: ${colors.primary};
+  border-radius: 48px;
+  border: none;
+  cursor: pointer;
+  transition: background ${motion.duration.base} ease, transform ${motion.duration.base} ease;
+
+  font-family: 'Montserrat', sans-serif;
+  font-weight: ${typography.fontWeight.bold};
+  font-size: 16px;
+  line-height: 150%;
+  color: ${colors.white};
+
+  &:hover:not(:disabled) {
+    background: ${colors.primaryHover};
+    transform: translateY(-1px);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+
+  &:disabled {
+    opacity: 0.6;
     cursor: not-allowed;
   }
+`;
+
+/* ── Divider: "Hoặc" ────── */
+const Divider = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+`;
+
+const DividerLine = styled.div`
+  flex: 1;
+  height: 1px;
+  background: #D9D9D9;
+`;
+
+const DividerText = styled.span`
+  font-family: 'Montserrat', sans-serif;
+  font-weight: ${typography.fontWeight.normal};
+  font-size: 16px;
+  line-height: 140%;
+  text-align: center;
+  color: #828282;
+`;
+
+/* Google sign-in — outline border, 576×56, border-radius 48 */
+const GoogleButton = styled.button`
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 16px 32px;
+  gap: 12px;
+  width: 100%;
+  height: 56px;
+  background: transparent;
+  border: 1px solid rgba(6, 21, 48, 0.5);
+  border-radius: 48px;
+  cursor: pointer;
+  transition: background ${motion.duration.base} ease, border-color ${motion.duration.base} ease;
+
+  font-family: 'Montserrat', sans-serif;
+  font-weight: ${typography.fontWeight.bold};
+  font-size: 16px;
+  line-height: 150%;
+  color: #061530;
+
+  &:hover:not(:disabled) {
+    background: rgba(6, 21, 48, 0.04);
+    border-color: rgba(6, 21, 48, 0.7);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+`;
+
+/* ── Inline alerts ────── */
+const InlineAlert = styled.div<{ $tone: 'error' | 'success' }>`
+  width: 100%;
+  border-radius: 12px;
+  padding: 12px 16px;
+  background: ${({ $tone }) =>
+    $tone === 'error' ? 'rgba(220, 38, 38, 0.08)' : 'rgba(22, 163, 74, 0.08)'};
+  border: 1px solid
+    ${({ $tone }) =>
+      $tone === 'error' ? 'rgba(220, 38, 38, 0.3)' : 'rgba(22, 163, 74, 0.3)'};
+  color: ${({ $tone }) => ($tone === 'error' ? '#dc2626' : '#16a34a')};
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
 `;
