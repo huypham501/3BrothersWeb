@@ -26,7 +26,7 @@ import { z } from 'zod';
 
 type FormValues = z.infer<typeof forCreatorsTestimonialsSchema> & { enabled: boolean };
 
-export function ForCreatorsTestimonialsEditor({ pageId, section }: { pageId: string; section: CmsPageSection }) {
+export function ForCreatorsTestimonialsEditor({ pageId, section }: { pageId: string; section: CmsPageSection<z.infer<typeof forCreatorsTestimonialsSchema>> }) {
   const [isSaving, setIsSaving] = React.useState(false);
   const [success, setSuccess] = React.useState(false);
   const [errorMsg, setErrorMsg] = React.useState<string | null>(null);

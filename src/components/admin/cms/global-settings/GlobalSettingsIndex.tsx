@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import styled from 'styled-components';
 import { CmsGlobalSetting } from '@/lib/cms/types';
 import { SUPPORTED_GLOBAL_SETTINGS } from '@/lib/cms/constants/global-settings';
 import {
@@ -22,16 +21,16 @@ interface GlobalSettingsIndexProps {
 
 export function GlobalSettingsIndex({ settings, role }: GlobalSettingsIndexProps) {
   return (
-    <Wrapper>
+    <div>
       <AdminAlert>
         <AdminAlertTitle>Global Impact Warning</AdminAlertTitle>
         <AdminAlertDescription>
           Changes to global settings affect multiple public pages and metadata surfaces across the site. Save drafts safely, then publish when ready.
         </AdminAlertDescription>
-        <MetaText>Your role: {role}</MetaText>
+        <p>Your role: {role}</p>
       </AdminAlert>
 
-      <CardsGrid>
+      <div>
         {SUPPORTED_GLOBAL_SETTINGS.map((item) => {
           const setting = settings.find((entry) => entry.schema_key === item.schemaKey);
           const isFound = Boolean(setting);
@@ -39,18 +38,18 @@ export function GlobalSettingsIndex({ settings, role }: GlobalSettingsIndexProps
           return (
             <AdminCard key={item.schemaKey}>
               <AdminCardHeader>
-                <TitleRow>
-                  <TitleText>{item.title}</TitleText>
+                <div>
+                  <span>{item.title}</span>
                   {setting?.has_unpublished_changes ? (
                     <AdminBadge tone="warning">Has Unpublished Changes</AdminBadge>
                   ) : (
                     <AdminBadge>No Unpublished Changes</AdminBadge>
                   )}
-                </TitleRow>
+                </div>
                 <AdminCardDescription>{item.description}</AdminCardDescription>
               </AdminCardHeader>
               <AdminCardContent>
-                <InfoRow>
+                <div>
                   <AdminBadge>{item.schemaKey}</AdminBadge>
                   <AdminBadge tone={setting?.published_enabled ? 'success' : 'neutral'}>
                     {setting?.published_enabled ? 'Published: Enabled' : 'Published: Disabled'}
@@ -58,13 +57,13 @@ export function GlobalSettingsIndex({ settings, role }: GlobalSettingsIndexProps
                   <AdminBadge tone={setting?.enabled ? 'info' : 'neutral'}>
                     {setting?.enabled ? 'Draft: Enabled' : 'Draft: Disabled'}
                   </AdminBadge>
-                </InfoRow>
-                <MetaText>
+                </div>
+                <p>
                   Last edited: {setting?.last_edited_by_identifier ?? 'N/A'}
-                </MetaText>
-                <MetaText>
+                </p>
+                <p>
                   Last published: {setting?.last_published_by_identifier ?? 'N/A'}
-                </MetaText>
+                </p>
 
                 {!isFound && (
                   <AdminAlert tone="destructive">
@@ -83,50 +82,7 @@ export function GlobalSettingsIndex({ settings, role }: GlobalSettingsIndexProps
             </AdminCard>
           );
         })}
-      </CardsGrid>
-    </Wrapper>
+      </div>
+    </div>
   );
 }
-
-const Wrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-`;
-
-const CardsGrid = styled.div`
-  display: grid;
-  gap: 16px;
-  grid-template-columns: repeat(1, minmax(0, 1fr));
-
-  @media (min-width: 768px) {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-`;
-
-const TitleRow = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-`;
-
-const TitleText = styled.span`
-  font-size: 1rem;
-  font-weight: 700;
-  color: #0f172a;
-`;
-
-const InfoRow = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 12px;
-`;
-
-const MetaText = styled.p`
-  margin: 0 0 8px;
-  font-size: 0.75rem;
-  color: #64748b;
-`;

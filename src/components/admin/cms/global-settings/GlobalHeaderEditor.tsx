@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import styled from 'styled-components';
 import { CmsGlobalSetting, globalHeaderSchema, SCHEMA_KEYS } from '@/lib/cms';
 import { saveGlobalSettingDraft, publishGlobalSetting } from '@/lib/cms/actions';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/admin/controls/AdminForm';
@@ -22,7 +21,7 @@ import {
 type FormValues = z.infer<typeof globalHeaderSchema> & { enabled: boolean };
 
 interface GlobalHeaderEditorProps {
-  setting: CmsGlobalSetting;
+  setting: CmsGlobalSetting<z.infer<typeof globalHeaderSchema>>;
   role: string;
   canPublish: boolean;
 }
@@ -299,110 +298,20 @@ export function GlobalHeaderEditor({ setting, role, canPublish }: GlobalHeaderEd
   );
 }
 
-const FormRoot = styled.form`
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-`;
-
-const SectionCard = styled.div`
-  border: 1px solid #cbd5e1;
-  border-radius: 10px;
-  background: #ffffff;
-  padding: 16px;
-`;
-
-const ActionHeader = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
-`;
-
-const MetaGroup = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-`;
-
-const BadgeRow = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-`;
-
-const MetaText = styled.p`
-  margin: 0;
-  font-size: 0.75rem;
-  color: #64748b;
-`;
-
-const ButtonGroup = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-`;
-
-const Divider = styled.hr`
-  margin: 16px 0;
-  border: 0;
-  border-top: 1px solid #e2e8f0;
-`;
-
-const ToggleFormItem = styled(FormItem)`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border: 1px solid #cbd5e1;
-  border-radius: 8px;
-  padding: 12px;
-`;
-
-const TwoColumnGrid = styled.div`
-  display: grid;
-  gap: 16px;
-  grid-template-columns: repeat(1, minmax(0, 1fr));
-
-  @media (min-width: 768px) {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-`;
-
-const Block = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-`;
-
-const BlockHeader = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-`;
-
-const BlockTitle = styled.h3`
-  margin: 0;
-  font-size: 1rem;
-  font-weight: 600;
-  color: #0f172a;
-`;
-
-const EditableRow = styled.div`
-  display: grid;
-  gap: 12px;
-  border: 1px solid #cbd5e1;
-  border-radius: 8px;
-  padding: 12px;
-  grid-template-columns: repeat(1, minmax(0, 1fr));
-
-  @media (min-width: 768px) {
-    grid-template-columns: 1fr 1fr auto;
-  }
-`;
-
-const RowActions = styled.div`
-  display: flex;
-  align-items: flex-end;
-`;
+const FormRoot = (props: React.ComponentProps<'form'>) => <form {...props} />;
+const SectionCard = (props: React.ComponentProps<'div'>) => <div {...props} />;
+const ActionHeader = (props: React.ComponentProps<'div'>) => <div {...props} />;
+const MetaGroup = (props: React.ComponentProps<'div'>) => <div {...props} />;
+const BadgeRow = (props: React.ComponentProps<'div'>) => <div {...props} />;
+const MetaText = (props: React.ComponentProps<'p'>) => <p {...props} />;
+const ButtonGroup = (props: React.ComponentProps<'div'>) => <div {...props} />;
+const Divider = (props: React.ComponentProps<'hr'>) => <hr {...props} />;
+const ToggleFormItem = (props: React.ComponentProps<typeof FormItem>) => (
+  <FormItem {...props} />
+);
+const TwoColumnGrid = (props: React.ComponentProps<'div'>) => <div {...props} />;
+const Block = (props: React.ComponentProps<'div'>) => <div {...props} />;
+const BlockHeader = (props: React.ComponentProps<'div'>) => <div {...props} />;
+const BlockTitle = (props: React.ComponentProps<'h3'>) => <h3 {...props} />;
+const EditableRow = (props: React.ComponentProps<'div'>) => <div {...props} />;
+const RowActions = (props: React.ComponentProps<'div'>) => <div {...props} />;

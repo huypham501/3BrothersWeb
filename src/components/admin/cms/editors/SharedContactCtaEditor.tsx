@@ -15,7 +15,7 @@ import { z } from 'zod';
 
 
 
-export function SharedContactCtaEditor({ section }: { section: CmsSharedSection }) {
+export function SharedContactCtaEditor({ section }: { section: CmsSharedSection<z.infer<typeof sharedContactCtaSchema>> }) {
   const [isSaving, setIsSaving] = React.useState(false);
   const [success, setSuccess] = React.useState(false);
   const [errorMsg, setErrorMsg] = React.useState<string | null>(null);

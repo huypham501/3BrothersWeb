@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import styled from 'styled-components';
 import { requireAdminUser } from '@/lib/admin/require-admin-user';
 import { hasCmsCapability } from '@/lib/cms/constants/roles';
 import { getRecentCmsAuditLogs } from '@/lib/cms/queries';
@@ -40,7 +39,7 @@ export default async function AdminContentIndexPage() {
         </AdminButton>
       </AdminPageHeader>
 
-      <CardsGrid>
+      <div>
           <AdminCard>
             <AdminCardHeader>
               <AdminCardTitle>Home CMS</AdminCardTitle>
@@ -97,23 +96,10 @@ export default async function AdminContentIndexPage() {
             </AdminCardContent>
           </AdminCard>
 
-      </CardsGrid>
+      </div>
 
       <CmsAuditLogList logs={recentLogs} />
     </AdminShell>
   );
 }
 
-const CardsGrid = styled.div`
-  display: grid;
-  gap: 16px;
-  grid-template-columns: repeat(1, minmax(0, 1fr));
-
-  @media (min-width: 768px) {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  @media (min-width: 1280px) {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-`;

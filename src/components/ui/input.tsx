@@ -1,27 +1,48 @@
-import * as React from "react"
-import { Input as InputPrimitive } from "@base-ui/react/input"
+import * as React from 'react';
+import styled from 'styled-components';
 
-import { cn } from "@/lib/utils"
-
-type InputProps = Omit<React.ComponentProps<"input">, "value"> & {
+type InputProps = Omit<React.ComponentProps<'input'>, 'value'> & {
   value?: string | number | readonly string[] | null;
 };
 
-function Input({ className, type, value, ...props }: InputProps) {
-  const normalizedValue = value ?? "";
+const InputRoot = styled.input`
+  width: 100%;
+  min-width: 0;
+  min-height: 38px;
+  border: 1px solid ${({ theme }) => theme.colors.borderInput};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  padding: ${({ theme }) => `${theme.spacing[2]} ${theme.spacing[3]}`};
+  color: ${({ theme }) => theme.colors.textPrimary};
+  background: ${({ theme }) => theme.colors.white};
+  transition:
+    border-color ${({ theme }) => theme.motion.duration.base} ${({ theme }) => theme.motion.easing.easeInOut},
+    box-shadow ${({ theme }) => theme.motion.duration.base} ${({ theme }) => theme.motion.easing.easeInOut};
 
-  return (
-    <InputPrimitive
-      type={type}
-      data-slot="input"
-      className={cn(
-        "h-8 w-full min-w-0 rounded-lg border border-input bg-transparent px-2.5 py-1 text-base transition-colors outline-none file:inline-flex file:h-6 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:bg-input/50 disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 md:text-sm dark:bg-input/30 dark:disabled:bg-input/80 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40",
-        className
-      )}
-      value={normalizedValue}
-      {...props}
-    />
-  )
+  &::placeholder {
+    color: ${({ theme }) => theme.colors.textPlaceholder};
+  }
+
+  &:focus-visible {
+    outline: none;
+    border-color: ${({ theme }) => theme.colors.primary};
+    box-shadow: 0 0 0 3px rgba(0, 60, 166, 0.12);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+    background: ${({ theme }) => theme.colors.gray100};
+  }
+
+  &[aria-invalid='true'] {
+    border-color: ${({ theme }) => theme.colors.error};
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.18);
+  }
+`;
+
+function Input({ value, ...props }: InputProps) {
+  const normalizedValue = value ?? '';
+  return <InputRoot value={normalizedValue} {...props} />;
 }
 
-export { Input }
+export { Input };

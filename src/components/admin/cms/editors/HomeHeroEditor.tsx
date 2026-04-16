@@ -16,7 +16,7 @@ import { z } from 'zod';
 
 
 
-export function HomeHeroEditor({ pageId, section }: { pageId: string, section: CmsPageSection }) {
+export function HomeHeroEditor({ pageId, section }: { pageId: string, section: CmsPageSection<z.infer<typeof homeHeroSchema>> }) {
   const [isSaving, setIsSaving] = React.useState(false);
   const [success, setSuccess] = React.useState(false);
   const [errorMsg, setErrorMsg] = React.useState<string | null>(null);

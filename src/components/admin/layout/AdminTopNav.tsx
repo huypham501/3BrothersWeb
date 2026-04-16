@@ -1,5 +1,7 @@
+'use client';
+
 import Link from 'next/link';
-import styled from 'styled-components';
+import { Button, Space } from 'antd';
 
 export interface AdminNavItem {
   href: string;
@@ -13,35 +15,14 @@ interface AdminTopNavProps {
 
 export function AdminTopNav({ items, activeHref }: AdminTopNavProps) {
   return (
-    <Nav>
+    <nav>
+      <Space wrap>
       {items.map((item) => (
-        <NavLink key={item.href} href={item.href} $active={activeHref === item.href}>
-          {item.label}
-        </NavLink>
+        <Link key={item.href} href={item.href}>
+          <Button type={activeHref === item.href ? 'primary' : 'default'}>{item.label}</Button>
+        </Link>
       ))}
-    </Nav>
+      </Space>
+    </nav>
   );
 }
-
-const Nav = styled.nav`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-`;
-
-const NavLink = styled(Link)<{ $active: boolean }>`
-  display: inline-flex;
-  align-items: center;
-  padding: 8px 12px;
-  border-radius: 8px;
-  border: 1px solid ${({ $active }) => ($active ? '#1e293b' : '#cbd5e1')};
-  background: ${({ $active }) => ($active ? '#e2e8f0' : '#ffffff')};
-  color: #0f172a;
-  font-size: 0.875rem;
-  font-weight: 600;
-  text-decoration: none;
-
-  &:hover {
-    background: #f8fafc;
-  }
-`;

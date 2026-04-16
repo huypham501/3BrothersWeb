@@ -28,7 +28,7 @@ import { z } from 'zod';
 
 
 
-export function HomeTrendingEditor({ pageId, section }: { pageId: string, section: CmsPageSection }) {
+export function HomeTrendingEditor({ pageId, section }: { pageId: string, section: CmsPageSection<z.infer<typeof homeTrendingSchema>> }) {
   const [isSaving, setIsSaving] = React.useState(false);
   const [success, setSuccess] = React.useState(false);
   const [errorMsg, setErrorMsg] = React.useState<string | null>(null);

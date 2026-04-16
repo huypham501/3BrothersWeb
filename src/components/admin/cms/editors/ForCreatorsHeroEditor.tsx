@@ -16,7 +16,7 @@ import { z } from 'zod';
 
 type FormValues = z.infer<typeof forCreatorsHeroSchema> & { enabled: boolean };
 
-export function ForCreatorsHeroEditor({ pageId, section }: { pageId: string; section: CmsPageSection }) {
+export function ForCreatorsHeroEditor({ pageId, section }: { pageId: string; section: CmsPageSection<z.infer<typeof forCreatorsHeroSchema>> }) {
   const [isSaving, setIsSaving] = React.useState(false);
   const [success, setSuccess] = React.useState(false);
   const [errorMsg, setErrorMsg] = React.useState<string | null>(null);

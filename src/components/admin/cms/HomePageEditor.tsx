@@ -3,8 +3,18 @@
 import * as React from 'react';
 import { useTransition } from 'react';
 import { useRouter } from 'next/navigation';
-import styled from 'styled-components';
-import { CmsPage, CmsPageSection, CmsSharedSection } from '@/lib/cms';
+import {
+  CmsPage,
+  CmsPageSection,
+  CmsSharedSection,
+  homeCoreCompetenciesSchema,
+  homeEfficiencySchema,
+  homeHeroSchema,
+  homePartnersSchema,
+  homeTrendingSchema,
+  sharedContactCtaSchema,
+  sharedExclusiveTalentsSchema,
+} from '@/lib/cms';
 import { publishHomePage } from '@/lib/cms/actions';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/admin/controls/AdminAccordion';
 import {
@@ -26,64 +36,19 @@ import { HomeEfficiencyEditor } from './editors/HomeEfficiencyEditor';
 import { HomeTrendingEditor } from './editors/HomeTrendingEditor';
 import { SharedExclusiveTalentsEditor } from './editors/SharedExclusiveTalentsEditor';
 import { SharedContactCtaEditor } from './editors/SharedContactCtaEditor';
+import { z } from 'zod';
 
 interface HomePageEditorProps {
   page: CmsPage;
   sections: CmsPageSection[];
   shared: {
-    exclusiveTalents: CmsSharedSection | null;
-    contactCta: CmsSharedSection | null;
+    exclusiveTalents: CmsSharedSection<z.infer<typeof sharedExclusiveTalentsSchema>> | null;
+    contactCta: CmsSharedSection<z.infer<typeof sharedContactCtaSchema>> | null;
   };
   role: string;
   canPublish: boolean;
   canManageShared: boolean;
 }
-
-const EditorContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-`;
-
-const SectionHeader = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 12px;
-`;
-
-const Badge = styled.span<{ $variant: 'local' | 'shared' | 'global' }>`
-  font-size: 0.75rem;
-  font-weight: 600;
-  padding: 4px 8px;
-  border-radius: 9999px;
-  background-color: ${({ $variant }) => {
-    switch ($variant) {
-      case 'local': return '#e0e7ff';
-      case 'shared': return '#fef08a';
-      case 'global': return '#fce7f3';
-      default: return '#f1f5f9';
-    }
-  }};
-  color: ${({ $variant }) => {
-    switch ($variant) {
-      case 'local': return '#3730a3';
-      case 'shared': return '#854d0e';
-      case 'global': return '#9d174d';
-      default: return '#0f172a';
-    }
-  }};
-`;
-
-const TopActionBar = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #f8fafc;
-  padding: 16px;
-  border-radius: 8px;
-  border: 1px solid #e2e8f0;
-  margin-bottom: 8px;
-`;
 
 function formatAuditDate(value?: string | null) {
   if (!value) return 'N/A';
@@ -118,31 +83,31 @@ export function HomePageEditor({
     || sections.some(s => s.has_unpublished_changes);
   
   // Helper to find local section
-  const findLocal = (schemaKey: string) => sections.find(s => s.schema_key === schemaKey);
+  const findLocal = <T,>(schemaKey: string) => sections.find((s) => s.schema_key === schemaKey) as CmsPageSection<T> | undefined;
 
-  const heroSection = findLocal('home.hero.v1');
-  const partnersSection = findLocal('home.partners.v1');
-  const coreCompetenciesSection = findLocal('home.core_competencies.v1');
-  const efficiencySection = findLocal('home.efficiency.v1');
-  const trendingSection = findLocal('home.trending.v1');
+  const heroSection = findLocal<z.infer<typeof homeHeroSchema>>('home.hero.v1');
+  const partnersSection = findLocal<z.infer<typeof homePartnersSchema>>('home.partners.v1');
+  const coreCompetenciesSection = findLocal<z.infer<typeof homeCoreCompetenciesSchema>>('home.core_competencies.v1');
+  const efficiencySection = findLocal<z.infer<typeof homeEfficiencySchema>>('home.efficiency.v1');
+  const trendingSection = findLocal<z.infer<typeof homeTrendingSchema>>('home.trending.v1');
 
   return (
-    <EditorContainer>
-      <TopActionBar>
+    <div>
+      <div>
         <div>
-          <Title>Home Page Editor</Title>
-          <SubText>
+          <h2>Home Page Editor</h2>
+          <p>
             {hasUnpublished 
               ? "You have unpublished draft changes." 
               : "All changes are published."}
-          </SubText>
-          <MetaText>Your role: {role}</MetaText>
-          <MetaText>
+          </p>
+          <p>Your role: {role}</p>
+          <p>
             Last edited: {page.last_edited_by_identifier ?? 'N/A'} at {formatAuditDate(page.last_edited_at)}
-          </MetaText>
-          <MetaText>
+          </p>
+          <p>
             Last published: {page.last_published_by_identifier ?? 'N/A'} at {formatAuditDate(page.last_published_at)}
-          </MetaText>
+          </p>
         </div>
         <AdminButton
           onClick={handlePublish} 
@@ -152,7 +117,7 @@ export function HomePageEditor({
         >
           {isPending ? 'Publishing...' : 'Publish Home'}
         </AdminButton>
-      </TopActionBar>
+      </div>
 
       <AdminAlert>
         <AdminAlertTitle>Shared Sections Ownership</AdminAlertTitle>
@@ -161,15 +126,15 @@ export function HomePageEditor({
           Canonical ownership is under `/admin/content/shared`.
         </AdminAlertDescription>
         {!canManageShared && (
-          <MetaText>
+          <p>
             Your role cannot edit shared sections from this page.
-          </MetaText>
+          </p>
         )}
-        <ButtonRow>
+        <div>
           <AdminButton href="/admin/content/shared" size="sm" variant="outline">
             Open Shared Sections
           </AdminButton>
-        </ButtonRow>
+        </div>
       </AdminAlert>
 
       <AdminCard>
@@ -190,7 +155,7 @@ export function HomePageEditor({
             {heroSection && (
               <AccordionItem value="hero">
                 <AccordionTrigger>
-                  <SectionHeader>Hero <Badge $variant="local">Local</Badge></SectionHeader>
+                  <div>Hero <AdminBadge tone="info">Local</AdminBadge></div>
                 </AccordionTrigger>
                 <AccordionContent>
                   <HomeHeroEditor pageId={page.id} section={heroSection} />
@@ -201,7 +166,7 @@ export function HomePageEditor({
             {partnersSection && (
               <AccordionItem value="partners">
                 <AccordionTrigger>
-                  <SectionHeader>Partners <Badge $variant="local">Local</Badge></SectionHeader>
+                  <div>Partners <AdminBadge tone="info">Local</AdminBadge></div>
                 </AccordionTrigger>
                 <AccordionContent>
                   <HomePartnersEditor pageId={page.id} section={partnersSection} />
@@ -212,7 +177,7 @@ export function HomePageEditor({
             {coreCompetenciesSection && (
               <AccordionItem value="competencies">
                 <AccordionTrigger>
-                  <SectionHeader>Core Competencies <Badge $variant="local">Local</Badge></SectionHeader>
+                  <div>Core Competencies <AdminBadge tone="info">Local</AdminBadge></div>
                 </AccordionTrigger>
                 <AccordionContent>
                   <HomeCoreCompetenciesEditor pageId={page.id} section={coreCompetenciesSection} />
@@ -223,7 +188,7 @@ export function HomePageEditor({
             {efficiencySection && (
               <AccordionItem value="efficiency">
                 <AccordionTrigger>
-                  <SectionHeader>Efficiency <Badge $variant="local">Local</Badge></SectionHeader>
+                  <div>Efficiency <AdminBadge tone="info">Local</AdminBadge></div>
                 </AccordionTrigger>
                 <AccordionContent>
                   <HomeEfficiencyEditor pageId={page.id} section={efficiencySection} />
@@ -234,7 +199,7 @@ export function HomePageEditor({
             {canManageShared && shared.exclusiveTalents ? (
               <AccordionItem value="talents">
                 <AccordionTrigger>
-                  <SectionHeader>Exclusive Talents <Badge $variant="shared">Shared</Badge></SectionHeader>
+                  <div>Exclusive Talents <AdminBadge tone="warning">Shared</AdminBadge></div>
                 </AccordionTrigger>
                 <AccordionContent>
                   <SharedExclusiveTalentsEditor section={shared.exclusiveTalents} />
@@ -245,7 +210,7 @@ export function HomePageEditor({
             {canManageShared && shared.contactCta ? (
               <AccordionItem value="contactCta">
                 <AccordionTrigger>
-                  <SectionHeader>Contact CTA <Badge $variant="shared">Shared</Badge></SectionHeader>
+                  <div>Contact CTA <AdminBadge tone="warning">Shared</AdminBadge></div>
                 </AccordionTrigger>
                 <AccordionContent>
                   <SharedContactCtaEditor section={shared.contactCta} />
@@ -256,7 +221,7 @@ export function HomePageEditor({
             {trendingSection && (
               <AccordionItem value="trending">
                 <AccordionTrigger>
-                  <SectionHeader>Trending <Badge $variant="local">Local</Badge></SectionHeader>
+                  <div>Trending <AdminBadge tone="info">Local</AdminBadge></div>
                 </AccordionTrigger>
                 <AccordionContent>
                   <HomeTrendingEditor pageId={page.id} section={trendingSection} />
@@ -266,31 +231,6 @@ export function HomePageEditor({
           </Accordion>
         </AdminCardContent>
       </AdminCard>
-    </EditorContainer>
+    </div>
   );
 }
-
-const Title = styled.h2`
-  margin: 0;
-  font-size: 1.125rem;
-  font-weight: 700;
-  color: #0f172a;
-`;
-
-const SubText = styled.p`
-  margin: 4px 0 0;
-  font-size: 0.875rem;
-  color: #64748b;
-`;
-
-const MetaText = styled.p`
-  margin: 4px 0 0;
-  font-size: 0.75rem;
-  color: #64748b;
-`;
-
-const ButtonRow = styled.div`
-  margin-top: 8px;
-  display: flex;
-  gap: 8px;
-`;

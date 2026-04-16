@@ -1,76 +1,176 @@
-import { Accordion as AccordionPrimitive } from "@base-ui/react/accordion"
+import * as React from 'react';
+import styled from 'styled-components';
+import { ChevronDownIcon, ChevronUpIcon } from 'lucide-react';
 
-import { cn } from "@/lib/utils"
-import { ChevronDownIcon, ChevronUpIcon } from "lucide-react"
+type AccordionValue = string | string[] | undefined;
 
-type AccordionProps = AccordionPrimitive.Root.Props & {
+type AccordionProps = {
+  children: React.ReactNode;
+  className?: string;
+  value?: AccordionValue;
+  defaultValue?: AccordionValue;
+  onValueChange?: (value: AccordionValue) => void;
   collapsible?: boolean;
 };
 
-function Accordion({ className, collapsible: _collapsible, ...props }: AccordionProps) {
-  return (
-    <AccordionPrimitive.Root
-      data-slot="accordion"
-      className={cn("flex w-full flex-col", className)}
-      {...props}
-    />
-  )
-}
+type AccordionContextValue = {
+  openValues: string[];
+  toggleValue: (value: string) => void;
+};
 
-function AccordionItem({ className, ...props }: AccordionPrimitive.Item.Props) {
-  return (
-    <AccordionPrimitive.Item
-      data-slot="accordion-item"
-      className={cn("not-last:border-b", className)}
-      {...props}
-    />
-  )
-}
+type AccordionItemContextValue = {
+  value: string;
+};
 
-function AccordionTrigger({
+const AccordionContext = React.createContext<AccordionContextValue | undefined>(undefined);
+const AccordionItemContext = React.createContext<AccordionItemContextValue | undefined>(undefined);
+
+const toArray = (value: AccordionValue) => {
+  if (!value) return [];
+  return Array.isArray(value) ? value : [value];
+};
+
+const AccordionRoot = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+`;
+
+const AccordionItemRoot = styled.div`
+  border-bottom: 1px solid ${({ theme }) => theme.colors.borderLight};
+
+  &:last-child {
+    border-bottom: 0;
+  }
+`;
+
+const AccordionTriggerButton = styled.button`
+  width: 100%;
+  border: 0;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: ${({ theme }) => theme.spacing.sm};
+  padding: ${({ theme }) => `${theme.spacing[2]} 0`};
+  text-align: left;
+  color: ${({ theme }) => theme.colors.textPrimary};
+  font-size: ${({ theme }) => theme.typography.fontSize.sm};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid ${({ theme }) => theme.colors.primary};
+    outline-offset: 2px;
+  }
+`;
+
+const AccordionContentRoot = styled.div<{ $open: boolean }>`
+  overflow: hidden;
+  max-height: ${({ $open }) => ($open ? '2000px' : '0')};
+  opacity: ${({ $open }) => ($open ? 1 : 0)};
+  transition:
+    max-height ${({ theme }) => theme.motion.duration.slow} ${({ theme }) => theme.motion.easing.easeInOut},
+    opacity ${({ theme }) => theme.motion.duration.base} ${({ theme }) => theme.motion.easing.easeInOut};
+`;
+
+const AccordionContentInner = styled.div`
+  padding: 0 0 ${({ theme }) => theme.spacing[2]};
+  color: ${({ theme }) => theme.colors.textBody};
+`;
+
+function Accordion({
+  children,
   className,
+  value,
+  defaultValue,
+  onValueChange,
+  collapsible = false,
+}: AccordionProps) {
+  const isControlled = value !== undefined;
+  const [internalValues, setInternalValues] = React.useState<string[]>(toArray(defaultValue));
+  const openValues = isControlled ? toArray(value) : internalValues;
+
+  const toggleValue = (itemValue: string) => {
+    const isOpen = openValues.includes(itemValue);
+    const nextValues = isOpen
+      ? openValues.filter((valueItem) => valueItem !== itemValue)
+      : collapsible
+      ? [...openValues, itemValue]
+      : [itemValue];
+
+    if (!isControlled) {
+      setInternalValues(nextValues);
+    }
+
+    if (!onValueChange) {
+      return;
+    }
+
+    if (collapsible) {
+      onValueChange(nextValues);
+    } else {
+      onValueChange(nextValues[0]);
+    }
+  };
+
+  return (
+    <AccordionContext.Provider value={{ openValues, toggleValue }}>
+      <AccordionRoot className={className}>{children}</AccordionRoot>
+    </AccordionContext.Provider>
+  );
+}
+
+function AccordionItem({
+  value,
   children,
   ...props
-}: AccordionPrimitive.Trigger.Props) {
+}: React.ComponentProps<'div'> & { value: string }) {
   return (
-    <AccordionPrimitive.Header className="flex">
-      <AccordionPrimitive.Trigger
-        data-slot="accordion-trigger"
-        className={cn(
-          "group/accordion-trigger relative flex flex-1 items-start justify-between rounded-lg border border-transparent py-2.5 text-left text-sm font-medium transition-all outline-none hover:underline focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:after:border-ring aria-disabled:pointer-events-none aria-disabled:opacity-50 **:data-[slot=accordion-trigger-icon]:ml-auto **:data-[slot=accordion-trigger-icon]:size-4 **:data-[slot=accordion-trigger-icon]:text-muted-foreground",
-          className
-        )}
-        {...props}
-      >
-        {children}
-        <ChevronDownIcon data-slot="accordion-trigger-icon" className="pointer-events-none shrink-0 group-aria-expanded/accordion-trigger:hidden" />
-        <ChevronUpIcon data-slot="accordion-trigger-icon" className="pointer-events-none hidden shrink-0 group-aria-expanded/accordion-trigger:inline" />
-      </AccordionPrimitive.Trigger>
-    </AccordionPrimitive.Header>
-  )
+    <AccordionItemContext.Provider value={{ value }}>
+      <AccordionItemRoot {...props}>{children}</AccordionItemRoot>
+    </AccordionItemContext.Provider>
+  );
 }
 
-function AccordionContent({
-  className,
-  children,
-  ...props
-}: AccordionPrimitive.Panel.Props) {
+function AccordionTrigger({ children, ...props }: React.ComponentProps<'button'>) {
+  const accordionContext = React.useContext(AccordionContext);
+  const itemContext = React.useContext(AccordionItemContext);
+
+  if (!accordionContext || !itemContext) {
+    throw new Error('AccordionTrigger must be used inside Accordion and AccordionItem.');
+  }
+
+  const isOpen = accordionContext.openValues.includes(itemContext.value);
+
   return (
-    <AccordionPrimitive.Panel
-      data-slot="accordion-content"
-      className="overflow-hidden text-sm data-open:animate-accordion-down data-closed:animate-accordion-up"
+    <AccordionTriggerButton
+      type="button"
+      aria-expanded={isOpen}
+      onClick={() => accordionContext.toggleValue(itemContext.value)}
       {...props}
     >
-      <div
-        className={cn(
-          "h-(--accordion-panel-height) pt-0 pb-2.5 data-ending-style:h-0 data-starting-style:h-0 [&_a]:underline [&_a]:underline-offset-3 [&_a]:hover:text-foreground [&_p:not(:last-child)]:mb-4",
-          className
-        )}
-      >
-        {children}
-      </div>
-    </AccordionPrimitive.Panel>
-  )
+      {children}
+      {isOpen ? <ChevronUpIcon size={16} /> : <ChevronDownIcon size={16} />}
+    </AccordionTriggerButton>
+  );
 }
 
-export { Accordion, AccordionItem, AccordionTrigger, AccordionContent }
+function AccordionContent({ children, ...props }: React.ComponentProps<'div'>) {
+  const accordionContext = React.useContext(AccordionContext);
+  const itemContext = React.useContext(AccordionItemContext);
+
+  if (!accordionContext || !itemContext) {
+    throw new Error('AccordionContent must be used inside Accordion and AccordionItem.');
+  }
+
+  const isOpen = accordionContext.openValues.includes(itemContext.value);
+
+  return (
+    <AccordionContentRoot $open={isOpen} aria-hidden={!isOpen} {...props}>
+      <AccordionContentInner>{children}</AccordionContentInner>
+    </AccordionContentRoot>
+  );
+}
+
+export { Accordion, AccordionContent, AccordionItem, AccordionTrigger };

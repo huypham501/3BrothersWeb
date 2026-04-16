@@ -1,5 +1,7 @@
+'use client';
+
 import * as React from 'react';
-import styled from 'styled-components';
+import { Space, Typography } from 'antd';
 
 interface AdminPageHeaderProps {
   title: string;
@@ -9,36 +11,14 @@ interface AdminPageHeaderProps {
 
 export function AdminPageHeader({ title, description, children }: AdminPageHeaderProps) {
   return (
-    <Header>
-      <Heading>{title}</Heading>
-      <Description>{description}</Description>
-      {children ? <MetaRow>{children}</MetaRow> : null}
-    </Header>
+    <header>
+      <Space direction="vertical" size={8} style={{ width: '100%' }}>
+        <Typography.Title level={3} style={{ margin: 0 }}>
+          {title}
+        </Typography.Title>
+        <Typography.Text type="secondary">{description}</Typography.Text>
+        {children ? <Space wrap>{children}</Space> : null}
+      </Space>
+    </header>
   );
 }
-
-const Header = styled.header`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-`;
-
-const Heading = styled.h1`
-  margin: 0;
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #0f172a;
-`;
-
-const Description = styled.p`
-  margin: 0;
-  font-size: 0.875rem;
-  color: #64748b;
-`;
-
-const MetaRow = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-`;

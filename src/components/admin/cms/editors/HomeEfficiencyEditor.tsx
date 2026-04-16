@@ -27,7 +27,7 @@ import { z } from 'zod';
 
 
 
-export function HomeEfficiencyEditor({ pageId, section }: { pageId: string, section: CmsPageSection }) {
+export function HomeEfficiencyEditor({ pageId, section }: { pageId: string, section: CmsPageSection<z.infer<typeof homeEfficiencySchema>> }) {
   const [isSaving, setIsSaving] = React.useState(false);
   const [success, setSuccess] = React.useState(false);
   const [errorMsg, setErrorMsg] = React.useState<string | null>(null);

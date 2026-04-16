@@ -12,7 +12,7 @@ import { CMS_REGISTRY, homePageSchema } from './schemas';
 
 type SchemaRegistry = Record<string, { parse: (value: unknown) => unknown }>;
 
-export const GLOBAL_CHROME_REVALIDATE_PATHS = [
+const GLOBAL_CHROME_REVALIDATE_PATHS = [
   '/',
   '/for-brands',
   '/for-creators',
@@ -22,7 +22,7 @@ export const GLOBAL_CHROME_REVALIDATE_PATHS = [
   '/our-brand',
 ] as const;
 
-export const GLOBAL_METADATA_REVALIDATE_PATHS = ['/', '/for-creators'] as const;
+const GLOBAL_METADATA_REVALIDATE_PATHS = ['/', '/for-creators'] as const;
 
 function revalidateGlobalChromeRoutes() {
   for (const route of GLOBAL_CHROME_REVALIDATE_PATHS) {

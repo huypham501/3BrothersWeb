@@ -25,7 +25,7 @@ import { z } from 'zod';
 
 
 
-export function HomePartnersEditor({ pageId, section }: { pageId: string, section: CmsPageSection }) {
+export function HomePartnersEditor({ pageId, section }: { pageId: string, section: CmsPageSection<z.infer<typeof homePartnersSchema>> }) {
   const [isSaving, setIsSaving] = React.useState(false);
   const [success, setSuccess] = React.useState(false);
   const [errorMsg, setErrorMsg] = React.useState<string | null>(null);

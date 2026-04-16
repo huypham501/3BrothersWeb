@@ -1,101 +1,104 @@
-import styled from 'styled-components';
 import { FormItem } from '@/components/admin/controls/AdminForm';
 
-export const FormStack = styled.form`
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-`;
+const styles = {
+  formStack: { display: 'flex', flexDirection: 'column', gap: 24 } as const,
+  headerRow: { display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 12 } as const,
+  toggleFormItem: { display: 'flex', alignItems: 'center', gap: 12 } as const,
+  twoColumnGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+    gap: 24,
+  } as const,
+  sectionStack: { display: 'flex', flexDirection: 'column', gap: 16 } as const,
+  sectionHeaderRow: { display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 12 } as const,
+  sectionTitle: { margin: 0, fontSize: 16, fontWeight: 600 } as const,
+  itemCard: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 16,
+    border: '1px solid #d0d5dd',
+    borderRadius: 10,
+    background: '#ffffff',
+    padding: 16,
+  } as const,
+  footerRow: { display: 'flex', justifyContent: 'flex-end' } as const,
+  errorText: { margin: 0, fontSize: 14, color: '#b42318' } as const,
+  selectInput: {
+    width: '100%',
+    minHeight: 36,
+    border: '1px solid #d0d5dd',
+    borderRadius: 8,
+    padding: '8px 10px',
+    fontSize: 14,
+    background: '#ffffff',
+  } as const,
+  borderedPanel: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 16,
+    border: '1px solid #d0d5dd',
+    borderRadius: 10,
+    background: '#ffffff',
+    padding: 16,
+  } as const,
+};
 
-export const HeaderRow = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  flex-wrap: wrap;
-`;
+export function FormStack(props: React.ComponentProps<'form'>) {
+  const { style, ...rest } = props;
+  return <form style={{ ...styles.formStack, ...style }} {...rest} />;
+}
 
-export const ToggleFormItem = styled(FormItem)`
-  display: flex;
-  align-items: center;
-  gap: 12px;
-`;
+export function HeaderRow(props: React.ComponentProps<'div'>) {
+  const { style, ...rest } = props;
+  return <div style={{ ...styles.headerRow, ...style }} {...rest} />;
+}
 
-export const TwoColumnGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(1, minmax(0, 1fr));
-  gap: 24px;
+export function ToggleFormItem(props: React.ComponentProps<typeof FormItem>) {
+  const { style, ...rest } = props;
+  return <FormItem style={{ ...styles.toggleFormItem, ...style }} {...rest} />;
+}
 
-  @media (min-width: 768px) {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-`;
+export function TwoColumnGrid(props: React.ComponentProps<'div'>) {
+  const { style, ...rest } = props;
+  return <div style={{ ...styles.twoColumnGrid, ...style }} {...rest} />;
+}
 
-export const SectionStack = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-`;
+export function SectionStack(props: React.ComponentProps<'div'>) {
+  const { style, ...rest } = props;
+  return <div style={{ ...styles.sectionStack, ...style }} {...rest} />;
+}
 
-export const SectionHeaderRow = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  flex-wrap: wrap;
-`;
+export function SectionHeaderRow(props: React.ComponentProps<'div'>) {
+  const { style, ...rest } = props;
+  return <div style={{ ...styles.sectionHeaderRow, ...style }} {...rest} />;
+}
 
-export const SectionTitle = styled.h5`
-  margin: 0;
-  font-size: 1rem;
-  font-weight: 600;
-  color: #0f172a;
-`;
+export function SectionTitle(props: React.ComponentProps<'h5'>) {
+  const { style, ...rest } = props;
+  return <h5 style={{ ...styles.sectionTitle, ...style }} {...rest} />;
+}
 
-export const ItemCard = styled.div`
-  border: 1px solid #cbd5e1;
-  border-radius: 10px;
-  background: #f8fafc;
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-`;
+export function ItemCard(props: React.ComponentProps<'div'>) {
+  const { style, ...rest } = props;
+  return <div style={{ ...styles.itemCard, ...style }} {...rest} />;
+}
 
-export const FooterRow = styled.div`
-  display: flex;
-  justify-content: flex-end;
-`;
+export function FooterRow(props: React.ComponentProps<'div'>) {
+  const { style, ...rest } = props;
+  return <div style={{ ...styles.footerRow, ...style }} {...rest} />;
+}
 
-export const ErrorText = styled.p`
-  margin: 0;
-  color: #b91c1c;
-  font-size: 0.875rem;
-`;
+export function ErrorText(props: React.ComponentProps<'p'>) {
+  const { style, ...rest } = props;
+  return <p style={{ ...styles.errorText, ...style }} {...rest} />;
+}
 
-export const SelectInput = styled.select`
-  height: 36px;
-  width: 100%;
-  border: 1px solid #cbd5e1;
-  border-radius: 8px;
-  background: #ffffff;
-  padding: 0 10px;
-  color: #0f172a;
-  font-size: 0.875rem;
-  outline: none;
+export function SelectInput(props: React.ComponentProps<'select'>) {
+  const { style, ...rest } = props;
+  return <select style={{ ...styles.selectInput, ...style }} {...rest} />;
+}
 
-  &:focus-visible {
-    border-color: #334155;
-    box-shadow: 0 0 0 3px rgba(51, 65, 85, 0.16);
-  }
-`;
-
-export const BorderedPanel = styled.div`
-  padding: 16px;
-  border: 1px solid #cbd5e1;
-  border-radius: 10px;
-  background: #ffffff;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-`;
+export function BorderedPanel(props: React.ComponentProps<'div'>) {
+  const { style, ...rest } = props;
+  return <div style={{ ...styles.borderedPanel, ...style }} {...rest} />;
+}

@@ -5,17 +5,19 @@ import { getSharedSectionForAdmin } from '@/lib/cms/queries';
 import { resolveSharedSectionUsage } from '@/lib/cms/resolvers/shared-usage.resolver';
 import { SharedContactCtaManager } from '@/components/admin/cms/shared-sections/SharedContactCtaManager';
 import { hasCmsCapability } from '@/lib/cms/constants/roles';
+import { sharedContactCtaSchema } from '@/lib/cms';
 import { AdminShell } from '@/components/admin/layout/AdminShell';
 import { AdminTopNav } from '@/components/admin/layout/AdminTopNav';
 import { AdminPageHeader } from '@/components/admin/layout/AdminPageHeader';
 import { SHARED_DETAIL_NAV } from '@/components/admin/layout/nav-items';
+import { z } from 'zod';
 
 export const dynamic = 'force-dynamic';
 
 export default async function SharedContactCtaPage() {
   const actor = await requireAdminUser('/admin/content/shared/contact-cta', 'manage_shared_sections');
 
-  const section = await getSharedSectionForAdmin(SCHEMA_KEYS.SHARED_CONTACT_CTA);
+  const section = await getSharedSectionForAdmin<z.infer<typeof sharedContactCtaSchema>>(SCHEMA_KEYS.SHARED_CONTACT_CTA);
 
   if (!section) {
     notFound();

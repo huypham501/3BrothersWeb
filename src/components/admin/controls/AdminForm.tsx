@@ -1,9 +1,6 @@
 'use client';
 
 import * as React from 'react';
-import * as LabelPrimitive from '@radix-ui/react-label';
-import { Slot } from '@radix-ui/react-slot';
-import styled from 'styled-components';
 import {
   Controller,
   type ControllerProps,
@@ -70,12 +67,12 @@ export function useFormField() {
 }
 
 export const FormItem = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
-  ({ className, ...props }, ref) => {
+  ({ style, ...props }, ref) => {
     const id = React.useId();
 
     return (
       <FormItemContext.Provider value={{ id }}>
-        <FormItemRoot ref={ref} className={className} {...props} />
+        <div ref={ref} style={{ display: 'flex', flexDirection: 'column', gap: 8, ...style }} {...props} />
       </FormItemContext.Provider>
     );
   }
@@ -83,29 +80,40 @@ export const FormItem = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HT
 FormItem.displayName = 'FormItem';
 
 export const FormLabel = React.forwardRef<
-  React.ElementRef<typeof LabelPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root>
->(({ className, ...props }, ref) => {
+  HTMLLabelElement,
+  React.ComponentPropsWithoutRef<'label'>
+>(({ style, ...props }, ref) => {
   const { error, formItemId } = useFormField();
 
-  return <FormLabelRoot ref={ref} className={className} data-error={error ? 'true' : undefined} htmlFor={formItemId} {...props} />;
+  return (
+    <label
+      ref={ref}
+      style={{ fontSize: 14, fontWeight: 600, color: error ? '#b42318' : '#111827', ...style }}
+      htmlFor={formItemId}
+      {...props}
+    />
+  );
 });
 FormLabel.displayName = 'FormLabel';
 
 export const FormControl = React.forwardRef<
-  React.ElementRef<typeof Slot>,
-  React.ComponentPropsWithoutRef<typeof Slot>
->(({ ...props }, ref) => {
+  HTMLElement,
+  React.HTMLAttributes<HTMLElement>
+>(({ children }, _ref) => {
   const { error, formItemId, formDescriptionId, formMessageId } = useFormField();
 
+  if (!React.isValidElement(children)) {
+    return null;
+  }
+
+  const child = children as React.ReactElement<Record<string, unknown>>;
+
   return (
-    <Slot
-      ref={ref}
-      id={formItemId}
-      aria-describedby={!error ? formDescriptionId : `${formDescriptionId} ${formMessageId}`}
-      aria-invalid={Boolean(error)}
-      {...props}
-    />
+    React.cloneElement(child, {
+      id: formItemId,
+      'aria-describedby': !error ? formDescriptionId : `${formDescriptionId} ${formMessageId}`,
+      'aria-invalid': Boolean(error),
+    })
   );
 });
 FormControl.displayName = 'FormControl';
@@ -113,14 +121,14 @@ FormControl.displayName = 'FormControl';
 export const FormDescription = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLParagraphElement>
->(({ className, ...props }, ref) => {
+>(({ style, ...props }, ref) => {
   const { formDescriptionId } = useFormField();
-  return <FormDescriptionRoot ref={ref} id={formDescriptionId} className={className} {...props} />;
+  return <p ref={ref} id={formDescriptionId} style={{ margin: 0, fontSize: 12, color: '#667085', ...style }} {...props} />;
 });
 FormDescription.displayName = 'FormDescription';
 
 export const FormMessage = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLParagraphElement>>(
-  ({ className, children, ...props }, ref) => {
+  ({ style, children, ...props }, ref) => {
     const { error, formMessageId } = useFormField();
     const body = error ? String(error.message ?? '') : children;
 
@@ -129,39 +137,10 @@ export const FormMessage = React.forwardRef<HTMLParagraphElement, React.HTMLAttr
     }
 
     return (
-      <FormMessageRoot ref={ref} id={formMessageId} className={className} {...props}>
+      <p ref={ref} id={formMessageId} style={{ margin: 0, fontSize: 12, fontWeight: 600, color: '#b42318', ...style }} {...props}>
         {body}
-      </FormMessageRoot>
+      </p>
     );
   }
 );
 FormMessage.displayName = 'FormMessage';
-
-const FormItemRoot = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-`;
-
-const FormLabelRoot = styled(LabelPrimitive.Root)`
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: #0f172a;
-
-  &[data-error='true'] {
-    color: #b91c1c;
-  }
-`;
-
-const FormDescriptionRoot = styled.p`
-  margin: 0;
-  font-size: 0.8rem;
-  color: #64748b;
-`;
-
-const FormMessageRoot = styled.p`
-  margin: 0;
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: #b91c1c;
-`;

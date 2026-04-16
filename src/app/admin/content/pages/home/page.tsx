@@ -27,6 +27,8 @@ export default async function HomeCmsAdminPage() {
     );
   }
 
+  const typedShared = data.shared as React.ComponentProps<typeof HomePageEditor>['shared'];
+
   return (
     <AdminShell maxWidth="1000px">
       <AdminTopNav items={CONTENT_MODULE_NAV} activeHref="/admin/content/pages/home" />
@@ -37,7 +39,7 @@ export default async function HomeCmsAdminPage() {
       <HomePageEditor
         page={data.page}
         sections={data.sections}
-        shared={data.shared}
+        shared={typedShared}
         role={actor.role}
         canPublish={hasCmsCapability(actor.role, 'publish')}
         canManageShared={hasCmsCapability(actor.role, 'manage_shared_sections')}

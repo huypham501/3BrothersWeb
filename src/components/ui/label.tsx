@@ -1,20 +1,19 @@
-"use client"
+'use client';
 
-import * as React from "react"
+import * as React from 'react';
+import styled from 'styled-components';
 
-import { cn } from "@/lib/utils"
+const LabelRoot = styled.label`
+  display: inline-flex;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing.xs};
+  font-size: ${({ theme }) => theme.typography.fontSize.sm};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
+  color: ${({ theme }) => theme.colors.textSecondary};
+`;
 
-function Label({ className, ...props }: React.ComponentProps<"label">) {
-  return (
-    <label
-      data-slot="label"
-      className={cn(
-        "flex items-center gap-2 text-sm leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50",
-        className
-      )}
-      {...props}
-    />
-  )
+function Label(props: React.ComponentProps<'label'>) {
+  return <LabelRoot {...props} />;
 }
 
-export { Label }
+export { Label };

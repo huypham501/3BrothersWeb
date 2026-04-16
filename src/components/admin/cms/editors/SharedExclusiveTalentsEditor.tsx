@@ -23,7 +23,7 @@ import {
 } from './EditorLayout';
 import { z } from 'zod';
 
-export function SharedExclusiveTalentsEditor({ section }: { section: CmsSharedSection }) {
+export function SharedExclusiveTalentsEditor({ section }: { section: CmsSharedSection<z.infer<typeof sharedExclusiveTalentsSchema>> }) {
   const [isSaving, setIsSaving] = React.useState(false);
   const [success, setSuccess] = React.useState(false);
   const [errorMsg, setErrorMsg] = React.useState<string | null>(null);

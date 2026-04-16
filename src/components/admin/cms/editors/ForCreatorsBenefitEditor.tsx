@@ -26,23 +26,26 @@ type FormValues = z.infer<typeof forCreatorsBenefitSchema> & { enabled: boolean 
 
 const BENEFIT_IDS: Array<FormValues['benefits'][number]['id']> = ['income', 'brand', 'management', 'content'];
 
-export function ForCreatorsBenefitEditor({ pageId, section }: { pageId: string; section: CmsPageSection }) {
+export function ForCreatorsBenefitEditor({ pageId, section }: { pageId: string; section: CmsPageSection<z.infer<typeof forCreatorsBenefitSchema>> }) {
   const [isSaving, setIsSaving] = React.useState(false);
   const [success, setSuccess] = React.useState(false);
   const [errorMsg, setErrorMsg] = React.useState<string | null>(null);
 
-  const defaults = section.content?.benefits?.length
-    ? section.content.benefits
+  const parsedContent = forCreatorsBenefitSchema.safeParse(section.content);
+  const content = parsedContent.success ? parsedContent.data : null;
+
+  const defaults = content?.benefits?.length
+    ? content.benefits
     : BENEFIT_IDS.map((id) => ({ id, title: '', description: '' }));
 
   const form = useForm<FormValues>({
     resolver: zodResolver(forCreatorsBenefitSchema.extend({ enabled: z.boolean() })),
     defaultValues: {
       enabled: section.enabled,
-      section_title: section.content?.section_title || '',
-      section_description: section.content?.section_description || '',
-      contact_cta_label: section.content?.contact_cta_label || '',
-      contact_cta_url: section.content?.contact_cta_url || '/contact',
+      section_title: content?.section_title || '',
+      section_description: content?.section_description || '',
+      contact_cta_label: content?.contact_cta_label || '',
+      contact_cta_url: content?.contact_cta_url || '/contact',
       benefits: defaults,
     },
   });

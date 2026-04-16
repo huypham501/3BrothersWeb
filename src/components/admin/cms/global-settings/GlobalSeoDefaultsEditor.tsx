@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import styled from 'styled-components';
 import { CmsGlobalSetting, globalSeoDefaultsSchema, SCHEMA_KEYS } from '@/lib/cms';
 import { saveGlobalSettingDraft, publishGlobalSetting } from '@/lib/cms/actions';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/admin/controls/AdminForm';
@@ -32,7 +31,7 @@ export function GlobalSeoDefaultsEditor({
   role,
   canPublish,
 }: {
-  setting: CmsGlobalSetting;
+  setting: CmsGlobalSetting<z.infer<typeof globalSeoDefaultsSchema>>;
   role: string;
   canPublish: boolean;
 }) {
@@ -212,62 +211,12 @@ export function GlobalSeoDefaultsEditor({
   );
 }
 
-const FormRoot = styled.form`
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-`;
-
-const SectionCard = styled.div`
-  border: 1px solid #cbd5e1;
-  border-radius: 10px;
-  background: #ffffff;
-  padding: 16px;
-`;
-
-const ActionHeader = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-`;
-
-const BadgeRow = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-`;
-
-const MetaText = styled.p`
-  margin: 0;
-  font-size: 0.75rem;
-  color: #64748b;
-`;
-
-const ButtonGroup = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 6px;
-`;
-
-const Divider = styled.hr`
-  margin: 16px 0;
-  border: 0;
-  border-top: 1px solid #e2e8f0;
-`;
-
-const ScopeText = styled.p`
-  margin: 0;
-  font-size: 0.875rem;
-  color: #64748b;
-`;
-
-const TwoColumnGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(1, minmax(0, 1fr));
-  gap: 24px;
-
-  @media (min-width: 768px) {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-`;
+const FormRoot = (props: React.ComponentProps<'form'>) => <form {...props} />;
+const SectionCard = (props: React.ComponentProps<'div'>) => <div {...props} />;
+const ActionHeader = (props: React.ComponentProps<'div'>) => <div {...props} />;
+const BadgeRow = (props: React.ComponentProps<'div'>) => <div {...props} />;
+const MetaText = (props: React.ComponentProps<'p'>) => <p {...props} />;
+const ButtonGroup = (props: React.ComponentProps<'div'>) => <div {...props} />;
+const Divider = (props: React.ComponentProps<'hr'>) => <hr {...props} />;
+const ScopeText = (props: React.ComponentProps<'p'>) => <p {...props} />;
+const TwoColumnGrid = (props: React.ComponentProps<'div'>) => <div {...props} />;

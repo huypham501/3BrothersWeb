@@ -1,7 +1,6 @@
 'use client';
 
 import * as React from 'react';
-import styled from 'styled-components';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CmsPage, homePageSchema } from '@/lib/cms';
@@ -13,24 +12,6 @@ import { AdminButton as Button } from '@/components/admin/layout/AdminPrimitives
 import { AdminAlert as Alert, AdminAlertDescription as AlertDescription } from '@/components/admin/layout/AdminPrimitives';
 import { FooterRow, FormStack, SelectInput } from './EditorLayout';
 import { z } from 'zod';
-
-const FormGrid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
-  
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-  }
-`;
-
-const SectionTitle = styled.h4`
-  font-size: 1rem;
-  font-weight: 600;
-  margin-bottom: 16px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid #e2e8f0;
-`;
 
 export function HomePageSettingsEditor({ page }: { page: CmsPage }) {
   const [isSaving, setIsSaving] = React.useState(false);
@@ -76,8 +57,8 @@ export function HomePageSettingsEditor({ page }: { page: CmsPage }) {
         {success && <Alert variant="success"><AlertDescription>Settings saved successfully.</AlertDescription></Alert>}
 
         <div>
-          <SectionTitle>General Information</SectionTitle>
-          <FormGrid>
+          <h4>General Information</h4>
+          <div>
             <FormField
               control={form.control}
               name="internal_name"
@@ -107,12 +88,12 @@ export function HomePageSettingsEditor({ page }: { page: CmsPage }) {
                 </FormItem>
               )}
             />
-          </FormGrid>
+          </div>
         </div>
 
         <div>
-          <SectionTitle>SEO Metadata</SectionTitle>
-          <FormGrid>
+          <h4>SEO Metadata</h4>
+          <div>
             <FormField
               control={form.control}
               name="seo_title"
@@ -139,7 +120,7 @@ export function HomePageSettingsEditor({ page }: { page: CmsPage }) {
                 </FormItem>
               )}
             />
-          </FormGrid>
+          </div>
           
           <FormField
             control={form.control}
@@ -155,7 +136,7 @@ export function HomePageSettingsEditor({ page }: { page: CmsPage }) {
             )}
           />
 
-          <FormGrid>
+          <div>
             <FormField
               control={form.control}
               name="og_image"
@@ -182,7 +163,7 @@ export function HomePageSettingsEditor({ page }: { page: CmsPage }) {
                 </FormItem>
               )}
             />
-          </FormGrid>
+          </div>
           
           <FormField
             control={form.control}

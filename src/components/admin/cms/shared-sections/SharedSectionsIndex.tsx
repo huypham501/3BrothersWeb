@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import styled from 'styled-components';
 import { CmsSharedSection } from '@/lib/cms/types';
 import { SUPPORTED_SHARED_SECTIONS, SupportedSharedSchemaKey } from '@/lib/cms/constants/shared-sections';
 import {
@@ -22,16 +21,16 @@ interface SharedSectionsIndexProps {
 
 export function SharedSectionsIndex({ sections, usageMap, role }: SharedSectionsIndexProps) {
   return (
-    <Wrapper>
+    <div>
       <AdminAlert>
         <AdminAlertTitle>Cross-Page Impact Warning</AdminAlertTitle>
         <AdminAlertDescription>
           Shared sections are reused by multiple routes. Saving keeps changes in draft only; publishing updates every affected route.
         </AdminAlertDescription>
-        <MetaText>Your role: {role}</MetaText>
+        <p>Your role: {role}</p>
       </AdminAlert>
 
-      <CardsGrid>
+      <div>
         {SUPPORTED_SHARED_SECTIONS.map((item) => {
           const section = sections.find((entry) => entry.schema_key === item.schemaKey);
           const affectedRoutes = usageMap[item.schemaKey] ?? [];
@@ -40,19 +39,19 @@ export function SharedSectionsIndex({ sections, usageMap, role }: SharedSections
           return (
             <AdminCard key={item.schemaKey}>
               <AdminCardHeader>
-                <TitleRow>
-                  <TitleText>{item.title}</TitleText>
+                <div>
+                  <span>{item.title}</span>
                   {section?.has_unpublished_changes ? (
                     <AdminBadge tone="warning">Has Unpublished Changes</AdminBadge>
                   ) : (
                     <AdminBadge>No Unpublished Changes</AdminBadge>
                   )}
-                </TitleRow>
+                </div>
                 <AdminCardDescription>{item.description}</AdminCardDescription>
               </AdminCardHeader>
 
               <AdminCardContent>
-                <InfoRow>
+                <div>
                   <AdminBadge>{item.schemaKey}</AdminBadge>
                   <AdminBadge tone={section?.published_enabled ? 'success' : 'neutral'}>
                     {section?.published_enabled ? 'Published: Enabled' : 'Published: Disabled'}
@@ -61,21 +60,21 @@ export function SharedSectionsIndex({ sections, usageMap, role }: SharedSections
                     {section?.enabled ? 'Draft: Enabled' : 'Draft: Disabled'}
                   </AdminBadge>
                   <AdminBadge>{affectedRoutes.length} affected routes</AdminBadge>
-                </InfoRow>
-                <MetaText>
+                </div>
+                <p>
                   Last edited: {section?.last_edited_by_identifier ?? 'N/A'}
-                </MetaText>
-                <MetaText>
+                </p>
+                <p>
                   Last published: {section?.last_published_by_identifier ?? 'N/A'}
-                </MetaText>
+                </p>
 
-                <RouteList>
+                <div>
                   {affectedRoutes.map((route) => (
                     <AdminBadge key={`${item.schemaKey}-${route}`}>
                       {route}
                     </AdminBadge>
                   ))}
-                </RouteList>
+                </div>
 
                 {!isFound && (
                   <AdminAlert tone="destructive">
@@ -94,57 +93,7 @@ export function SharedSectionsIndex({ sections, usageMap, role }: SharedSections
             </AdminCard>
           );
         })}
-      </CardsGrid>
-    </Wrapper>
+      </div>
+    </div>
   );
 }
-
-const Wrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-`;
-
-const CardsGrid = styled.div`
-  display: grid;
-  gap: 16px;
-  grid-template-columns: repeat(1, minmax(0, 1fr));
-
-  @media (min-width: 768px) {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-`;
-
-const TitleRow = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-`;
-
-const TitleText = styled.span`
-  font-size: 1rem;
-  font-weight: 700;
-  color: #0f172a;
-`;
-
-const InfoRow = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 12px;
-`;
-
-const MetaText = styled.p`
-  margin: 0 0 8px;
-  font-size: 0.75rem;
-  color: #64748b;
-`;
-
-const RouteList = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin: 4px 0 12px;
-`;

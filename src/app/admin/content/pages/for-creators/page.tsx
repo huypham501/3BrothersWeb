@@ -25,6 +25,9 @@ export default async function ForCreatorsCmsAdminPage() {
     );
   }
 
+  const typedGlobals = data.globals as React.ComponentProps<typeof ForCreatorsPageEditor>['globals'];
+  const typedShared = data.shared as React.ComponentProps<typeof ForCreatorsPageEditor>['shared'];
+
   return (
     <AdminShell maxWidth="1000px">
       <AdminTopNav items={CONTENT_MODULE_NAV} activeHref="/admin/content/pages/for-creators" />
@@ -36,8 +39,8 @@ export default async function ForCreatorsCmsAdminPage() {
       <ForCreatorsPageEditor
         page={data.page}
         sections={data.sections}
-        globals={data.globals}
-        shared={data.shared}
+        globals={typedGlobals}
+        shared={typedShared}
         role={actor.role}
         canPublish={hasCmsCapability(actor.role, 'publish')}
       />

@@ -32,7 +32,7 @@ export async function getPageSections(pageId: string): Promise<CmsPageSection[]>
   return data;
 }
 
-export async function getSharedSection(schemaKey: string): Promise<CmsSharedSection | null> {
+export async function getSharedSection<T = unknown>(schemaKey: string): Promise<CmsSharedSection<T> | null> {
   const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from('shared_sections')
@@ -44,7 +44,7 @@ export async function getSharedSection(schemaKey: string): Promise<CmsSharedSect
   return data;
 }
 
-export async function getSharedSectionForAdmin(schemaKey: string): Promise<CmsSharedSection | null> {
+export async function getSharedSectionForAdmin<T = unknown>(schemaKey: string): Promise<CmsSharedSection<T> | null> {
   const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from('shared_sections')
@@ -67,7 +67,7 @@ export async function getSharedSectionsForAdmin(schemaKeys: string[]): Promise<C
   return data;
 }
 
-export async function getGlobalSetting(schemaKey: string): Promise<CmsGlobalSetting | null> {
+export async function getGlobalSetting<T = unknown>(schemaKey: string): Promise<CmsGlobalSetting<T> | null> {
   const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from('global_settings')
@@ -79,7 +79,7 @@ export async function getGlobalSetting(schemaKey: string): Promise<CmsGlobalSett
   return data;
 }
 
-export async function getGlobalSettingForAdmin(schemaKey: string): Promise<CmsGlobalSetting | null> {
+export async function getGlobalSettingForAdmin<T = unknown>(schemaKey: string): Promise<CmsGlobalSetting<T> | null> {
   const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from('global_settings')
