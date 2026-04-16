@@ -2,6 +2,7 @@
 
 import styled from 'styled-components';
 import { colors, spacing, typography, mediaQueries } from '@/styles/tokens';
+import { GrowIcon, TeamIcon, CreativeIcon } from '../shared/Icons';
 
 // ── Perks / Value props data ──────────────────────────────────────────────────
 
@@ -25,37 +26,6 @@ const PERKS = [
     description: 'Tự do thể hiện ý tưởng, được khuyến khích đổi mới và phá vỡ khuôn mẫu truyền thống.',
   },
 ];
-
-// ── SVG Icons ─────────────────────────────────────────────────────────────────
-
-function GrowIcon() {
-  return (
-    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M5 35L15 22l7 7 8-10 5 6" stroke="#003CA6" strokeWidth="3.33" strokeLinecap="round" strokeLinejoin="round"/>
-      <path d="M28 15l7-7M35 8v6M35 8h-6" stroke="#003CA6" strokeWidth="3.33" strokeLinecap="round" strokeLinejoin="round"/>
-    </svg>
-  );
-}
-
-function TeamIcon() {
-  return (
-    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="14" cy="13" r="5" stroke="#003CA6" strokeWidth="3.33"/>
-      <path d="M4 33c0-5.523 4.477-10 10-10s10 4.477 10 10" stroke="#003CA6" strokeWidth="3.33" strokeLinecap="round"/>
-      <circle cx="28" cy="13" r="4" stroke="#003CA6" strokeWidth="3.33"/>
-      <path d="M34 33c0-4.418-2.686-8-6-8" stroke="#003CA6" strokeWidth="3.33" strokeLinecap="round"/>
-    </svg>
-  );
-}
-
-function CreativeIcon() {
-  return (
-    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M20 5l2.5 7.5H30l-6.25 4.5 2.5 7.5L20 20l-6.25 4.5 2.5-7.5L10 12.5h7.5L20 5z" stroke="#003CA6" strokeWidth="3.33" strokeLinecap="round" strokeLinejoin="round"/>
-      <path d="M8 30h24M12 35h16" stroke="#003CA6" strokeWidth="3.33" strokeLinecap="round"/>
-    </svg>
-  );
-}
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
