@@ -19,7 +19,7 @@ const SERVICES = [
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
-export function SocialCommerceHeroSection() {
+export function HeroSection() {
 
   return (
     <SectionContainer>

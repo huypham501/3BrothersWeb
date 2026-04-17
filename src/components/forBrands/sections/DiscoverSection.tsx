@@ -66,7 +66,7 @@ const DISCOVER_ITEMS = [
   },
 ] as const;
 
-export function ForBrandsDiscoverSection() {
+export function DiscoverSection() {
   return (
     <DiscoverSection>
       <Container>

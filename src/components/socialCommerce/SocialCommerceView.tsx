@@ -7,18 +7,18 @@ import { HeaderV2 } from '@/components/home-v2/shared/HeaderV2';
 import { FooterV2 } from '@/components/home-v2/shared/FooterV2';
 import { ContactCTASectionV2 } from '@/components/home-v2/sections/ContactCTASectionV2';
 
-import { SocialCommerceHeroSection } from './sections/SocialCommerceHeroSection';
-import { SocialCommerceGrowthSection } from './sections/SocialCommerceGrowthSection';
-import { SocialCommerceValuePropositionSection } from './sections/SocialCommerceValuePropositionSection';
+import { HeroSection } from './sections/HeroSection';
+import { GrowthSection } from './sections/GrowthSection';
+import { ValuePropositionSection } from './sections/ValuePropositionSection';
 
 export function SocialCommerceView() {
   return (
     <Wrapper>
       <HeaderV2 />
       <MainContent>
-        <SocialCommerceHeroSection />
-        <SocialCommerceGrowthSection />
-        <SocialCommerceValuePropositionSection />
+        <HeroSection />
+        <GrowthSection />
+        <ValuePropositionSection />
       </MainContent>
       <ContactCTASectionV2 />
       <FooterV2 />

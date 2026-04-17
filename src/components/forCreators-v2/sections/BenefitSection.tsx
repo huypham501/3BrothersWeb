@@ -54,7 +54,7 @@ function resolveBenefitIcon(id: ForCreatorsBenefitPayload['benefits'][number]['i
   }
 }
 
-export function ForCreatorsBenefitSection({ content }: { content: ForCreatorsBenefitPayload }) {
+export function BenefitSection({ content }: { content: ForCreatorsBenefitPayload }) {
   return (
     <SectionContainer id="benefit">
       <Inner>

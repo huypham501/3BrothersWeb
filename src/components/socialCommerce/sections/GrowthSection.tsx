@@ -14,7 +14,7 @@ const STAT_CARDS = [
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
-export function SocialCommerceGrowthSection() {
+export function GrowthSection() {
   return (
     <SectionContainer>
       {/* Background overlapping gradient mesh (Vectors 5, 6, 7, 8, 9, 3) representing the background blobs */}

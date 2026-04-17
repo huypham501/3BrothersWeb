@@ -23,7 +23,7 @@ const SERVICES = [
   },
 ] as const;
 
-export function ForBrandsServicesSection() {
+export function ServicesSection() {
   return (
     <ServicesSection>
       <Container>

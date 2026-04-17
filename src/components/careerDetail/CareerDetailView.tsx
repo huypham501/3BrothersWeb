@@ -6,9 +6,9 @@ import { notFound } from 'next/navigation';
 import { HeaderV2 } from '@/components/home-v2/shared/HeaderV2';
 import { FooterV2 } from '@/components/home-v2/shared/FooterV2';
 import { ContactCTASectionV2 } from '@/components/home-v2/sections/ContactCTASectionV2';
-import { CareerDetailHeroSection } from './sections/CareerDetailHeroSection';
-import { CareerDetailMainSection } from './sections/CareerDetailMainSection';
-import { CareerDetailExploreSection } from './sections/CareerDetailExploreSection';
+import { HeroSection } from './sections/HeroSection';
+import { MainSection } from './sections/MainSection';
+import { ExploreSection } from './sections/ExploreSection';
 import { getJobBySlug } from '../careers/data/jobPositions';
 
 // ── Props ─────────────────────────────────────────────────────────────────────
@@ -30,9 +30,9 @@ export function CareerDetailView({ slug }: CareerDetailViewProps) {
     <Wrapper>
       <HeaderV2 />
       <MainContent>
-        <CareerDetailHeroSection job={job} />
-        <CareerDetailMainSection job={job} />
-        <CareerDetailExploreSection currentSlug={slug} />
+        <HeroSection job={job} />
+        <MainSection job={job} />
+        <ExploreSection currentSlug={slug} />
       </MainContent>
       <ContactCTASectionV2 />
       <FooterV2 />

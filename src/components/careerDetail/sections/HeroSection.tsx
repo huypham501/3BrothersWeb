@@ -15,7 +15,7 @@ interface CareerDetailHeroSectionProps {
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
-export function CareerDetailHeroSection({ job }: CareerDetailHeroSectionProps) {
+export function HeroSection({ job }: CareerDetailHeroSectionProps) {
   const postedLabel =
     job.postedDaysAgo === 0
       ? 'Đăng hôm nay'

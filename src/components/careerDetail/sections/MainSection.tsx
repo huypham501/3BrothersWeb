@@ -23,7 +23,7 @@ interface CareerDetailMainSectionProps {
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
-export function CareerDetailMainSection({ job }: CareerDetailMainSectionProps) {
+export function MainSection({ job }: CareerDetailMainSectionProps) {
   return (
     <Container>
       <Inner>

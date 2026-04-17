@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { Container } from "@/components/primitives/Container";
 import { mq } from "@/styles/mediaQueries";
 
-export function ForBrandsHeroSection() {
+export function HeroSection() {
   return (
     <HeroSection aria-label="For Brands hero">
       <BannerImageDesktop

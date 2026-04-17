@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { colors, spacing, typography, mediaQueries, motion } from '@/styles/tokens';
 import { ForCreatorsCtaPayload } from '@/lib/cms/types';
 
-export function ForCreatorsCTASection({ content }: { content: ForCreatorsCtaPayload }) {
+export function CTASection({ content }: { content: ForCreatorsCtaPayload }) {
   return (
     <SectionContainer>
       <EllipseBlur1 />

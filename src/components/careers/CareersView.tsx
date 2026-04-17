@@ -5,16 +5,16 @@ import { colors } from '@/styles/tokens';
 
 import { HeaderV2 } from '@/components/home-v2/shared/HeaderV2';
 import { FooterV2 } from '@/components/home-v2/shared/FooterV2';
-import { CareersHeroSection } from './sections/CareersHeroSection';
-import { CareersOpenPositionSection } from './sections/CareersOpenPositionSection';
+import { HeroSection } from './sections/HeroSection';
+import { OpenPositionSection } from './sections/OpenPositionSection';
 
 export function CareersView() {
   return (
     <Wrapper>
       <HeaderV2 />
       <MainContent>
-        <CareersHeroSection />
-        <CareersOpenPositionSection />
+        <HeroSection />
+        <OpenPositionSection />
       </MainContent>
       <FooterV2 />
     </Wrapper>

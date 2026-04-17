@@ -1,4 +1,4 @@
-// Shared mock data for Careers — used by CareersOpenPositionSection and CareerDetailView
+// Shared mock data for Careers — used by OpenPositionSection and CareerDetailView
 
 export interface JobPosition {
   id: number;

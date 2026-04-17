@@ -25,7 +25,7 @@ const VALUE_PROPS = [
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
-export function SocialCommerceValuePropositionSection() {
+export function ValuePropositionSection() {
   return (
     <SectionContainer>
       <Inner>

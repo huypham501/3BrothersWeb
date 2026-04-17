@@ -132,7 +132,7 @@ const SWIPER_SPACE_MD = parseInt(spacing["2xl"], 10);
 const SWIPER_SPACE_LG = parseInt(spacing["3xl"], 10);
 const SWIPER_SPACE_XL = parseInt(spacing["4xl"], 10);
 
-export function ForBrandsCampaignsSection() {
+export function CampaignsSection() {
   const [thumbsSwiper, setThumbsSwiper] = useState<SwiperType | null>(null);
 
   return (

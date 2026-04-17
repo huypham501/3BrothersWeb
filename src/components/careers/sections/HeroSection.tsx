@@ -29,7 +29,7 @@ const PERKS = [
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
-export function CareersHeroSection() {
+export function HeroSection() {
   return (
     <SectionContainer>
       <Inner>

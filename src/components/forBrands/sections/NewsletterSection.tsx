@@ -5,7 +5,7 @@ import { Container } from "@/components/primitives/Container";
 import { Button } from "@/components/ui/Button";
 import { mq } from "@/styles/mediaQueries";
 
-export function ForBrandsNewsletterSection() {
+export function NewsletterSection() {
   return (
     <NewsletterSection aria-label="Newsletter">
       <Container>

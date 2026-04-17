@@ -6,16 +6,16 @@ import { colors } from '@/styles/tokens';
 import { HeaderV2 } from '@/components/home-v2/shared/HeaderV2';
 import { FooterV2 } from '@/components/home-v2/shared/FooterV2';
 import { ContactCTASectionV2 } from '@/components/home-v2/sections/ContactCTASectionV2';
-import { BlogHighlightsSection } from './sections/BlogHighlightsSection';
-import { BlogContentsSection } from './sections/BlogContentsSection';
+import { HighlightsSection } from './sections/HighlightsSection';
+import { ContentsSection } from './sections/ContentsSection';
 
 export function BlogView() {
   return (
     <Wrapper>
       <HeaderV2 />
       <MainContent>
-        <BlogHighlightsSection />
-        <BlogContentsSection />
+        <HighlightsSection />
+        <ContentsSection />
       </MainContent>
       <ContactCTASectionV2 />
       <FooterV2 />

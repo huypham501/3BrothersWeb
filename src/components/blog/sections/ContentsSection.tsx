@@ -100,7 +100,7 @@ const BLOG_POSTS = [
 
 // ── Component ────────────────────────────────────────────────────────────────
 
-export function BlogContentsSection() {
+export function ContentsSection() {
   const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE);
   const [isExpanded, setIsExpanded] = useState(false);
 

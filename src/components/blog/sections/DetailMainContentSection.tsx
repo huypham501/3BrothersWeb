@@ -109,7 +109,7 @@ function YoutubeIcon() {
 
 // ── Component ────────────────────────────────────────────────────────────────
 
-export function BlogDetailMainContentSection() {
+export function DetailMainContentSection() {
   return (
     <SectionContainer>
       <InnerLayout>

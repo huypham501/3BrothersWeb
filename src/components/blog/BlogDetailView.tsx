@@ -6,7 +6,7 @@ import { colors } from '@/styles/tokens';
 import { HeaderV2 } from '@/components/home-v2/shared/HeaderV2';
 import { FooterV2 } from '@/components/home-v2/shared/FooterV2';
 import { ContactCTASectionV2 } from '@/components/home-v2/sections/ContactCTASectionV2';
-import { BlogDetailMainContentSection } from './sections/BlogDetailMainContentSection';
+import { DetailMainContentSection } from './sections/DetailMainContentSection';
 import { RelatedPostsSection } from './sections/RelatedPostsSection';
 
 export function BlogDetailView() {
@@ -14,7 +14,7 @@ export function BlogDetailView() {
     <Wrapper>
       <HeaderV2 />
       <MainContent>
-        <BlogDetailMainContentSection />
+        <DetailMainContentSection />
         <RelatedPostsSection />
       </MainContent>
       <ContactCTASectionV2 />

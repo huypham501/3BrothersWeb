@@ -5,7 +5,7 @@ import { colors, spacing, typography, mediaQueries, borderRadius, motion } from 
 
 // ── Component ────────────────────────────────────────────────────────────────
 
-export function BlogHighlightsSection() {
+export function HighlightsSection() {
   return (
     <SectionContainer>
       {/* Full-width hero image with dark overlay */}

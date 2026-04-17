@@ -22,7 +22,7 @@ const BOTTOM_TICKER_ITEMS = [
   { label: "AND MORE" },
 ] as const;
 
-export function ForBrandsInformationSection() {
+export function InformationSection() {
   return (
     <InformationSection aria-label="For Brands information">
       <TickerRow items={TOP_TICKER_ITEMS} />

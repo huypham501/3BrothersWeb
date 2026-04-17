@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { Container } from "@/components/primitives/Container";
 import { mq } from "@/styles/mediaQueries";
 
-export function OurBrandHeaderSection() {
+export function HeaderSection() {
   return (
     <HeaderSection>
       <Container>

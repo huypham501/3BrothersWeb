@@ -24,7 +24,7 @@ const BRANDS = [
   "/metub/template/images/upload/brand-15.png",
 ] as const;
 
-export function ForBrandsBrandsSection() {
+export function BrandsSection() {
   return (
     <BrandsSection aria-label="Brands">
       <BrandsTop>

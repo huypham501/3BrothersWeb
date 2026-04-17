@@ -4,16 +4,16 @@ import styled from "styled-components";
 import { GetInTouchNewsletterSection } from "@/components/sections/GetInTouchNewsletterSection";
 import { HeaderV2 } from "@/components/home-v2/shared/HeaderV2";
 import { FooterV2 } from "@/components/home-v2/shared/FooterV2";
-import { OurBrandHeaderSection } from "@/components/ourBrand/sections/OurBrandHeaderSection";
-import { OurBrandsSection } from "@/components/ourBrand/sections/OurBrandsSection";
+import { HeaderSection } from "@/components/ourBrand/sections/HeaderSection";
+import { BrandsSection } from "@/components/ourBrand/sections/BrandsSection";
 
 export function OurBrandView() {
   return (
     <PageRoot>
       <HeaderV2 />
       <MainContent>
-        <OurBrandHeaderSection />
-        <OurBrandsSection />
+        <HeaderSection />
+        <BrandsSection />
         <GetInTouchNewsletterSection />
       </MainContent>
       <FooterV2 />

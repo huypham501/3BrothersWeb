@@ -122,7 +122,7 @@ const BRANDS: readonly OurBrand[] = [
   },
 ] as const;
 
-export function OurBrandsSection() {
+export function BrandsSection() {
   return (
     <Section>
       <Container>

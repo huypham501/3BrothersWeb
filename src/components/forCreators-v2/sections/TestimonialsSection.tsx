@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { colors, spacing, typography, mediaQueries } from '@/styles/tokens';
 import { ForCreatorsTestimonialsPayload } from '@/lib/cms/types';
 
-export function ForCreatorsTestimonialsSection({ content }: { content: ForCreatorsTestimonialsPayload }) {
+export function TestimonialsSection({ content }: { content: ForCreatorsTestimonialsPayload }) {
   return (
     <SectionContainer>
       <StripeOverlay />

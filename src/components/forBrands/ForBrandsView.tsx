@@ -3,26 +3,26 @@
 import styled from "styled-components";
 import { HeaderV2 } from "@/components/home-v2/shared/HeaderV2";
 import { FooterV2 } from "@/components/home-v2/shared/FooterV2";
-import { ForBrandsBrandsSection } from "@/components/forBrands/sections/ForBrandsBrandsSection";
-import { ForBrandsCampaignsSection } from "@/components/forBrands/sections/ForBrandsCampaignsSection";
-import { ForBrandsDiscoverSection } from "@/components/forBrands/sections/ForBrandsDiscoverSection";
-import { ForBrandsHeroSection } from "@/components/forBrands/sections/ForBrandsHeroSection";
-import { ForBrandsInformationSection } from "@/components/forBrands/sections/ForBrandsInformationSection";
-import { ForBrandsNewsletterSection } from "@/components/forBrands/sections/ForBrandsNewsletterSection";
-import { ForBrandsServicesSection } from "@/components/forBrands/sections/ForBrandsServicesSection";
+import { BrandsSection } from "@/components/forBrands/sections/BrandsSection";
+import { CampaignsSection } from "@/components/forBrands/sections/CampaignsSection";
+import { DiscoverSection } from "@/components/forBrands/sections/DiscoverSection";
+import { HeroSection } from "@/components/forBrands/sections/HeroSection";
+import { InformationSection } from "@/components/forBrands/sections/InformationSection";
+import { NewsletterSection } from "@/components/forBrands/sections/NewsletterSection";
+import { ServicesSection } from "@/components/forBrands/sections/ServicesSection";
 
 export function ForBrandsView() {
   return (
     <PageRoot>
       <HeaderV2 />
       <MainContent>
-        <ForBrandsHeroSection />
-        <ForBrandsInformationSection />
-        <ForBrandsDiscoverSection />
-        <ForBrandsServicesSection />
-        <ForBrandsBrandsSection />
-        <ForBrandsCampaignsSection />
-        <ForBrandsNewsletterSection />
+        <HeroSection />
+        <InformationSection />
+        <DiscoverSection />
+        <ServicesSection />
+        <BrandsSection />
+        <CampaignsSection />
+        <NewsletterSection />
       </MainContent>
       <FooterV2 />
     </PageRoot>

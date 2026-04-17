@@ -14,7 +14,7 @@ interface CareerDetailExploreSectionProps {
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
-export function CareerDetailExploreSection({ currentSlug }: CareerDetailExploreSectionProps) {
+export function ExploreSection({ currentSlug }: CareerDetailExploreSectionProps) {
   // Pick up to 3 other jobs, excluding the current one
   const relatedJobs = JOB_POSITIONS
     .filter((job) => job.slug !== currentSlug)

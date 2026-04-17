@@ -14,7 +14,7 @@ const INITIAL_VISIBLE = 6;
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
-export function CareersOpenPositionSection() {
+export function OpenPositionSection() {
   const [expanded, setExpanded] = useState(false);
   const visibleJobs = expanded ? JOB_POSITIONS : JOB_POSITIONS.slice(0, INITIAL_VISIBLE);
 
