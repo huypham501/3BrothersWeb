@@ -6,7 +6,7 @@ import { mq } from "@/styles/mediaQueries";
 
 export function HeaderSection() {
   return (
-    <HeaderSection>
+    <StyledHeaderSection>
       <Container>
         <Title>
           OUR <span>BRANDS</span>
@@ -16,12 +16,12 @@ export function HeaderSection() {
           the engagement you deserve.
         </Subtitle>
       </Container>
-    </HeaderSection>
+    </StyledHeaderSection>
   );
 }
 
 
-const HeaderSection = styled.section`
+const StyledHeaderSection = styled.section`
   border-top: 1px solid ${({ theme }) => theme.colors.border};
   padding: ${({ theme }) => theme.spacing["6xl"]} 0 ${({ theme }) => theme.spacing["3xl"]};
 
