@@ -138,6 +138,13 @@ export const CMS_NAV: NavItem[] = [
     children: [
       {
         type: 'leaf',
+        key: 'publish-center',
+        label: 'Publish Center',
+        href: '/admin/publish',
+        iconName: 'CloudUploadOutlined',
+      },
+      {
+        type: 'leaf',
         key: 'asset-manager',
         label: 'Asset Manager',
         href: '/admin/assets',
@@ -169,6 +176,7 @@ const PATH_TO_KEY: Record<string, string> = {
   '/admin/content/settings/footer': 'settings-footer',
   '/admin/content/settings/seo-defaults': 'settings-seo',
   '/admin/content/settings/site-metadata': 'settings-metadata',
+  '/admin/publish': 'publish-center',
   '/admin/assets': 'asset-manager',
   '/admin/content/audit': 'audit-log',
 };
@@ -190,6 +198,7 @@ const KEY_TO_OPEN_GROUPS: Record<string, string[]> = {
   'settings-footer': ['settings'],
   'settings-seo': ['settings'],
   'settings-metadata': ['settings'],
+  'publish-center': ['tools'],
   'asset-manager': ['tools'],
   'audit-log': ['tools'],
 };
@@ -223,6 +232,7 @@ const PATH_TO_BREADCRUMB: Record<string, BreadcrumbSegment[]> = {
   '/admin/content/settings/site-metadata': [ROOT_CRUMB, { label: 'Global Settings' }, { label: 'Site Metadata' }],
 
   // Tools
+  '/admin/publish': [ROOT_CRUMB, { label: 'Tools' }, { label: 'Publish Center' }],
   '/admin/assets': [ROOT_CRUMB, { label: 'Tools' }, { label: 'Asset Manager' }],
   '/admin/content/audit': [ROOT_CRUMB, { label: 'Tools' }, { label: 'Audit Log' }],
 };

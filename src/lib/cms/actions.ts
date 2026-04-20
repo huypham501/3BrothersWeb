@@ -1,40 +1,14 @@
 'use server';
 
-import { revalidatePath } from 'next/cache';
 import { requireCmsActionCapability } from '@/lib/admin/require-admin-user';
 import { hasCmsCapability } from '@/lib/cms/constants/roles';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { writeCmsAuditLog } from './audit';
 import type { SupportedSharedSchemaKey } from './constants/shared-sections';
 import { SCHEMA_KEYS } from './constants/schema-keys';
-import { resolveSharedSectionUsage } from './resolvers/shared-usage.resolver';
 import { CMS_REGISTRY, homePageSchema } from './schemas';
 
 type SchemaRegistry = Record<string, { parse: (value: unknown) => unknown }>;
-
-const GLOBAL_CHROME_REVALIDATE_PATHS = [
-  '/',
-  '/for-brands',
-  '/for-creators',
-  '/blogs',
-  '/blogs/[slug]',
-  '/careers',
-  '/our-brand',
-] as const;
-
-const GLOBAL_METADATA_REVALIDATE_PATHS = ['/', '/for-creators'] as const;
-
-function revalidateGlobalChromeRoutes() {
-  for (const route of GLOBAL_CHROME_REVALIDATE_PATHS) {
-    revalidatePath(route);
-  }
-}
-
-function revalidateGlobalMetadataRoutes() {
-  for (const route of GLOBAL_METADATA_REVALIDATE_PATHS) {
-    revalidatePath(route);
-  }
-}
 
 export async function saveHomePageSettings(pageId: string, payload: unknown) {
   return savePageSettingsDraft(pageId, payload);
@@ -289,8 +263,6 @@ export async function publishHomePage(pageId: string) {
     pageSlugOrSchemaKey: pageData.slug,
     summary: `Published page ${pageData.slug}`,
   });
-
-  revalidatePath('/');
 }
 
 export async function publishForCreatorsPage(pageId: string) {
@@ -372,8 +344,6 @@ export async function publishForCreatorsPage(pageId: string) {
     pageSlugOrSchemaKey: pageData.slug,
     summary: `Published page ${pageData.slug}`,
   });
-
-  revalidatePath('/for-creators');
 }
 
 export async function saveGlobalSettingDraft(schemaKey: string, payload: unknown, enabled?: boolean) {
@@ -492,11 +462,6 @@ export async function publishGlobalSetting(schemaKey: string) {
     summary: `Published global setting ${schemaKey}`,
   });
 
-  if (schemaKey === SCHEMA_KEYS.GLOBAL_HEADER || schemaKey === SCHEMA_KEYS.GLOBAL_FOOTER) {
-    revalidateGlobalChromeRoutes();
-  } else {
-    revalidateGlobalMetadataRoutes();
-  }
 }
 
 export async function publishSharedSection(schemaKey: SupportedSharedSchemaKey) {
@@ -562,8 +527,4 @@ export async function publishSharedSection(schemaKey: SupportedSharedSchemaKey) 
     summary: `Published shared section ${schemaKey}`,
   });
 
-  const affectedRoutes = resolveSharedSectionUsage(schemaKey);
-  for (const route of affectedRoutes) {
-    revalidatePath(route);
-  }
 }

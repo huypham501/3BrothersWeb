@@ -1,4 +1,7 @@
 import type { Metadata } from 'next';
+
+// Public page — served from ISR cache, revalidated only via Publish Center.
+export const revalidate = false;
 import { ForCreatorsViewV2 } from '@/components/forCreators-v2/ForCreatorsViewV2';
 
 import { SITE_URL } from '@/lib/constants';

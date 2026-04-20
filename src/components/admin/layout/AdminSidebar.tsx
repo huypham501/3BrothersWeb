@@ -8,6 +8,7 @@ import { Menu } from 'antd';
 import type { MenuProps } from 'antd';
 import {
   AuditOutlined,
+  CloudUploadOutlined,
   DashboardOutlined,
   EditOutlined,
   FileTextOutlined,
@@ -29,21 +30,22 @@ import type { NavItem, NavLeaf, NavGroup } from './nav-config';
 // ─── Icon resolver ────────────────────────────────────────────────────────────
 
 const ICON_MAP: Record<string, React.ReactNode> = {
+  AuditOutlined: <AuditOutlined />,
+  CloudUploadOutlined: <CloudUploadOutlined />,
   DashboardOutlined: <DashboardOutlined />,
-  FileTextOutlined: <FileTextOutlined />,
-  HomeOutlined: <HomeOutlined />,
   EditOutlined: <EditOutlined />,
+  FileTextOutlined: <FileTextOutlined />,
+  GlobalOutlined: <GlobalOutlined />,
+  HomeOutlined: <HomeOutlined />,
+  LayoutOutlined: <LayoutOutlined />,
+  LinkOutlined: <LinkOutlined />,
+  MenuOutlined: <MenuOutlined />,
+  PictureOutlined: <PictureOutlined />,
+  SearchOutlined: <SearchOutlined />,
+  SettingOutlined: <SettingOutlined />,
   ShareAltOutlined: <ShareAltOutlined />,
   TeamOutlined: <TeamOutlined />,
-  LinkOutlined: <LinkOutlined />,
-  SettingOutlined: <SettingOutlined />,
-  LayoutOutlined: <LayoutOutlined />,
-  MenuOutlined: <MenuOutlined />,
-  SearchOutlined: <SearchOutlined />,
-  GlobalOutlined: <GlobalOutlined />,
   ToolOutlined: <ToolOutlined />,
-  PictureOutlined: <PictureOutlined />,
-  AuditOutlined: <AuditOutlined />,
 };
 
 // ─── Build antd MenuProps['items'] from nav config ───────────────────────────
