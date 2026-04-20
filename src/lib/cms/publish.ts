@@ -10,7 +10,6 @@ import { requireCmsActionCapability } from '@/lib/admin/require-admin-user';
 const PUBLIC_ROUTES = [
   '/',
   '/for-creators',
-  '/for-brands',
   '/blogs',
   '/blogs/[slug]',
   '/careers',

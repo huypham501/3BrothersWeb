@@ -18,7 +18,6 @@ INSERT INTO global_settings (
     "logo_image": null,
     "nav_links": [
       {"label": "For Creators", "url": "/for-creators"},
-      {"label": "For Brands", "url": "/for-brands"},
       {"label": "Our Brands", "url": "/our-brand"},
       {"label": "Blogs", "url": "/blogs"},
       {"label": "Careers", "url": "/careers"}
@@ -31,7 +30,6 @@ INSERT INTO global_settings (
     "logo_image": null,
     "nav_links": [
       {"label": "For Creators", "url": "/for-creators"},
-      {"label": "For Brands", "url": "/for-brands"},
       {"label": "Our Brands", "url": "/our-brand"},
       {"label": "Blogs", "url": "/blogs"},
       {"label": "Careers", "url": "/careers"}
@@ -51,7 +49,6 @@ INSERT INTO global_settings (
     "email": "work.3brothers@gmail.com",
     "address": "123 Phan Văn Giang, Phú Nhuận, Hồ Chí Minh",
     "menu_links": [
-      {"label": "For Brands", "url": "/for-brands"},
       {"label": "For Creators", "url": "/for-creators"},
       {"label": "About Us", "url": "#"},
       {"label": "Careers", "url": "/careers"},
@@ -70,7 +67,6 @@ INSERT INTO global_settings (
     "email": "work.3brothers@gmail.com",
     "address": "123 Phan Văn Giang, Phú Nhuận, Hồ Chí Minh",
     "menu_links": [
-      {"label": "For Brands", "url": "/for-brands"},
       {"label": "For Creators", "url": "/for-creators"},
       {"label": "About Us", "url": "#"},
       {"label": "Careers", "url": "/careers"},
