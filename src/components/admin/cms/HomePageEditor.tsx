@@ -18,16 +18,15 @@ import {
 import { publishHomePage } from '@/lib/cms/actions';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/admin/controls/AdminAccordion';
 import {
-  AdminAlert,
-  AdminAlertDescription,
-  AdminAlertTitle,
   AdminBadge,
-  AdminButton,
   AdminCard,
   AdminCardContent,
   AdminCardHeader,
   AdminCardTitle,
 } from '@/components/admin/layout/AdminPrimitives';
+import { CmsEditorStatusBar } from './CmsEditorStatusBar';
+import { CmsDependenciesCard } from './CmsDependenciesCard';
+import type { CmsDependency } from './CmsDependenciesCard';
 import { HomePageSettingsEditor } from './editors/HomePageSettingsEditor';
 import { HomeHeroEditor } from './editors/HomeHeroEditor';
 import { HomePartnersEditor } from './editors/HomePartnersEditor';
@@ -48,11 +47,6 @@ interface HomePageEditorProps {
   role: string;
   canPublish: boolean;
   canManageShared: boolean;
-}
-
-function formatAuditDate(value?: string | null) {
-  if (!value) return 'N/A';
-  return new Date(value).toLocaleString();
 }
 
 export function HomePageEditor({
@@ -91,52 +85,52 @@ export function HomePageEditor({
   const efficiencySection = findLocal<z.infer<typeof homeEfficiencySchema>>('home.efficiency.v1');
   const trendingSection = findLocal<z.infer<typeof homeTrendingSchema>>('home.trending.v1');
 
+  // ── Dependencies config ─────────────────────────────────────────────────────
+  const dependencies: CmsDependency[] = [
+    {
+      label: 'Header',
+      connected: true, // global settings always assumed present; warning shown if editor is missing
+      kind: 'global',
+      editHref: '/admin/content/settings/header',
+    },
+    {
+      label: 'Footer',
+      connected: true,
+      kind: 'global',
+      editHref: '/admin/content/settings/footer',
+    },
+    {
+      label: 'Exclusive Talents',
+      connected: !!shared.exclusiveTalents,
+      kind: 'shared',
+      editHref: '/admin/content/shared/exclusive-talents',
+    },
+    {
+      label: 'Contact CTA',
+      connected: !!shared.contactCta,
+      kind: 'shared',
+      editHref: '/admin/content/shared/contact-cta',
+    },
+  ];
+
   return (
-    <div>
-      <div>
-        <div>
-          <h2>Home Page Editor</h2>
-          <p>
-            {hasUnpublished 
-              ? "You have unpublished draft changes." 
-              : "All changes are published."}
-          </p>
-          <p>Your role: {role}</p>
-          <p>
-            Last edited: {page.last_edited_by_identifier ?? 'N/A'} at {formatAuditDate(page.last_edited_at)}
-          </p>
-          <p>
-            Last published: {page.last_published_by_identifier ?? 'N/A'} at {formatAuditDate(page.last_published_at)}
-          </p>
-        </div>
-        <AdminButton
-          onClick={handlePublish} 
-          disabled={!hasUnpublished || isPending || !canPublish}
-          variant={hasUnpublished ? 'default' : 'outline'}
-          title={canPublish ? undefined : 'Your role cannot publish.'}
-        >
-          {isPending ? 'Publishing...' : 'Publish Home'}
-        </AdminButton>
-      </div>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+      {/* ── Status bar ── */}
+      <CmsEditorStatusBar
+        pageTitle="Home CMS"
+        hasUnpublished={hasUnpublished}
+        lastEditedBy={page.last_edited_by_identifier}
+        lastEditedAt={page.last_edited_at}
+        lastPublishedBy={page.last_published_by_identifier}
+        lastPublishedAt={page.last_published_at}
+        role={role}
+        canPublish={canPublish}
+        isPublishing={isPending}
+        onPublish={handlePublish}
+        publishLabel="Publish Home"
+      />
 
-      <AdminAlert>
-        <AdminAlertTitle>Shared Sections Ownership</AdminAlertTitle>
-        <AdminAlertDescription>
-          Exclusive Talents and Contact CTA are now managed in the dedicated Shared Sections module.
-          Canonical ownership is under `/admin/content/shared`.
-        </AdminAlertDescription>
-        {!canManageShared && (
-          <p>
-            Your role cannot edit shared sections from this page.
-          </p>
-        )}
-        <div>
-          <AdminButton href="/admin/content/shared" size="sm" variant="outline">
-            Open Shared Sections
-          </AdminButton>
-        </div>
-      </AdminAlert>
-
+      {/* ── Page settings ── */}
       <AdminCard>
         <AdminCardHeader>
           <AdminCardTitle>Page Settings</AdminCardTitle>
@@ -146,6 +140,7 @@ export function HomePageEditor({
         </AdminCardContent>
       </AdminCard>
 
+      {/* ── Section editors ── */}
       <AdminCard>
         <AdminCardHeader>
           <AdminCardTitle>Section Editors</AdminCardTitle>
@@ -155,18 +150,22 @@ export function HomePageEditor({
             {heroSection && (
               <AccordionItem value="hero">
                 <AccordionTrigger>
-                  <div>Hero <AdminBadge tone="info">Local</AdminBadge></div>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    Hero <AdminBadge tone="info">Local</AdminBadge>
+                  </span>
                 </AccordionTrigger>
                 <AccordionContent>
                   <HomeHeroEditor pageId={page.id} section={heroSection} />
                 </AccordionContent>
               </AccordionItem>
             )}
-            
+
             {partnersSection && (
               <AccordionItem value="partners">
                 <AccordionTrigger>
-                  <div>Partners <AdminBadge tone="info">Local</AdminBadge></div>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    Partners <AdminBadge tone="info">Local</AdminBadge>
+                  </span>
                 </AccordionTrigger>
                 <AccordionContent>
                   <HomePartnersEditor pageId={page.id} section={partnersSection} />
@@ -177,7 +176,9 @@ export function HomePageEditor({
             {coreCompetenciesSection && (
               <AccordionItem value="competencies">
                 <AccordionTrigger>
-                  <div>Core Competencies <AdminBadge tone="info">Local</AdminBadge></div>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    Core Competencies <AdminBadge tone="info">Local</AdminBadge>
+                  </span>
                 </AccordionTrigger>
                 <AccordionContent>
                   <HomeCoreCompetenciesEditor pageId={page.id} section={coreCompetenciesSection} />
@@ -188,7 +189,9 @@ export function HomePageEditor({
             {efficiencySection && (
               <AccordionItem value="efficiency">
                 <AccordionTrigger>
-                  <div>Efficiency <AdminBadge tone="info">Local</AdminBadge></div>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    Efficiency <AdminBadge tone="info">Local</AdminBadge>
+                  </span>
                 </AccordionTrigger>
                 <AccordionContent>
                   <HomeEfficiencyEditor pageId={page.id} section={efficiencySection} />
@@ -196,32 +199,38 @@ export function HomePageEditor({
               </AccordionItem>
             )}
 
-            {canManageShared && shared.exclusiveTalents ? (
+            {canManageShared && shared.exclusiveTalents && (
               <AccordionItem value="talents">
                 <AccordionTrigger>
-                  <div>Exclusive Talents <AdminBadge tone="warning">Shared</AdminBadge></div>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    Exclusive Talents <AdminBadge tone="warning">Shared</AdminBadge>
+                  </span>
                 </AccordionTrigger>
                 <AccordionContent>
                   <SharedExclusiveTalentsEditor section={shared.exclusiveTalents} />
                 </AccordionContent>
               </AccordionItem>
-            ) : null}
+            )}
 
-            {canManageShared && shared.contactCta ? (
+            {canManageShared && shared.contactCta && (
               <AccordionItem value="contactCta">
                 <AccordionTrigger>
-                  <div>Contact CTA <AdminBadge tone="warning">Shared</AdminBadge></div>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    Contact CTA <AdminBadge tone="warning">Shared</AdminBadge>
+                  </span>
                 </AccordionTrigger>
                 <AccordionContent>
                   <SharedContactCtaEditor section={shared.contactCta} />
                 </AccordionContent>
               </AccordionItem>
-            ) : null}
+            )}
 
             {trendingSection && (
               <AccordionItem value="trending">
                 <AccordionTrigger>
-                  <div>Trending <AdminBadge tone="info">Local</AdminBadge></div>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    Trending <AdminBadge tone="info">Local</AdminBadge>
+                  </span>
                 </AccordionTrigger>
                 <AccordionContent>
                   <HomeTrendingEditor pageId={page.id} section={trendingSection} />
@@ -231,6 +240,9 @@ export function HomePageEditor({
           </Accordion>
         </AdminCardContent>
       </AdminCard>
+
+      {/* ── Dependencies ── */}
+      <CmsDependenciesCard dependencies={dependencies} />
     </div>
   );
 }

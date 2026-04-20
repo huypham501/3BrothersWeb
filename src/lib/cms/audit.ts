@@ -2,7 +2,7 @@ import { createSupabaseServerClient } from '@/lib/supabase/server';
 import type { CmsRole } from './constants/roles';
 
 type CmsAuditAction = 'save_draft' | 'publish';
-type CmsAuditEntityType = 'page' | 'page_section' | 'shared_section' | 'global_setting';
+type CmsAuditEntityType = 'page' | 'page_section' | 'shared_section' | 'global_setting' | 'blog_post' | 'job_position';
 
 export interface WriteCmsAuditInput {
   actorUserId: string;

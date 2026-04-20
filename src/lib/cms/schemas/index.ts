@@ -3,7 +3,8 @@ import { SCHEMA_KEYS } from '../constants/schema-keys';
 
 const urlOrHash = z.string().regex(/^(https?:\/\/|\/|#)/, { error: 'Must be a valid URL, relative path, or #' }).max(500);
 
-export const homePageSchema = z.object({
+/** Generic page settings schema — used for all CMS-managed pages (Home, For Creators, …) */
+export const pageSettingsSchema = z.object({
   slug: z.string().min(1),
   internal_name: z.string().max(80),
   status: z.enum(['draft', 'published']),
@@ -14,6 +15,9 @@ export const homePageSchema = z.object({
   canonical_url: z.string().max(1024).nullable().optional(),
   keywords: z.array(z.string().max(40)).max(10),
 });
+
+/** @deprecated Use pageSettingsSchema */
+export const homePageSchema = pageSettingsSchema;
 
 export const globalHeaderSchema = z.object({
   logo_text: z.string().max(20),
@@ -204,6 +208,59 @@ export const forCreatorsCtaSchema = z.object({
   cta_url: urlOrHash,
 });
 
+// ── Careers ──────────────────────────────────────────────────────────────────
+
+export const careersHeroPerkSchema = z.object({
+  id: z.enum(['grow', 'team', 'creative']),
+  icon: z.enum(['grow', 'team', 'creative']),
+  title: z.string().max(80),
+  description: z.string().max(300),
+});
+
+export const careersHeroSchema = z.object({
+  superlabel: z.string().max(80),
+  title: z.string().max(200),
+  subtitle: z.string().max(500),
+  perks: z.array(careersHeroPerkSchema).length(3),
+});
+
+export const jobPositionContentSchema = z.object({
+  title: z.string().min(1).max(200),
+  department: z.string().max(80),
+  type: z.string().max(60),
+  location: z.string().max(120),
+  experience: z.string().max(120),
+  salary: z.string().max(120),
+  short_description: z.string().max(400),
+  descriptions: z.array(z.string().max(500)).max(10),
+  requirements: z.array(z.string().max(500)).max(20),
+  benefits: z.array(z.string().max(500)).max(20),
+});
+
+// ── Blog Posts ───────────────────────────────────────────────────────────────
+
+export const blogPostContentSectionSchema = z.object({
+  id: z.string().min(1).max(60),
+  heading: z.string().max(120).nullable(),
+  body: z.string().min(1),
+});
+
+export const blogPostFormSchema = z.object({
+  title: z.string().min(1).max(200),
+  badge: z.string().max(60).nullable().optional(),
+  excerpt: z.string().max(300).nullable().optional(),
+  cover_image_bg: z.string().max(500).nullable().optional(),
+  cover_image_url: z.string().max(1024).nullable().optional(),
+  cover_image_alt: z.string().max(125).nullable().optional(),
+  content: z.array(blogPostContentSectionSchema).max(20),
+  mid_content: z.array(blogPostContentSectionSchema).max(20),
+  seo_title: z.string().max(70).nullable().optional(),
+  seo_description: z.string().max(160).nullable().optional(),
+  og_image: z.string().max(1024).nullable().optional(),
+  keywords: z.array(z.string().max(40)).max(15),
+  is_featured: z.boolean(),
+});
+
 export const CMS_REGISTRY = {
   [SCHEMA_KEYS.GLOBAL_HEADER]: globalHeaderSchema,
   [SCHEMA_KEYS.GLOBAL_FOOTER]: globalFooterSchema,
@@ -220,4 +277,5 @@ export const CMS_REGISTRY = {
   [SCHEMA_KEYS.FOR_CREATORS_BENEFIT]: forCreatorsBenefitSchema,
   [SCHEMA_KEYS.FOR_CREATORS_TESTIMONIALS]: forCreatorsTestimonialsSchema,
   [SCHEMA_KEYS.FOR_CREATORS_CTA]: forCreatorsCtaSchema,
+  [SCHEMA_KEYS.CAREERS_HERO]: careersHeroSchema,
 };

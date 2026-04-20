@@ -1,5 +1,6 @@
 import type { SCHEMA_KEYS } from '../constants/schema-keys';
 import type {
+  CareersHeroPayload,
   ForCreatorsBenefitPayload,
   ForCreatorsCtaPayload,
   ForCreatorsHeroPayload,
@@ -33,6 +34,7 @@ export interface CmsSchemaPayloadMap {
   [SCHEMA_KEYS.FOR_CREATORS_BENEFIT]: ForCreatorsBenefitPayload;
   [SCHEMA_KEYS.FOR_CREATORS_TESTIMONIALS]: ForCreatorsTestimonialsPayload;
   [SCHEMA_KEYS.FOR_CREATORS_CTA]: ForCreatorsCtaPayload;
+  [SCHEMA_KEYS.CAREERS_HERO]: CareersHeroPayload;
 }
 
 export type CmsSectionSchemaKey =
@@ -46,7 +48,8 @@ export type CmsSectionSchemaKey =
   | typeof SCHEMA_KEYS.FOR_CREATORS_TESTIMONIALS
   | typeof SCHEMA_KEYS.FOR_CREATORS_CTA
   | typeof SCHEMA_KEYS.SHARED_EXCLUSIVE_TALENTS
-  | typeof SCHEMA_KEYS.SHARED_CONTACT_CTA;
+  | typeof SCHEMA_KEYS.SHARED_CONTACT_CTA
+  | typeof SCHEMA_KEYS.CAREERS_HERO;
 
 export type CmsSharedSchemaKey =
   | typeof SCHEMA_KEYS.SHARED_EXCLUSIVE_TALENTS

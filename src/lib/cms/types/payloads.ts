@@ -164,3 +164,58 @@ export interface ForCreatorsCtaPayload {
   cta_label: string;
   cta_url: string;
 }
+
+// ── Careers ──────────────────────────────────────────────────────────────────
+
+export interface CareersHeroPerk {
+  id: 'grow' | 'team' | 'creative';
+  icon: 'grow' | 'team' | 'creative';
+  title: string;
+  description: string;
+}
+
+export interface CareersHeroPayload {
+  superlabel: string;
+  title: string;
+  subtitle: string;
+  perks: CareersHeroPerk[];
+}
+
+/** Shape of the content / published_content JSONB columns for a job position. */
+export interface JobPositionContent {
+  title: string;
+  department: string;
+  type: string;
+  location: string;
+  experience: string;
+  salary: string;
+  short_description: string;
+  descriptions: string[];
+  requirements: string[];
+  benefits: string[];
+}
+
+// ── Blog Posts ───────────────────────────────────────────────────────────────
+
+export interface BlogPostContentSection {
+  id: string;
+  heading: string | null;
+  body: string;
+}
+
+/** Shape the admin editor saves for a blog post (draft save & publish). */
+export interface BlogPostFormPayload {
+  title: string;
+  badge: string | null;
+  excerpt: string | null;
+  cover_image_bg: string | null;
+  cover_image_url: string | null;
+  cover_image_alt: string | null;
+  content: BlogPostContentSection[];
+  mid_content: BlogPostContentSection[];
+  seo_title: string | null;
+  seo_description: string | null;
+  og_image: string | null;
+  keywords: string[];
+  is_featured: boolean;
+}

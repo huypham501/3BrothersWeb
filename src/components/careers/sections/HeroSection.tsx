@@ -3,50 +3,69 @@
 import styled from 'styled-components';
 import { colors, spacing, typography, mediaQueries } from '@/styles/tokens';
 import { GrowIcon, TeamIcon, CreativeIcon } from '../shared/Icons';
+import type { CareersHeroPayload } from '@/lib/cms/types/payloads';
 
 // ── Perks / Value props data ──────────────────────────────────────────────────
 
-const PERKS = [
+const DEFAULT_PERKS = [
   {
-    id: 'grow',
+    id: 'grow' as const,
     icon: <GrowIcon />,
     title: 'Phát triển nhanh',
     description: 'Cơ hội phát triển sự nghiệp vượt bậc trong ngành Influencer Marketing đang bùng nổ.',
   },
   {
-    id: 'team',
+    id: 'team' as const,
     icon: <TeamIcon />,
     title: 'Đội ngũ trẻ trung',
     description: 'Làm việc cùng những người trẻ tài năng, sáng tạo và đầy nhiệt huyết trong lĩnh vực media.',
   },
   {
-    id: 'creative',
+    id: 'creative' as const,
     icon: <CreativeIcon />,
     title: 'Sáng tạo không giới hạn',
     description: 'Tự do thể hiện ý tưởng, được khuyến khích đổi mới và phá vỡ khuôn mẫu truyền thống.',
   },
 ];
 
+const ICON_MAP: Record<string, React.ReactNode> = {
+  grow: <GrowIcon />,
+  team: <TeamIcon />,
+  creative: <CreativeIcon />,
+};
+
+// ── Props ─────────────────────────────────────────────────────────────────────
+
+interface HeroSectionProps {
+  /** Live CMS data. Falls back to hardcoded defaults if omitted. */
+  hero?: CareersHeroPayload | null;
+}
+
 // ── Component ─────────────────────────────────────────────────────────────────
 
-export function HeroSection() {
+export function HeroSection({ hero }: HeroSectionProps) {
+  const superlabel = hero?.superlabel ?? 'Gia nhập đội ngũ';
+  const title = hero?.title ?? '3Brothers Media';
+  const subtitle = hero?.subtitle ?? 'Chúng tôi đang tìm kiếm những tài năng đam mê sáng tạo, yêu thích thế giới Influencer Marketing và muốn tạo ra những giá trị khác biệt.';
+  const perks = hero?.perks
+    ? hero.perks.map((p) => ({ id: p.id, icon: ICON_MAP[p.icon] ?? <GrowIcon />, title: p.title, description: p.description }))
+    : DEFAULT_PERKS;
+
   return (
     <SectionContainer>
       <Inner>
         {/* Heading block */}
         <TextBlock>
           <HeadingGroup>
-            <Superlabel>Gia nhập đội ngũ</Superlabel>
-            <MainTitle>3Brothers Media</MainTitle>
+            <Superlabel>{superlabel}</Superlabel>
+            <MainTitle>{title}</MainTitle>
           </HeadingGroup>
-          <Subtitle>
-            Chúng tôi đang tìm kiếm những tài năng đam mê sáng tạo, yêu thích thế giới Influencer Marketing và muốn tạo ra những giá trị khác biệt.
-          </Subtitle>
+          <Subtitle>{subtitle}</Subtitle>
         </TextBlock>
 
         {/* 3-column perk cards */}
         <PerksRow>
-          {PERKS.map((perk) => (
+          {perks.map((perk) => (
             <PerkCard key={perk.id}>
               <IconWrapper>{perk.icon}</IconWrapper>
               <PerkTitle>{perk.title}</PerkTitle>

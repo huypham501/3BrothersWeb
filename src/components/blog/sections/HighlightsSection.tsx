@@ -1,41 +1,61 @@
 'use client';
 
+import Link from 'next/link';
 import styled from 'styled-components';
 import { colors, spacing, typography, mediaQueries, borderRadius, motion } from '@/styles/tokens';
 
+// ── Types ─────────────────────────────────────────────────────────────────────
+
+export interface FeaturedPost {
+  slug: string;
+  title: string;
+  badge: string | null;
+  excerpt: string | null;
+  date: string;
+  heroBg: string;
+}
+
+const DEFAULT_FEATURED: FeaturedPost = {
+  slug: '2025-tang-toc-media-he-sinh-thai-influence',
+  title: '2025 - Một năm tăng tốc Media trong hệ sinh thái Influence',
+  badge: 'Event • Sắp diễn ra',
+  excerpt:
+    'Traveling is an enriching experience that opens up new horizons, exposes us to different cultures, and creates memories that last a lifetime. However, traveling can also be stressful and overwhelming, especially if you don\'t plan and prepare adequately. In this blog…',
+  date: '12 Jan 2026',
+  heroBg: 'linear-gradient(180deg, #001a5c 0%, #003CA6 35%, #0050d0 60%, #061530 100%)',
+};
+
 // ── Component ────────────────────────────────────────────────────────────────
 
-export function HighlightsSection() {
+export function HighlightsSection({ featuredPost }: { featuredPost?: FeaturedPost }) {
+  const post = featuredPost ?? DEFAULT_FEATURED;
   return (
     <SectionContainer>
       {/* Full-width hero image with dark overlay */}
       <HeroImageWrapper>
-        <HeroImage />
+        <HeroImage $bg={post.heroBg} />
         <HeroDimmer />
       </HeroImageWrapper>
 
       {/* White info card overlapping the bottom of the image */}
-      <InfoCard>
+      <InfoCardLink href={`/blogs/${post.slug}`}>
         <CardHeading>
-          <Badge>
-            <BadgeText>Event • Sắp diễn ra</BadgeText>
-          </Badge>
-          <CardTitle>
-            2025 - Một năm tăng tốc Media trong hệ sinh thái Influence
-          </CardTitle>
+          {post.badge && (
+            <Badge>
+              <BadgeText>{post.badge}</BadgeText>
+            </Badge>
+          )}
+          <CardTitle>{post.title}</CardTitle>
         </CardHeading>
 
-        <CardArticle>
-          Traveling is an enriching experience that opens up new horizons, exposes us to different
-          cultures, and creates memories that last a lifetime. However, traveling can also be
-          stressful and overwhelming, especially if you don&rsquo;t plan and prepare adequately.
-          In this blog…
-        </CardArticle>
+        {post.excerpt && (
+          <CardArticle>{post.excerpt}</CardArticle>
+        )}
 
         <ShortInfo>
-          <DateText>12 Jan 2026</DateText>
+          <DateText>{post.date}</DateText>
         </ShortInfo>
-      </InfoCard>
+      </InfoCardLink>
     </SectionContainer>
   );
 }
@@ -70,18 +90,10 @@ const HeroImageWrapper = styled.div`
   }
 `;
 
-const HeroImage = styled.div`
+const HeroImage = styled.div<{ $bg: string }>`
   position: absolute;
   inset: 0;
-  /* Placeholder gradient replicating the dark blue Wrapped 2025 style */
-  background:
-    linear-gradient(
-      180deg,
-      #001a5c 0%,
-      #003CA6 35%,
-      #0050d0 60%,
-      #061530 100%
-    );
+  background: ${({ $bg }) => $bg};
   background-size: cover;
   background-position: center top;
 
@@ -122,11 +134,13 @@ const HeroDimmer = styled.div`
 
 /* ─── White info card ────────────────────────────────────────────────────── */
 
-const InfoCard = styled.div`
+const InfoCardLink = styled(Link)`
   position: absolute;
   bottom: 0;
   left: 84px;
   right: 84px;
+  text-decoration: none;
+  color: inherit;
 
   display: flex;
   flex-direction: column;

@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { useTransition } from 'react';
 import { useRouter } from 'next/navigation';
+import { z } from 'zod';
 import {
   CmsPage,
   CmsPageSection,
@@ -20,22 +21,20 @@ import {
 import { publishForCreatorsPage } from '@/lib/cms/actions';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/admin/controls/AdminAccordion';
 import {
-  AdminAlert,
-  AdminAlertDescription,
-  AdminAlertTitle,
   AdminBadge,
-  AdminButton,
   AdminCard,
   AdminCardContent,
   AdminCardHeader,
   AdminCardTitle,
 } from '@/components/admin/layout/AdminPrimitives';
+import { CmsEditorStatusBar } from './CmsEditorStatusBar';
+import { CmsDependenciesCard } from './CmsDependenciesCard';
+import type { CmsDependency } from './CmsDependenciesCard';
 import { HomePageSettingsEditor } from './editors/HomePageSettingsEditor';
 import { ForCreatorsHeroEditor } from './editors/ForCreatorsHeroEditor';
 import { ForCreatorsBenefitEditor } from './editors/ForCreatorsBenefitEditor';
 import { ForCreatorsTestimonialsEditor } from './editors/ForCreatorsTestimonialsEditor';
 import { ForCreatorsCtaEditor } from './editors/ForCreatorsCtaEditor';
-import { z } from 'zod';
 
 interface ForCreatorsPageEditorProps {
   page: CmsPage;
@@ -52,11 +51,6 @@ interface ForCreatorsPageEditorProps {
   canPublish: boolean;
 }
 
-function formatAuditDate(value?: string | null) {
-  if (!value) return 'N/A';
-  return new Date(value).toLocaleString();
-}
-
 export function ForCreatorsPageEditor({
   page,
   sections,
@@ -68,103 +62,85 @@ export function ForCreatorsPageEditor({
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
+  const hasUnpublished =
+    page.has_unpublished_changes || sections.some((s) => s.has_unpublished_changes);
+
   const handlePublish = () => {
     startTransition(async () => {
       try {
         await publishForCreatorsPage(page.id);
-        alert('Successfully published For Creators content!');
+        alert('Da publish For Creators thanh cong!');
         router.refresh();
       } catch (err) {
-        alert('Failed to publish For Creators content. Please try again.');
+        alert('Publish that bai. Vui long thu lai.');
         console.error(err);
       }
     });
   };
 
-  const hasUnpublished = page.has_unpublished_changes || sections.some((s) => s.has_unpublished_changes);
-  const findLocal = <T,>(schemaKey: string) => sections.find((s) => s.schema_key === schemaKey) as CmsPageSection<T> | undefined;
+  const findLocal = <T,>(schemaKey: string) =>
+    sections.find((s) => s.schema_key === schemaKey) as CmsPageSection<T> | undefined;
 
   const heroSection = findLocal<z.infer<typeof forCreatorsHeroSchema>>('for_creators.hero.v1');
   const benefitSection = findLocal<z.infer<typeof forCreatorsBenefitSchema>>('for_creators.benefit.v1');
   const testimonialsSection = findLocal<z.infer<typeof forCreatorsTestimonialsSchema>>('for_creators.testimonials.v1');
   const ctaSection = findLocal<z.infer<typeof forCreatorsCtaSchema>>('for_creators.cta.v1');
 
-  return (
-    <div>
-      <div>
-        <div>
-          <h2>For Creators Editor</h2>
-          <p>
-            {hasUnpublished ? 'You have unpublished draft changes.' : 'All changes are published.'}
-          </p>
-          <p>Your role: {role}</p>
-          <p>
-            Last edited: {page.last_edited_by_identifier ?? 'N/A'} at {formatAuditDate(page.last_edited_at)}
-          </p>
-          <p>
-            Last published: {page.last_published_by_identifier ?? 'N/A'} at {formatAuditDate(page.last_published_at)}
-          </p>
-        </div>
-        <AdminButton
-          onClick={handlePublish}
-          disabled={!hasUnpublished || isPending || !canPublish}
-          variant={hasUnpublished ? 'default' : 'outline'}
-          title={canPublish ? undefined : 'Your role cannot publish.'}
-        >
-          {isPending ? 'Publishing...' : 'Publish For Creators'}
-        </AdminButton>
-      </div>
+  const dependencies: CmsDependency[] = [
+    { label: 'Header', connected: !!globals.header, kind: 'global', editHref: '/admin/content/settings/header' },
+    { label: 'Footer', connected: !!globals.footer, kind: 'global', editHref: '/admin/content/settings/footer' },
+    { label: 'Exclusive Talents', connected: !!shared.exclusiveTalents, kind: 'shared', editHref: '/admin/content/shared/exclusive-talents' },
+    { label: 'Contact CTA', connected: !!shared.contactCta, kind: 'shared', editHref: '/admin/content/shared/contact-cta' },
+  ];
 
-      <AdminAlert>
-        <AdminAlertTitle>Shared/Global Ownership</AdminAlertTitle>
-        <AdminAlertDescription>
-          Header/Footer are managed in Global Settings, and Exclusive Talents/Contact CTA are managed in Shared Sections.
-        </AdminAlertDescription>
-        <div>
-          <AdminButton href="/admin/content/settings" size="sm" variant="outline">Open Global Settings</AdminButton>
-          <AdminButton href="/admin/content/shared" size="sm" variant="outline">Open Shared Sections</AdminButton>
-        </div>
-      </AdminAlert>
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+      <CmsEditorStatusBar
+        pageTitle="For Creators CMS"
+        hasUnpublished={hasUnpublished}
+        lastEditedBy={page.last_edited_by_identifier}
+        lastEditedAt={page.last_edited_at}
+        lastPublishedBy={page.last_published_by_identifier}
+        lastPublishedAt={page.last_published_at}
+        role={role}
+        canPublish={canPublish}
+        isPublishing={isPending}
+        onPublish={handlePublish}
+        publishLabel="Publish For Creators"
+      />
 
       <AdminCard>
-        <AdminCardHeader>
-          <AdminCardTitle>Page Settings</AdminCardTitle>
-        </AdminCardHeader>
+        <AdminCardHeader><AdminCardTitle>Page Settings</AdminCardTitle></AdminCardHeader>
         <AdminCardContent>
           <HomePageSettingsEditor page={page} />
         </AdminCardContent>
       </AdminCard>
 
       <AdminCard>
-        <AdminCardHeader>
-          <AdminCardTitle>Local Section Editors</AdminCardTitle>
-        </AdminCardHeader>
+        <AdminCardHeader><AdminCardTitle>Section Editors</AdminCardTitle></AdminCardHeader>
         <AdminCardContent>
           <Accordion collapsible>
             {heroSection && (
               <AccordionItem value="hero">
-                <AccordionTrigger><div>Hero <AdminBadge tone="info">Local</AdminBadge></div></AccordionTrigger>
+                <AccordionTrigger><span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>Hero <AdminBadge tone="info">Local</AdminBadge></span></AccordionTrigger>
                 <AccordionContent><ForCreatorsHeroEditor pageId={page.id} section={heroSection} /></AccordionContent>
               </AccordionItem>
             )}
-
             {benefitSection && (
               <AccordionItem value="benefit">
-                <AccordionTrigger><div>Benefit <AdminBadge tone="info">Local</AdminBadge></div></AccordionTrigger>
+                <AccordionTrigger><span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>Benefit <AdminBadge tone="info">Local</AdminBadge></span></AccordionTrigger>
                 <AccordionContent><ForCreatorsBenefitEditor pageId={page.id} section={benefitSection} /></AccordionContent>
               </AccordionItem>
             )}
-
             {testimonialsSection && (
               <AccordionItem value="testimonials">
-                <AccordionTrigger><div>Testimonials <AdminBadge tone="info">Local</AdminBadge></div></AccordionTrigger>
+                <AccordionTrigger><span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>Testimonials <AdminBadge tone="info">Local</AdminBadge></span></AccordionTrigger>
                 <AccordionContent><ForCreatorsTestimonialsEditor pageId={page.id} section={testimonialsSection} /></AccordionContent>
               </AccordionItem>
             )}
-
             {ctaSection && (
               <AccordionItem value="cta">
-                <AccordionTrigger><div>CTA Banner <AdminBadge tone="info">Local</AdminBadge></div></AccordionTrigger>
+                <AccordionTrigger><span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>CTA Banner <AdminBadge tone="info">Local</AdminBadge></span></AccordionTrigger>
                 <AccordionContent><ForCreatorsCtaEditor pageId={page.id} section={ctaSection} /></AccordionContent>
               </AccordionItem>
             )}
@@ -172,17 +148,7 @@ export function ForCreatorsPageEditor({
         </AdminCardContent>
       </AdminCard>
 
-      <AdminCard>
-        <AdminCardHeader>
-          <AdminCardTitle>Dependencies</AdminCardTitle>
-        </AdminCardHeader>
-        <AdminCardContent>
-          <div>
-            <p><strong>Global:</strong> {globals.header ? 'Header connected' : 'Header missing'} / {globals.footer ? 'Footer connected' : 'Footer missing'}</p>
-            <p><strong>Shared:</strong> {shared.exclusiveTalents ? 'Exclusive Talents connected' : 'Exclusive Talents missing'} / {shared.contactCta ? 'Contact CTA connected' : 'Contact CTA missing'}</p>
-          </div>
-        </AdminCardContent>
-      </AdminCard>
+      <CmsDependenciesCard dependencies={dependencies} />
     </div>
   );
 }

@@ -9,18 +9,22 @@ import { ContactCTASectionV2 } from '@/components/home-v2/sections/ContactCTASec
 import { HeroSection } from './sections/HeroSection';
 import { MainSection } from './sections/MainSection';
 import { ExploreSection } from './sections/ExploreSection';
-import { getJobBySlug } from '../careers/data/jobPositions';
+import { getJobBySlug, type JobPosition } from '../careers/data/jobPositions';
 
 // ── Props ─────────────────────────────────────────────────────────────────────
 
 interface CareerDetailViewProps {
   slug: string;
+  /** Live CMS job data. Falls back to hardcoded lookup if omitted. */
+  job?: JobPosition | null;
+  /** Related positions from CMS for the Explore section. */
+  relatedJobs?: JobPosition[];
 }
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
-export function CareerDetailView({ slug }: CareerDetailViewProps) {
-  const job = getJobBySlug(slug);
+export function CareerDetailView({ slug, job: jobProp, relatedJobs }: CareerDetailViewProps) {
+  const job = jobProp ?? getJobBySlug(slug);
 
   if (!job) {
     notFound();
@@ -32,7 +36,7 @@ export function CareerDetailView({ slug }: CareerDetailViewProps) {
       <MainContent>
         <HeroSection job={job} />
         <MainSection job={job} />
-        <ExploreSection currentSlug={slug} />
+        <ExploreSection currentSlug={slug} relatedJobs={relatedJobs} />
       </MainContent>
       <ContactCTASectionV2 />
       <FooterV2 />

@@ -14,6 +14,7 @@ export const SCHEMA_KEYS = {
     FOR_CREATORS_BENEFIT: 'for_creators.benefit.v1',
     FOR_CREATORS_TESTIMONIALS: 'for_creators.testimonials.v1',
     FOR_CREATORS_CTA: 'for_creators.cta.v1',
+    CAREERS_HERO: 'careers.hero.v1',
 } as const;
 
 export type SchemaKey = typeof SCHEMA_KEYS[keyof typeof SCHEMA_KEYS];

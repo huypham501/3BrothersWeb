@@ -14,6 +14,7 @@ import {
   findSectionContentBySchemaKey,
   resolveGlobalContentBySchemaKey,
   resolveSharedContentBySchemaKey,
+  validateCmsPayloadBySchemaKey,
 } from './utils/cms-content';
 
 export interface ForCreatorsViewModel {
@@ -55,10 +56,26 @@ export async function resolveForCreatorsPageData(): Promise<ForCreatorsViewModel
           ? data.page.published_keywords
           : ['creator', 'creators', 'creator program', '3brothers network'],
     },
-    hero: findSectionContentBySchemaKey(data.sections, SCHEMA_KEYS.FOR_CREATORS_HERO),
-    benefit: findSectionContentBySchemaKey(data.sections, SCHEMA_KEYS.FOR_CREATORS_BENEFIT),
-    testimonials: findSectionContentBySchemaKey(data.sections, SCHEMA_KEYS.FOR_CREATORS_TESTIMONIALS),
-    cta: findSectionContentBySchemaKey(data.sections, SCHEMA_KEYS.FOR_CREATORS_CTA),
+    hero: validateCmsPayloadBySchemaKey(
+      SCHEMA_KEYS.FOR_CREATORS_HERO,
+      findSectionContentBySchemaKey(data.sections, SCHEMA_KEYS.FOR_CREATORS_HERO),
+      'for-creators.sections.hero'
+    ),
+    benefit: validateCmsPayloadBySchemaKey(
+      SCHEMA_KEYS.FOR_CREATORS_BENEFIT,
+      findSectionContentBySchemaKey(data.sections, SCHEMA_KEYS.FOR_CREATORS_BENEFIT),
+      'for-creators.sections.benefit'
+    ),
+    testimonials: validateCmsPayloadBySchemaKey(
+      SCHEMA_KEYS.FOR_CREATORS_TESTIMONIALS,
+      findSectionContentBySchemaKey(data.sections, SCHEMA_KEYS.FOR_CREATORS_TESTIMONIALS),
+      'for-creators.sections.testimonials'
+    ),
+    cta: validateCmsPayloadBySchemaKey(
+      SCHEMA_KEYS.FOR_CREATORS_CTA,
+      findSectionContentBySchemaKey(data.sections, SCHEMA_KEYS.FOR_CREATORS_CTA),
+      'for-creators.sections.cta'
+    ),
     shared: {
       exclusiveTalents: resolveSharedContentBySchemaKey<typeof SCHEMA_KEYS.SHARED_EXCLUSIVE_TALENTS>(
         data.shared.exclusiveTalents

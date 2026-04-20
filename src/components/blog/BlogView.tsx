@@ -6,16 +6,22 @@ import { colors } from '@/styles/tokens';
 import { HeaderV2 } from '@/components/home-v2/shared/HeaderV2';
 import { FooterV2 } from '@/components/home-v2/shared/FooterV2';
 import { ContactCTASectionV2 } from '@/components/home-v2/sections/ContactCTASectionV2';
-import { HighlightsSection } from './sections/HighlightsSection';
+import { HighlightsSection, type FeaturedPost } from './sections/HighlightsSection';
 import { ContentsSection } from './sections/ContentsSection';
+import type { BlogPost } from './components/BlogPostCard';
 
-export function BlogView() {
+interface BlogViewProps {
+  featuredPost?: FeaturedPost;
+  posts?: BlogPost[];
+}
+
+export function BlogView({ featuredPost, posts }: BlogViewProps) {
   return (
     <Wrapper>
       <HeaderV2 />
       <MainContent>
-        <HighlightsSection />
-        <ContentsSection />
+        <HighlightsSection featuredPost={featuredPost} />
+        <ContentsSection posts={posts} />
       </MainContent>
       <ContactCTASectionV2 />
       <FooterV2 />

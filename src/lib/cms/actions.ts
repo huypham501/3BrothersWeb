@@ -6,7 +6,7 @@ import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { writeCmsAuditLog } from './audit';
 import type { SupportedSharedSchemaKey } from './constants/shared-sections';
 import { SCHEMA_KEYS } from './constants/schema-keys';
-import { CMS_REGISTRY, homePageSchema } from './schemas';
+import { CMS_REGISTRY, pageSettingsSchema } from './schemas';
 
 type SchemaRegistry = Record<string, { parse: (value: unknown) => unknown }>;
 
@@ -18,7 +18,7 @@ export async function savePageSettingsDraft(pageId: string, payload: unknown) {
   const actor = await requireCmsActionCapability('edit_draft');
   const supabase = await createSupabaseServerClient();
 
-  const validatedData = homePageSchema.parse(payload);
+  const validatedData = pageSettingsSchema.parse(payload);
   const editedAt = new Date().toISOString();
 
   const { data: page, error: pageError } = await supabase

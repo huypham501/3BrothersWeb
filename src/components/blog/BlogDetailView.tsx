@@ -6,16 +6,22 @@ import { colors } from '@/styles/tokens';
 import { HeaderV2 } from '@/components/home-v2/shared/HeaderV2';
 import { FooterV2 } from '@/components/home-v2/shared/FooterV2';
 import { ContactCTASectionV2 } from '@/components/home-v2/sections/ContactCTASectionV2';
-import { DetailMainContentSection } from './sections/DetailMainContentSection';
+import { DetailMainContentSection, type ArticleData } from './sections/DetailMainContentSection';
 import { RelatedPostsSection } from './sections/RelatedPostsSection';
+import type { BlogPost } from './components/BlogPostCard';
 
-export function BlogDetailView() {
+interface BlogDetailViewProps {
+  article?: ArticleData;
+  relatedPosts?: BlogPost[];
+}
+
+export function BlogDetailView({ article, relatedPosts }: BlogDetailViewProps) {
   return (
     <Wrapper>
       <HeaderV2 />
       <MainContent>
-        <DetailMainContentSection />
-        <RelatedPostsSection />
+        <DetailMainContentSection article={article} />
+        <RelatedPostsSection posts={relatedPosts} />
       </MainContent>
       <ContactCTASectionV2 />
       <FooterV2 />

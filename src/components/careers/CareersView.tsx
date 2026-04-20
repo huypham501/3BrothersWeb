@@ -7,14 +7,21 @@ import { HeaderV2 } from '@/components/home-v2/shared/HeaderV2';
 import { FooterV2 } from '@/components/home-v2/shared/FooterV2';
 import { HeroSection } from './sections/HeroSection';
 import { OpenPositionSection } from './sections/OpenPositionSection';
+import type { CareersHeroPayload } from '@/lib/cms/types/payloads';
+import type { JobPosition } from './data/jobPositions';
 
-export function CareersView() {
+interface CareersViewProps {
+  hero?: CareersHeroPayload | null;
+  positions?: JobPosition[];
+}
+
+export function CareersView({ hero, positions }: CareersViewProps) {
   return (
     <Wrapper>
       <HeaderV2 />
       <MainContent>
-        <HeroSection />
-        <OpenPositionSection />
+        <HeroSection hero={hero} />
+        <OpenPositionSection positions={positions} />
       </MainContent>
       <FooterV2 />
     </Wrapper>

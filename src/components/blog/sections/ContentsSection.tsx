@@ -3,7 +3,7 @@
 import styled from 'styled-components';
 import { colors, spacing, typography, mediaQueries, motion } from '@/styles/tokens';
 import { useState } from 'react';
-import { BlogPostCard } from '@/components/blog/components/BlogPostCard';
+import { BlogPostCard, type BlogPost } from '@/components/blog/components/BlogPostCard';
 
 // ── Constants ────────────────────────────────────────────────────────────────
 
@@ -98,21 +98,29 @@ const BLOG_POSTS = [
   },
 ];
 
+// ── Props ─────────────────────────────────────────────────────────────────────
+
+interface ContentsSectionProps {
+  /** Live posts from CMS. Falls back to placeholder BLOG_POSTS if omitted. */
+  posts?: BlogPost[];
+}
+
 // ── Component ────────────────────────────────────────────────────────────────
 
-export function ContentsSection() {
+export function ContentsSection({ posts: postsProp }: ContentsSectionProps) {
+  const allPosts = postsProp ?? BLOG_POSTS;
   const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE);
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const visiblePosts = BLOG_POSTS.slice(0, visibleCount);
-  const hasMore = visibleCount < BLOG_POSTS.length;
+  const visiblePosts = allPosts.slice(0, visibleCount);
+  const hasMore = visibleCount < allPosts.length;
 
   const handleToggle = () => {
     if (isExpanded) {
       setVisibleCount(INITIAL_VISIBLE);
       setIsExpanded(false);
     } else {
-      setVisibleCount(BLOG_POSTS.length);
+      setVisibleCount(allPosts.length);
       setIsExpanded(true);
     }
   };

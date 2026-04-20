@@ -107,9 +107,28 @@ function YoutubeIcon() {
   );
 }
 
+// ── Types ─────────────────────────────────────────────────────────────────────
+
+export interface ArticleContentSection {
+  id: string;
+  heading: string | null;
+  body: string;
+}
+
+export interface ArticleData {
+  title: string;
+  badge: string | null;
+  date: string;
+  heroImageBg: string;
+  midImageBg?: string;
+  sections: ArticleContentSection[];
+  midSections: ArticleContentSection[];
+}
+
 // ── Component ────────────────────────────────────────────────────────────────
 
-export function DetailMainContentSection() {
+export function DetailMainContentSection({ article }: { article?: ArticleData }) {
+  const data = article ?? ARTICLE;
   return (
     <SectionContainer>
       <InnerLayout>
@@ -136,19 +155,21 @@ export function DetailMainContentSection() {
           {/* Blog info header */}
           <BlogInfo>
             <ArticleHeading>
-              <Badge>
-                <BadgeText>{ARTICLE.badge}</BadgeText>
-              </Badge>
-              <ArticleTitle>{ARTICLE.title}</ArticleTitle>
+              {data.badge && (
+                <Badge>
+                  <BadgeText>{data.badge}</BadgeText>
+                </Badge>
+              )}
+              <ArticleTitle>{data.title}</ArticleTitle>
             </ArticleHeading>
-            <ArticleDate>{ARTICLE.date}</ArticleDate>
+            <ArticleDate>{data.date}</ArticleDate>
           </BlogInfo>
 
           {/* Hero image */}
-          <ArticleHeroImage $bg={ARTICLE.heroImageBg} />
+          <ArticleHeroImage $bg={data.heroImageBg} />
 
           {/* Intro paragraphs (no heading) */}
-          {ARTICLE.sections.map((section) => (
+          {data.sections.map((section) => (
             <ArticleSection key={section.id}>
               {section.heading && (
                 <SectionHeading>{section.heading}</SectionHeading>
@@ -160,10 +181,10 @@ export function DetailMainContentSection() {
           ))}
 
           {/* Mid-article image */}
-          <ArticleMidImage $bg={ARTICLE.midImageBg} />
+          <ArticleMidImage $bg={data.midImageBg ?? ARTICLE.midImageBg} />
 
           {/* Remaining sections */}
-          {ARTICLE.midSections.map((section) => (
+          {data.midSections.map((section) => (
             <ArticleSection key={section.id}>
               {section.heading && (
                 <SectionHeading>{section.heading}</SectionHeading>

@@ -4,19 +4,25 @@ import styled from 'styled-components';
 import Link from 'next/link';
 import { useState } from 'react';
 import { colors, spacing, typography, mediaQueries, motion } from '@/styles/tokens';
-import { JOB_POSITIONS } from '../data/jobPositions';
+import { JOB_POSITIONS, type JobPosition } from '../data/jobPositions';
 import { JobCard } from '../shared/JobCard';
 import { StripeOverlay } from '../shared/StripeOverlay';
 
-// ── Data ──────────────────────────────────────────────────────────────────────
+// ── Props / Data ───────────────────────────────────────────────────────────────
 
 const INITIAL_VISIBLE = 6;
 
+interface OpenPositionSectionProps {
+  /** Live CMS positions. Falls back to hardcoded JOB_POSITIONS if omitted. */
+  positions?: JobPosition[];
+}
+
 // ── Component ─────────────────────────────────────────────────────────────────
 
-export function OpenPositionSection() {
+export function OpenPositionSection({ positions }: OpenPositionSectionProps) {
+  const allJobs = positions ?? JOB_POSITIONS;
   const [expanded, setExpanded] = useState(false);
-  const visibleJobs = expanded ? JOB_POSITIONS : JOB_POSITIONS.slice(0, INITIAL_VISIBLE);
+  const visibleJobs = expanded ? allJobs : allJobs.slice(0, INITIAL_VISIBLE);
 
   return (
     <SectionContainer>
@@ -27,7 +33,7 @@ export function OpenPositionSection() {
         {/* Heading row */}
         <HeadingRow>
           <SectionTitle>Vị trí đang tuyển</SectionTitle>
-          <OpenCount>{JOB_POSITIONS.length} vị trí đang mở</OpenCount>
+          <OpenCount>{allJobs.length} vị trí đang mở</OpenCount>
         </HeadingRow>
 
         {/* Job list */}
@@ -38,7 +44,7 @@ export function OpenPositionSection() {
         </JobList>
 
         {/* Xem thêm toggle */}
-        {JOB_POSITIONS.length > INITIAL_VISIBLE && (
+        {allJobs.length > INITIAL_VISIBLE && (
           <ShowMoreButton onClick={() => setExpanded(!expanded)}>
             {expanded ? 'Thu gọn' : 'Xem thêm'}
             <ChevronIcon $rotated={expanded}>

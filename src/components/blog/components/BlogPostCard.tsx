@@ -7,7 +7,7 @@ import { colors, borderRadius, typography, motion } from '@/styles/tokens';
 // ── Types ─────────────────────────────────────────────────────────────────────
 
 export interface BlogPost {
-  id: number;
+  id: string | number;
   slug: string;
   title: string;
   date: string;

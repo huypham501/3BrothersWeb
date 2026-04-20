@@ -10,13 +10,15 @@ import { JobCard } from '../../careers/shared/JobCard';
 
 interface CareerDetailExploreSectionProps {
   currentSlug: string;
+  /** Live related positions from CMS. Falls back to filtered JOB_POSITIONS if omitted. */
+  relatedJobs?: JobPosition[];
 }
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
-export function ExploreSection({ currentSlug }: CareerDetailExploreSectionProps) {
+export function ExploreSection({ currentSlug, relatedJobs: relatedJobsProp }: CareerDetailExploreSectionProps) {
   // Pick up to 3 other jobs, excluding the current one
-  const relatedJobs = JOB_POSITIONS
+  const relatedJobs = relatedJobsProp ?? JOB_POSITIONS
     .filter((job) => job.slug !== currentSlug)
     .slice(0, 3);
 
