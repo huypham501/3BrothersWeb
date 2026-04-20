@@ -13,7 +13,6 @@ const PUBLIC_ROUTES = [
   '/blogs',
   '/blogs/[slug]',
   '/careers',
-  '/our-brand',
 ] as const;
 
 export interface PublishResult {

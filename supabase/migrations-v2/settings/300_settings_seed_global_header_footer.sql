@@ -18,7 +18,6 @@ INSERT INTO global_settings (
     "logo_image": null,
     "nav_links": [
       {"label": "For Creators", "url": "/for-creators"},
-      {"label": "Our Brands", "url": "/our-brand"},
       {"label": "Blogs", "url": "/blogs"},
       {"label": "Careers", "url": "/careers"}
     ],
@@ -30,7 +29,6 @@ INSERT INTO global_settings (
     "logo_image": null,
     "nav_links": [
       {"label": "For Creators", "url": "/for-creators"},
-      {"label": "Our Brands", "url": "/our-brand"},
       {"label": "Blogs", "url": "/blogs"},
       {"label": "Careers", "url": "/careers"}
     ],

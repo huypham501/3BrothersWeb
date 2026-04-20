@@ -14,7 +14,6 @@ const HEADER_MOCK = {
   nav_links: [
     { label: 'For Creators', url: '/for-creators' },
     { label: 'For Brands', url: '/for-brands' },
-    { label: 'Our Brands', url: '/our-brand' },
     { label: 'Blogs', url: '/blogs' },
     { label: 'Careers', url: '/careers' }
   ],

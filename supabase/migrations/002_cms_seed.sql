@@ -12,7 +12,6 @@ INSERT INTO global_settings (schema_key, setting_key, enabled, content) VALUES
         "logo_image": null,
         "nav_links": [
             {"label": "For Creators", "url": "/for-creators"},
-            {"label": "Our Brands", "url": "/our-brand"},
             {"label": "Blogs", "url": "/blogs"},
             {"label": "Careers", "url": "/careers"}
         ],
