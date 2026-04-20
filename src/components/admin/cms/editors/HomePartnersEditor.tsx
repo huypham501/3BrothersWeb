@@ -7,6 +7,7 @@ import { CmsPageSection, homePartnersSchema } from '@/lib/cms';
 import { savePageSection } from '@/lib/cms/actions';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/admin/controls/AdminForm';
 import { AdminInput as Input } from '@/components/admin/controls/AdminInput';
+import { AdminImageUpload } from '@/components/admin/controls/AdminImageUpload';
 import { AdminButton as Button } from '@/components/admin/layout/AdminPrimitives';
 import { AdminSwitch as Switch } from '@/components/admin/controls/AdminSwitch';
 import { AdminAlert as Alert, AdminAlertDescription as AlertDescription, AdminAlertTitle as AlertTitle } from '@/components/admin/layout/AdminPrimitives';
@@ -129,9 +130,13 @@ export function HomePartnersEditor({ pageId, section }: { pageId: string, sectio
                 name={`partners.${index}.logo_image`}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Logo Image URL</FormLabel>
+                    <FormLabel>Logo Image</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <AdminImageUpload
+                        value={field.value}
+                        onChange={field.onChange}
+                        label="Logo Image"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

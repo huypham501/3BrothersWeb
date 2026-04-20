@@ -7,6 +7,7 @@ import { CmsPageSection, homeTrendingSchema } from '@/lib/cms';
 import { savePageSection } from '@/lib/cms/actions';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/admin/controls/AdminForm';
 import { AdminInput as Input } from '@/components/admin/controls/AdminInput';
+import { AdminImageUpload } from '@/components/admin/controls/AdminImageUpload';
 import { AdminButton as Button } from '@/components/admin/layout/AdminPrimitives';
 import { AdminSwitch as Switch } from '@/components/admin/controls/AdminSwitch';
 import { AdminAlert as Alert, AdminAlertDescription as AlertDescription, AdminAlertTitle as AlertTitle } from '@/components/admin/layout/AdminPrimitives';
@@ -231,9 +232,13 @@ export function HomeTrendingEditor({ pageId, section }: { pageId: string, sectio
                     name={`news_items.${index}.image`}
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Image URL</FormLabel>
+                        <FormLabel>Image</FormLabel>
                         <FormControl>
-                          <Input {...field} />
+                          <AdminImageUpload
+                            value={field.value}
+                            onChange={field.onChange}
+                            label="News Image"
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>

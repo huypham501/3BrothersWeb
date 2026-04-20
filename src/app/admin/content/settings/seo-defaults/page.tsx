@@ -6,9 +6,7 @@ import { getGlobalSettingForAdmin } from '@/lib/cms/queries';
 import { globalSeoDefaultsSchema } from '@/lib/cms';
 import { GlobalSeoDefaultsEditor } from '@/components/admin/cms/global-settings/GlobalSeoDefaultsEditor';
 import { AdminShell } from '@/components/admin/layout/AdminShell';
-import { AdminTopNav } from '@/components/admin/layout/AdminTopNav';
 import { AdminPageHeader } from '@/components/admin/layout/AdminPageHeader';
-import { SETTINGS_DETAIL_NAV } from '@/components/admin/layout/nav-items';
 import { z } from 'zod';
 
 export const dynamic = 'force-dynamic';
@@ -21,7 +19,6 @@ export default async function GlobalSeoDefaultsEditorPage() {
 
   return (
     <AdminShell>
-      <AdminTopNav items={SETTINGS_DETAIL_NAV} activeHref="/admin/content/settings" />
       <AdminPageHeader
         title="Edit SEO Defaults"
         description="Configure `global.seo_defaults.v1` and publish independently."

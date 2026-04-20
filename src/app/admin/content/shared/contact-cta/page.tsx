@@ -7,9 +7,7 @@ import { SharedContactCtaManager } from '@/components/admin/cms/shared-sections/
 import { hasCmsCapability } from '@/lib/cms/constants/roles';
 import { sharedContactCtaSchema } from '@/lib/cms';
 import { AdminShell } from '@/components/admin/layout/AdminShell';
-import { AdminTopNav } from '@/components/admin/layout/AdminTopNav';
 import { AdminPageHeader } from '@/components/admin/layout/AdminPageHeader';
-import { SHARED_DETAIL_NAV } from '@/components/admin/layout/nav-items';
 import { z } from 'zod';
 
 export const dynamic = 'force-dynamic';
@@ -27,7 +25,6 @@ export default async function SharedContactCtaPage() {
 
   return (
     <AdminShell>
-      <AdminTopNav items={SHARED_DETAIL_NAV} activeHref="/admin/content/shared" />
       <AdminPageHeader
         title="Edit Contact CTA Shared Section"
         description="Configure `shared.contact_cta.v1` and publish independently across affected routes."

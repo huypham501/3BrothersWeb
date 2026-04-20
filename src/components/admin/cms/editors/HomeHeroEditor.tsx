@@ -7,6 +7,7 @@ import { CmsPageSection, homeHeroSchema } from '@/lib/cms';
 import { savePageSection } from '@/lib/cms/actions';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/admin/controls/AdminForm';
 import { AdminInput as Input } from '@/components/admin/controls/AdminInput';
+import { AdminImageUpload } from '@/components/admin/controls/AdminImageUpload';
 import { AdminTextarea as Textarea } from '@/components/admin/controls/AdminTextarea';
 import { AdminButton as Button } from '@/components/admin/layout/AdminPrimitives';
 import { AdminSwitch as Switch } from '@/components/admin/controls/AdminSwitch';
@@ -171,9 +172,13 @@ export function HomeHeroEditor({ pageId, section }: { pageId: string, section: C
             name="media_image"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Media Image URL</FormLabel>
+                <FormLabel>Media Image</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <AdminImageUpload
+                    value={field.value}
+                    onChange={field.onChange}
+                    label="Media Image"
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>

@@ -9,6 +9,7 @@ import { CmsGlobalSetting, globalSeoDefaultsSchema, SCHEMA_KEYS } from '@/lib/cm
 import { saveGlobalSettingDraft, publishGlobalSetting } from '@/lib/cms/actions';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/admin/controls/AdminForm';
 import { AdminInput as Input } from '@/components/admin/controls/AdminInput';
+import { AdminImageUpload } from '@/components/admin/controls/AdminImageUpload';
 import { AdminTextarea as Textarea } from '@/components/admin/controls/AdminTextarea';
 import {
   AdminAlert,
@@ -179,7 +180,9 @@ export function GlobalSeoDefaultsEditor({
 
         <TwoColumnGrid>
           <FormField control={form.control} name="default_og_image" render={({ field }) => (
-            <FormItem><FormLabel>Default OG Image</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+            <FormItem><FormLabel>Default OG Image</FormLabel><FormControl>
+              <AdminImageUpload value={field.value} onChange={field.onChange} label="Default OG Image" />
+            </FormControl><FormMessage /></FormItem>
           )} />
           <FormField control={form.control} name="default_og_image_alt" render={({ field }) => (
             <FormItem><FormLabel>Default OG Image Alt</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>

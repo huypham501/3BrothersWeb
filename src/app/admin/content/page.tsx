@@ -4,9 +4,7 @@ import { hasCmsCapability } from '@/lib/cms/constants/roles';
 import { getRecentCmsAuditLogs } from '@/lib/cms/queries';
 import { CmsAuditLogList } from '@/components/admin/cms/audit/CmsAuditLogList';
 import { AdminShell } from '@/components/admin/layout/AdminShell';
-import { AdminTopNav } from '@/components/admin/layout/AdminTopNav';
 import { AdminPageHeader } from '@/components/admin/layout/AdminPageHeader';
-import { CONTENT_MODULE_NAV } from '@/components/admin/layout/nav-items';
 import {
   AdminBadge,
   AdminButton,
@@ -28,7 +26,6 @@ export default async function AdminContentIndexPage() {
 
   return (
     <AdminShell>
-      <AdminTopNav items={CONTENT_MODULE_NAV} activeHref="/admin/content" />
       <AdminPageHeader
         title="Content Admin"
         description="Manage page content and site-wide global settings."

@@ -7,6 +7,7 @@ import { CmsSharedSection, sharedExclusiveTalentsSchema } from '@/lib/cms';
 import { saveSharedSection } from '@/lib/cms/actions';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/admin/controls/AdminForm';
 import { AdminInput as Input } from '@/components/admin/controls/AdminInput';
+import { AdminImageUpload } from '@/components/admin/controls/AdminImageUpload';
 import { AdminTextarea as Textarea } from '@/components/admin/controls/AdminTextarea';
 import { AdminButton as Button } from '@/components/admin/layout/AdminPrimitives';
 import { AdminAlert as Alert, AdminAlertDescription as AlertDescription, AdminAlertTitle as AlertTitle } from '@/components/admin/layout/AdminPrimitives';
@@ -116,7 +117,9 @@ export function SharedExclusiveTalentsEditor({ section }: { section: CmsSharedSe
           </TwoColumnGrid>
           <TwoColumnGrid>
             <FormField control={form.control} name="featured_photo" render={({ field }) => (
-              <FormItem><FormLabel>Photo URL</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+              <FormItem><FormLabel>Photo</FormLabel><FormControl>
+                <AdminImageUpload value={field.value} onChange={field.onChange} label="Featured Photo" />
+              </FormControl><FormMessage /></FormItem>
             )} />
             <FormField control={form.control} name="featured_photo_alt" render={({ field }) => (
               <FormItem><FormLabel>Photo Alt Text</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
@@ -163,7 +166,9 @@ export function SharedExclusiveTalentsEditor({ section }: { section: CmsSharedSe
                 )} />
                 <HeaderRow>
                   <FormField control={form.control} name={`talents.${index}.photo`} render={({ field }) => (
-                    <FormItem><FormLabel>Photo URL</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                    <FormItem><FormLabel>Photo</FormLabel><FormControl>
+                      <AdminImageUpload value={field.value} onChange={field.onChange} label="Talent Photo" />
+                    </FormControl><FormMessage /></FormItem>
                   )} />
                   <Button type="button" variant="destructive" size="sm" onClick={() => removeTalent(index)}>Remove</Button>
                 </HeaderRow>

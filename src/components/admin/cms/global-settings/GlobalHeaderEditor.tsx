@@ -9,6 +9,7 @@ import { CmsGlobalSetting, globalHeaderSchema, SCHEMA_KEYS } from '@/lib/cms';
 import { saveGlobalSettingDraft, publishGlobalSetting } from '@/lib/cms/actions';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/admin/controls/AdminForm';
 import { AdminInput as Input } from '@/components/admin/controls/AdminInput';
+import { AdminImageUpload } from '@/components/admin/controls/AdminImageUpload';
 import { AdminSwitch as Switch } from '@/components/admin/controls/AdminSwitch';
 import {
   AdminAlert,
@@ -197,9 +198,13 @@ export function GlobalHeaderEditor({ setting, role, canPublish }: GlobalHeaderEd
             name="logo_image"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Logo Image URL</FormLabel>
+                <FormLabel>Logo Image</FormLabel>
                 <FormControl>
-                  <Input {...field} value={field.value || ''} />
+                  <AdminImageUpload
+                    value={field.value}
+                    onChange={field.onChange}
+                    label="Logo Image"
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>

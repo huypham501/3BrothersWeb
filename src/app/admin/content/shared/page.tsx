@@ -4,9 +4,7 @@ import { SUPPORTED_SHARED_SECTIONS } from '@/lib/cms/constants/shared-sections';
 import { resolveAllSharedSectionUsage } from '@/lib/cms/resolvers/shared-usage.resolver';
 import { SharedSectionsIndex } from '@/components/admin/cms/shared-sections/SharedSectionsIndex';
 import { AdminShell } from '@/components/admin/layout/AdminShell';
-import { AdminTopNav } from '@/components/admin/layout/AdminTopNav';
 import { AdminPageHeader } from '@/components/admin/layout/AdminPageHeader';
-import { CONTENT_MODULE_NAV } from '@/components/admin/layout/nav-items';
 
 export const dynamic = 'force-dynamic';
 
@@ -18,7 +16,6 @@ export default async function SharedSectionsPage() {
 
   return (
     <AdminShell>
-      <AdminTopNav items={CONTENT_MODULE_NAV} activeHref="/admin/content/shared" />
       <AdminPageHeader
         title="Shared Sections"
         description="Manage reusable content blocks with independent draft/publish workflow and usage mapping."

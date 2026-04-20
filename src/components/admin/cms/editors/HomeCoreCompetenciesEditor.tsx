@@ -7,6 +7,7 @@ import { CmsPageSection, homeCoreCompetenciesSchema } from '@/lib/cms';
 import { savePageSection } from '@/lib/cms/actions';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/admin/controls/AdminForm';
 import { AdminInput as Input } from '@/components/admin/controls/AdminInput';
+import { AdminImageUpload } from '@/components/admin/controls/AdminImageUpload';
 import { AdminTextarea as Textarea } from '@/components/admin/controls/AdminTextarea';
 import { AdminButton as Button } from '@/components/admin/layout/AdminPrimitives';
 import { AdminSwitch as Switch } from '@/components/admin/controls/AdminSwitch';
@@ -146,9 +147,13 @@ export function HomeCoreCompetenciesEditor({ pageId, section }: { pageId: string
                   name={`services.${index}.image`}
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Image URL (Optional)</FormLabel>
+                      <FormLabel>Image (Optional)</FormLabel>
                       <FormControl>
-                        <Input {...field} />
+                        <AdminImageUpload
+                          value={field.value}
+                          onChange={field.onChange}
+                          label="Service Image"
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

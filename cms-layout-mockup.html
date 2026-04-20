@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CMS Layout Mockup — Right Nav Panel</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f0f2f5;
+    color: #111;
+  }
+
+  /* ─── TOP BAR ──────────────────────────────────────── */
+  .topbar {
+    height: 52px;
+    background: #fff;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    gap: 12px;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    box-shadow: 0 1px 4px rgba(0,0,0,.06);
+  }
+  .topbar-logo {
+    font-weight: 800;
+    font-size: 15px;
+    color: #7c3aed;
+    letter-spacing: -.3px;
+  }
+  .topbar-sep { color: #d1d5db; }
+  .topbar-section { font-size: 13px; color: #888; }
+  .topbar-user {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #555;
+  }
+  .topbar-avatar {
+    width: 28px; height: 28px;
+    background: #7c3aed;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 11px; font-weight: 700;
+  }
+
+  /* ─── OUTER WRAPPER ────────────────────────────────── */
+  .outer {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 28px 24px;
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+  }
+
+  /* ─── MAIN CONTENT ─────────────────────────────────── */
+  .main {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  /* Page header */
+  .page-header {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 20px 24px;
+  }
+  .page-header h1 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #111;
+    margin-bottom: 4px;
+  }
+  .page-header p { font-size: 13px; color: #888; }
+  .page-header-meta {
+    display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap;
+  }
+  .badge {
+    padding: 2px 10px;
+    border-radius: 99px;
+    font-size: 11px;
+    font-weight: 600;
+    background: #ede9fe;
+    color: #7c3aed;
+    border: 1px solid #ddd6fe;
+  }
+  .badge.green { background: #dcfce7; color: #16a34a; border-color: #bbf7d0; }
+
+  /* Editor card skeleton */
+  .editor-card {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 20px 24px;
+  }
+  .editor-card-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #444;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .editor-card-title .save-btn {
+    padding: 5px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    background: #7c3aed;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .form-field label {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    color: #888;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: .4px;
+  }
+  .form-field .fake-input {
+    height: 32px;
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+  }
+  .form-field .fake-textarea {
+    height: 56px;
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+  }
+  .form-field .fake-image-input {
+    height: 32px;
+    background: #f9fafb;
+    border: 1px dashed #c4b5fd;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    font-size: 11px;
+    color: #a78bfa;
+    gap: 6px;
+  }
+
+  /* ─── RIGHT NAV PANEL ──────────────────────────────── */
+  .sidebar {
+    width: 224px;
+    flex-shrink: 0;
+    position: sticky;
+    top: 80px; /* below topbar */
+  }
+
+  .nav-panel {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .nav-panel-header {
+    padding: 12px 16px 10px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .8px;
+    color: #aaa;
+    border-bottom: 1px solid #f3f4f6;
+  }
+
+  .nav-list { padding: 6px 0; }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 16px;
+    font-size: 13px;
+    color: #555;
+    cursor: pointer;
+    border-left: 3px solid transparent;
+    text-decoration: none;
+    transition: all .15s;
+  }
+  .nav-item:hover {
+    background: #f9fafb;
+    color: #7c3aed;
+    border-left-color: #ddd6fe;
+  }
+  .nav-item.active {
+    background: #ede9fe;
+    color: #7c3aed;
+    font-weight: 600;
+    border-left-color: #7c3aed;
+  }
+  .nav-item .icon { font-size: 14px; width: 18px; text-align: center; flex-shrink: 0; }
+
+  .nav-divider {
+    height: 1px;
+    background: #f3f4f6;
+    margin: 4px 0;
+  }
+
+  /* Storage mini widget at bottom of nav */
+  .nav-storage {
+    padding: 10px 14px 12px;
+    border-top: 1px solid #f3f4f6;
+  }
+  .nav-storage-label {
+    font-size: 10px;
+    color: #aaa;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    margin-bottom: 7px;
+  }
+  .storage-bar-track {
+    height: 5px;
+    background: #f3f4f6;
+    border-radius: 99px;
+    overflow: hidden;
+    margin-bottom: 5px;
+  }
+  .storage-bar-fill {
+    height: 100%;
+    width: 23%;
+    background: #7c3aed;
+    border-radius: 99px;
+  }
+  .storage-nums {
+    font-size: 10px;
+    color: #aaa;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  /* ─── ANNOTATION CALLOUTS ──────────────────────────── */
+  .annotations {
+    max-width: 1200px;
+    margin: 0 auto 32px;
+    padding: 0 24px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+  }
+  .annotation {
+    background: #fff;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 14px 16px;
+  }
+  .annotation.highlight { border-color: #a78bfa; background: #faf5ff; }
+  .annotation-num {
+    width: 22px; height: 22px;
+    background: #7c3aed;
+    color: #fff;
+    border-radius: 50%;
+    font-size: 11px;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 8px;
+  }
+  .annotation h3 { font-size: 13px; font-weight: 700; color: #333; margin-bottom: 4px; }
+  .annotation p { font-size: 12px; color: #666; line-height: 1.5; }
+
+  /* ─── SECTION LABEL ────────────────────────────────── */
+  .section-label {
+    max-width: 1200px;
+    margin: 24px auto 8px;
+    padding: 0 24px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #aaa;
+  }
+
+  /* ─── TOGGLE DEMO ──────────────────────────────────── */
+  .demo-controls {
+    max-width: 1200px;
+    margin: 0 auto 4px;
+    padding: 0 24px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .demo-label { font-size: 12px; color: #888; }
+  .demo-btn {
+    padding: 5px 12px;
+    font-size: 12px;
+    border-radius: 6px;
+    border: 1px solid #e5e7eb;
+    background: #fff;
+    cursor: pointer;
+    color: #555;
+    font-weight: 500;
+  }
+  .demo-btn.active {
+    background: #7c3aed;
+    border-color: #7c3aed;
+    color: #fff;
+  }
+
+  /* ─── COMPARISON: BEFORE ───────────────────────────── */
+  .before-outer {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px 40px;
+  }
+  .before-shell {
+    background: #f0f2f5;
+    border-radius: 12px;
+    padding: 20px;
+    border: 2px dashed #e5e7eb;
+  }
+  .before-topnav {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px dashed #e5e7eb;
+  }
+  .before-nav-btn {
+    padding: 5px 12px;
+    font-size: 12px;
+    border-radius: 6px;
+    border: 1px solid #e5e7eb;
+    background: #fff;
+    color: #555;
+    font-weight: 500;
+  }
+  .before-nav-btn.active {
+    background: #1677ff;
+    border-color: #1677ff;
+    color: #fff;
+  }
+  .before-page-header {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 16px;
+  }
+  .before-page-header h1 { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+  .before-page-header p { font-size: 13px; color: #888; }
+  .before-content {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .skeleton-card {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 16px 20px;
+    height: 90px;
+  }
+  .skeleton-line {
+    height: 10px;
+    background: #f3f4f6;
+    border-radius: 4px;
+    margin-bottom: 8px;
+  }
+  .skeleton-line.short { width: 40%; }
+  .skeleton-line.medium { width: 70%; }
+
+  /* hide/show logic */
+  .view-after { display: flex; }
+  .view-before { display: none; }
+  body.show-before .view-after { display: none; }
+  body.show-before .view-before { display: block; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     DEMO CONTROLS
+══════════════════════════════════════════════════════════════════ -->
+<div style="background:#7c3aed; padding: 10px 24px; color:#fff; font-size:13px; display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+  <strong>🎨 CMS Layout Mockup</strong>
+  <span style="opacity:.7">—</span>
+  <span style="opacity:.8">Xem layout MỚI và SO SÁNH với layout hiện tại</span>
+  <div style="margin-left:auto; display:flex; gap:8px;">
+    <button onclick="setView('after')" id="btn-after"
+      style="padding:5px 14px; border-radius:6px; border:1px solid rgba(255,255,255,.4); background:rgba(255,255,255,.2); color:#fff; cursor:pointer; font-size:12px; font-weight:600;">
+      ✨ Layout Mới
+    </button>
+    <button onclick="setView('before')" id="btn-before"
+      style="padding:5px 14px; border-radius:6px; border:1px solid rgba(255,255,255,.4); background:transparent; color:rgba(255,255,255,.8); cursor:pointer; font-size:12px;">
+      Layout Cũ
+    </button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     ✨ LAYOUT MỚI (AFTER)
+══════════════════════════════════════════════════════════════════ -->
+<div class="view-after">
+
+  <!-- Topbar -->
+  <div class="topbar">
+    <span class="topbar-logo">3BROTHERS</span>
+    <span class="topbar-sep">/</span>
+    <span class="topbar-section">CMS Admin</span>
+    <div class="topbar-user">
+      <div class="topbar-avatar">HP</div>
+      <span>huy.pham7@mservice.com.vn</span>
+    </div>
+  </div>
+
+  <!-- Main layout -->
+  <div class="outer">
+
+    <!-- ── Left: Main content ── -->
+    <div class="main">
+
+      <!-- Page header -->
+      <div class="page-header">
+        <h1>Home CMS Editor</h1>
+        <p>Manage the contents and SEO of the Home Page.</p>
+        <div class="page-header-meta">
+          <span class="badge">Role: content_admin</span>
+          <span class="badge green">● Published</span>
+        </div>
+      </div>
+
+      <!-- Editor cards -->
+      <div class="editor-card">
+        <div class="editor-card-title">
+          Hero Section
+          <button class="save-btn">Save Section</button>
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <label>Title</label>
+            <div class="fake-textarea"></div>
+          </div>
+          <div class="form-field">
+            <label>Subtext</label>
+            <div class="fake-textarea"></div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <label>Media Image</label>
+            <div class="fake-image-input">📎 Upload &nbsp;·&nbsp; hoặc nhập URL</div>
+          </div>
+          <div class="form-field">
+            <label>Image Alt</label>
+            <div class="fake-input"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="editor-card">
+        <div class="editor-card-title">
+          Partners Section
+          <button class="save-btn">Save Section</button>
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <label>Partner Name</label>
+            <div class="fake-input"></div>
+          </div>
+          <div class="form-field">
+            <label>Logo Image</label>
+            <div class="fake-image-input">📎 Upload &nbsp;·&nbsp; hoặc nhập URL</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="editor-card" style="opacity:.5;">
+        <div class="editor-card-title">Core Competencies Section <span style="font-weight:400; text-transform:none; letter-spacing:0; font-size:12px; color:#aaa;">+ thêm các section khác bên dưới...</span></div>
+        <div style="height:40px;"></div>
+      </div>
+
+    </div><!-- /main -->
+
+    <!-- ── Right: Sticky nav panel ── -->
+    <div class="sidebar">
+      <div class="nav-panel">
+        <div class="nav-panel-header">CMS Navigation</div>
+
+        <div class="nav-list">
+          <a class="nav-item" onclick="setActive(this)">
+            <span class="icon">🏠</span> Content Admin
+          </a>
+          <a class="nav-item active" onclick="setActive(this)">
+            <span class="icon">📄</span> Home CMS
+          </a>
+          <a class="nav-item" onclick="setActive(this)">
+            <span class="icon">🎨</span> For Creators CMS
+          </a>
+          <div class="nav-divider"></div>
+          <a class="nav-item" onclick="setActive(this)">
+            <span class="icon">🔗</span> Shared Sections
+          </a>
+          <a class="nav-item" onclick="setActive(this)">
+            <span class="icon">⚙️</span> Global Settings
+          </a>
+          <div class="nav-divider"></div>
+          <a class="nav-item" onclick="setActive(this)">
+            <span class="icon">📋</span> Audit Log
+          </a>
+          <a class="nav-item" onclick="setActive(this)">
+            <span class="icon">🖼</span> Asset Manager
+          </a>
+        </div>
+
+        <!-- Mini storage widget -->
+        <div class="nav-storage">
+          <div class="nav-storage-label">Storage</div>
+          <div class="storage-bar-track">
+            <div class="storage-bar-fill"></div>
+          </div>
+          <div class="storage-nums">
+            <span>230 MB dùng</span>
+            <span>1 GB · Free</span>
+          </div>
+        </div>
+
+      </div><!-- /nav-panel -->
+    </div><!-- /sidebar -->
+
+  </div><!-- /outer -->
+
+  <!-- Annotations -->
+  <div style="max-width:1200px; margin: 0 auto 12px; padding: 0 24px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:#aaa;">
+    Thay đổi chính so với layout cũ
+  </div>
+  <div class="annotations">
+    <div class="annotation highlight">
+      <div class="annotation-num">1</div>
+      <h3>Nav panel cố định bên phải</h3>
+      <p>Sticky sidebar thay thế horizontal button nav. Luôn hiển thị khi scroll, không bị đẩy xuống dưới header.</p>
+    </div>
+    <div class="annotation highlight">
+      <div class="annotation-num">2</div>
+      <h3>Storage mini widget</h3>
+      <p>Progress bar nhỏ gọn ở cuối nav panel — luôn thấy dung lượng đang dùng mà không cần vào trang Asset Manager.</p>
+    </div>
+    <div class="annotation highlight">
+      <div class="annotation-num">3</div>
+      <h3>Top bar thống nhất</h3>
+      <p>Sticky top bar mới hiển thị logo + tên section hiện tại + user info. Không có trên layout cũ.</p>
+    </div>
+  </div>
+
+</div><!-- /view-after -->
+
+
+<!-- ═══════════════════════════════════════════════════════════════
+     📦 LAYOUT CŨ (BEFORE)
+══════════════════════════════════════════════════════════════════ -->
+<div class="view-before">
+  <div style="background:#fff3cd; padding:10px 24px; font-size:13px; color:#856404; display:flex; align-items:center; gap:8px;">
+    ⚠️ <strong>Layout hiện tại</strong> — nav nằm ngang trên cùng, không sticky khi scroll
+  </div>
+  <div class="before-outer">
+    <div class="before-shell" style="margin-top:20px;">
+
+      <!-- Horizontal top nav (current) -->
+      <div class="before-topnav">
+        <span style="font-size:11px; color:#aaa; align-self:center; margin-right:4px; text-transform:uppercase; font-weight:700; letter-spacing:.5px;">Nav:</span>
+        <button class="before-nav-btn">Content Admin</button>
+        <button class="before-nav-btn active">Home CMS</button>
+        <button class="before-nav-btn">For Creators CMS</button>
+        <button class="before-nav-btn">Shared Sections</button>
+        <button class="before-nav-btn">Global Settings</button>
+        <button class="before-nav-btn">Audit Log</button>
+        <button class="before-nav-btn">🖼 Asset Manager</button>
+      </div>
+
+      <!-- Page header -->
+      <div class="before-page-header">
+        <h1>Home CMS Editor</h1>
+        <p>Manage the contents and SEO of the Home Page.</p>
+      </div>
+
+      <!-- Content -->
+      <div class="before-content">
+        <div class="skeleton-card">
+          <div class="skeleton-line short"></div>
+          <div class="skeleton-line medium"></div>
+          <div class="skeleton-line"></div>
+        </div>
+        <div class="skeleton-card">
+          <div class="skeleton-line short"></div>
+          <div class="skeleton-line medium"></div>
+          <div class="skeleton-line"></div>
+        </div>
+      </div>
+
+      <!-- Problems callout -->
+      <div style="margin-top:16px; padding:14px 16px; background:#fff5f5; border:1px solid #fca5a5; border-radius:8px; font-size:12px; color:#dc2626; line-height:1.8;">
+        <strong>Vấn đề với layout cũ:</strong><br/>
+        ❌ Nav nằm ngang — bị che khuất khi màn hình nhỏ hoặc nhiều mục<br/>
+        ❌ Nav scroll mất khi trang dài — không biết đang ở section nào<br/>
+        ❌ Không có không gian cho widget phụ (storage bar, user info)<br/>
+        ❌ Khi thêm nav item (ví dụ Asset Manager), hàng nav bị tràn dòng
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function setView(v) {
+    if (v === 'before') {
+      document.body.classList.add('show-before');
+      document.getElementById('btn-before').style.background = 'rgba(255,255,255,.2)';
+      document.getElementById('btn-after').style.background = 'transparent';
+      document.getElementById('btn-after').style.color = 'rgba(255,255,255,.8)';
+      document.getElementById('btn-after').style.fontWeight = '400';
+      document.getElementById('btn-before').style.color = '#fff';
+      document.getElementById('btn-before').style.fontWeight = '600';
+    } else {
+      document.body.classList.remove('show-before');
+      document.getElementById('btn-after').style.background = 'rgba(255,255,255,.2)';
+      document.getElementById('btn-before').style.background = 'transparent';
+      document.getElementById('btn-before').style.color = 'rgba(255,255,255,.8)';
+      document.getElementById('btn-before').style.fontWeight = '400';
+      document.getElementById('btn-after').style.color = '#fff';
+      document.getElementById('btn-after').style.fontWeight = '600';
+    }
+  }
+
+  function setActive(el) {
+    document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+    el.classList.add('active');
+  }
+</script>
+</body>
+</html>

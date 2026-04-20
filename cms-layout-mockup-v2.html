@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CMS Layout v2 — Left Sidebar + Breadcrumb</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f5; color: #000000d9; font-size: 14px; }
+
+/* ─── ANNOUNCEMENT BAR ─────────────────────────────────── */
+.announce { background: #7c3aed; color: #fff; padding: 8px 20px; font-size: 12px; display: flex; align-items: center; gap: 10px; }
+.announce strong { font-weight: 700; }
+.announce span { opacity: .8; }
+.announce small { margin-left: auto; opacity: .65; }
+
+/* ─── APP SHELL ─────────────────────────────────────────── */
+.app { display: flex; min-height: 100vh; }
+
+/* ─── LEFT SIDEBAR ──────────────────────────────────────── */
+.sidebar {
+  width: 240px;
+  flex-shrink: 0;
+  background: #fff;
+  border-right: 1px solid #f0f0f0;
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Logo */
+.sidebar-logo {
+  height: 56px;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  border-bottom: 1px solid #f0f0f0;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.logo-icon {
+  width: 28px; height: 28px;
+  background: linear-gradient(135deg, #7c3aed, #a855f7);
+  border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-weight: 800; font-size: 13px;
+}
+.logo-text { font-weight: 700; font-size: 14px; color: #222; }
+.logo-sub { font-size: 11px; color: #aaa; font-weight: 400; }
+
+/* ── Ant Design Menu (inline mode simulation) ── */
+.ant-menu {
+  flex: 1;
+  padding: 4px 0;
+  overflow-y: auto;
+}
+
+.ant-menu-item,
+.ant-menu-submenu-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 40px;
+  padding: 0 16px;
+  cursor: pointer;
+  border-radius: 0;
+  color: #000000d9;
+  font-size: 14px;
+  position: relative;
+  user-select: none;
+  transition: background .15s, color .15s;
+  white-space: nowrap;
+}
+.ant-menu-item:hover,
+.ant-menu-submenu-title:hover {
+  background: #f5f5f5;
+  color: #7c3aed;
+}
+.ant-menu-item.active {
+  background: #f3f0ff;
+  color: #7c3aed;
+  font-weight: 600;
+}
+.ant-menu-item.active::after {
+  content: '';
+  position: absolute;
+  right: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: #7c3aed;
+  border-radius: 3px 0 0 3px;
+}
+
+/* Sub-items (indented) */
+.ant-menu-sub {
+  background: #fafafa;
+  border-top: 1px solid #f5f5f5;
+  border-bottom: 1px solid #f5f5f5;
+}
+.ant-menu-sub .ant-menu-item {
+  padding-left: 44px;
+  height: 36px;
+  font-size: 13px;
+  color: #595959;
+}
+.ant-menu-sub .ant-menu-item:hover { color: #7c3aed; background: #f3f0ff; }
+.ant-menu-sub .ant-menu-item.active { color: #7c3aed; background: #f3f0ff; font-weight: 600; }
+
+/* Submenu title row */
+.ant-menu-submenu-title {
+  font-size: 13px;
+  color: #8c8c8c;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .6px;
+  height: 36px;
+  margin-top: 4px;
+}
+.ant-menu-submenu-title:hover { background: transparent; color: #7c3aed; }
+.submenu-arrow {
+  margin-left: auto;
+  font-size: 10px;
+  color: #bbb;
+  transition: transform .2s;
+  flex-shrink: 0;
+}
+.ant-menu-submenu.open .submenu-arrow { transform: rotate(180deg); }
+.ant-menu-submenu.open .ant-menu-submenu-title { color: #7c3aed; }
+.ant-menu-sub { display: none; }
+.ant-menu-submenu.open .ant-menu-sub { display: block; }
+
+/* Icon */
+.menu-icon {
+  width: 16px; height: 16px;
+  flex-shrink: 0;
+  opacity: .65;
+  display: flex; align-items: center; justify-content: center;
+}
+.ant-menu-item.active .menu-icon,
+.ant-menu-item:hover .menu-icon { opacity: 1; }
+.ant-menu-submenu-title .menu-icon { opacity: .5; }
+.ant-menu-submenu.open .ant-menu-submenu-title .menu-icon { opacity: .85; color: #7c3aed; }
+
+/* Divider */
+.menu-divider { height: 1px; background: #f0f0f0; margin: 4px 0; }
+
+/* ── Storage widget ─────────────────────────── */
+.sidebar-footer {
+  padding: 12px 16px;
+  border-top: 1px solid #f0f0f0;
+  flex-shrink: 0;
+}
+.storage-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 7px;
+}
+.storage-label { font-size: 11px; font-weight: 600; color: #aaa; text-transform: uppercase; letter-spacing: .5px; }
+.storage-pct { font-size: 11px; color: #888; }
+.storage-track {
+  height: 4px; background: #f0f0f0; border-radius: 99px; overflow: hidden; margin-bottom: 5px;
+}
+.storage-fill {
+  height: 100%; width: 23%; background: #7c3aed; border-radius: 99px; transition: width .4s;
+}
+.storage-nums {
+  font-size: 11px; color: #bbb; display: flex; justify-content: space-between;
+}
+.storage-link {
+  font-size: 11px; color: #7c3aed; text-decoration: none; display: block; margin-top: 6px;
+  cursor: pointer;
+}
+.storage-link:hover { text-decoration: underline; }
+
+/* ─── MAIN CONTENT ──────────────────────────────────────── */
+.content { flex: 1; min-width: 0; padding: 0 28px 40px; max-width: 900px; }
+
+/* Breadcrumb */
+.breadcrumb {
+  display: flex; align-items: center; gap: 6px;
+  padding: 14px 0 16px;
+  font-size: 13px;
+  color: #8c8c8c;
+  border-bottom: 1px solid #f0f0f0;
+  margin-bottom: 24px;
+}
+.breadcrumb a { color: #8c8c8c; text-decoration: none; }
+.breadcrumb a:hover { color: #7c3aed; }
+.breadcrumb .sep { color: #d9d9d9; font-size: 11px; }
+.breadcrumb .current { color: #000000d9; font-weight: 500; }
+.bc-icon { width: 14px; height: 14px; opacity: .5; }
+
+/* Page header */
+.page-header { margin-bottom: 24px; }
+.page-header h1 { font-size: 20px; font-weight: 600; color: #000000d9; margin-bottom: 4px; }
+.page-header p { font-size: 14px; color: #8c8c8c; }
+.page-header-meta { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; align-items: center; }
+.tag { padding: 1px 8px; border-radius: 4px; font-size: 12px; font-weight: 500; border: 1px solid; }
+.tag-purple { background: #f9f0ff; color: #722ed1; border-color: #d3adf7; }
+.tag-green { background: #f6ffed; color: #52c41a; border-color: #b7eb8f; }
+.tag-blue { background: #e6f4ff; color: #1677ff; border-color: #91caff; }
+
+/* Editor cards */
+.editor-card {
+  background: #fff;
+  border: 1px solid #f0f0f0;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+.editor-card-header {
+  padding: 12px 16px;
+  border-bottom: 1px solid #f5f5f5;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.editor-card-header h3 {
+  font-size: 13px; font-weight: 600; color: #000000d9;
+  display: flex; align-items: center; gap: 8px;
+}
+.editor-card-header h3 .card-icon { opacity: .5; font-size: 13px; }
+.editor-card-body { padding: 16px; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+.form-field label { display: block; font-size: 12px; font-weight: 500; color: #595959; margin-bottom: 5px; }
+.fake-input { height: 32px; background: #fff; border: 1px solid #d9d9d9; border-radius: 6px; }
+.fake-textarea { height: 60px; background: #fff; border: 1px solid #d9d9d9; border-radius: 6px; }
+.fake-image-field {
+  height: 32px; background: #fafafa; border: 1px solid #d9d9d9; border-radius: 6px;
+  display: flex; align-items: center; padding: 0 10px; gap: 6px;
+  font-size: 12px; color: #7c3aed;
+}
+.save-btn {
+  padding: 4px 14px; font-size: 12px; font-weight: 600;
+  background: #7c3aed; color: #fff; border: none; border-radius: 6px; cursor: pointer;
+}
+.outline-btn {
+  padding: 4px 14px; font-size: 12px; font-weight: 500;
+  background: #fff; color: #595959; border: 1px solid #d9d9d9; border-radius: 6px; cursor: pointer;
+  margin-right: 6px;
+}
+
+/* Empty state */
+.empty-state { padding: 48px 0; text-align: center; color: #bbb; font-size: 13px; }
+
+/* ─── ANNOTATION FOOTER ─────────────────────────────────── */
+.annotations {
+  background: #fafafa;
+  border-top: 1px solid #f0f0f0;
+  padding: 24px 28px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-left: 240px; /* offset sidebar width */
+}
+.ann-item { }
+.ann-num {
+  width: 20px; height: 20px; background: #7c3aed; border-radius: 50%;
+  color: #fff; font-size: 10px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 8px;
+}
+.ann-item h4 { font-size: 13px; font-weight: 600; color: #222; margin-bottom: 4px; }
+.ann-item p { font-size: 12px; color: #888; line-height: 1.6; }
+
+/* ─── SVG ICONS ─────────────────────────────────────────── */
+svg { display: block; }
+</style>
+</head>
+<body>
+
+<div class="announce">
+  <strong>Mockup v2</strong>
+  <span>Left sidebar · Ant Design Menu (inline) · Breadcrumb động · Nhóm theo pages</span>
+  <small>Click vào menu item để xem breadcrumb thay đổi →</small>
+</div>
+
+<div class="app">
+
+  <!-- ══════════════════════════════════════════
+       LEFT SIDEBAR
+  ═══════════════════════════════════════════ -->
+  <aside class="sidebar">
+
+    <!-- Logo -->
+    <div class="sidebar-logo">
+      <div class="logo-icon">3B</div>
+      <div>
+        <div class="logo-text">3BROTHERS</div>
+        <div class="logo-sub">CMS Admin</div>
+      </div>
+    </div>
+
+    <!-- Ant Design Menu (inline mode) -->
+    <nav class="ant-menu">
+
+      <!-- Dashboard -->
+      <div class="ant-menu-item" data-key="dashboard"
+           data-bc='[{"label":"CMS Admin","icon":"home"}]'
+           data-title="CMS Overview"
+           data-desc="Tổng quan CMS, recent activity và quick links."
+           onclick="activate(this)">
+        <span class="menu-icon">
+          <svg viewBox="64 64 896 896" width="16" height="16" fill="currentColor">
+            <path d="M924.8 625.7l-65.5-56c3.1-19 4.7-38.4 4.7-57.8s-1.6-38.8-4.7-57.8l65.5-56a32.03 32.03 0 009.3-35.2l-.9-2.6a443.74 443.74 0 00-79.7-137.9l-1.8-2.1a32.12 32.12 0 00-35.1-9.5l-81.3 28.9c-30-24.6-63.5-44-99.7-57.6l-15.7-85a32.05 32.05 0 00-25.8-25.7l-2.7-.5c-52.1-9.4-106.2-9.4-158.4 0l-2.7.5a32.05 32.05 0 00-25.8 25.7l-15.8 85.4a351.86 351.86 0 00-99 57.4l-81.9-29.1a32 32 0 00-35.1 9.5l-1.8 2.1a446.02 446.02 0 00-79.7 137.9l-.9 2.6c-4.5 12.5-.8 26.5 9.3 35.2l66.3 56.6c-3.1 18.8-4.6 38-4.6 57.1 0 19.2 1.5 38.4 4.6 57.1L99 625.5a32.03 32.03 0 00-9.3 35.2l.9 2.6c18.1 50.4 44.9 96.9 79.7 137.9l1.8 2.1a32.12 32.12 0 0035.1 9.5l81.9-29.1c29.8 24.5 63.1 43.9 99 57.4l15.8 85.4a32.05 32.05 0 0025.8 25.7l2.7.5a449.4 449.4 0 00158.4 0l2.7-.5a32.05 32.05 0 0025.8-25.7l15.7-85a350 350 0 0099.7-57.6l81.3 28.9a32 32 0 0035.1-9.5l1.8-2.1c34.8-41.1 61.6-87.5 79.7-137.9l.9-2.6c4.5-12.3.8-26.3-9.3-35zM512 651c-77.4 0-140-62.6-140-140s62.6-140 140-140 140 62.6 140 140-62.6 140-140 140z"/>
+          </svg>
+        </span>
+        CMS Overview
+      </div>
+
+      <div class="menu-divider"></div>
+
+      <!-- GROUP: Pages -->
+      <div class="ant-menu-submenu open" id="group-pages">
+        <div class="ant-menu-submenu-title" onclick="toggleGroup('group-pages')">
+          <span class="menu-icon">
+            <svg viewBox="64 64 896 896" width="14" height="14" fill="currentColor">
+              <path d="M854.6 288.7L639.4 73.4c-6-6-14.2-9.4-22.7-9.4H192c-17.7 0-32 14.3-32 32v832c0 17.7 14.3 32 32 32h640c17.7 0 32-14.3 32-32V311.3c0-8.5-3.4-16.6-9.4-22.6zM790.2 326H602V137.8L790.2 326zm1.8 562H232V136h302v216a42 42 0 0042 42h216v494z"/>
+            </svg>
+          </span>
+          Pages
+          <span class="submenu-arrow">▾</span>
+        </div>
+        <div class="ant-menu-sub">
+          <div class="ant-menu-item" data-key="home-cms"
+               data-bc='[{"label":"CMS Admin","icon":"home"},{"label":"Pages"},{"label":"Home CMS"}]'
+               data-title="Home CMS Editor"
+               data-desc="Quản lý nội dung và SEO của trang Home."
+               onclick="activate(this)">
+            <span class="menu-icon">
+              <svg viewBox="64 64 896 896" width="14" height="14" fill="currentColor">
+                <path d="M946.5 505L560.1 118.8l-25.9-25.9a31.5 31.5 0 00-44.4 0L77.5 505a63.9 63.9 0 00-18.8 46c.4 35.2 29.7 63.3 64.9 63.3h42.5V940h691.8V614.3h43.4c17.1 0 33.2-6.7 45.3-18.8a63.6 63.6 0 0018.7-45.3c0-17-6.7-33.1-18.8-45.2z"/>
+              </svg>
+            </span>
+            Home CMS
+          </div>
+          <div class="ant-menu-item" data-key="for-creators"
+               data-bc='[{"label":"CMS Admin","icon":"home"},{"label":"Pages"},{"label":"For Creators CMS"}]'
+               data-title="For Creators CMS Editor"
+               data-desc="Quản lý nội dung trang For Creators."
+               onclick="activate(this)">
+            <span class="menu-icon">
+              <svg viewBox="64 64 896 896" width="14" height="14" fill="currentColor">
+                <path d="M904 512h-56c-4.4 0-8 3.6-8 8v320H184V184h320c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H144c-17.7 0-32 14.3-32 32v736c0 17.7 14.3 32 32 32h736c17.7 0 32-14.3 32-32V520c0-4.4-3.6-8-8-8z"/><path d="M355.9 534.9L354 653.8c-.1 8.9 7.1 16.2 16 16.2h.4l118-2.9c2.2-.1 4.2-.9 5.7-2.4l415.5-415c3.1-3.1 3.1-8.2 0-11.3L785.1 135.2c-1.6-1.6-3.6-2.3-5.7-2.3s-4.1.8-5.7 2.3l-415 415a8.1 8.1 0 00-2.8 5.7z"/>
+              </svg>
+            </span>
+            For Creators CMS
+          </div>
+        </div>
+      </div>
+
+      <!-- GROUP: Shared Content -->
+      <div class="ant-menu-submenu" id="group-shared">
+        <div class="ant-menu-submenu-title" onclick="toggleGroup('group-shared')">
+          <span class="menu-icon">
+            <svg viewBox="64 64 896 896" width="14" height="14" fill="currentColor">
+              <path d="M752 664c-28.5 0-54.8 10-75.4 26.7L469.4 540.8a160.68 160.68 0 000-57.6l207.2-149.9C697.2 350 723.5 360 752 360c66.2 0 120-53.8 120-120s-53.8-120-120-120-120 53.8-120 120c0 11.6 1.6 22.9 4.7 33.6L439.2 418.5C410.4 391.1 371.6 374 328.8 374 241.1 374 170 445.1 170 532.8c0 87.7 71.1 158.8 158.8 158.8 42.8 0 81.6-17.1 110.4-44.5l197.5 144.9c-3.1 10.7-4.7 22-4.7 33.6 0 66.2 53.8 120 120 120s120-53.8 120-120-53.8-120-120-120zm0-476c28.7 0 52 23.3 52 52s-23.3 52-52 52-52-23.3-52-52 23.3-52 52-52zM328.8 625.6c-51.2 0-92.8-41.6-92.8-92.8s41.6-92.8 92.8-92.8 92.8 41.6 92.8 92.8-41.6 92.8-92.8 92.8zM752 844c-28.7 0-52-23.3-52-52s23.3-52 52-52 52 23.3 52 52-23.3 52-52 52z"/>
+            </svg>
+          </span>
+          Shared Content
+          <span class="submenu-arrow">▾</span>
+        </div>
+        <div class="ant-menu-sub">
+          <div class="ant-menu-item" data-key="exclusive-talents"
+               data-bc='[{"label":"CMS Admin","icon":"home"},{"label":"Shared Content"},{"label":"Exclusive Talents"}]'
+               data-title="Exclusive Talents"
+               data-desc="Shared section hiển thị trên nhiều trang. Thay đổi sẽ ảnh hưởng toàn site."
+               onclick="activate(this)">
+            <span class="menu-icon">
+              <svg viewBox="64 64 896 896" width="14" height="14" fill="currentColor">
+                <path d="M824 672h-98.1c-15.5 0-29.4 9.4-35.2 23.8l-49.3 119.5a8 8 0 01-7.4 4.7H388a8.01 8.01 0 01-7.4-4.7l-49.3-119.5A38.1 38.1 0 00296 672H200c-4.4 0-8 3.6-8 8v12c0 4.4 3.6 8 8 8h96.1c3.6 0 6.9 2.2 8.3 5.6l49.3 119.5A68.03 68.03 0 00416 868h192c28.2 0 53.7-16.7 64.3-42.9l49.3-119.5c1.4-3.4 4.8-5.6 8.3-5.6H824c4.4 0 8-3.6 8-8v-12c0-4.4-3.6-8-8-8zM512 566a56 56 0 100-112 56 56 0 000 112zm204.1-83.4c-6.5-19.8-24.4-32.9-45.1-32.9-12.4 0-24.2 4.9-33.1 13.8l-16 16.1c-10.1 10.2-23.5 15.5-37.5 14.7-22.3-1.2-42.2-14.9-51.3-35.5l-17.3-39.2c-1.6-3.7-5.3-6.1-9.3-6.1-4 0-7.6 2.4-9.3 6.1l-17.4 39.5c-9.1 20.7-29 34.3-51.3 35.5-14.1.7-27.5-4.6-37.5-14.7L356 464.5c-8.9-8.9-20.7-13.8-33.1-13.8-20.7 0-38.6 13.1-45.1 32.9C266.1 517 272 540.7 287.5 555L461 722.2a73.1 73.1 0 0051.3 21.1c19.4 0 37.7-7.5 51.6-21.2l173-166.8c15.7-14.4 21.6-38.1 9.2-72.7z"/>
+              </svg>
+            </span>
+            Exclusive Talents
+          </div>
+          <div class="ant-menu-item" data-key="contact-cta"
+               data-bc='[{"label":"CMS Admin","icon":"home"},{"label":"Shared Content"},{"label":"Contact CTA"}]'
+               data-title="Contact CTA"
+               data-desc="Shared section nút Call-to-Action liên hệ, dùng chung nhiều trang."
+               onclick="activate(this)">
+            <span class="menu-icon">
+              <svg viewBox="64 64 896 896" width="14" height="14" fill="currentColor">
+                <path d="M574 665.4a8.03 8.03 0 00-11.3 0L446.5 781.6c-53.8 53.8-144.6 59.5-204 0-59.5-59.5-53.8-150.2 0-204l116.2-116.2c3.1-3.1 3.1-8.2 0-11.3l-39.8-39.8a8.03 8.03 0 00-11.3 0L191.4 526.5c-84.6 84.6-84.6 221.5 0 306s221.5 84.6 306 0l116.2-116.2c3.1-3.1 3.1-8.2 0-11.3L574 665.4zm258.6-474c-84.6-84.6-221.5-84.6-306 0L410.3 307.6a8.03 8.03 0 000 11.3l39.7 39.7c3.1 3.1 8.2 3.1 11.3 0l116.2-116.2c53.8-53.8 144.6-59.5 204 0 59.5 59.5 53.8 150.2 0 204L665.3 562.6a8.03 8.03 0 000 11.3l39.8 39.8c3.1 3.1 8.2 3.1 11.3 0l116.2-116.2c84.5-84.6 84.5-221.5 0-306.1zM610.1 372.3a8.03 8.03 0 00-11.3 0L372.3 598.9a8.03 8.03 0 000 11.3l39.6 39.6c3.1 3.1 8.2 3.1 11.3 0l226.4-226.4c3.1-3.1 3.1-8.2 0-11.3l-39.5-39.8z"/>
+              </svg>
+            </span>
+            Contact CTA
+          </div>
+        </div>
+      </div>
+
+      <!-- GROUP: Global Settings -->
+      <div class="ant-menu-submenu" id="group-settings">
+        <div class="ant-menu-submenu-title" onclick="toggleGroup('group-settings')">
+          <span class="menu-icon">
+            <svg viewBox="64 64 896 896" width="14" height="14" fill="currentColor">
+              <path d="M924.8 625.7l-65.5-56c3.1-19 4.7-38.4 4.7-57.8s-1.6-38.8-4.7-57.8l65.5-56a32.03 32.03 0 009.3-35.2l-.9-2.6a443.74 443.74 0 00-79.7-137.9l-1.8-2.1a32.12 32.12 0 00-35.1-9.5l-81.3 28.9c-30-24.6-63.5-44-99.7-57.6l-15.7-85a32.05 32.05 0 00-25.8-25.7l-2.7-.5c-52.1-9.4-106.2-9.4-158.4 0l-2.7.5a32.05 32.05 0 00-25.8 25.7l-15.8 85.4a351.86 351.86 0 00-99 57.4l-81.9-29.1a32 32 0 00-35.1 9.5l-1.8 2.1a446.02 446.02 0 00-79.7 137.9l-.9 2.6c-4.5 12.5-.8 26.5 9.3 35.2l66.3 56.6c-3.1 18.8-4.6 38-4.6 57.1 0 19.2 1.5 38.4 4.6 57.1L99 625.5a32.03 32.03 0 00-9.3 35.2l.9 2.6c18.1 50.4 44.9 96.9 79.7 137.9l1.8 2.1a32.12 32.12 0 0035.1 9.5l81.9-29.1c29.8 24.5 63.1 43.9 99 57.4l15.8 85.4a32.05 32.05 0 0025.8 25.7l2.7.5a449.4 449.4 0 00158.4 0l2.7-.5a32.05 32.05 0 0025.8-25.7l15.7-85a350 350 0 0099.7-57.6l81.3 28.9a32 32 0 0035.1-9.5l1.8-2.1c34.8-41.1 61.6-87.5 79.7-137.9l.9-2.6c4.5-12.3.8-26.3-9.3-35zM512 651c-77.4 0-140-62.6-140-140s62.6-140 140-140 140 62.6 140 140-62.6 140-140 140z"/>
+            </svg>
+          </span>
+          Global Settings
+          <span class="submenu-arrow">▾</span>
+        </div>
+        <div class="ant-menu-sub">
+          <div class="ant-menu-item" data-key="settings-header"
+               data-bc='[{"label":"CMS Admin","icon":"home"},{"label":"Global Settings"},{"label":"Header"}]'
+               data-title="Global Header"
+               data-desc="Cấu hình navigation bar, logo và các liên kết header toàn site."
+               onclick="activate(this)">
+            <span class="menu-icon">
+              <svg viewBox="64 64 896 896" width="14" height="14" fill="currentColor">
+                <path d="M928 160H96c-17.7 0-32 14.3-32 32v160c0 17.7 14.3 32 32 32h832c17.7 0 32-14.3 32-32V192c0-17.7-14.3-32-32-32zm-32 160H128V224h768v96zM928 480H96c-17.7 0-32 14.3-32 32v320c0 17.7 14.3 32 32 32h832c17.7 0 32-14.3 32-32V512c0-17.7-14.3-32-32-32zm-32 320H128V544h768v256z"/>
+              </svg>
+            </span>
+            Header
+          </div>
+          <div class="ant-menu-item" data-key="settings-footer"
+               data-bc='[{"label":"CMS Admin","icon":"home"},{"label":"Global Settings"},{"label":"Footer"}]'
+               data-title="Global Footer"
+               data-desc="Cấu hình footer, các nhóm link và thông tin bản quyền."
+               onclick="activate(this)">
+            <span class="menu-icon">
+              <svg viewBox="64 64 896 896" width="14" height="14" fill="currentColor">
+                <path d="M928 640H96c-17.7 0-32 14.3-32 32v160c0 17.7 14.3 32 32 32h832c17.7 0 32-14.3 32-32V672c0-17.7-14.3-32-32-32zm-32 160H128V704h768v96zM928 192H96c-17.7 0-32 14.3-32 32v320c0 17.7 14.3 32 32 32h832c17.7 0 32-14.3 32-32V224c0-17.7-14.3-32-32-32zm-32 320H128V256h768v256z"/>
+              </svg>
+            </span>
+            Footer
+          </div>
+          <div class="ant-menu-item" data-key="settings-seo"
+               data-bc='[{"label":"CMS Admin","icon":"home"},{"label":"Global Settings"},{"label":"SEO Defaults"}]'
+               data-title="SEO Defaults"
+               data-desc="Các giá trị SEO mặc định: OG image, Twitter card, meta description."
+               onclick="activate(this)">
+            <span class="menu-icon">
+              <svg viewBox="64 64 896 896" width="14" height="14" fill="currentColor">
+                <path d="M909.6 854.5L649.9 594.8C690.2 542.7 712 479 712 412c0-80.2-31.3-155.4-87.9-212.1-56.6-56.7-132-87.9-212.1-87.9s-155.5 31.3-212.1 87.9C143.2 256.5 112 331.8 112 412c0 80.1 31.3 155.5 87.9 212.1C256.5 680.8 331.8 712 412 712c67 0 130.6-21.8 182.7-62l259.7 259.6a8.2 8.2 0 0011.6 0l43.6-43.5a8.2 8.2 0 000-11.6zM570.4 570.4C528 612.7 471.8 636 412 636s-116-23.3-158.4-65.6C211.3 528 188 471.8 188 412s23.3-116.1 65.6-158.4C296 211.3 352.2 188 412 188s116.1 23.2 158.4 65.6S636 352.2 636 412s-23.3 116.1-65.6 158.4z"/>
+              </svg>
+            </span>
+            SEO Defaults
+          </div>
+          <div class="ant-menu-item" data-key="settings-metadata"
+               data-bc='[{"label":"CMS Admin","icon":"home"},{"label":"Global Settings"},{"label":"Site Metadata"}]'
+               data-title="Site Metadata"
+               data-desc="Tên site, favicon, canonical URL và các metadata toàn cục."
+               onclick="activate(this)">
+            <span class="menu-icon">
+              <svg viewBox="64 64 896 896" width="14" height="14" fill="currentColor">
+                <path d="M854 342h-52v-82c0-45.3-33.4-82-74.4-82H326.6c-38.6 0-70.5 32.3-74.2 73.9H170c-52 0-94 43.9-94 98v536c0 54.1 42 98 94 98h684c52 0 94-43.9 94-98V440c0-54.1-42-98-94-98zm-550-82c0-14 10.5-26 24.6-26h400.9C742.9 234 754 246 754 260v82H304v-82zm-130 120h24v478H196c-26.5 0-48-21.9-48-50V428c0-27.1 20.6-48 48-48zm626 534H204v-390h646v350c0 22.1-17.9 40-46 40zm48-446v-8c0-28 21.9-52 48-52h6c26.1 0 48 24.1 48 52v8H694z"/>
+              </svg>
+            </span>
+            Site Metadata
+          </div>
+        </div>
+      </div>
+
+      <!-- GROUP: Tools -->
+      <div class="ant-menu-submenu" id="group-tools">
+        <div class="ant-menu-submenu-title" onclick="toggleGroup('group-tools')">
+          <span class="menu-icon">
+            <svg viewBox="64 64 896 896" width="14" height="14" fill="currentColor">
+              <path d="M876.6 239.5c-.5-.9-1.2-1.8-2-2.5-5-5-13.1-5-18.1 0L684.2 409.3l-67.9-67.9L788.7 169c.8-.8 1.4-1.6 2-2.5 3.6-6.1 1.6-13.9-4.5-17.5-98.2-58-226.8-44.7-311.3 39.7-67 67-89.2 162-66.5 247.4l-293 293c-3 3-2.8 7.9.3 11l169.7 169.7c3.1 3.1 8.1 3.3 11 .3l292.9-292.9c85.5 22.8 180.5.7 247.6-66.4 84.4-84.5 97.7-213.1 39.7-311.3zM786 499.8c-58.1 58.1-145.3 69.3-214.6 33.6l-8.8 8.8-.1-.1-274.6 274.6-75.3-75.3 274.6-274.6-.1-.1 8.8-8.8C461.4 388 472.6 300.8 530.7 242.7c55.1-55.1 136.5-70.6 207.5-46.4l-120 120c-5 5-7.9 11.7-7.9 18.7v89.7c0 14.5 11.7 26.2 26.2 26.2h89.7c7 0 13.7-2.8 18.7-7.9l120-120c24.3 71.1 8.8 152.5-46.4 207.6z"/>
+            </svg>
+          </span>
+          Tools
+          <span class="submenu-arrow">▾</span>
+        </div>
+        <div class="ant-menu-sub">
+          <div class="ant-menu-item" data-key="assets"
+               data-bc='[{"label":"CMS Admin","icon":"home"},{"label":"Tools"},{"label":"Asset Manager"}]'
+               data-title="Asset Manager"
+               data-desc="Quản lý ảnh đã upload, theo dõi dung lượng Supabase Storage."
+               onclick="activate(this)">
+            <span class="menu-icon">
+              <svg viewBox="64 64 896 896" width="14" height="14" fill="currentColor">
+                <path d="M928 160H96c-17.7 0-32 14.3-32 32v640c0 17.7 14.3 32 32 32h832c17.7 0 32-14.3 32-32V192c0-17.7-14.3-32-32-32zm-40 632H136v-39.9l138.5-164.3 150.1 178L664 486.8l224 267.8V792zm0-116.3L664 381.6c-3.2-3.8-9-3.8-12.2 0L424.6 674.4l-144-170.7c-3.2-3.8-9-3.8-12.2 0L136 652.7V232h752v443.7z"/>
+              </svg>
+            </span>
+            Asset Manager
+          </div>
+          <div class="ant-menu-item" data-key="audit"
+               data-bc='[{"label":"CMS Admin","icon":"home"},{"label":"Tools"},{"label":"Audit Log"}]'
+               data-title="Audit Log"
+               data-desc="Lịch sử thay đổi: ai đã chỉnh sửa và publish gì, khi nào."
+               onclick="activate(this)">
+            <span class="menu-icon">
+              <svg viewBox="64 64 896 896" width="14" height="14" fill="currentColor">
+                <path d="M280 752h80c4.4 0 8-3.6 8-8v-48c0-4.4-3.6-8-8-8h-80c-4.4 0-8 3.6-8 8v48c0 4.4 3.6 8 8 8zm0-144h80c4.4 0 8-3.6 8-8v-48c0-4.4-3.6-8-8-8h-80c-4.4 0-8 3.6-8 8v48c0 4.4 3.6 8 8 8zm0-144h80c4.4 0 8-3.6 8-8v-48c0-4.4-3.6-8-8-8h-80c-4.4 0-8 3.6-8 8v48c0 4.4 3.6 8 8 8zM176 880h672V144H176v736zm84-576h120v-48h-120v-64h510v64H550v48h120v384H260V304zm234 416h90V400h-90v304z"/>
+              </svg>
+            </span>
+            Audit Log
+          </div>
+        </div>
+      </div>
+
+    </nav><!-- /ant-menu -->
+
+    <!-- Storage footer widget -->
+    <div class="sidebar-footer">
+      <div class="storage-header">
+        <span class="storage-label">Storage</span>
+        <span class="storage-pct">23%</span>
+      </div>
+      <div class="storage-track"><div class="storage-fill"></div></div>
+      <div class="storage-nums">
+        <span>230 MB / 1 GB</span>
+        <span style="color:#7c3aed; font-weight:600;">Free</span>
+      </div>
+      <a class="storage-link" onclick="activate(document.querySelector('[data-key=assets]'))">
+        → Quản lý assets
+      </a>
+    </div>
+
+  </aside><!-- /sidebar -->
+
+  <!-- ══════════════════════════════════════════
+       MAIN CONTENT
+  ═══════════════════════════════════════════ -->
+  <main class="content">
+
+    <!-- Breadcrumb (dynamic) -->
+    <nav class="breadcrumb" id="breadcrumb">
+      <!-- filled by JS -->
+    </nav>
+
+    <!-- Page header (dynamic) -->
+    <div class="page-header">
+      <h1 id="page-title">CMS Overview</h1>
+      <p id="page-desc">Tổng quan CMS, recent activity và quick links.</p>
+      <div class="page-header-meta">
+        <span class="tag tag-purple">Role: content_admin</span>
+        <span class="tag tag-green">● Published</span>
+      </div>
+    </div>
+
+    <!-- Editor content skeleton -->
+    <div id="page-content">
+
+      <!-- Dashboard default content -->
+      <div class="editor-card" id="default-content">
+        <div class="editor-card-header">
+          <h3><span class="card-icon">📊</span> Quick Links</h3>
+        </div>
+        <div class="editor-card-body" style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <div style="padding:14px; background:#fafafa; border:1px solid #f0f0f0; border-radius:6px; cursor:pointer;" onclick="activate(document.querySelector('[data-key=home-cms]'))">
+            <div style="font-size:12px; font-weight:600; margin-bottom:4px;">🏠 Home CMS</div>
+            <div style="font-size:12px; color:#888;">Hero, Partners, Competencies...</div>
+          </div>
+          <div style="padding:14px; background:#fafafa; border:1px solid #f0f0f0; border-radius:6px; cursor:pointer;" onclick="activate(document.querySelector('[data-key=for-creators]'))">
+            <div style="font-size:12px; font-weight:600; margin-bottom:4px;">✏️ For Creators</div>
+            <div style="font-size:12px; color:#888;">Hero, Benefits, CTA...</div>
+          </div>
+          <div style="padding:14px; background:#fafafa; border:1px solid #f0f0f0; border-radius:6px; cursor:pointer;" onclick="activate(document.querySelector('[data-key=assets]'))">
+            <div style="font-size:12px; font-weight:600; margin-bottom:4px;">🖼 Asset Manager</div>
+            <div style="font-size:12px; color:#888;">230 MB / 1 GB dùng</div>
+          </div>
+          <div style="padding:14px; background:#fafafa; border:1px solid #f0f0f0; border-radius:6px; cursor:pointer;" onclick="activate(document.querySelector('[data-key=audit]'))">
+            <div style="font-size:12px; font-weight:600; margin-bottom:4px;">📋 Audit Log</div>
+            <div style="font-size:12px; color:#888;">3 thay đổi hôm nay</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+</div><!-- /app -->
+
+<!-- Annotations -->
+<div class="annotations">
+  <div class="ann-item">
+    <div class="ann-num">1</div>
+    <h4>Sidebar trái — sticky, inline mode</h4>
+    <p>Ant Design <code>Menu</code> inline với SubMenu groups. Expand/collapse từng nhóm. Active item có right-border highlight + background tím nhạt.</p>
+  </div>
+  <div class="ann-item">
+    <div class="ann-num">2</div>
+    <h4>Breadcrumb động theo path</h4>
+    <p>Click menu item → breadcrumb tự cập nhật đúng cấu trúc <code>CMS Admin / Group / Page</code>. Có thể click từng segment để navigate ngược.</p>
+  </div>
+  <div class="ann-item">
+    <div class="ann-num">3</div>
+    <h4>Scalable menu structure</h4>
+    <p>4 nhóm: <strong>Pages</strong> · <strong>Shared Content</strong> · <strong>Global Settings</strong> · <strong>Tools</strong>. Thêm page mới chỉ cần append vào đúng group — không ảnh hưởng cấu trúc.</p>
+  </div>
+</div>
+
+<script>
+// ── Home SVG path for breadcrumb ──
+const HOME_SVG = `<svg viewBox="64 64 896 896" width="13" height="13" fill="currentColor" style="display:inline-block; vertical-align:-2px; margin-right:4px;"><path d="M946.5 505L560.1 118.8l-25.9-25.9a31.5 31.5 0 00-44.4 0L77.5 505a63.9 63.9 0 00-18.8 46c.4 35.2 29.7 63.3 64.9 63.3h42.5V940h691.8V614.3h43.4c17.1 0 33.2-6.7 45.3-18.8a63.6 63.6 0 0018.7-45.3c0-17-6.7-33.1-18.8-45.2z"/></svg>`;
+
+function renderBreadcrumb(segments) {
+  const bc = document.getElementById('breadcrumb');
+  bc.innerHTML = segments.map((seg, i) => {
+    const isLast = i === segments.length - 1;
+    const icon = i === 0 ? HOME_SVG : '';
+    if (isLast) {
+      return `<span class="current">${icon}${seg.label}</span>`;
+    }
+    return `<a href="#">${icon}${seg.label}</a><span class="sep">›</span>`;
+  }).join('');
+}
+
+function activate(el) {
+  if (!el) return;
+
+  // Deactivate all
+  document.querySelectorAll('.ant-menu-item').forEach(i => i.classList.remove('active'));
+
+  // Activate clicked
+  el.classList.add('active');
+
+  // Auto-open parent submenu
+  const sub = el.closest('.ant-menu-submenu');
+  if (sub && !sub.classList.contains('open')) {
+    sub.classList.add('open');
+  }
+
+  // Update breadcrumb
+  const bcData = JSON.parse(el.dataset.bc || '[]');
+  renderBreadcrumb(bcData);
+
+  // Update page title/desc
+  document.getElementById('page-title').textContent = el.dataset.title || '';
+  document.getElementById('page-desc').textContent = el.dataset.desc || '';
+
+  // Swap content
+  const content = document.getElementById('page-content');
+  content.innerHTML = buildContent(el.dataset.key);
+}
+
+function toggleGroup(id) {
+  document.getElementById(id).classList.toggle('open');
+}
+
+function buildContent(key) {
+  if (key === 'home-cms') {
+    return `
+      <div class="editor-card">
+        <div class="editor-card-header">
+          <h3><span class="card-icon">🎯</span> Hero Section</h3>
+          <div><button class="outline-btn">Preview</button><button class="save-btn">Save</button></div>
+        </div>
+        <div class="editor-card-body">
+          <div style="margin-bottom:12px;" class="form-grid">
+            <div class="form-field"><label>Title</label><div class="fake-textarea"></div></div>
+            <div class="form-field"><label>Subtext</label><div class="fake-textarea"></div></div>
+          </div>
+          <div class="form-grid">
+            <div class="form-field"><label>Media Image</label><div class="fake-image-field">📎 Upload · URL</div></div>
+            <div class="form-field"><label>Image Alt</label><div class="fake-input"></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="editor-card">
+        <div class="editor-card-header">
+          <h3><span class="card-icon">🤝</span> Partners Section</h3>
+          <div><button class="save-btn">Save</button></div>
+        </div>
+        <div class="editor-card-body">
+          <div class="form-grid">
+            <div class="form-field"><label>Partner Name</label><div class="fake-input"></div></div>
+            <div class="form-field"><label>Logo Image</label><div class="fake-image-field">📎 Upload · URL</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="editor-card" style="opacity:.5">
+        <div class="editor-card-header"><h3><span class="card-icon">⬇️</span> Thêm sections bên dưới...</h3></div>
+        <div class="editor-card-body" style="height:30px;"></div>
+      </div>
+    `;
+  }
+  if (key === 'assets') {
+    return `
+      <div class="editor-card">
+        <div class="editor-card-header"><h3><span class="card-icon">📊</span> Storage Usage</h3></div>
+        <div class="editor-card-body">
+          <div style="margin-bottom:8px; display:flex; justify-content:space-between; font-size:12px; color:#888;">
+            <span>230 MB dùng · 47 files</span><span style="font-weight:600; color:#7c3aed">23% · Free (1 GB)</span>
+          </div>
+          <div style="height:6px; background:#f0f0f0; border-radius:99px; overflow:hidden;">
+            <div style="width:23%; height:100%; background:#7c3aed; border-radius:99px;"></div>
+          </div>
+        </div>
+      </div>
+      <div class="editor-card">
+        <div class="editor-card-header">
+          <h3><span class="card-icon">🖼</span> Uploaded Assets (47)</h3>
+          <input placeholder="Tìm theo tên..." style="height:28px; padding:0 10px; border:1px solid #d9d9d9; border-radius:6px; font-size:12px; width:180px;" />
+        </div>
+        <div class="editor-card-body">
+          <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:10px;">
+            ${[1,2,3,4,5,6,7,8].map(i => `
+              <div style="border:1px solid #f0f0f0; border-radius:6px; overflow:hidden;">
+                <div style="height:70px; background:linear-gradient(135deg, #f3f0ff, #ede9fe); display:flex; align-items:center; justify-content:center; font-size:24px;">🖼</div>
+                <div style="padding:6px 8px; font-size:10px; color:#888; text-overflow:ellipsis; overflow:hidden; white-space:nowrap;">image-${i}.jpg</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      </div>
+    `;
+  }
+  if (key === 'settings-header') {
+    return `
+      <div class="editor-card">
+        <div class="editor-card-header">
+          <h3><span class="card-icon">🔲</span> Header Config</h3>
+          <div><button class="outline-btn">Publish</button><button class="save-btn">Save Draft</button></div>
+        </div>
+        <div class="editor-card-body">
+          <div class="form-grid">
+            <div class="form-field"><label>Logo Text</label><div class="fake-input"></div></div>
+            <div class="form-field"><label>Logo Image</label><div class="fake-image-field">📎 Upload · URL</div></div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+  // Default skeleton for other pages
+  return `
+    <div class="editor-card">
+      <div class="editor-card-header">
+        <h3><span class="card-icon">📝</span> Editor</h3>
+        <button class="save-btn">Save</button>
+      </div>
+      <div class="editor-card-body">
+        <div class="form-grid">
+          <div class="form-field"><label>Field 1</label><div class="fake-input"></div></div>
+          <div class="form-field"><label>Field 2</label><div class="fake-input"></div></div>
+        </div>
+        <div class="form-grid">
+          <div class="form-field"><label>Field 3</label><div class="fake-textarea"></div></div>
+          <div class="form-field"><label>Image</label><div class="fake-image-field">📎 Upload · URL</div></div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// Init
+renderBreadcrumb([{ label: 'CMS Admin', icon: 'home' }]);
+</script>
+
+</body>
+</html>
