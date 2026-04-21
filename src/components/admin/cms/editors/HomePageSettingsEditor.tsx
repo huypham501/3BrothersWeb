@@ -11,6 +11,8 @@ import { AdminTextarea as Textarea } from '@/components/admin/controls/AdminText
 import { AdminButton as Button } from '@/components/admin/layout/AdminPrimitives';
 import { AdminAlert as Alert, AdminAlertDescription as AlertDescription } from '@/components/admin/layout/AdminPrimitives';
 import { FooterRow, FormStack, SelectInput } from './EditorLayout';
+import { CmsFieldHint } from '@/components/admin/cms/ux/CmsFieldHint';
+import { getCmsFieldUxSpec } from '@/lib/cms/ux/field-ux-spec';
 import { z } from 'zod';
 
 export function HomePageSettingsEditor({ page }: { page: CmsPage }) {
@@ -50,6 +52,8 @@ export function HomePageSettingsEditor({ page }: { page: CmsPage }) {
     }
   };
 
+  const ux = (fieldPath: string) => getCmsFieldUxSpec('home_page_settings', fieldPath);
+
   return (
     <Form {...form}>
       <FormStack onSubmit={form.handleSubmit(onSubmit)}>
@@ -64,10 +68,11 @@ export function HomePageSettingsEditor({ page }: { page: CmsPage }) {
               name="internal_name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Internal Name</FormLabel>
+                  <FormLabel>{ux('internal_name').label ?? 'Internal Name'}</FormLabel>
                   <FormControl>
                     <Input placeholder="Home - Main" {...field} />
                   </FormControl>
+                  <CmsFieldHint formId="home_page_settings" fieldPath="internal_name" />
                   <FormMessage />
                 </FormItem>
               )}
@@ -77,13 +82,14 @@ export function HomePageSettingsEditor({ page }: { page: CmsPage }) {
               name="status"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Status</FormLabel>
+                  <FormLabel>{ux('status').label ?? 'Status'}</FormLabel>
                   <FormControl>
                       <SelectInput {...field}>
                       <option value="draft">Draft</option>
                       <option value="published">Published</option>
                       </SelectInput>
                   </FormControl>
+                  <CmsFieldHint formId="home_page_settings" fieldPath="status" />
                   <FormMessage />
                 </FormItem>
               )}
@@ -112,10 +118,11 @@ export function HomePageSettingsEditor({ page }: { page: CmsPage }) {
               name="canonical_url"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Canonical URL</FormLabel>
+                  <FormLabel>{ux('canonical_url').label ?? 'Canonical URL'}</FormLabel>
                   <FormControl>
                     <Input {...field} />
                   </FormControl>
+                  <CmsFieldHint formId="home_page_settings" fieldPath="canonical_url" />
                   <FormMessage />
                 </FormItem>
               )}

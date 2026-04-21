@@ -9,6 +9,8 @@ import { CmsGlobalSetting, globalSiteMetadataSchema, SCHEMA_KEYS } from '@/lib/c
 import { saveGlobalSettingDraft, publishGlobalSetting } from '@/lib/cms/actions';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/admin/controls/AdminForm';
 import { AdminInput as Input } from '@/components/admin/controls/AdminInput';
+import { CmsFieldHint } from '@/components/admin/cms/ux/CmsFieldHint';
+import { getCmsFieldUxSpec } from '@/lib/cms/ux/field-ux-spec';
 import {
   AdminAlert,
   AdminAlertDescription,
@@ -89,6 +91,8 @@ export function GlobalSiteMetadataEditor({
     }
   };
 
+  const ux = (fieldPath: string) => getCmsFieldUxSpec('global_site_metadata', fieldPath);
+
   return (
     <Form {...form}>
       <FormRoot onSubmit={form.handleSubmit(onSaveDraft)}>
@@ -144,10 +148,20 @@ export function GlobalSiteMetadataEditor({
 
         <TwoColumnGrid>
           <FormField control={form.control} name="site_url" render={({ field }) => (
-            <FormItem><FormLabel>Site URL</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+            <FormItem>
+              <FormLabel>{ux('site_url').label ?? 'Site URL'}</FormLabel>
+              <FormControl><Input {...field} /></FormControl>
+              <CmsFieldHint formId="global_site_metadata" fieldPath="site_url" />
+              <FormMessage />
+            </FormItem>
           )} />
           <FormField control={form.control} name="default_canonical_base" render={({ field }) => (
-            <FormItem><FormLabel>Default Canonical Base</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+            <FormItem>
+              <FormLabel>{ux('default_canonical_base').label ?? 'Default Canonical Base'}</FormLabel>
+              <FormControl><Input {...field} /></FormControl>
+              <CmsFieldHint formId="global_site_metadata" fieldPath="default_canonical_base" />
+              <FormMessage />
+            </FormItem>
           )} />
         </TwoColumnGrid>
 

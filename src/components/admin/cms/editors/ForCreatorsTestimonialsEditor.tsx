@@ -11,6 +11,8 @@ import { AdminTextarea as Textarea } from '@/components/admin/controls/AdminText
 import { AdminButton as Button } from '@/components/admin/layout/AdminPrimitives';
 import { AdminSwitch as Switch } from '@/components/admin/controls/AdminSwitch';
 import { AdminAlert as Alert, AdminAlertDescription as AlertDescription } from '@/components/admin/layout/AdminPrimitives';
+import { CmsFieldHint } from '@/components/admin/cms/ux/CmsFieldHint';
+import { getCmsFieldUxSpec } from '@/lib/cms/ux/field-ux-spec';
 import {
   FooterRow,
   FormStack,
@@ -64,6 +66,8 @@ export function ForCreatorsTestimonialsEditor({ pageId, section }: { pageId: str
     }
   };
 
+  const ux = (fieldPath: string) => getCmsFieldUxSpec('for_creators_testimonials', fieldPath);
+
   return (
     <Form {...form}>
       <FormStack onSubmit={form.handleSubmit(onSubmit)}>
@@ -90,7 +94,12 @@ export function ForCreatorsTestimonialsEditor({ pageId, section }: { pageId: str
 
         <TwoColumnGrid>
           <FormField control={form.control} name="superlabel" render={({ field }) => (
-            <FormItem><FormLabel>Superlabel</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+            <FormItem>
+              <FormLabel>{ux('superlabel').label ?? 'Superlabel'}</FormLabel>
+              <FormControl><Input {...field} /></FormControl>
+              <CmsFieldHint formId="for_creators_testimonials" fieldPath="superlabel" />
+              <FormMessage />
+            </FormItem>
           )} />
           <FormField control={form.control} name="section_title" render={({ field }) => (
             <FormItem><FormLabel>Section Title</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>

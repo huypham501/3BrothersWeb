@@ -21,6 +21,8 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { AdminInput as Input } from '@/components/admin/controls/AdminInput';
 import { AdminTextarea as Textarea } from '@/components/admin/controls/AdminTextarea';
 import { AdminAlert as Alert, AdminAlertDescription as AlertDescription } from '@/components/admin/layout/AdminPrimitives';
+import { CmsFieldHint } from '@/components/admin/cms/ux/CmsFieldHint';
+import { getCmsFieldUxSpec } from '@/lib/cms/ux/field-ux-spec';
 import {
   FooterRow,
   FormStack,
@@ -166,6 +168,7 @@ export function BlogPostEditor({ post, mode, role, canPublish }: BlogPostEditorP
 
   const hasUnpublished = post?.has_unpublished_changes ?? true;
   const keywordsString = form.watch('keywords').join(', ');
+  const ux = (fieldPath: string) => getCmsFieldUxSpec('blog_post', fieldPath);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
@@ -220,7 +223,7 @@ export function BlogPostEditor({ post, mode, role, canPublish }: BlogPostEditorP
             name="is_featured"
             render={({ field }) => (
               <ToggleFormItem>
-                <FormLabel>Featured Post</FormLabel>
+                <FormLabel>{ux('is_featured').label ?? 'Featured Post'}</FormLabel>
                 <FormControl>
                   <Switch
                     checked={field.value}
@@ -229,6 +232,7 @@ export function BlogPostEditor({ post, mode, role, canPublish }: BlogPostEditorP
                     unCheckedChildren="Normal"
                   />
                 </FormControl>
+                <CmsFieldHint formId="blog_post" fieldPath="is_featured" />
               </ToggleFormItem>
             )}
           />
@@ -340,8 +344,9 @@ export function BlogPostEditor({ post, mode, role, canPublish }: BlogPostEditorP
 
                 <FormField control={form.control} name={`content.${index}.id`} render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Section ID</FormLabel>
+                    <FormLabel>{ux('content.id').label ?? 'Section ID'}</FormLabel>
                     <FormControl><Input {...field} placeholder="e.g. intro, research" style={{ fontFamily: 'monospace', fontSize: 12 }} /></FormControl>
+                    <CmsFieldHint formId="blog_post" fieldPath="content.id" />
                     <FormMessage />
                   </FormItem>
                 )} />
@@ -393,8 +398,9 @@ export function BlogPostEditor({ post, mode, role, canPublish }: BlogPostEditorP
 
                 <FormField control={form.control} name={`mid_content.${index}.id`} render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Section ID</FormLabel>
+                    <FormLabel>{ux('mid_content.id').label ?? 'Section ID'}</FormLabel>
                     <FormControl><Input {...field} placeholder="e.g. packing, health" style={{ fontFamily: 'monospace', fontSize: 12 }} /></FormControl>
+                    <CmsFieldHint formId="blog_post" fieldPath="mid_content.id" />
                     <FormMessage />
                   </FormItem>
                 )} />

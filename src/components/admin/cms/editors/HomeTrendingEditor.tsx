@@ -11,6 +11,8 @@ import { AdminImageUpload } from '@/components/admin/controls/AdminImageUpload';
 import { AdminButton as Button } from '@/components/admin/layout/AdminPrimitives';
 import { AdminSwitch as Switch } from '@/components/admin/controls/AdminSwitch';
 import { AdminAlert as Alert, AdminAlertDescription as AlertDescription, AdminAlertTitle as AlertTitle } from '@/components/admin/layout/AdminPrimitives';
+import { CmsFieldHint } from '@/components/admin/cms/ux/CmsFieldHint';
+import { getCmsFieldUxSpec } from '@/lib/cms/ux/field-ux-spec';
 import {
   ErrorText,
   FooterRow,
@@ -73,6 +75,8 @@ export function HomeTrendingEditor({ pageId, section }: { pageId: string, sectio
     }
   };
 
+  const ux = (fieldPath: string) => getCmsFieldUxSpec('home_trending', fieldPath);
+
   return (
     <Form {...form}>
       <FormStack onSubmit={form.handleSubmit(onSubmit)}>
@@ -116,13 +120,14 @@ export function HomeTrendingEditor({ pageId, section }: { pageId: string, sectio
             name="news_source"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>News Source</FormLabel>
+                <FormLabel>{ux('news_source').label ?? 'News Source'}</FormLabel>
                 <FormControl>
                   <SelectInput {...field}>
                     <option value="manual">Manual Items</option>
                     <option value="auto_latest">Auto Latest Blog Posts</option>
                   </SelectInput>
                 </FormControl>
+                <CmsFieldHint formId="home_trending" fieldPath="news_source" />
                 <FormMessage />
               </FormItem>
             )}
@@ -164,10 +169,11 @@ export function HomeTrendingEditor({ pageId, section }: { pageId: string, sectio
             name="news_limit"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Number of Auto-fetched Items</FormLabel>
+                <FormLabel>{ux('news_limit').label ?? 'Number of Auto-fetched Items'}</FormLabel>
                 <FormControl>
                   <Input type="number" {...field} onChange={e => field.onChange(parseInt(e.target.value) || 0)} />
                 </FormControl>
+                <CmsFieldHint formId="home_trending" fieldPath="news_limit" />
                 <FormMessage />
               </FormItem>
             )}
@@ -204,10 +210,11 @@ export function HomeTrendingEditor({ pageId, section }: { pageId: string, sectio
                     name={`news_items.${index}.date`}
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Date string</FormLabel>
+                        <FormLabel>{ux('news_items.date').label ?? 'Date string'}</FormLabel>
                         <FormControl>
                           <Input {...field} placeholder="12 JAN 2026" />
                         </FormControl>
+                        <CmsFieldHint formId="home_trending" fieldPath="news_items.date" />
                         <FormMessage />
                       </FormItem>
                     )}

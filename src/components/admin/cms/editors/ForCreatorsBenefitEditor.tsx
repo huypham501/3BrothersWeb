@@ -11,6 +11,8 @@ import { AdminTextarea as Textarea } from '@/components/admin/controls/AdminText
 import { AdminButton as Button } from '@/components/admin/layout/AdminPrimitives';
 import { AdminSwitch as Switch } from '@/components/admin/controls/AdminSwitch';
 import { AdminAlert as Alert, AdminAlertDescription as AlertDescription } from '@/components/admin/layout/AdminPrimitives';
+import { CmsFieldHint } from '@/components/admin/cms/ux/CmsFieldHint';
+import { getCmsFieldUxSpec } from '@/lib/cms/ux/field-ux-spec';
 import {
   FormStack,
   HeaderRow,
@@ -69,6 +71,8 @@ export function ForCreatorsBenefitEditor({ pageId, section }: { pageId: string; 
     }
   };
 
+  const ux = (fieldPath: string) => getCmsFieldUxSpec('for_creators_benefit', fieldPath);
+
   return (
     <Form {...form}>
       <FormStack onSubmit={form.handleSubmit(onSubmit)}>
@@ -116,10 +120,11 @@ export function ForCreatorsBenefitEditor({ pageId, section }: { pageId: string; 
             <ItemCard key={item.id}>
               <FormField control={form.control} name={`benefits.${index}.id`} render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Benefit Key</FormLabel>
+                  <FormLabel>{ux('benefits.id').label ?? 'Benefit Key'}</FormLabel>
                   <FormControl>
                     <Input {...field} readOnly />
                   </FormControl>
+                  <CmsFieldHint formId="for_creators_benefit" fieldPath="benefits.id" />
                 </FormItem>
               )} />
 

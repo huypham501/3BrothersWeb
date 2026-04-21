@@ -19,6 +19,8 @@ import {
   AdminButton,
 } from '@/components/admin/layout/AdminPrimitives';
 import { SelectInput } from '@/components/admin/cms/editors/EditorLayout';
+import { CmsFieldHint } from '@/components/admin/cms/ux/CmsFieldHint';
+import { getCmsFieldUxSpec } from '@/lib/cms/ux/field-ux-spec';
 
 type FormValues = z.infer<typeof globalSeoDefaultsSchema>;
 
@@ -93,6 +95,8 @@ export function GlobalSeoDefaultsEditor({
       setIsPublishing(false);
     }
   };
+
+  const ux = (fieldPath: string) => getCmsFieldUxSpec('global_seo_defaults', fieldPath);
 
   return (
     <Form {...form}>
@@ -206,7 +210,12 @@ export function GlobalSeoDefaultsEditor({
             </FormItem>
           )} />
           <FormField control={form.control} name="default_robots" render={({ field }) => (
-            <FormItem><FormLabel>Default Robots</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+            <FormItem>
+              <FormLabel>{ux('default_robots').label ?? 'Default Robots'}</FormLabel>
+              <FormControl><Input {...field} /></FormControl>
+              <CmsFieldHint formId="global_seo_defaults" fieldPath="default_robots" />
+              <FormMessage />
+            </FormItem>
           )} />
         </TwoColumnGrid>
       </FormRoot>
