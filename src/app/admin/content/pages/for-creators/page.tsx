@@ -1,14 +1,13 @@
 import { getForCreatorsPageData } from '@/lib/cms/queries';
 import { ForCreatorsPageEditor } from '@/components/admin/cms/ForCreatorsPageEditor';
-import { requireAdminUser } from '@/lib/admin/require-admin-user';
-import { hasCmsCapability } from '@/lib/cms/constants/roles';
 import { AdminShell } from '@/components/admin/layout/AdminShell';
 import { AdminPageHeader } from '@/components/admin/layout/AdminPageHeader';
+import { getAdminUiContext } from '@/lib/admin/require-admin-user';
 
 export const dynamic = 'force-dynamic';
 
 export default async function ForCreatorsCmsAdminPage() {
-  const actor = await requireAdminUser('/admin/content/pages/for-creators', 'edit_draft');
+  const ui = await getAdminUiContext('/admin/content/pages/for-creators');
   const data = await getForCreatorsPageData();
 
   if (!data) {
@@ -37,8 +36,8 @@ export default async function ForCreatorsCmsAdminPage() {
         sections={data.sections}
         globals={typedGlobals}
         shared={typedShared}
-        role={actor.role}
-        canPublish={hasCmsCapability(actor.role, 'publish')}
+        role={ui.actor.role}
+        canPublish={ui.canPublish}
       />
     </AdminShell>
   );

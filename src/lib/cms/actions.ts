@@ -1,9 +1,9 @@
 'use server';
 
 import { requireCmsActionCapability } from '@/lib/admin/require-admin-user';
-import { hasCmsCapability } from '@/lib/cms/constants/roles';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { writeCmsAuditLog } from './audit';
+import { invalidateAdminReadScope } from './admin-read-cache';
 import type { SupportedSharedSchemaKey } from './constants/shared-sections';
 import { SCHEMA_KEYS } from './constants/schema-keys';
 import { CMS_REGISTRY, pageSettingsSchema } from './schemas';
@@ -177,6 +177,8 @@ export async function saveSharedSection(schemaKey: string, payload: unknown, ena
     pageSlugOrSchemaKey: schemaKey,
     summary: `Saved draft shared section ${schemaKey}`,
   });
+
+  invalidateAdminReadScope('shared');
 }
 
 export async function publishHomePage(pageId: string) {
@@ -393,13 +395,12 @@ export async function saveGlobalSettingDraft(schemaKey: string, payload: unknown
     pageSlugOrSchemaKey: schemaKey,
     summary: `Saved draft global setting ${schemaKey}`,
   });
+
+  invalidateAdminReadScope('global');
 }
 
 export async function publishGlobalSetting(schemaKey: string) {
   const actor = await requireCmsActionCapability('manage_global_settings');
-  if (!hasCmsCapability(actor.role, 'publish')) {
-    throw new Error('You do not have permission to publish.');
-  }
   const supabase = await createSupabaseServerClient();
   const publishedAt = new Date().toISOString();
 
@@ -462,13 +463,12 @@ export async function publishGlobalSetting(schemaKey: string) {
     summary: `Published global setting ${schemaKey}`,
   });
 
+  invalidateAdminReadScope('global');
+
 }
 
 export async function publishSharedSection(schemaKey: SupportedSharedSchemaKey) {
   const actor = await requireCmsActionCapability('manage_shared_sections');
-  if (!hasCmsCapability(actor.role, 'publish')) {
-    throw new Error('You do not have permission to publish.');
-  }
   const supabase = await createSupabaseServerClient();
   const publishedAt = new Date().toISOString();
 
@@ -526,5 +526,7 @@ export async function publishSharedSection(schemaKey: SupportedSharedSchemaKey) 
     pageSlugOrSchemaKey: schemaKey,
     summary: `Published shared section ${schemaKey}`,
   });
+
+  invalidateAdminReadScope('shared');
 
 }

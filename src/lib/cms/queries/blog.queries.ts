@@ -1,6 +1,7 @@
 import { createSupabaseServerClient } from '../../supabase/server';
 import { createSupabasePublicClient } from '../../supabase/public-client';
 import type { CmsBlogPost } from '../types';
+import { getAdminReadCached } from '../admin-read-cache';
 
 // ─── Public queries (ISR-safe) ────────────────────────────────────────────────
 
@@ -71,39 +72,45 @@ export async function getRelatedBlogPosts(
 
 /** Returns all blog posts for admin list view (all statuses, ordered by sort_order). */
 export async function getAllBlogPostsForAdmin(): Promise<CmsBlogPost[]> {
-  const supabase = await createSupabaseServerClient();
-  const { data, error } = await supabase
-    .from('blog_posts')
-    .select('*')
-    .order('sort_order', { ascending: true })
-    .order('created_at', { ascending: false });
+  return getAdminReadCached('blogs', ['list'], async () => {
+    const supabase = await createSupabaseServerClient();
+    const { data, error } = await supabase
+      .from('blog_posts')
+      .select('*')
+      .order('sort_order', { ascending: true })
+      .order('created_at', { ascending: false });
 
-  if (error || !data) return [];
-  return data as CmsBlogPost[];
+    if (error || !data) return [];
+    return data as CmsBlogPost[];
+  });
 }
 
 /** Returns a single blog post by ID for admin editor. */
 export async function getBlogPostByIdForAdmin(id: string): Promise<CmsBlogPost | null> {
-  const supabase = await createSupabaseServerClient();
-  const { data, error } = await supabase
-    .from('blog_posts')
-    .select('*')
-    .eq('id', id)
-    .single();
+  return getAdminReadCached('blogs', ['id', id], async () => {
+    const supabase = await createSupabaseServerClient();
+    const { data, error } = await supabase
+      .from('blog_posts')
+      .select('*')
+      .eq('id', id)
+      .single();
 
-  if (error || !data) return null;
-  return data as CmsBlogPost;
+    if (error || !data) return null;
+    return data as CmsBlogPost;
+  });
 }
 
 /** Returns a single blog post by slug for admin editor (used for slug-based routing). */
 export async function getBlogPostBySlugForAdmin(slug: string): Promise<CmsBlogPost | null> {
-  const supabase = await createSupabaseServerClient();
-  const { data, error } = await supabase
-    .from('blog_posts')
-    .select('*')
-    .eq('slug', slug)
-    .single();
+  return getAdminReadCached('blogs', ['slug', slug], async () => {
+    const supabase = await createSupabaseServerClient();
+    const { data, error } = await supabase
+      .from('blog_posts')
+      .select('*')
+      .eq('slug', slug)
+      .single();
 
-  if (error || !data) return null;
-  return data as CmsBlogPost;
+    if (error || !data) return null;
+    return data as CmsBlogPost;
+  });
 }

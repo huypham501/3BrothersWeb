@@ -2,6 +2,7 @@
 
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { requireCmsActionCapability } from '@/lib/admin/require-admin-user';
+import { getAdminReadCached, invalidateAdminReadScope } from './admin-read-cache';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -139,56 +140,58 @@ async function fetchPlanFromManagementApi(
 export async function getCmsStorageStats(): Promise<StorageStatsResult> {
   await requireCmsActionCapability('edit_draft');
 
-  const supabase = await createSupabaseServerClient();
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? '';
-  const projectRef = extractProjectRef(supabaseUrl);
+  return getAdminReadCached('assets', ['storage-stats'], async () => {
+    const supabase = await createSupabaseServerClient();
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? '';
+    const projectRef = extractProjectRef(supabaseUrl);
 
-  // ── 1. Fetch plan info from Management API (server-side, token never exposed) ──
-  const { plan: planName, fallback: planFallback } =
-    await fetchPlanFromManagementApi(projectRef);
+    // ── 1. Fetch plan info from Management API (server-side, token never exposed) ──
+    const { plan: planName, fallback: planFallback } =
+      await fetchPlanFromManagementApi(projectRef);
 
-  const limitBytes = PLAN_LIMITS_BYTES[planName];
+    const limitBytes = PLAN_LIMITS_BYTES[planName];
 
-  // ── 2. List all files in cms-assets/images/ ──────────────────────────────────
-  const { data: rawFiles, error: listError } = await supabase.storage
-    .from(CMS_BUCKET)
-    .list(IMAGES_FOLDER, {
-      limit: 1000,
-      offset: 0,
-      sortBy: { column: 'created_at', order: 'desc' },
-    });
+    // ── 2. List all files in cms-assets/images/ ──────────────────────────────────
+    const { data: rawFiles, error: listError } = await supabase.storage
+      .from(CMS_BUCKET)
+      .list(IMAGES_FOLDER, {
+        limit: 1000,
+        offset: 0,
+        sortBy: { column: 'created_at', order: 'desc' },
+      });
 
-  if (listError) {
-    console.error('[storage-stats] Failed to list bucket files:', listError);
-    return {
-      files: [],
-      usedBytes: 0,
-      limitBytes,
-      planName,
-      planFallback,
-      error: `Không thể lấy danh sách file: ${listError.message}`,
-    };
-  }
-
-  // ── 3. Build file list + sum sizes ───────────────────────────────────────────
-  const files: CmsAssetFile[] = (rawFiles ?? [])
-    .filter((f) => f.name !== '.emptyFolderPlaceholder')
-    .map((f) => {
-      const path = `${IMAGES_FOLDER}/${f.name}`;
-      const { data } = supabase.storage.from(CMS_BUCKET).getPublicUrl(path);
+    if (listError) {
+      console.error('[storage-stats] Failed to list bucket files:', listError);
       return {
-        name: f.name,
-        path,
-        publicUrl: data.publicUrl,
-        sizeBytes: (f.metadata?.size as number) ?? 0,
-        mimeType: (f.metadata?.mimetype as string) ?? null,
-        createdAt: f.created_at ?? null,
+        files: [],
+        usedBytes: 0,
+        limitBytes,
+        planName,
+        planFallback,
+        error: `Không thể lấy danh sách file: ${listError.message}`,
       };
-    });
+    }
 
-  const usedBytes = files.reduce((sum, f) => sum + f.sizeBytes, 0);
+    // ── 3. Build file list + sum sizes ───────────────────────────────────────────
+    const files: CmsAssetFile[] = (rawFiles ?? [])
+      .filter((f) => f.name !== '.emptyFolderPlaceholder')
+      .map((f) => {
+        const path = `${IMAGES_FOLDER}/${f.name}`;
+        const { data } = supabase.storage.from(CMS_BUCKET).getPublicUrl(path);
+        return {
+          name: f.name,
+          path,
+          publicUrl: data.publicUrl,
+          sizeBytes: (f.metadata?.size as number) ?? 0,
+          mimeType: (f.metadata?.mimetype as string) ?? null,
+          createdAt: f.created_at ?? null,
+        };
+      });
 
-  return { files, usedBytes, limitBytes, planName, planFallback };
+    const usedBytes = files.reduce((sum, f) => sum + f.sizeBytes, 0);
+
+    return { files, usedBytes, limitBytes, planName, planFallback };
+  });
 }
 
 // ─── Delete action ────────────────────────────────────────────────────────────
@@ -215,6 +218,8 @@ export async function deleteCmsAsset(path: string): Promise<DeleteAssetResult> {
     console.error('[storage-stats] Failed to delete asset:', error);
     return { success: false, error: `Xóa thất bại: ${error.message}` };
   }
+
+  invalidateAdminReadScope('assets');
 
   return { success: true };
 }

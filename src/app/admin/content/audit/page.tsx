@@ -1,4 +1,3 @@
-import { requireAdminUser } from '@/lib/admin/require-admin-user';
 import { getRecentCmsAuditLogs } from '@/lib/cms/queries';
 import { CmsAuditLogList } from '@/components/admin/cms/audit/CmsAuditLogList';
 import { AdminShell } from '@/components/admin/layout/AdminShell';
@@ -7,7 +6,6 @@ import { AdminPageHeader } from '@/components/admin/layout/AdminPageHeader';
 export const dynamic = 'force-dynamic';
 
 export default async function CmsAuditPage() {
-  await requireAdminUser('/admin/content/audit', 'view');
   const logs = await getRecentCmsAuditLogs(80);
 
   return (

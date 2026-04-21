@@ -1,4 +1,3 @@
-import { requireAdminUser } from '@/lib/admin/require-admin-user';
 import { getCmsStorageStats } from '@/lib/cms/storage-stats';
 import { AdminShell } from '@/components/admin/layout/AdminShell';
 import { AdminPageHeader } from '@/components/admin/layout/AdminPageHeader';
@@ -9,7 +8,6 @@ import { AdminAlert, AdminAlertDescription } from '@/components/admin/layout/Adm
 export const dynamic = 'force-dynamic';
 
 export default async function AdminAssetsPage() {
-  await requireAdminUser('/admin/assets', 'view');
   const stats = await getCmsStorageStats();
 
   return (

@@ -3,6 +3,7 @@
 import { requireCmsActionCapability } from '@/lib/admin/require-admin-user';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { writeCmsAuditLog } from './audit';
+import { invalidateAdminReadScope } from './admin-read-cache';
 import { careersHeroSchema, jobPositionContentSchema } from './schemas';
 import { SCHEMA_KEYS } from './constants/schema-keys';
 import type { CareersHeroPayload, JobPositionContent } from './types/payloads';
@@ -61,6 +62,8 @@ export async function saveCareersHeroDraft(
     pageSlugOrSchemaKey: page.slug,
     summary: `Saved draft careers hero section for ${page.slug}`,
   });
+
+  invalidateAdminReadScope('careers');
 }
 
 /** Publishes the careers page metadata + all its sections (including hero). */
@@ -149,6 +152,8 @@ export async function publishCareersPage(pageId: string): Promise<void> {
     pageSlugOrSchemaKey: pageData.slug,
     summary: `Published page ${pageData.slug}`,
   });
+
+  invalidateAdminReadScope('careers');
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -199,6 +204,8 @@ export async function createJobPosition(
     pageSlugOrSchemaKey: 'careers',
     summary: `Created job position draft "${validated.title}" (${slug})`,
   });
+
+  invalidateAdminReadScope('careers');
 
   return { id: data.id, slug: data.slug };
 }
@@ -256,6 +263,8 @@ export async function saveJobPositionDraft(
     pageSlugOrSchemaKey: 'careers',
     summary: `Saved job position draft "${validated.title}" (${existing.slug})`,
   });
+
+  invalidateAdminReadScope('careers');
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -309,6 +318,8 @@ export async function publishJobPosition(positionId: string): Promise<void> {
     pageSlugOrSchemaKey: 'careers',
     summary: `Published job position "${position.title}" (${position.slug})`,
   });
+
+  invalidateAdminReadScope('careers');
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -337,6 +348,8 @@ export async function updateJobPositionSortOrder(
       throw new Error('Failed to update sort order.');
     }
   }
+
+  invalidateAdminReadScope('careers');
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -378,4 +391,6 @@ export async function deleteJobPosition(positionId: string): Promise<void> {
     pageSlugOrSchemaKey: 'careers',
     summary: `Deleted job position "${position.title}" (${position.slug})`,
   });
+
+  invalidateAdminReadScope('careers');
 }

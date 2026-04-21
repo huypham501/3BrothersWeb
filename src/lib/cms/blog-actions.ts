@@ -3,6 +3,7 @@
 import { requireCmsActionCapability } from '@/lib/admin/require-admin-user';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { writeCmsAuditLog } from './audit';
+import { invalidateAdminReadScope } from './admin-read-cache';
 import { blogPostFormSchema } from './schemas';
 import type { BlogPostFormPayload } from './types';
 
@@ -64,6 +65,8 @@ export async function createBlogPostWithSlug(
     pageSlugOrSchemaKey: slug,
     summary: `Created blog post draft "${validated.title}" (${slug})`,
   });
+
+  invalidateAdminReadScope('blogs');
 
   return { id: data.id, slug: data.slug };
 }
@@ -131,6 +134,8 @@ export async function saveBlogPostDraft(
     pageSlugOrSchemaKey: existing.slug,
     summary: `Saved blog post draft "${validated.title}" (${existing.slug})`,
   });
+
+  invalidateAdminReadScope('blogs');
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -213,6 +218,8 @@ export async function publishBlogPost(postId: string): Promise<void> {
     pageSlugOrSchemaKey: post.slug,
     summary: `Published blog post "${post.title}" (${post.slug})`,
   });
+
+  invalidateAdminReadScope('blogs');
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -241,6 +248,8 @@ export async function updateBlogPostSortOrder(
       throw new Error('Failed to update sort order.');
     }
   }
+
+  invalidateAdminReadScope('blogs');
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -279,4 +288,6 @@ export async function deleteBlogPost(postId: string): Promise<void> {
     pageSlugOrSchemaKey: post.slug,
     summary: `Deleted blog post "${post.title}" (${post.slug})`,
   });
+
+  invalidateAdminReadScope('blogs');
 }

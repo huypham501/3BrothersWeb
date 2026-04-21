@@ -22,7 +22,8 @@ This folder contains the canonical, scalable SQL layout for CMS schema managemen
 6. `pages/110_pages_seed_for_creators.sql`
 7. `settings/310_settings_seed_metadata_defaults.sql`
 8. `access_control/400_access_bootstrap_roles.sql`
-9. `storage/500_storage_cms_assets_bucket_and_policies.sql`
+9. `access_control/410_access_token_hook_cms_role.sql`
+10. `storage/500_storage_cms_assets_bucket_and_policies.sql`
 
 ## Mapping from Legacy Files
 - `001_cms_tables.sql` -> `_core/010`, `_core/020`

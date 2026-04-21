@@ -9,10 +9,9 @@ import { AdminPageHeader } from "@/components/admin/layout/AdminPageHeader";
 
 type AdminPageViewProps = {
   userEmail: string;
-  forbidden?: boolean;
 };
 
-export function AdminPageView({ userEmail, forbidden = false }: AdminPageViewProps) {
+export function AdminPageView({ userEmail }: AdminPageViewProps) {
   return (
     <AdminShell maxWidth="880px">
       <AdminTopNav items={CONTENT_MODULE_NAV} activeHref="/admin/content" />
@@ -21,7 +20,6 @@ export function AdminPageView({ userEmail, forbidden = false }: AdminPageViewPro
           title="Admin"
           description={`Signed in as ${userEmail}.`}
         />
-        {forbidden && <p>You do not have permission to access the requested CMS module.</p>}
         <p>
           <Link href="/admin/content">Open Content Admin</Link> to manage Home, For Creators, Shared Sections, Global Settings, and audit trails.
         </p>

@@ -1,19 +1,17 @@
 import { notFound } from 'next/navigation';
-import { requireAdminUser } from '@/lib/admin/require-admin-user';
 import { SCHEMA_KEYS } from '@/lib/cms/constants/schema-keys';
-import { hasCmsCapability } from '@/lib/cms/constants/roles';
 import { getGlobalSettingForAdmin } from '@/lib/cms/queries';
 import { globalFooterSchema } from '@/lib/cms';
 import { GlobalFooterEditor } from '@/components/admin/cms/global-settings/GlobalFooterEditor';
 import { AdminShell } from '@/components/admin/layout/AdminShell';
 import { AdminPageHeader } from '@/components/admin/layout/AdminPageHeader';
+import { getAdminUiContext } from '@/lib/admin/require-admin-user';
 import { z } from 'zod';
 
 export const dynamic = 'force-dynamic';
 
 export default async function GlobalFooterEditorPage() {
-  const actor = await requireAdminUser('/admin/content/settings/footer', 'manage_global_settings');
-
+  const ui = await getAdminUiContext('/admin/content/settings/footer');
   const setting = await getGlobalSettingForAdmin<z.infer<typeof globalFooterSchema>>(SCHEMA_KEYS.GLOBAL_FOOTER);
 
   if (!setting) {
@@ -28,8 +26,8 @@ export default async function GlobalFooterEditorPage() {
       />
       <GlobalFooterEditor
         setting={setting}
-        role={actor.role}
-        canPublish={hasCmsCapability(actor.role, 'publish')}
+        role={ui.actor.role}
+        canPublish={ui.canPublish}
       />
     </AdminShell>
   );

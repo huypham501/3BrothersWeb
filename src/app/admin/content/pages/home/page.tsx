@@ -1,16 +1,15 @@
 import * as React from 'react';
 import { getHomePageData } from '@/lib/cms/queries';
 import { HomePageEditor } from '@/components/admin/cms/HomePageEditor';
-import { requireAdminUser } from '@/lib/admin/require-admin-user';
-import { hasCmsCapability } from '@/lib/cms/constants/roles';
 import { AdminShell } from '@/components/admin/layout/AdminShell';
 import { AdminPageHeader } from '@/components/admin/layout/AdminPageHeader';
+import { getAdminUiContext } from '@/lib/admin/require-admin-user';
 
 // We temporarily use a plain render because AdminPageView isn't fully adaptable for this full bleed interface without modifying it, but let's emulate the Admin context.
 export const dynamic = 'force-dynamic';
 
 export default async function HomeCmsAdminPage() {
-  const actor = await requireAdminUser('/admin/content/pages/home', 'edit_draft');
+  const ui = await getAdminUiContext('/admin/content/pages/home');
   const data = await getHomePageData();
 
   if (!data) {
@@ -36,9 +35,9 @@ export default async function HomeCmsAdminPage() {
         page={data.page}
         sections={data.sections}
         shared={typedShared}
-        role={actor.role}
-        canPublish={hasCmsCapability(actor.role, 'publish')}
-        canManageShared={hasCmsCapability(actor.role, 'manage_shared_sections')}
+        role={ui.actor.role}
+        canPublish={ui.canPublish}
+        canManageShared={ui.canManageShared}
       />
     </AdminShell>
   );

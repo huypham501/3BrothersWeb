@@ -1,5 +1,3 @@
-import { requireAdminUser } from '@/lib/admin/require-admin-user';
-import { hasCmsCapability } from '@/lib/cms/constants/roles';
 import {
   getAllJobPositionsForAdmin,
   getCareersHeroSectionForAdmin,
@@ -10,19 +8,17 @@ import { CareersHeroEditor } from '@/components/admin/cms/editors/CareersHeroEdi
 import { AdminShell } from '@/components/admin/layout/AdminShell';
 import { AdminPageHeader } from '@/components/admin/layout/AdminPageHeader';
 import { CareersAdminTabs } from '@/components/admin/cms/CareersAdminTabs';
+import { getAdminUiContext } from '@/lib/admin/require-admin-user';
 
 export const dynamic = 'force-dynamic';
 
 export default async function CareersAdminPage() {
-  const actor = await requireAdminUser('/admin/content/pages/careers', 'edit_draft');
-
+  const ui = await getAdminUiContext('/admin/content/pages/careers');
   const [positions, heroSection, careersPage] = await Promise.all([
     getAllJobPositionsForAdmin(),
     getCareersHeroSectionForAdmin(),
     getCareersPageForAdmin(),
   ]);
-
-  const canPublish = hasCmsCapability(actor.role, 'publish');
 
   return (
     <AdminShell maxWidth="1100px">
@@ -34,8 +30,8 @@ export default async function CareersAdminPage() {
         heroSection={heroSection}
         careersPageId={careersPage?.id ?? null}
         positions={positions}
-        role={actor.role}
-        canPublish={canPublish}
+        role={ui.actor.role}
+        canPublish={ui.canPublish}
       />
     </AdminShell>
   );

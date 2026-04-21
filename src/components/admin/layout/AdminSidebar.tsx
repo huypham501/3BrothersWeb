@@ -3,7 +3,7 @@
 import '@ant-design/v5-patch-for-react-19';
 import * as React from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { Menu } from 'antd';
 import type { MenuProps } from 'antd';
 import {
@@ -52,41 +52,64 @@ const ICON_MAP: Record<string, React.ReactNode> = {
 
 // ─── Build antd MenuProps['items'] from nav config ───────────────────────────
 
-function buildMenuItems(nav: NavItem[]): MenuProps['items'] {
+function buildMenuItems(
+  nav: NavItem[],
+  onPrefetch: (href: string) => void
+): MenuProps['items'] {
   return nav.map((item) => {
     if (item.type === 'leaf') {
-      return buildLeaf(item);
+      return buildLeaf(item, onPrefetch);
     }
-    return buildGroup(item);
+    return buildGroup(item, onPrefetch);
   });
 }
 
-function buildLeaf(leaf: NavLeaf): NonNullable<MenuProps['items']>[number] {
+function buildLeaf(
+  leaf: NavLeaf,
+  onPrefetch: (href: string) => void
+): NonNullable<MenuProps['items']>[number] {
   return {
     key: leaf.key,
     icon: ICON_MAP[leaf.iconName],
-    label: <Link href={leaf.href}>{leaf.label}</Link>,
+    label: (
+      <Link
+        href={leaf.href}
+        onMouseEnter={() => onPrefetch(leaf.href)}
+        onFocus={() => onPrefetch(leaf.href)}
+      >
+        {leaf.label}
+      </Link>
+    ),
   };
 }
 
-function buildGroup(group: NavGroup): NonNullable<MenuProps['items']>[number] {
+function buildGroup(
+  group: NavGroup,
+  onPrefetch: (href: string) => void
+): NonNullable<MenuProps['items']>[number] {
   return {
     key: group.key,
     icon: ICON_MAP[group.iconName],
     label: group.label,
-    children: group.children.map(buildLeaf),
+    children: group.children.map((child) => buildLeaf(child, onPrefetch)),
   };
 }
-
-const MENU_ITEMS = buildMenuItems(CMS_NAV);
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export function AdminSidebar() {
   const pathname = usePathname();
+  const router = useRouter();
   const activeKey = getActiveKey(pathname);
   const [openKeys, setOpenKeys] = React.useState<string[]>(
     getDefaultOpenGroups(pathname)
+  );
+  const menuItems = React.useMemo(
+    () =>
+      buildMenuItems(CMS_NAV, (href) => {
+        router.prefetch(href);
+      }),
+    [router]
   );
 
   // Sync open groups when pathname changes (e.g. browser back/forward)
@@ -116,14 +139,19 @@ export function AdminSidebar() {
           selectedKeys={[activeKey]}
           openKeys={openKeys}
           onOpenChange={(keys) => setOpenKeys(keys as string[])}
-          items={MENU_ITEMS}
+          items={menuItems}
           style={styles.menu}
         />
       </div>
 
       {/* ── Asset Manager quick link ── */}
       <div style={styles.footer}>
-        <Link href="/admin/assets" style={styles.footerLink}>
+        <Link
+          href="/admin/assets"
+          style={styles.footerLink}
+          onMouseEnter={() => router.prefetch('/admin/assets')}
+          onFocus={() => router.prefetch('/admin/assets')}
+        >
           <PictureOutlined style={{ fontSize: 13 }} />
           <span>Asset Manager</span>
         </Link>

@@ -1,6 +1,7 @@
 import { createSupabaseServerClient } from '../../supabase/server';
 import { createSupabasePublicClient } from '../../supabase/public-client';
 import { SCHEMA_KEYS } from '../constants/schema-keys';
+import { getAdminReadCached } from '../admin-read-cache';
 import type {
   CmsPage,
   CmsPageSection,
@@ -64,61 +65,73 @@ export async function getGlobalSetting<T = unknown>(schemaKey: string): Promise<
 // These read draft content and require auth. Always dynamic — never cached.
 
 export async function getSharedSectionForAdmin<T = unknown>(schemaKey: string): Promise<CmsSharedSection<T> | null> {
-  const supabase = await createSupabaseServerClient();
-  const { data, error } = await supabase
-    .from('shared_sections')
-    .select('*')
-    .eq('schema_key', schemaKey)
-    .single();
+  return getAdminReadCached('shared', ['single', schemaKey], async () => {
+    const supabase = await createSupabaseServerClient();
+    const { data, error } = await supabase
+      .from('shared_sections')
+      .select('*')
+      .eq('schema_key', schemaKey)
+      .single();
 
-  if (error || !data) return null;
-  return data;
+    if (error || !data) return null;
+    return data;
+  });
 }
 
 export async function getSharedSectionsForAdmin(schemaKeys: string[]): Promise<CmsSharedSection[]> {
-  const supabase = await createSupabaseServerClient();
-  const { data, error } = await supabase
-    .from('shared_sections')
-    .select('*')
-    .in('schema_key', schemaKeys);
+  const normalizedKeys = [...schemaKeys].sort();
+  return getAdminReadCached('shared', ['multi', normalizedKeys], async () => {
+    const supabase = await createSupabaseServerClient();
+    const { data, error } = await supabase
+      .from('shared_sections')
+      .select('*')
+      .in('schema_key', normalizedKeys);
 
-  if (error || !data) return [];
-  return data;
+    if (error || !data) return [];
+    return data;
+  });
 }
 
 export async function getGlobalSettingForAdmin<T = unknown>(schemaKey: string): Promise<CmsGlobalSetting<T> | null> {
-  const supabase = await createSupabaseServerClient();
-  const { data, error } = await supabase
-    .from('global_settings')
-    .select('*')
-    .eq('schema_key', schemaKey)
-    .single();
+  return getAdminReadCached('global', ['single', schemaKey], async () => {
+    const supabase = await createSupabaseServerClient();
+    const { data, error } = await supabase
+      .from('global_settings')
+      .select('*')
+      .eq('schema_key', schemaKey)
+      .single();
 
-  if (error || !data) return null;
-  return data;
+    if (error || !data) return null;
+    return data;
+  });
 }
 
 export async function getGlobalSettingsForAdmin(schemaKeys: string[]): Promise<CmsGlobalSetting[]> {
-  const supabase = await createSupabaseServerClient();
-  const { data, error } = await supabase
-    .from('global_settings')
-    .select('*')
-    .in('schema_key', schemaKeys);
+  const normalizedKeys = [...schemaKeys].sort();
+  return getAdminReadCached('global', ['multi', normalizedKeys], async () => {
+    const supabase = await createSupabaseServerClient();
+    const { data, error } = await supabase
+      .from('global_settings')
+      .select('*')
+      .in('schema_key', normalizedKeys);
 
-  if (error || !data) return [];
-  return data;
+    if (error || !data) return [];
+    return data;
+  });
 }
 
 export async function getRecentCmsAuditLogs(limit = 50): Promise<CmsAuditLog[]> {
-  const supabase = await createSupabaseServerClient();
-  const { data, error } = await supabase
-    .from('cms_audit_logs')
-    .select('*')
-    .order('created_at', { ascending: false })
-    .limit(limit);
+  return getAdminReadCached('audit', [limit], async () => {
+    const supabase = await createSupabaseServerClient();
+    const { data, error } = await supabase
+      .from('cms_audit_logs')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(limit);
 
-  if (error || !data) return [];
-  return data;
+    if (error || !data) return [];
+    return data;
+  });
 }
 
 interface PageDataBundleOptions {
@@ -134,11 +147,6 @@ interface PageDataBundleOptions {
 }
 
 async function getPageDataBundle(options: PageDataBundleOptions) {
-  const page = await getPageBySlug(options.slug);
-  if (!page) return null;
-
-  const sections = await getPageSections(page.id);
-
   const globalSchemaKeys = options.globalSchemaKeys ?? {
     header: SCHEMA_KEYS.GLOBAL_HEADER,
     footer: SCHEMA_KEYS.GLOBAL_FOOTER,
@@ -149,12 +157,17 @@ async function getPageDataBundle(options: PageDataBundleOptions) {
     contactCta: SCHEMA_KEYS.SHARED_CONTACT_CTA,
   };
 
-  const [header, footer, exclusiveTalents, contactCta] = await Promise.all([
+  const [page, header, footer, exclusiveTalents, contactCta] = await Promise.all([
+    getPageBySlug(options.slug),
     getGlobalSetting(globalSchemaKeys.header),
     getGlobalSetting(globalSchemaKeys.footer),
     getSharedSection(sharedSchemaKeys.exclusiveTalents),
     getSharedSection(sharedSchemaKeys.contactCta),
   ]);
+
+  if (!page) return null;
+
+  const sections = await getPageSections(page.id);
 
   return {
     page,

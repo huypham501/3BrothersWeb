@@ -1,19 +1,17 @@
 import { notFound } from 'next/navigation';
-import { requireAdminUser } from '@/lib/admin/require-admin-user';
 import { SCHEMA_KEYS } from '@/lib/cms/constants/schema-keys';
-import { hasCmsCapability } from '@/lib/cms/constants/roles';
 import { getGlobalSettingForAdmin } from '@/lib/cms/queries';
 import { globalSeoDefaultsSchema } from '@/lib/cms';
 import { GlobalSeoDefaultsEditor } from '@/components/admin/cms/global-settings/GlobalSeoDefaultsEditor';
 import { AdminShell } from '@/components/admin/layout/AdminShell';
 import { AdminPageHeader } from '@/components/admin/layout/AdminPageHeader';
+import { getAdminUiContext } from '@/lib/admin/require-admin-user';
 import { z } from 'zod';
 
 export const dynamic = 'force-dynamic';
 
 export default async function GlobalSeoDefaultsEditorPage() {
-  const actor = await requireAdminUser('/admin/content/settings/seo-defaults', 'manage_global_settings');
-
+  const ui = await getAdminUiContext('/admin/content/settings/seo-defaults');
   const setting = await getGlobalSettingForAdmin<z.infer<typeof globalSeoDefaultsSchema>>(SCHEMA_KEYS.GLOBAL_SEO_DEFAULTS);
   if (!setting) notFound();
 
@@ -25,8 +23,8 @@ export default async function GlobalSeoDefaultsEditorPage() {
       />
       <GlobalSeoDefaultsEditor
         setting={setting}
-        role={actor.role}
-        canPublish={hasCmsCapability(actor.role, 'publish')}
+        role={ui.actor.role}
+        canPublish={ui.canPublish}
       />
     </AdminShell>
   );

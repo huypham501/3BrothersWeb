@@ -1,13 +1,12 @@
-import { requireAdminUser } from '@/lib/admin/require-admin-user';
-import { hasCmsCapability } from '@/lib/cms/constants/roles';
 import { JobPositionEditor } from '@/components/admin/cms/editors/JobPositionEditor';
 import { AdminShell } from '@/components/admin/layout/AdminShell';
 import { AdminPageHeader } from '@/components/admin/layout/AdminPageHeader';
+import { getAdminUiContext } from '@/lib/admin/require-admin-user';
 
 export const dynamic = 'force-dynamic';
 
 export default async function NewJobPositionPage() {
-  const actor = await requireAdminUser('/admin/content/pages/careers/new', 'edit_draft');
+  const ui = await getAdminUiContext('/admin/content/pages/careers/new');
 
   return (
     <AdminShell maxWidth="900px">
@@ -17,8 +16,8 @@ export default async function NewJobPositionPage() {
       />
       <JobPositionEditor
         mode="create"
-        role={actor.role}
-        canPublish={hasCmsCapability(actor.role, 'publish')}
+        role={ui.actor.role}
+        canPublish={ui.canPublish}
       />
     </AdminShell>
   );

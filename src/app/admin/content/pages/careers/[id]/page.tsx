@@ -1,10 +1,9 @@
 import { notFound } from 'next/navigation';
-import { requireAdminUser } from '@/lib/admin/require-admin-user';
-import { hasCmsCapability } from '@/lib/cms/constants/roles';
 import { getJobPositionByIdForAdmin } from '@/lib/cms/queries';
 import { JobPositionEditor } from '@/components/admin/cms/editors/JobPositionEditor';
 import { AdminShell } from '@/components/admin/layout/AdminShell';
 import { AdminPageHeader } from '@/components/admin/layout/AdminPageHeader';
+import { getAdminUiContext } from '@/lib/admin/require-admin-user';
 
 export const dynamic = 'force-dynamic';
 
@@ -13,11 +12,8 @@ interface Props {
 }
 
 export default async function EditJobPositionPage({ params }: Props) {
+  const ui = await getAdminUiContext('/admin/content/pages/careers');
   const { id } = await params;
-  const actor = await requireAdminUser(
-    `/admin/content/pages/careers/${id}`,
-    'edit_draft'
-  );
   const position = await getJobPositionByIdForAdmin(id);
 
   if (!position) notFound();
@@ -31,8 +27,8 @@ export default async function EditJobPositionPage({ params }: Props) {
       <JobPositionEditor
         position={position}
         mode="edit"
-        role={actor.role}
-        canPublish={hasCmsCapability(actor.role, 'publish')}
+        role={ui.actor.role}
+        canPublish={ui.canPublish}
       />
     </AdminShell>
   );

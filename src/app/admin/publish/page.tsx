@@ -1,4 +1,3 @@
-import { requireAdminUser } from '@/lib/admin/require-admin-user';
 import { AdminShell } from '@/components/admin/layout/AdminShell';
 import { AdminPageHeader } from '@/components/admin/layout/AdminPageHeader';
 import { PublishCenterClient } from '@/components/admin/publish/PublishCenterClient';
@@ -6,8 +5,6 @@ import { PublishCenterClient } from '@/components/admin/publish/PublishCenterCli
 export const dynamic = 'force-dynamic';
 
 export default async function AdminPublishPage() {
-  await requireAdminUser('/admin/publish', 'view');
-
   return (
     <AdminShell>
       <AdminPageHeader

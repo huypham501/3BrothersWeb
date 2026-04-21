@@ -1,25 +1,7 @@
-import { redirect } from 'next/navigation';
 import { AdminPageView } from '@/components/admin/AdminPageView';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { getAdminUiContext } from '@/lib/admin/require-admin-user';
 
-export default async function AdminPage({
-  searchParams,
-}: {
-  searchParams?: Promise<{ forbidden?: string }>;
-}) {
-  const supabase = await createSupabaseServerClient();
-  const { data, error } = await supabase.auth.getUser();
-
-  if (error || !data.user) {
-    redirect('/login?next=%2Fadmin');
-  }
-
-  const resolvedSearchParams = (await searchParams) ?? {};
-
-  return (
-    <AdminPageView
-      userEmail={data.user.email ?? 'user'}
-      forbidden={resolvedSearchParams.forbidden === '1'}
-    />
-  );
+export default async function AdminPage() {
+  const ui = await getAdminUiContext('/admin');
+  return <AdminPageView userEmail={ui.actor.email} />;
 }

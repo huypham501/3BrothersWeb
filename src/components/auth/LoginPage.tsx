@@ -14,6 +14,7 @@ const DEFAULT_REDIRECT = '/admin';
 const oauthErrorMessages: Record<string, string> = {
   oauth_callback_failed: 'Unable to complete Google sign-in. Please try again.',
   missing_code: 'Missing OAuth code. Please try signing in again.',
+  forbidden: 'Bạn không có quyền truy cập CMS Admin.',
 };
 
 import { getSafeRedirectPath } from '@/lib/auth/utils';
