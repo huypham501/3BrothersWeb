@@ -5,51 +5,20 @@ import { colors } from '@/styles/tokens';
 
 import { HeaderV2 } from '@/components/home-v2/shared/HeaderV2';
 import { FooterV2 } from '@/components/home-v2/shared/FooterV2';
+import type { GlobalFooterPayload, GlobalHeaderPayload } from '@/lib/cms/types';
 
 import { FormSection } from './sections/FormSection';
 import { ContactInfo } from './sections/ContactInfo';
 
-const HEADER_MOCK = {
-  logo_text: '3BROTHERS',
-  nav_links: [
-    { label: 'For Creators', url: '/for-creators' },
-    { label: 'For Brands', url: '/for-brands' },
-    { label: 'Blogs', url: '/blogs' },
-    { label: 'Careers', url: '/careers' }
-  ],
-  cta_label: 'Liên hệ ngay',
-  cta_url: '/contact'
-};
+interface ContactViewProps {
+  header?: GlobalHeaderPayload | null;
+  footer?: GlobalFooterPayload | null;
+}
 
-const FOOTER_MOCK = {
-  thank_you_heading: 'CẢM ƠN SỰ TIN TƯỞNG\nCỦA QUÍ ĐỐI TÁC',
-  email: 'work.3brothers@gmail.com',
-  address: '123 Phan Van Giang, Phú Nhuận, Hồ Chí Minh',
-  menu_links: [
-    { label: 'For Brands', url: '/for-brands' },
-    { label: 'For Creators', url: '/for-creators' },
-    { label: 'About Us', url: '/about' },
-    { label: 'Careers', url: '/careers' },
-    { label: 'Blogs', url: '/blogs' }
-  ],
-  social_links: [
-    { label: 'Facebook', url: '#' },
-    { label: 'Instagram', url: '#' },
-    { label: 'Tiktok', url: '#' },
-    { label: 'Thread', url: '#' }
-  ],
-  brand_watermark: '3BROTHERS.MEDIA'
-};
-
-export function ContactView() {
+export function ContactView({ header, footer }: ContactViewProps) {
   return (
     <Wrapper>
-      {/* 
-        Using unmodified HeaderV2 as requested.
-        Note: The top section has a light background, so the HeaderV2's text might 
-        be hard to read before scrolling if text is white. 
-      */}
-      <HeaderV2 content={HEADER_MOCK} />
+      <HeaderV2 content={header ?? undefined} />
       
       <MainContent>
         {/* Background blurs from the common CSS Contact tokens */}
@@ -66,7 +35,7 @@ export function ContactView() {
         <ContactInfo />
       </MainContent>
 
-      <FooterV2 content={FOOTER_MOCK} />
+      <FooterV2 content={footer ?? undefined} />
     </Wrapper>
   );
 }

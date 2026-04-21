@@ -9,22 +9,25 @@ import { ContactCTASectionV2 } from '@/components/home-v2/sections/ContactCTASec
 import { HighlightsSection, type FeaturedPost } from './sections/HighlightsSection';
 import { ContentsSection } from './sections/ContentsSection';
 import type { BlogPost } from './components/BlogPostCard';
+import type { GlobalFooterPayload, GlobalHeaderPayload } from '@/lib/cms/types';
 
 interface BlogViewProps {
   featuredPost?: FeaturedPost;
   posts?: BlogPost[];
+  header?: GlobalHeaderPayload | null;
+  footer?: GlobalFooterPayload | null;
 }
 
-export function BlogView({ featuredPost, posts }: BlogViewProps) {
+export function BlogView({ featuredPost, posts, header, footer }: BlogViewProps) {
   return (
     <Wrapper>
-      <HeaderV2 />
+      <HeaderV2 content={header ?? undefined} />
       <MainContent>
         <HighlightsSection featuredPost={featuredPost} />
         <ContentsSection posts={posts} />
       </MainContent>
       <ContactCTASectionV2 />
-      <FooterV2 />
+      <FooterV2 content={footer ?? undefined} />
     </Wrapper>
   );
 }

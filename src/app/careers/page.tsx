@@ -4,6 +4,7 @@ import { getCareersHeroSection, getPublishedJobPositions } from '@/lib/cms/queri
 import type { JobPosition } from '@/components/careers/data/jobPositions';
 import type { CmsJobPosition } from '@/lib/cms';
 import { SITE_URL } from '@/lib/constants';
+import { resolvePublicLayoutData } from '@/lib/cms/resolvers/public-layout.resolver';
 
 export const revalidate = false;
 
@@ -59,13 +60,21 @@ function mapCmsJobToJobPosition(pos: CmsJobPosition, idx: number): JobPosition {
 }
 
 export default async function CareersPage() {
-  const [heroSection, cmsPositions] = await Promise.all([
+  const [heroSection, cmsPositions, layout] = await Promise.all([
     getCareersHeroSection(),
     getPublishedJobPositions(),
+    resolvePublicLayoutData(),
   ]);
 
   const hero = heroSection?.published_content ?? heroSection?.content ?? null;
   const positions = cmsPositions.map(mapCmsJobToJobPosition);
 
-  return <CareersView hero={hero} positions={positions.length > 0 ? positions : undefined} />;
+  return (
+    <CareersView
+      hero={hero}
+      positions={positions.length > 0 ? positions : undefined}
+      header={layout.header}
+      footer={layout.footer}
+    />
+  );
 }

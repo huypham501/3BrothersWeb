@@ -9,21 +9,24 @@ import { HeroSection } from './sections/HeroSection';
 import { OpenPositionSection } from './sections/OpenPositionSection';
 import type { CareersHeroPayload } from '@/lib/cms/types/payloads';
 import type { JobPosition } from './data/jobPositions';
+import type { GlobalFooterPayload, GlobalHeaderPayload } from '@/lib/cms/types';
 
 interface CareersViewProps {
   hero?: CareersHeroPayload | null;
   positions?: JobPosition[];
+  header?: GlobalHeaderPayload | null;
+  footer?: GlobalFooterPayload | null;
 }
 
-export function CareersView({ hero, positions }: CareersViewProps) {
+export function CareersView({ hero, positions, header, footer }: CareersViewProps) {
   return (
     <Wrapper>
-      <HeaderV2 />
+      <HeaderV2 content={header ?? undefined} />
       <MainContent>
         <HeroSection hero={hero} />
         <OpenPositionSection positions={positions} />
       </MainContent>
-      <FooterV2 />
+      <FooterV2 content={footer ?? undefined} />
     </Wrapper>
   );
 }

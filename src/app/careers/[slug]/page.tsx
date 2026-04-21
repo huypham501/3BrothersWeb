@@ -8,6 +8,7 @@ import {
 import type { JobPosition } from '@/components/careers/data/jobPositions';
 import type { CmsJobPosition } from '@/lib/cms';
 import { SITE_URL } from '@/lib/constants';
+import { resolvePublicLayoutData } from '@/lib/cms/resolvers/public-layout.resolver';
 
 export const revalidate = false;
 
@@ -75,9 +76,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function CareerDetailPage({ params }: Props) {
   const { slug } = await params;
 
-  const [cmsJob, allCmsPositions] = await Promise.all([
+  const [cmsJob, allCmsPositions, layout] = await Promise.all([
     getPublishedJobPositionBySlug(slug),
     getPublishedJobPositions(),
+    resolvePublicLayoutData(),
   ]);
 
   if (!cmsJob) notFound();
@@ -93,6 +95,8 @@ export default async function CareerDetailPage({ params }: Props) {
       slug={slug}
       job={job}
       relatedJobs={relatedJobs}
+      header={layout.header}
+      footer={layout.footer}
     />
   );
 }

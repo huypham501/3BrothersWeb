@@ -4,6 +4,7 @@ import { BlogDetailView } from '@/components/blog/BlogDetailView';
 import { getPublishedBlogPostBySlug, getRelatedBlogPosts } from '@/lib/cms/queries';
 import type { ArticleData } from '@/components/blog/sections/DetailMainContentSection';
 import type { BlogPost } from '@/components/blog/components/BlogPostCard';
+import { resolvePublicLayoutData } from '@/lib/cms/resolvers/public-layout.resolver';
 
 import { SITE_URL } from '@/lib/constants';
 
@@ -69,9 +70,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function BlogDetailPage({ params }: Props) {
   const { slug } = await params;
 
-  const [post, related] = await Promise.all([
+  const [post, related, layout] = await Promise.all([
     getPublishedBlogPostBySlug(slug),
     getRelatedBlogPosts(slug, 3),
+    resolvePublicLayoutData(),
   ]);
 
   if (!post) notFound();
@@ -112,5 +114,12 @@ export default async function BlogDetailPage({ params }: Props) {
       'linear-gradient(135deg, #003CA6 0%, #1a56c4 50%, #0a3080 100%)',
   }));
 
-  return <BlogDetailView article={article} relatedPosts={relatedPosts} />;
+  return (
+    <BlogDetailView
+      article={article}
+      relatedPosts={relatedPosts}
+      header={layout.header}
+      footer={layout.footer}
+    />
+  );
 }

@@ -3,6 +3,7 @@ import { BlogView } from "@/components/blog/BlogView";
 import { getPublishedBlogPosts, getFeaturedBlogPost } from "@/lib/cms/queries";
 import type { FeaturedPost } from "@/components/blog/sections/HighlightsSection";
 import type { BlogPost } from "@/components/blog/components/BlogPostCard";
+import { resolvePublicLayoutData } from '@/lib/cms/resolvers/public-layout.resolver';
 
 import { SITE_URL } from "@/lib/constants";
 
@@ -48,9 +49,10 @@ function formatBlogDate(dateStr: string | null): string {
 }
 
 export default async function BlogPage() {
-  const [featuredRaw, allPosts] = await Promise.all([
+  const [featuredRaw, allPosts, layout] = await Promise.all([
     getFeaturedBlogPost(),
     getPublishedBlogPosts(),
+    resolvePublicLayoutData(),
   ]);
 
   const featuredPost: FeaturedPost | undefined = featuredRaw
@@ -78,5 +80,12 @@ export default async function BlogPage() {
       'linear-gradient(135deg, #003CA6 0%, #1a56c4 50%, #0a3080 100%)',
   }));
 
-  return <BlogView featuredPost={featuredPost} posts={posts} />;
+  return (
+    <BlogView
+      featuredPost={featuredPost}
+      posts={posts}
+      header={layout.header}
+      footer={layout.footer}
+    />
+  );
 }

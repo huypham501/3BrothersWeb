@@ -9,22 +9,30 @@ import { ContactCTASectionV2 } from '@/components/home-v2/sections/ContactCTASec
 import { DetailMainContentSection, type ArticleData } from './sections/DetailMainContentSection';
 import { RelatedPostsSection } from './sections/RelatedPostsSection';
 import type { BlogPost } from './components/BlogPostCard';
+import type { GlobalFooterPayload, GlobalHeaderPayload } from '@/lib/cms/types';
 
 interface BlogDetailViewProps {
   article?: ArticleData;
   relatedPosts?: BlogPost[];
+  header?: GlobalHeaderPayload | null;
+  footer?: GlobalFooterPayload | null;
 }
 
-export function BlogDetailView({ article, relatedPosts }: BlogDetailViewProps) {
+export function BlogDetailView({
+  article,
+  relatedPosts,
+  header,
+  footer,
+}: BlogDetailViewProps) {
   return (
     <Wrapper>
-      <HeaderV2 />
+      <HeaderV2 content={header ?? undefined} />
       <MainContent>
         <DetailMainContentSection article={article} />
         <RelatedPostsSection posts={relatedPosts} />
       </MainContent>
       <ContactCTASectionV2 />
-      <FooterV2 />
+      <FooterV2 content={footer ?? undefined} />
     </Wrapper>
   );
 }
