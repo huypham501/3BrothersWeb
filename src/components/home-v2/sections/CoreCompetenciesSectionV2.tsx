@@ -35,7 +35,7 @@ export function CoreCompetenciesSectionV2({ content }: { content: HomeCoreCompet
 const SectionContainer = styled.section`
   width: 100%;
   padding: 120px ${spacing['5xl']};
-  background: transparent;
+  background: ${colors.brandLightBlue};
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -60,9 +60,9 @@ const TitleWrapper = styled.div`
 `;
 
 const Title = styled.h2`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.bold};
-  font-size: 26px;
+  font-size: ${typography.fontSize['6xl']};
   line-height: 140%;
   text-align: left;
   text-transform: uppercase;
@@ -133,5 +133,3 @@ const GridContainer = styled.div`
     row-gap: 60px;
   }
 `;
-
-

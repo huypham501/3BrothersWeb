@@ -5,8 +5,7 @@ import { colors } from '@/styles/tokens';
 import { HomeViewModel } from '@/lib/cms/resolvers/home.resolver';
 
 import { HeaderV2 } from './shared/HeaderV2';
-import { HeroSectionV2 } from './sections/HeroSectionV2';
-import { PartnersSectionV2 } from './sections/PartnersSectionV2';
+import { HomeHeroPartnerSectionV2 } from './sections/HomeHeroPartnerSectionV2';
 import { CoreCompetenciesSectionV2 } from './sections/CoreCompetenciesSectionV2';
 import { EfficiencySectionV2 } from './sections/EfficiencySectionV2';
 import { ExclusiveTalentsSectionV2 } from './sections/ExclusiveTalentsSectionV2';
@@ -20,11 +19,8 @@ export function HomeViewV2({ data }: { data: HomeViewModel | null }) {
   return (
     <Wrapper>
       {data.globals.header && <HeaderV2 content={data.globals.header} />}
-      
-      <HeroPartnersWrapper>
-        {data.hero && <HeroSectionV2 content={data.hero} />}
-        {data.partners && <PartnersSectionV2 content={data.partners} />}
-      </HeroPartnersWrapper>
+
+      <HomeHeroPartnerSectionV2 hero={data.hero} partners={data.partners} />
       
       {data.coreCompetencies && <CoreCompetenciesSectionV2 content={data.coreCompetencies} />}
       
@@ -50,12 +46,6 @@ const Wrapper = styled.div`
   box-shadow: 0px 4.5px 225px rgba(6, 21, 48, 0.6);
   overflow-x: hidden;
   font-family: 'Montserrat', 'Inter', sans-serif;
-`;
-
-const HeroPartnersWrapper = styled.div`
-  width: 100%;
-  position: relative;
-  background: linear-gradient(180deg, #000000 84.09%, #071E48 100%);
 `;
 
 const BlueGroupWrapper = styled.div`

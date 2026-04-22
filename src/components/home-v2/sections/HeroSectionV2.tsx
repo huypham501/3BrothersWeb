@@ -10,9 +10,17 @@ import { SecondaryButton } from '../components/SecondaryButton';
 
 import { HomeHeroPayload } from '@/lib/cms/types';
 
-export function HeroSectionV2({ content }: { content: HomeHeroPayload }) {
+export function HeroSectionV2({
+  content,
+  className,
+  isComposite = false,
+}: {
+  content: HomeHeroPayload;
+  className?: string;
+  isComposite?: boolean;
+}) {
   return (
-    <HeroContainer>
+    <HeroContainer className={className} $isComposite={isComposite}>
       <HeroBackgroundGraphics />
       <ContentWrapper>
         <TextBlock>
@@ -46,11 +54,11 @@ export function HeroSectionV2({ content }: { content: HomeHeroPayload }) {
   );
 }
 
-const HeroContainer = styled.section`
+const HeroContainer = styled.section<{ $isComposite: boolean }>`
   position: relative;
   width: 100%;
   min-height: 800px;
-  background: linear-gradient(0deg, #031027, #031027), linear-gradient(180deg, ${colors.primaryLight} 0%, ${colors.primary} 100%);
+  background: #061530;
   border-radius: 0 0 120px 120px;
   overflow: hidden;
   display: flex;
@@ -63,7 +71,7 @@ const HeroContainer = styled.section`
   }
 
   ${mediaQueries.down.sm} {
-    min-height: 100vh;
+    min-height: ${({ $isComposite }) => ($isComposite ? '680px' : '100vh')};
     padding: ${spacing['2xl']} ${spacing.lg};
     border-radius: 0 0 80px 80px;
   }
@@ -136,4 +144,3 @@ const ButtonGroup = styled.div`
     width: 100%;
   }
 `;
-

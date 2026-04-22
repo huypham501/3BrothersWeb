@@ -111,7 +111,6 @@ export const homeHeroSchema = z.object({
 });
 
 export const homePartnersSchema = z.object({
-  section_label: z.string().max(80).nullable().optional(),
   partners: z.array(
     z.object({
       name: z.string().max(60),

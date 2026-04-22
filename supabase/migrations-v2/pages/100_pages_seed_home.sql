@@ -94,7 +94,6 @@ BEGIN
     2,
     true,
     '{
-      "section_label": "",
       "partners": [
         {"name": "Gillette", "logo_image": null, "url": "#"},
         {"name": "Dior", "logo_image": null, "url": "#"},
@@ -107,7 +106,6 @@ BEGIN
       ]
     }'::jsonb,
     '{
-      "section_label": "",
       "partners": [
         {"name": "Gillette", "logo_image": null, "url": "#"},
         {"name": "Dior", "logo_image": null, "url": "#"},

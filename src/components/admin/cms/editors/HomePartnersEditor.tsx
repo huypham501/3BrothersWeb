@@ -10,9 +10,7 @@ import { AdminInput as Input } from '@/components/admin/controls/AdminInput';
 import { AdminImageUpload } from '@/components/admin/controls/AdminImageUpload';
 import { AdminButton as Button } from '@/components/admin/layout/AdminPrimitives';
 import { AdminSwitch as Switch } from '@/components/admin/controls/AdminSwitch';
-import { AdminAlert as Alert, AdminAlertDescription as AlertDescription, AdminAlertTitle as AlertTitle } from '@/components/admin/layout/AdminPrimitives';
-import { CmsFieldHint } from '@/components/admin/cms/ux/CmsFieldHint';
-import { getCmsFieldUxSpec } from '@/lib/cms/ux/field-ux-spec';
+import { AdminAlert as Alert, AdminAlertDescription as AlertDescription } from '@/components/admin/layout/AdminPrimitives';
 import {
   ErrorText,
   FormStack,
@@ -39,7 +37,6 @@ export function HomePartnersEditor({ pageId, section }: { pageId: string, sectio
     resolver: zodResolver(homePartnersSchema.extend({ enabled: z.boolean() })),
     defaultValues: {
       enabled: section.enabled,
-      section_label: section.content.section_label || '',
       partners: section.content.partners || [],
     },
   });
@@ -66,8 +63,6 @@ export function HomePartnersEditor({ pageId, section }: { pageId: string, sectio
     }
   };
 
-  const ux = (fieldPath: string) => getCmsFieldUxSpec('home_partners', fieldPath);
-
   return (
     <Form {...form}>
       <FormStack onSubmit={form.handleSubmit(onSubmit)}>
@@ -92,21 +87,6 @@ export function HomePartnersEditor({ pageId, section }: { pageId: string, sectio
           </Button>
         </HeaderRow>
 
-        <FormField
-          control={form.control}
-          name="section_label"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>{ux('section_label').label ?? 'Section Label (Hidden usually)'}</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <CmsFieldHint formId="home_partners" fieldPath="section_label" />
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        
         <SectionStack>
           <SectionHeaderRow>
             <SectionTitle>Partners ({fields.length})</SectionTitle>

@@ -8,15 +8,15 @@ export const ButtonBase = styled.a`
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  padding: 0 ${spacing.lg};
-  height: 52px;
-  gap: ${spacing.xs};
+  padding: ${spacing.md} ${spacing.xl};
+  height: 54px;
+  gap: ${spacing.sm};
   border-radius: ${borderRadius.xl};
   text-decoration: none;
-  font-weight: ${typography.fontWeight.semibold};
-  font-family: 'Inter', sans-serif;
+  font-weight: ${typography.fontWeight.bold};
+  font-family: ${typography.fontFamily.montserrat};
   font-size: ${typography.fontSize.md};
-  line-height: 1;
+  line-height: 140%;
   box-sizing: border-box;
   cursor: pointer;
 

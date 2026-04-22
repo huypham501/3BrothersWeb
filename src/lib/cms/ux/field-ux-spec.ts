@@ -119,15 +119,6 @@ export const CMS_FIELD_UX_SPECS: Record<string, CmsFormUxSpec> = {
       example: 'index,follow',
     },
   },
-  home_partners: {
-    section_label: {
-      label: 'Section Label (Hidden usually)',
-      what: 'Optional small label for this section.',
-      why: 'Used by some layouts for accessibility/context even when visually hidden.',
-      validation: 'Max 80 characters.',
-      impact: 'May appear if a design variant enables section labels.',
-    },
-  },
   for_creators_benefit: {
     'benefits.id': {
       label: 'Benefit Key',

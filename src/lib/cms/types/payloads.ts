@@ -54,7 +54,6 @@ export interface HomeHeroPayload {
 }
 
 export interface HomePartnersPayload {
-  section_label?: string | null;
   partners: Array<{
     name: string;
     logo_image?: string | null;
