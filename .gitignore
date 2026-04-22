@@ -24,3 +24,5 @@ pnpm-debug.log*
 walkthrough*
 .agent-state
 .chrome-profile
+
+artifacts/

@@ -10,6 +10,7 @@
     "lint": "eslint .",
     "cms:check:ui-boundary": "node scripts/cms-ui-boundary-check.mjs",
     "cms:e2e:auth": "node scripts/cms-authenticated-e2e-governance.mjs",
+    "cms:capture:home": "node scripts/cms-home-video-capture.mjs --scenario=home_public_recursive_then_cms --auth-mode=password --headed",
     "cms:verify:phase7": "npm run cms:check:ui-boundary && node scripts/cms-phase7-verify.mjs"
   },
   "dependencies": {
