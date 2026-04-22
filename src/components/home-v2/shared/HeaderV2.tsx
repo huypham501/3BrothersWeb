@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Link from 'next/link';
+import Image from 'next/image';
 import { HeaderContactButton } from '../components/HeaderContactButton';
 
 import { GlobalHeaderPayload } from '@/lib/cms/types';
@@ -36,7 +37,15 @@ export function HeaderV2({ content = DEFAULT_HEADER_CONTENT }: { content?: Globa
         <LogoContainer>
           <Link href="/" style={{ textDecoration: 'none' }}>
             <LogoText $isFloating={isFloating}>
-              {content.logo_image && <img src={content.logo_image} alt="Logo" style={{ width: '40px', height: '40px', borderRadius: '20px', marginRight: '12px' }} />}
+              {content.logo_image && (
+                <Image
+                  src={content.logo_image}
+                  alt="Logo"
+                  width={40}
+                  height={40}
+                  style={{ borderRadius: '20px', marginRight: '12px' }}
+                />
+              )}
               {!content.logo_image && content.logo_text}
             </LogoText>
           </Link>
@@ -124,4 +133,3 @@ const NavItem = styled(Link) <{ $isFloating: boolean }>`
   color: ${({ $isFloating }) => $isFloating ? '#061530' : '#FFFFFF'};
   text-decoration: none;
 `;
-

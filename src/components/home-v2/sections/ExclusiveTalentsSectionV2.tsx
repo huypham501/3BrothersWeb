@@ -1,6 +1,7 @@
 'use client';
 
 import styled, { css } from 'styled-components';
+import Image from 'next/image';
 import { useRef, useState, useEffect, useCallback } from 'react';
 import { colors, spacing, typography, mediaQueries, motion } from '@/styles/tokens';
 
@@ -97,9 +98,19 @@ export function ExclusiveTalentsSectionV2({ content }: { content: SharedExclusiv
       {/* Main area: photo LEFT, info RIGHT */}
       <MainTalentArea>
         {content.featured_photo ? (
-           <img src={content.featured_photo} alt={content.featured_photo_alt || 'Featured Talent'} style={{
-             flex: 'none', width: '560px', height: '560px', objectFit: 'cover', borderRadius: '16px'
-           }} />
+          <Image
+            src={content.featured_photo}
+            alt={content.featured_photo_alt || 'Featured Talent'}
+            width={560}
+            height={560}
+            style={{
+              flex: 'none',
+              width: '560px',
+              height: '560px',
+              objectFit: 'cover',
+              borderRadius: '16px',
+            }}
+          />
         ) : (
           <TalentPhotoMain />
         )}
@@ -149,7 +160,13 @@ export function ExclusiveTalentsSectionV2({ content }: { content: SharedExclusiv
             {talents.map((t, idx) => (
               <TalentThumb key={idx}>
                 {t.photo ? (
-                  <img src={t.photo} alt={t.photo_alt || t.name} style={{ width: '240px', height: '240px', objectFit: 'cover', borderRadius: '8px', flex: 'none' }} />
+                  <Image
+                    src={t.photo}
+                    alt={t.photo_alt || t.name}
+                    width={240}
+                    height={240}
+                    style={{ width: '240px', height: '240px', objectFit: 'cover', borderRadius: '8px', flex: 'none' }}
+                  />
                 ) : (
                   <ThumbImagePlaceholder />
                 )}

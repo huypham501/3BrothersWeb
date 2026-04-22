@@ -1,7 +1,11 @@
 'use client';
 
 import * as React from 'react';
-import { useForm, useFieldArray } from 'react-hook-form';
+import {
+  useForm,
+  useFieldArray,
+  type UseFormReturn,
+} from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTransition } from 'react';
 import { useRouter } from 'next/navigation';
@@ -359,11 +363,14 @@ export function JobPositionEditor({
 
 interface DynamicStringListProps {
   label: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  fieldArray: any;
   name: 'descriptions' | 'requirements' | 'benefits';
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  form: any;
+  fieldArray: {
+    fields: Array<{ id: string }>;
+    append: (value: string) => void;
+    move: (from: number, to: number) => void;
+    remove: (index: number) => void;
+  };
+  form: UseFormReturn<FormValues>;
   placeholder?: string;
 }
 
@@ -394,8 +401,8 @@ function DynamicStringList({
             <div style={{ flex: 1 }}>
               <FormField
                 control={form.control}
-                name={`${name}.${idx}`}
-                render={({ field: inputField }: { field: React.InputHTMLAttributes<HTMLTextAreaElement> }) => (
+                name={`${name}.${idx}` as const}
+                render={({ field: inputField }) => (
                   <FormItem>
                     <FormControl>
                       <Textarea

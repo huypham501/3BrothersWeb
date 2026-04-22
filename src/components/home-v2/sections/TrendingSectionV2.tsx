@@ -1,6 +1,7 @@
 'use client';
 
 import styled from 'styled-components';
+import Image from 'next/image';
 import { colors, spacing, typography, mediaQueries, borderRadius, motion } from '@/styles/tokens';
 
 import { HomeTrendingPayload } from '@/lib/cms/types';
@@ -20,7 +21,14 @@ export function TrendingSectionV2({ content }: { content: HomeTrendingPayload })
           <a key={index} href={news.url || '#'} style={{ display: 'contents', textDecoration: 'none' }}>
             <NewsCard>
               {news.image ? (
-                <img src={news.image} alt={news.image_alt || news.title} style={{ width: '100%', height: '268px', borderRadius: '24px', objectFit: 'cover', border: '1px solid white' }} />
+                <CardImageWrapper>
+                  <Image
+                    src={news.image}
+                    alt={news.image_alt || news.title}
+                    fill
+                    style={{ objectFit: 'cover' }}
+                  />
+                </CardImageWrapper>
               ) : (
                 <CardImage />
               )}
@@ -138,6 +146,16 @@ const CardImage = styled.div`
   background: linear-gradient(180deg, #A48B8B, #4C3C3C);
   flex-shrink: 0;
   overflow: hidden;
+`;
+
+const CardImageWrapper = styled.div`
+  position: relative;
+  width: 100%;
+  height: 268px;
+  border-radius: 24px;
+  border: 1px solid ${colors.white};
+  overflow: hidden;
+  flex-shrink: 0;
 `;
 
 const CardContent = styled.div`

@@ -1,6 +1,7 @@
 'use client';
 
 import styled from 'styled-components';
+import Image from 'next/image';
 import { colors, spacing, typography, mediaQueries, borderRadius, motion } from '@/styles/tokens';
 import { HeroBackgroundGraphics } from '../components/HeroBackgroundGraphics';
 import { HeroMediaPlaceholder } from '../components/HeroMediaPlaceholder';
@@ -30,10 +31,12 @@ export function HeroSectionV2({ content }: { content: HomeHeroPayload }) {
           </ButtonGroup>
         </TextBlock>
         {content.media_image ? (
-          <img 
-            src={content.media_image} 
-            alt={content.media_image_alt || "Hero media"} 
-            style={{ maxWidth: '600px', width: '100%', height: 'auto', borderRadius: '24px' }} 
+          <Image
+            src={content.media_image}
+            alt={content.media_image_alt || 'Hero media'}
+            width={1200}
+            height={800}
+            style={{ maxWidth: '600px', width: '100%', height: 'auto', borderRadius: '24px' }}
           />
         ) : (
           <HeroMediaPlaceholder />
@@ -133,5 +136,4 @@ const ButtonGroup = styled.div`
     width: 100%;
   }
 `;
-
 

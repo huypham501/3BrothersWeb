@@ -1,6 +1,7 @@
 'use client';
 
 import styled from 'styled-components';
+import Image from 'next/image';
 import { colors, spacing, typography, mediaQueries, borderRadius, motion } from '@/styles/tokens';
 
 import { HomePartnersPayload } from '@/lib/cms/types';
@@ -13,12 +14,14 @@ export function PartnersSectionV2({ content }: { content: HomePartnersPayload })
       <LogosWrapper>
         {partners.map((partner, index) => (
           partner.logo_image ? (
-            <img 
-              key={index} 
-              src={partner.logo_image} 
-              alt={partner.name} 
-              style={{ maxHeight: '40px', maxWidth: '120px', objectFit: 'contain' }}
-            />
+            <PartnerLogo key={index}>
+              <Image
+                src={partner.logo_image}
+                alt={partner.name}
+                fill
+                style={{ objectFit: 'contain' }}
+              />
+            </PartnerLogo>
           ) : (
             <LogoTextPlaceholder key={index}>
               {partner.name}
@@ -72,4 +75,11 @@ const LogoTextPlaceholder = styled.div`
   font-size: ${typography.fontSize.xl};
   text-transform: uppercase;
   letter-spacing: 1px;
+`;
+
+const PartnerLogo = styled.div`
+  position: relative;
+  width: 120px;
+  height: 40px;
+  flex: none;
 `;
