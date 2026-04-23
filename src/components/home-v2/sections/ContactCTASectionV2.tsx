@@ -13,36 +13,9 @@ const DEFAULT_CONTACT_CTA_CONTENT: SharedContactCtaPayload = {
 };
 
 export function ContactCTASectionV2({ content = DEFAULT_CONTACT_CTA_CONTENT }: { content?: SharedContactCtaPayload }) {
-  // 22 beams as in the design (Rectangle 27 through 48)
-  // Each beam is 134px wide, 590px tall, spaced 66px apart with a step-down in top
-  const beams = Array.from({ length: 22 }, (_, i) => {
-    // Left half (0-10): starts at x=0, top=2224 stepping down -20px each
-    // Right half (11-21): starts at x=726, top=2014 stepping up +20px each
-    // We normalise relative to the container: left portion starts top=210, right mirrors
-    if (i <= 10) {
-      const left = i * 66;
-      const top = 210 - i * 20; // decreasing top (going up-right)
-      return { left, top };
-    } else {
-      const j = i - 11;
-      const left = 726 + j * 66;
-      const top = 0 + j * 30; // increasing top (going down-right)
-      return { left, top };
-    }
-  });
-
   return (
     <SectionContainer>
-      {/* Ambient blurs */}
-      <AmbientBlur7 />
-      <AmbientBlur8 />
-
-      {/* Diagonal beam overlay */}
-      <BeamsOverlay>
-        {beams.map((b, i) => (
-          <Beam key={i} style={{ left: b.left, top: b.top }} />
-        ))}
-      </BeamsOverlay>
+      <BackgroundEffectsLayer src="/images/home/contact-cta-bg-from-group.svg" alt="" aria-hidden="true" />
 
       <ContentBlock>
         <Title dangerouslySetInnerHTML={{ __html: content.title.replace(/\n/g, '<br />') }} />
@@ -66,65 +39,49 @@ export function ContactCTASectionV2({ content = DEFAULT_CONTACT_CTA_CONTENT }: {
 
 const SectionContainer = styled.section`
   position: relative;
+  box-sizing: border-box;
   width: 100%;
-  padding: 120px ${spacing['5xl']};
+  min-height: 800px;
+  padding: 150px ${spacing['5xl']} 80px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   text-align: center;
   overflow: hidden;
   background: ${colors.primaryLight};
 
   ${mediaQueries.down.sm} {
+    min-height: auto;
     padding: 80px ${spacing.lg};
+    justify-content: center;
   }
 `;
 
-/* Ellipse 7 — large deep blue blur at top */
-const AmbientBlur7 = styled.div`
+const BackgroundEffectsLayer = styled.img`
   position: absolute;
-  width: 1543px;
-  height: 624px;
-  left: -27px;
   top: 0;
-  background: #003CA6;
-  opacity: 0.7;
-  filter: blur(200px);
+  left: 50%;
+  width: 1440px;
+  height: 800px;
+  transform: translateX(-50%);
+  display: block;
   pointer-events: none;
   z-index: 0;
-`;
 
-/* Ellipse 8 — smaller dark blur at bottom-left */
-const AmbientBlur8 = styled.div`
-  position: absolute;
-  width: 335px;
-  height: 366px;
-  left: 24px;
-  bottom: 0;
-  background: #061530;
-  opacity: 0.4;
-  filter: blur(200px);
-  pointer-events: none;
-  z-index: 0;
-`;
+  ${mediaQueries.down.md} {
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    transform: none;
+    object-fit: cover;
+    object-position: center top;
+  }
 
-/* Beam container with mix-blend-mode overlay */
-const BeamsOverlay = styled.div`
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  mix-blend-mode: overlay;
-  overflow: hidden;
-  z-index: 1;
-`;
-
-const Beam = styled.div`
-  position: absolute;
-  width: 134px;
-  height: 590px;
-  background: linear-gradient(222.85deg, rgba(255, 255, 255, 0) 49.5%, rgba(255, 255, 255, 0.6) 100%);
-  filter: drop-shadow(0px 0px 12px rgba(255, 255, 255, 0.25));
+  ${mediaQueries.down.sm} {
+    object-position: center -40px;
+  }
 `;
 
 const ContentBlock = styled.div`
