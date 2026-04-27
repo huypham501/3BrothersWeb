@@ -6,7 +6,7 @@ import { colors, spacing, typography, mediaQueries } from '@/styles/tokens';
 
 import { HomePartnersPayload } from '@/lib/cms/types';
 
-export function PartnersSectionV2({
+export function PartnersSection({
   content,
   className,
   inComposite = false,

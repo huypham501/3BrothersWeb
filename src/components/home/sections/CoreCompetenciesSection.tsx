@@ -6,7 +6,7 @@ import { CoreCompetencyCard } from '../components/CoreCompetencyCard';
 
 import { HomeCoreCompetenciesPayload } from '@/lib/cms/types';
 
-export function CoreCompetenciesSectionV2({ content }: { content: HomeCoreCompetenciesPayload }) {
+export function CoreCompetenciesSection({ content }: { content: HomeCoreCompetenciesPayload }) {
   const SERVICES = content.services || [];
 
   return (

@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 
 // Public page — served from ISR cache, revalidated only via Publish Center.
 export const revalidate = false;
-import { ForCreatorsViewV2 } from '@/components/forCreators-v2/ForCreatorsViewV2';
+import { ForCreatorsView } from '@/components/forCreators/ForCreatorsView';
 
 import { SITE_URL } from '@/lib/constants';
 import { getPageBySlug } from '@/lib/cms/queries';
@@ -59,5 +59,5 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function ForCreatorsPage() {
   const data = await resolveForCreatorsPageData();
-  return <ForCreatorsViewV2 data={data} />;
+  return <ForCreatorsView data={data} />;
 }

@@ -3,8 +3,8 @@
 import styled from 'styled-components';
 import { colors } from '@/styles/tokens';
 
-import { HeaderV2 } from '@/components/home-v2/shared/HeaderV2';
-import { FooterV2 } from '@/components/home-v2/shared/FooterV2';
+import { Header } from '@/components/shared/Header';
+import { Footer } from '@/components/shared/Footer';
 import { HeroSection } from './sections/HeroSection';
 import { OpenPositionSection } from './sections/OpenPositionSection';
 import type { CareersHeroPayload } from '@/lib/cms/types/payloads';
@@ -21,12 +21,12 @@ interface CareersViewProps {
 export function CareersView({ hero, positions, header, footer }: CareersViewProps) {
   return (
     <Wrapper>
-      <HeaderV2 content={header ?? undefined} />
+      <Header content={header ?? undefined} />
       <MainContent>
         <HeroSection hero={hero} />
         <OpenPositionSection positions={positions} />
       </MainContent>
-      <FooterV2 content={footer ?? undefined} />
+      <Footer content={footer ?? undefined} />
     </Wrapper>
   );
 }

@@ -6,7 +6,7 @@ import { colors, spacing, typography, mediaQueries, motion } from '@/styles/toke
 
 import { HomeEfficiencyPayload } from '@/lib/cms/types';
 
-export function EfficiencySectionV2({ content }: { content: HomeEfficiencyPayload }) {
+export function EfficiencySection({ content }: { content: HomeEfficiencyPayload }) {
   const STATS = content.stats || [];
 
   return (

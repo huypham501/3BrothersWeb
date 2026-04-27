@@ -3,10 +3,10 @@
 import styled from 'styled-components';
 import { mediaQueries } from '@/styles/tokens';
 import { HomeHeroPayload, HomePartnersPayload } from '@/lib/cms/types';
-import { HeroSectionV2 } from './HeroSectionV2';
-import { PartnersSectionV2 } from './PartnersSectionV2';
+import { HeroSection } from './HeroSection';
+import { PartnersSection } from './PartnersSection';
 
-export function HomeHeroPartnerSectionV2({
+export function HomeHeroPartnerSection({
   hero,
   partners,
 }: {
@@ -19,10 +19,10 @@ export function HomeHeroPartnerSectionV2({
     return (
       <CompositeStage>
         <HeroLayer>
-          <HeroSectionV2 content={hero} isComposite />
+          <HeroSection content={hero} isComposite />
         </HeroLayer>
         <PartnerLayer>
-          <PartnersSectionV2 content={partners} inComposite />
+          <PartnersSection content={partners} inComposite />
         </PartnerLayer>
       </CompositeStage>
     );
@@ -31,12 +31,12 @@ export function HomeHeroPartnerSectionV2({
   if (hero) {
     return (
       <HeroOnlyWrapper>
-        <HeroSectionV2 content={hero} />
+        <HeroSection content={hero} />
       </HeroOnlyWrapper>
     );
   }
 
-  return <PartnersSectionV2 content={partners!} />;
+  return <PartnersSection content={partners!} />;
 }
 
 const CompositeStage = styled.section`

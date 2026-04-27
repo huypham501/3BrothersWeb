@@ -18,7 +18,7 @@ import {
   TalentInfoContent,
   TalentName,
   TalentPhotoMain,
-} from '../ExclusiveTalentsSectionV2.styles';
+} from '../ExclusiveTalentsSection.styles';
 
 export function FeaturedTalentPanel({ activeTalent }: { activeTalent: ExclusiveTalent | null }) {
   const descriptionText = activeTalent?.description || '';

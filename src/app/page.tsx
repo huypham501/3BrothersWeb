@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 // Public page — served from ISR cache, revalidated only via Publish Center.
 export const revalidate = false;
-import { HomeViewV2 } from "@/components/home-v2/HomeViewV2";
+import { HomeView } from "@/components/home/HomeView";
 
 import { SITE_URL } from "@/lib/constants";
 import { getPageBySlug } from "@/lib/cms/queries";
@@ -61,5 +61,5 @@ export default async function HomePage() {
   const data = await resolveHomePageData();
   
   // If no CMS data exists yet, we could fallback, but we assume the admin seeded it
-  return <HomeViewV2 data={data} />;
+  return <HomeView data={data} />;
 }

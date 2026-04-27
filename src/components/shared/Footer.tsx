@@ -14,7 +14,7 @@ const DEFAULT_FOOTER_CONTENT: GlobalFooterPayload = {
   brand_watermark: '3BROTHERS.MEDIA',
 };
 
-export function FooterV2({ content = DEFAULT_FOOTER_CONTENT }: { content?: GlobalFooterPayload }) {
+export function Footer({ content = DEFAULT_FOOTER_CONTENT }: { content?: GlobalFooterPayload }) {
   return (
     <FooterContainer>
       <BackgroundGlow aria-hidden="true">

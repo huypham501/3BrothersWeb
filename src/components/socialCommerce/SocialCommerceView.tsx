@@ -3,9 +3,9 @@
 import styled from 'styled-components';
 import { colors } from '@/styles/tokens';
 
-import { HeaderV2 } from '@/components/home-v2/shared/HeaderV2';
-import { FooterV2 } from '@/components/home-v2/shared/FooterV2';
-import { ContactCTASectionV2 } from '@/components/home-v2/sections/ContactCTASectionV2';
+import { Header } from '@/components/shared/Header';
+import { Footer } from '@/components/shared/Footer';
+import { ContactCTASection } from '@/components/shared/ContactCTASection';
 import type { GlobalFooterPayload, GlobalHeaderPayload } from '@/lib/cms/types';
 
 import { HeroSection } from './sections/HeroSection';
@@ -20,14 +20,14 @@ interface SocialCommerceViewProps {
 export function SocialCommerceView({ header, footer }: SocialCommerceViewProps) {
   return (
     <Wrapper>
-      <HeaderV2 content={header ?? undefined} />
+      <Header content={header ?? undefined} />
       <MainContent>
         <HeroSection />
         <GrowthSection />
         <ValuePropositionSection />
       </MainContent>
-      <ContactCTASectionV2 />
-      <FooterV2 content={footer ?? undefined} />
+      <ContactCTASection />
+      <Footer content={footer ?? undefined} />
     </Wrapper>
   );
 }

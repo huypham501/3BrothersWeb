@@ -10,7 +10,7 @@ import { SecondaryButton } from '../components/SecondaryButton';
 
 import { HomeHeroPayload } from '@/lib/cms/types';
 
-export function HeroSectionV2({
+export function HeroSection({
   content,
   className,
   isComposite = false,

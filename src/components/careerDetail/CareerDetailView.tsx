@@ -3,9 +3,9 @@
 import styled from 'styled-components';
 import { notFound } from 'next/navigation';
 
-import { HeaderV2 } from '@/components/home-v2/shared/HeaderV2';
-import { FooterV2 } from '@/components/home-v2/shared/FooterV2';
-import { ContactCTASectionV2 } from '@/components/home-v2/sections/ContactCTASectionV2';
+import { Header } from '@/components/shared/Header';
+import { Footer } from '@/components/shared/Footer';
+import { ContactCTASection } from '@/components/shared/ContactCTASection';
 import { HeroSection } from './sections/HeroSection';
 import { MainSection } from './sections/MainSection';
 import { ExploreSection } from './sections/ExploreSection';
@@ -41,14 +41,14 @@ export function CareerDetailView({
 
   return (
     <Wrapper>
-      <HeaderV2 content={header ?? undefined} />
+      <Header content={header ?? undefined} />
       <MainContent>
         <HeroSection job={job} />
         <MainSection job={job} />
         <ExploreSection currentSlug={slug} relatedJobs={relatedJobs} />
       </MainContent>
-      <ContactCTASectionV2 />
-      <FooterV2 content={footer ?? undefined} />
+      <ContactCTASection />
+      <Footer content={footer ?? undefined} />
     </Wrapper>
   );
 }

@@ -3,8 +3,8 @@
 import styled from 'styled-components';
 import { colors } from '@/styles/tokens';
 
-import { HeaderV2 } from '@/components/home-v2/shared/HeaderV2';
-import { FooterV2 } from '@/components/home-v2/shared/FooterV2';
+import { Header } from '@/components/shared/Header';
+import { Footer } from '@/components/shared/Footer';
 import type { GlobalFooterPayload, GlobalHeaderPayload } from '@/lib/cms/types';
 
 import { FormSection } from './sections/FormSection';
@@ -18,7 +18,7 @@ interface ContactViewProps {
 export function ContactView({ header, footer }: ContactViewProps) {
   return (
     <Wrapper>
-      <HeaderV2 content={header ?? undefined} />
+      <Header content={header ?? undefined} />
       
       <MainContent>
         {/* Background blurs from the common CSS Contact tokens */}
@@ -35,7 +35,7 @@ export function ContactView({ header, footer }: ContactViewProps) {
         <ContactInfo />
       </MainContent>
 
-      <FooterV2 content={footer ?? undefined} />
+      <Footer content={footer ?? undefined} />
     </Wrapper>
   );
 }

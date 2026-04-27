@@ -13,9 +13,9 @@ import {
   Title,
   TitleLine,
   TitleRow,
-} from './ExclusiveTalentsSectionV2.styles';
+} from './ExclusiveTalentsSection.styles';
 
-export function ExclusiveTalentsSectionV2({ content }: { content: SharedExclusiveTalentsPayload }) {
+export function ExclusiveTalentsSection({ content }: { content: SharedExclusiveTalentsPayload }) {
   const talents = content.talents || [];
 
   const featuredIndex = useMemo(() => {

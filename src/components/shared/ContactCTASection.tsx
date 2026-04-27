@@ -15,7 +15,7 @@ const CONTACT_CTA_BG_IMAGE = '/images/home/contact-cta-bg.png';
 const CONTACT_CTA_BG_ASPECT_RATIO = '2880 / 1843';
 const CONTACT_CTA_BG_WIDTH = '1440px';
 
-export function ContactCTASectionV2({ content = DEFAULT_CONTACT_CTA_CONTENT }: { content?: SharedContactCtaPayload }) {
+export function ContactCTASection({ content = DEFAULT_CONTACT_CTA_CONTENT }: { content?: SharedContactCtaPayload }) {
   return (
     <SectionContainer>
       <ContentBlock>

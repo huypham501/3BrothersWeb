@@ -11,7 +11,7 @@ import {
   ThumbImagePlaceholder,
   ThumbName,
   VerticalText,
-} from '../ExclusiveTalentsSectionV2.styles';
+} from '../ExclusiveTalentsSection.styles';
 
 interface TalentSliderProps {
   talents: ExclusiveTalent[];

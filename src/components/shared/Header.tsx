@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Link from 'next/link';
 import Image from 'next/image';
-import { HeaderContactButton } from '../components/HeaderContactButton';
+import { HeaderContactButton } from '@/components/home/components/HeaderContactButton';
 
 import { GlobalHeaderPayload } from '@/lib/cms/types';
 
@@ -16,7 +16,7 @@ const DEFAULT_HEADER_CONTENT: GlobalHeaderPayload = {
   cta_url: '/',
 };
 
-export function HeaderV2({ content = DEFAULT_HEADER_CONTENT }: { content?: GlobalHeaderPayload }) {
+export function Header({ content = DEFAULT_HEADER_CONTENT }: { content?: GlobalHeaderPayload }) {
   const [isFloating, setIsFloating] = useState(false);
 
   useEffect(() => {

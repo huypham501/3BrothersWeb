@@ -6,7 +6,7 @@ import { colors, spacing, typography, mediaQueries, borderRadius, motion } from 
 
 import { HomeTrendingPayload } from '@/lib/cms/types';
 
-export function TrendingSectionV2({ content }: { content: HomeTrendingPayload }) {
+export function TrendingSection({ content }: { content: HomeTrendingPayload }) {
   const newsItems = (content.news_items || []).slice(0, content.news_limit || 3);
 
   return (

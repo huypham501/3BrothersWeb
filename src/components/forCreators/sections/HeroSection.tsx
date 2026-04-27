@@ -10,7 +10,7 @@ const fadeUp = keyframes`
   to   { opacity: 1; transform: translateY(0); }
 `;
 
-export function HeroSectionV2({ content }: { content: ForCreatorsHeroPayload }) {
+export function HeroSection({ content }: { content: ForCreatorsHeroPayload }) {
   return (
     <HeroWrapper>
       <BlobLayer>

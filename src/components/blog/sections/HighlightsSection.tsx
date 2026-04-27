@@ -77,16 +77,16 @@ const HeroImageWrapper = styled.div`
   width: 100%;
   height: 710px;
   overflow: hidden;
-  border-radius: 0 0 120px 120px;
+  border-radius: 12px;
 
   ${mediaQueries.down.lg} {
     height: 500px;
-    border-radius: 0 0 80px 80px;
+    border-radius: 12px;
   }
 
   ${mediaQueries.down.sm} {
     height: 380px;
-    border-radius: 0 0 48px 48px;
+    border-radius: 12px;
   }
 `;
 
