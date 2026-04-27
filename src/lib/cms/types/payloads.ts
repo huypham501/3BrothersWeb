@@ -102,20 +102,18 @@ export interface HomeTrendingPayload {
 
 export interface SharedExclusiveTalentsPayload {
   section_title: string;
-  featured_name: string;
-  featured_handle: string;
-  featured_photo?: string | null;
-  featured_photo_alt?: string | null;
-  featured_description: string;
-  featured_stats: Array<{
-    value: string;
-    label: string;
-  }>;
   talent_count_label?: string | null;
   talents: Array<{
     name: string;
+    handle: string;
     photo?: string | null;
     photo_alt?: string | null;
+    description: string;
+    stats: Array<{
+      value: string;
+      label: string;
+    }>;
+    is_featured: boolean;
   }>;
 }
 

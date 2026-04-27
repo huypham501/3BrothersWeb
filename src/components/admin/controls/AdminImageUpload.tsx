@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import { Image } from 'antd';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -201,15 +202,18 @@ export function AdminImageUpload({
         <p style={styles.errorText}>{uploadError}</p>
       )}
 
-      {/* ── Image preview ── */}
+      {/* ── Image preview (Antd built-in preview) ── */}
       {hasImage && !previewError && (
         <div style={styles.previewWrapper}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          <Image
             src={value!}
             alt="Preview"
             onError={() => setPreviewError(true)}
             style={styles.preview}
+            preview={{
+              src: value!,
+              mask: 'Xem ảnh lớn',
+            }}
           />
           <span style={styles.previewLabel}>Preview</span>
         </div>
@@ -342,6 +346,7 @@ const styles = {
     objectFit: 'contain' as const,
     borderRadius: '4px',
     border: '1px solid #e8e8e8',
+    cursor: 'zoom-in',
   },
   previewLabel: {
     fontSize: '11px',

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { requireAdminUser } from '@/lib/admin/require-admin-user';
+import { AdminShell } from '@/components/admin/layout/AdminShell';
 
 interface AdminLayoutProps {
   children: React.ReactNode;
@@ -7,5 +8,5 @@ interface AdminLayoutProps {
 
 export default async function AdminLayout({ children }: AdminLayoutProps) {
   await requireAdminUser('/admin');
-  return children;
+  return <AdminShell>{children}</AdminShell>;
 }

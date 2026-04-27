@@ -82,7 +82,7 @@ export function GlobalSeoDefaultsEditor({
     clearFlash();
     try {
       const values = form.getValues();
-      if (form.formState.isDirty) {
+      if (form.formState.isDirty || !setting.id) {
         await saveGlobalSettingDraft(SCHEMA_KEYS.GLOBAL_SEO_DEFAULTS, values, setting.enabled);
       }
       await publishGlobalSetting(SCHEMA_KEYS.GLOBAL_SEO_DEFAULTS);

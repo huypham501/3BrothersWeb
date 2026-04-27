@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, UseFormReturn } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CmsSharedSection, sharedContactCtaSchema } from '@/lib/cms';
 import { saveSharedSection } from '@/lib/cms/actions';
@@ -13,26 +13,93 @@ import { AdminAlert as Alert, AdminAlertDescription as AlertDescription, AdminAl
 import { FormStack, HeaderRow, TwoColumnGrid } from './EditorLayout';
 import { z } from 'zod';
 
+export type SharedContactCtaFormValues = z.infer<typeof sharedContactCtaSchema>;
 
+export function getSharedContactCtaDefaultValues(
+  content?: Partial<SharedContactCtaFormValues> | null
+): SharedContactCtaFormValues {
+  return {
+    title: content?.title || '',
+    subtitle: content?.subtitle || '',
+    cta_label: content?.cta_label || '',
+    cta_url: content?.cta_url || '',
+  };
+}
+
+export function SharedContactCtaFields({ form }: { form: UseFormReturn<any> }) {
+  return (
+    <>
+      <FormField
+        control={form.control}
+        name="title"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Title</FormLabel>
+            <FormControl>
+              <Input {...field} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+
+      <FormField
+        control={form.control}
+        name="subtitle"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Subtitle</FormLabel>
+            <FormControl>
+              <Textarea {...field} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+
+      <TwoColumnGrid>
+        <FormField
+          control={form.control}
+          name="cta_label"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>CTA Label</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="cta_url"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>CTA URL</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      </TwoColumnGrid>
+    </>
+  );
+}
 
 export function SharedContactCtaEditor({ section }: { section: CmsSharedSection<z.infer<typeof sharedContactCtaSchema>> }) {
   const [isSaving, setIsSaving] = React.useState(false);
   const [success, setSuccess] = React.useState(false);
   const [errorMsg, setErrorMsg] = React.useState<string | null>(null);
 
-  type FormValues = z.infer<typeof sharedContactCtaSchema>;
-
-  const form = useForm<FormValues>({
+  const form = useForm<SharedContactCtaFormValues>({
     resolver: zodResolver(sharedContactCtaSchema),
-    defaultValues: {
-      title: section.content.title || '',
-      subtitle: section.content.subtitle || '',
-      cta_label: section.content.cta_label || '',
-      cta_url: section.content.cta_url || '',
-    },
+    defaultValues: getSharedContactCtaDefaultValues(section.content),
   });
 
-  const onSubmit = async (data: FormValues) => {
+  const onSubmit = async (data: SharedContactCtaFormValues) => {
     setIsSaving(true);
     setSuccess(false);
     setErrorMsg(null);
@@ -54,7 +121,7 @@ export function SharedContactCtaEditor({ section }: { section: CmsSharedSection<
         <Alert variant="default" style={{ backgroundColor: '#fffbeb', borderColor: '#fcd34d' }}>
           <AlertTitle>Shared Content Warning</AlertTitle>
           <AlertDescription>
-            This Contact CTA section is shared across multiple pages (Home, For Creators, Blogs, etc.). 
+            This Contact CTA section is shared across multiple pages (Home, For Creators, Blogs, etc.).
             Modifying its content here will affect all pages displaying this section.
           </AlertDescription>
         </Alert>
@@ -68,62 +135,7 @@ export function SharedContactCtaEditor({ section }: { section: CmsSharedSection<
           </Button>
         </HeaderRow>
 
-        <FormField
-          control={form.control}
-          name="title"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Title</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        
-        <FormField
-          control={form.control}
-          name="subtitle"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Subtitle</FormLabel>
-              <FormControl>
-                <Textarea {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <TwoColumnGrid>
-          <FormField
-            control={form.control}
-            name="cta_label"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>CTA Label</FormLabel>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="cta_url"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>CTA URL</FormLabel>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </TwoColumnGrid>
+        <SharedContactCtaFields form={form} />
       </FormStack>
     </Form>
   );

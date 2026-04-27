@@ -69,28 +69,91 @@ export const globalSiteMetadataSchema = z.object({
   publisher_name: z.string().max(80),
 });
 
-export const sharedExclusiveTalentsSchema = z.object({
-  section_title: z.string().max(80),
-  featured_name: z.string().max(60),
-  featured_handle: z.string().max(40),
-  featured_photo: z.string().nullable().optional(),
-  featured_photo_alt: z.string().max(125).nullable().optional(),
-  featured_description: z.string().max(800),
-  featured_stats: z.array(
+const sharedExclusiveTalentItemSchema = z.object({
+  name: z.string().max(60),
+  handle: z.string().max(40),
+  photo: z.string().nullable().optional(),
+  photo_alt: z.string().max(125).nullable().optional(),
+  description: z.string().max(800),
+  stats: z.array(
     z.object({
       value: z.string().max(20),
       label: z.string().max(30),
     })
   ).length(2),
-  talent_count_label: z.string().max(20).nullable().optional(),
-  talents: z.array(
-    z.object({
-      name: z.string().max(60),
-      photo: z.string().nullable().optional(),
-      photo_alt: z.string().max(125).nullable().optional(),
-    })
-  ).min(1).max(20),
+  is_featured: z.boolean(),
 });
+
+export const sharedExclusiveTalentsSchema = z.preprocess((input) => {
+  if (!input || typeof input !== 'object') return input;
+  const payload = input as Record<string, unknown>;
+
+  // Backward compatibility: migrate old featured_* shape into the new talents[] shape.
+  const talentsRaw = Array.isArray(payload.talents) ? payload.talents : [];
+  const hasNewTalentShape = talentsRaw.some((item) => {
+    if (!item || typeof item !== 'object') return false;
+    const talent = item as Record<string, unknown>;
+    return 'handle' in talent || 'description' in talent || 'stats' in talent || 'is_featured' in talent;
+  });
+
+  if (hasNewTalentShape) {
+    return input;
+  }
+
+  const featuredStatsRaw = Array.isArray(payload.featured_stats) ? payload.featured_stats : [];
+  const fallbackStats = [{ label: '', value: '' }, { label: '', value: '' }];
+  const featuredStats = (featuredStatsRaw.length === 2 ? featuredStatsRaw : fallbackStats).map((item) => {
+    const stat = item as Record<string, unknown>;
+    return {
+      label: typeof stat?.label === 'string' ? stat.label : '',
+      value: typeof stat?.value === 'string' ? stat.value : '',
+    };
+  });
+
+  const mappedTalents = talentsRaw.map((item, index) => {
+    const talent = item && typeof item === 'object' ? item as Record<string, unknown> : {};
+    return {
+      name: typeof talent.name === 'string' ? talent.name : '',
+      handle: '',
+      photo: typeof talent.photo === 'string' ? talent.photo : null,
+      photo_alt: typeof talent.photo_alt === 'string' ? talent.photo_alt : null,
+      description: '',
+      stats: [{ label: '', value: '' }, { label: '', value: '' }],
+      is_featured: index === 0,
+    };
+  });
+
+  if (typeof payload.featured_name === 'string') {
+    mappedTalents.unshift({
+      name: payload.featured_name,
+      handle: typeof payload.featured_handle === 'string' ? payload.featured_handle : '',
+      photo: typeof payload.featured_photo === 'string' ? payload.featured_photo : null,
+      photo_alt: typeof payload.featured_photo_alt === 'string' ? payload.featured_photo_alt : null,
+      description: typeof payload.featured_description === 'string' ? payload.featured_description : '',
+      stats: featuredStats,
+      is_featured: true,
+    });
+  }
+
+  return {
+    section_title: typeof payload.section_title === 'string' ? payload.section_title : '',
+    talent_count_label: typeof payload.talent_count_label === 'string' ? payload.talent_count_label : null,
+    talents: mappedTalents.slice(0, 20),
+  };
+}, z.object({
+  section_title: z.string().max(80),
+  talent_count_label: z.string().max(20).nullable().optional(),
+  talents: z.array(sharedExclusiveTalentItemSchema).min(1).max(20),
+}).superRefine((value, ctx) => {
+  const featuredCount = value.talents.filter((talent) => talent.is_featured).length;
+  if (featuredCount !== 1) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: 'Exactly one talent must be featured.',
+      path: ['talents'],
+    });
+  }
+}));
 
 export const sharedContactCtaSchema = z.object({
   title: z.string().max(120),

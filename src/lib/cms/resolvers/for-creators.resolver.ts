@@ -77,16 +77,32 @@ export async function resolveForCreatorsPageData(): Promise<ForCreatorsViewModel
       'for-creators.sections.cta'
     ),
     shared: {
-      exclusiveTalents: resolveSharedContentBySchemaKey<typeof SCHEMA_KEYS.SHARED_EXCLUSIVE_TALENTS>(
-        data.shared.exclusiveTalents
+      exclusiveTalents: validateCmsPayloadBySchemaKey(
+        SCHEMA_KEYS.SHARED_EXCLUSIVE_TALENTS,
+        resolveSharedContentBySchemaKey<typeof SCHEMA_KEYS.SHARED_EXCLUSIVE_TALENTS>(
+          data.shared.exclusiveTalents
+        ),
+        'for-creators.shared.exclusive_talents'
       ),
-      contactCta: resolveSharedContentBySchemaKey<typeof SCHEMA_KEYS.SHARED_CONTACT_CTA>(
-        data.shared.contactCta
+      contactCta: validateCmsPayloadBySchemaKey(
+        SCHEMA_KEYS.SHARED_CONTACT_CTA,
+        resolveSharedContentBySchemaKey<typeof SCHEMA_KEYS.SHARED_CONTACT_CTA>(
+          data.shared.contactCta
+        ),
+        'for-creators.shared.contact_cta'
       ),
     },
     globals: {
-      header: resolveGlobalContentBySchemaKey<typeof SCHEMA_KEYS.GLOBAL_HEADER>(data.globals.header),
-      footer: resolveGlobalContentBySchemaKey<typeof SCHEMA_KEYS.GLOBAL_FOOTER>(data.globals.footer),
+      header: validateCmsPayloadBySchemaKey(
+        SCHEMA_KEYS.GLOBAL_HEADER,
+        resolveGlobalContentBySchemaKey<typeof SCHEMA_KEYS.GLOBAL_HEADER>(data.globals.header),
+        'for-creators.globals.header'
+      ),
+      footer: validateCmsPayloadBySchemaKey(
+        SCHEMA_KEYS.GLOBAL_FOOTER,
+        resolveGlobalContentBySchemaKey<typeof SCHEMA_KEYS.GLOBAL_FOOTER>(data.globals.footer),
+        'for-creators.globals.footer'
+      ),
     },
   };
 }

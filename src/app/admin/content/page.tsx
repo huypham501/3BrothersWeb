@@ -1,7 +1,7 @@
 import { getRecentCmsAuditLogs } from '@/lib/cms/queries';
-import { getAdminUiContext } from '@/lib/admin/require-admin-user';
+import { getAdminUiContextFromActor } from '@/lib/admin/require-admin-user';
 import { CmsAuditLogList } from '@/components/admin/cms/audit/CmsAuditLogList';
-import { AdminShell } from '@/components/admin/layout/AdminShell';
+import { AdminContent } from '@/components/admin/layout/AdminShell';
 import { AdminPageHeader } from '@/components/admin/layout/AdminPageHeader';
 import {
   AdminBadge,
@@ -16,11 +16,13 @@ import {
 export const dynamic = 'force-dynamic';
 
 export default async function AdminContentIndexPage() {
-  const ui = await getAdminUiContext('/admin/content');
-  const recentLogs = await getRecentCmsAuditLogs(10);
+  const [ui, recentLogs] = await Promise.all([
+    getAdminUiContextFromActor(),
+    getRecentCmsAuditLogs(10),
+  ]);
 
   return (
-    <AdminShell>
+    <AdminContent>
       <AdminPageHeader
         title="Content Admin"
         description="Manage page content and site-wide global settings."
@@ -75,6 +77,6 @@ export default async function AdminContentIndexPage() {
       </div>
 
       <CmsAuditLogList logs={recentLogs} />
-    </AdminShell>
+    </AdminContent>
   );
 }

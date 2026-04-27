@@ -7,9 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { CmsSharedSection, sharedContactCtaSchema, SCHEMA_KEYS } from '@/lib/cms';
 import { saveSharedSection, publishSharedSection } from '@/lib/cms/actions';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/admin/controls/AdminForm';
-import { AdminInput as Input } from '@/components/admin/controls/AdminInput';
-import { AdminTextarea as Textarea } from '@/components/admin/controls/AdminTextarea';
+import { Form, FormControl, FormField, FormLabel } from '@/components/admin/controls/AdminForm';
 import { AdminSwitch as Switch } from '@/components/admin/controls/AdminSwitch';
 import {
   AdminAlert,
@@ -18,8 +16,14 @@ import {
   AdminBadge,
   AdminButton,
 } from '@/components/admin/layout/AdminPrimitives';
+import { FormStack, HeaderRow, ToggleFormItem } from '@/components/admin/cms/editors/EditorLayout';
+import {
+  SharedContactCtaFields,
+  SharedContactCtaFormValues,
+  getSharedContactCtaDefaultValues,
+} from '@/components/admin/cms/editors/SharedContactCtaEditor';
 
-type FormValues = z.infer<typeof sharedContactCtaSchema> & { enabled: boolean };
+type FormValues = SharedContactCtaFormValues & { enabled: boolean };
 
 interface SharedContactCtaManagerProps {
   section: CmsSharedSection<z.infer<typeof sharedContactCtaSchema>>;
@@ -48,11 +52,8 @@ export function SharedContactCtaManager({
   const form = useForm<FormValues>({
     resolver: zodResolver(sharedContactCtaSchema.extend({ enabled: z.boolean() })),
     defaultValues: {
+      ...getSharedContactCtaDefaultValues(section.content),
       enabled: section.enabled,
-      title: section.content?.title || '',
-      subtitle: section.content?.subtitle || '',
-      cta_label: section.content?.cta_label || '',
-      cta_url: section.content?.cta_url || '/',
     },
   });
 
@@ -102,19 +103,17 @@ export function SharedContactCtaManager({
 
   return (
     <Form {...form}>
-      <FormRoot onSubmit={form.handleSubmit(onSaveDraft)}>
+      <FormStack onSubmit={form.handleSubmit(onSaveDraft)}>
         <AdminAlert>
           <AdminAlertTitle>Cross-Page Impact Warning</AdminAlertTitle>
           <AdminAlertDescription>
             This shared section is used by multiple routes. Publish will update all routes listed below.
           </AdminAlertDescription>
-          <BadgeRow>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
             {usageRoutes.map((route) => (
-              <AdminBadge key={`contact-cta-${route}`}>
-                {route}
-              </AdminBadge>
+              <AdminBadge key={`contact-cta-${route}`}>{route}</AdminBadge>
             ))}
-          </BadgeRow>
+          </div>
         </AdminAlert>
 
         {errorMsg && (
@@ -129,10 +128,10 @@ export function SharedContactCtaManager({
           </AdminAlert>
         )}
 
-        <SectionCard>
-          <ActionHeader>
-            <MetaGroup>
-              <BadgeRow>
+        <div style={{ border: '1px solid #d0d5dd', borderRadius: 10, background: '#ffffff', padding: 16, display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <HeaderRow>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
                 <AdminBadge>{section.schema_key}</AdminBadge>
                 <AdminBadge tone={section.published_enabled ? 'success' : 'neutral'}>
                   {section.published_enabled ? 'Published: Enabled' : 'Published: Disabled'}
@@ -140,17 +139,17 @@ export function SharedContactCtaManager({
                 <AdminBadge tone={section.has_unpublished_changes ? 'warning' : 'neutral'}>
                   {section.has_unpublished_changes ? 'Has Unpublished Changes' : 'No Unpublished Changes'}
                 </AdminBadge>
-              </BadgeRow>
-              <MetaText>Your role: {role}</MetaText>
-              <MetaText>
+              </div>
+              <p style={{ margin: 0 }}>Your role: {role}</p>
+              <p style={{ margin: 0 }}>
                 Last edited: {section.last_edited_by_identifier ?? 'N/A'} at {formatAuditDate(section.last_edited_at)}
-              </MetaText>
-              <MetaText>
+              </p>
+              <p style={{ margin: 0 }}>
                 Last published: {section.last_published_by_identifier ?? 'N/A'} at {formatAuditDate(section.last_published_at)}
-              </MetaText>
-            </MetaGroup>
+              </p>
+            </div>
 
-            <ButtonGroup>
+            <div style={{ display: 'flex', gap: 12 }}>
               <AdminButton type="submit" variant="outline" disabled={isSaving || isPublishing || !form.formState.isDirty}>
                 {isSaving ? 'Saving Draft...' : 'Save Draft'}
               </AdminButton>
@@ -162,10 +161,10 @@ export function SharedContactCtaManager({
               >
                 {isPublishing ? 'Publishing...' : 'Publish'}
               </AdminButton>
-            </ButtonGroup>
-          </ActionHeader>
+            </div>
+          </HeaderRow>
 
-          <Divider />
+          <hr style={{ width: '100%', borderColor: '#e4e7ec', margin: 0 }} />
 
           <FormField
             control={form.control}
@@ -181,79 +180,10 @@ export function SharedContactCtaManager({
               </ToggleFormItem>
             )}
           />
-        </SectionCard>
+        </div>
 
-        <FormField
-          control={form.control}
-          name="title"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Title</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="subtitle"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Subtitle</FormLabel>
-              <FormControl>
-                <Textarea {...field} rows={5} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <TwoColumnGrid>
-          <FormField
-            control={form.control}
-            name="cta_label"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>CTA Label</FormLabel>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="cta_url"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>CTA URL</FormLabel>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </TwoColumnGrid>
-      </FormRoot>
+        <SharedContactCtaFields form={form} />
+      </FormStack>
     </Form>
   );
 }
-
-const FormRoot = (props: React.ComponentProps<'form'>) => <form {...props} />;
-const SectionCard = (props: React.ComponentProps<'div'>) => <div {...props} />;
-const ActionHeader = (props: React.ComponentProps<'div'>) => <div {...props} />;
-const MetaGroup = (props: React.ComponentProps<'div'>) => <div {...props} />;
-const BadgeRow = (props: React.ComponentProps<'div'>) => <div {...props} />;
-const MetaText = (props: React.ComponentProps<'p'>) => <p {...props} />;
-const ButtonGroup = (props: React.ComponentProps<'div'>) => <div {...props} />;
-const Divider = (props: React.ComponentProps<'hr'>) => <hr {...props} />;
-const ToggleFormItem = (props: React.ComponentProps<typeof FormItem>) => (
-  <FormItem {...props} />
-);
-const TwoColumnGrid = (props: React.ComponentProps<'div'>) => <div {...props} />;

@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { CmsGlobalSetting } from '@/lib/cms/types';
 import { SUPPORTED_GLOBAL_SETTINGS } from '@/lib/cms/constants/global-settings';
 import {
@@ -73,11 +72,9 @@ export function GlobalSettingsIndex({ settings, role }: GlobalSettingsIndexProps
                   </AdminAlert>
                 )}
 
-                {isFound ? (
-                  <AdminButton href={item.editorPath}>Edit</AdminButton>
-                ) : (
-                  <AdminButton disabled>Edit</AdminButton>
-                )}
+                <AdminButton href={item.editorPath}>
+                  {isFound ? 'Edit' : 'Initialize & Edit'}
+                </AdminButton>
               </AdminCardContent>
             </AdminCard>
           );

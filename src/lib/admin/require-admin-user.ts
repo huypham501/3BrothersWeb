@@ -1,4 +1,5 @@
 import { redirect } from 'next/navigation';
+import { cache } from 'react';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import {
   type CmsCapability,
@@ -39,7 +40,7 @@ function getCmsRoleFromAppMetadata(appMetadata: unknown): CmsRole | null {
   return rawRole;
 }
 
-async function resolveCmsActorFromJwt(): Promise<CmsActorResolution> {
+const resolveCmsActorFromJwt = cache(async (): Promise<CmsActorResolution> => {
   const supabase = await createSupabaseServerClient();
   const { data: claimsData, error: claimsError } = await supabase.auth.getClaims();
   if (claimsError || !claimsData?.claims) {
@@ -65,6 +66,27 @@ async function resolveCmsActorFromJwt(): Promise<CmsActorResolution> {
       role,
     },
   };
+});
+
+export function buildAdminUiContext(actor: CmsActor): AdminUiContext {
+  return {
+    actor,
+    canPublish: hasCmsCapability(actor.role, 'publish'),
+    canManageShared: hasCmsCapability(actor.role, 'manage_shared_sections'),
+    canManageGlobal: hasCmsCapability(actor.role, 'manage_global_settings'),
+    canEditDraft: hasCmsCapability(actor.role, 'edit_draft'),
+  };
+}
+
+export async function getAdminUiContextFromActor(): Promise<AdminUiContext> {
+  const resolved = await resolveCmsActorFromJwt();
+  if (resolved.status !== 'ok') {
+    throw new Error(
+      'Admin actor is unavailable in this request. Ensure /admin layout guard is applied before reading admin UI context.'
+    );
+  }
+
+  return buildAdminUiContext(resolved.actor);
 }
 
 export async function requireAdminUser(
@@ -112,12 +134,5 @@ export async function getAdminUiContext(
   nextPath = '/admin'
 ): Promise<AdminUiContext> {
   const actor = await requireAdminUser(nextPath, 'view');
-
-  return {
-    actor,
-    canPublish: hasCmsCapability(actor.role, 'publish'),
-    canManageShared: hasCmsCapability(actor.role, 'manage_shared_sections'),
-    canManageGlobal: hasCmsCapability(actor.role, 'manage_global_settings'),
-    canEditDraft: hasCmsCapability(actor.role, 'edit_draft'),
-  };
+  return buildAdminUiContext(actor);
 }

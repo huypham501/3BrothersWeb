@@ -1,23 +1,25 @@
 import { getForCreatorsPageData } from '@/lib/cms/queries';
 import { ForCreatorsPageEditor } from '@/components/admin/cms/ForCreatorsPageEditor';
-import { AdminShell } from '@/components/admin/layout/AdminShell';
+import { AdminContent } from '@/components/admin/layout/AdminShell';
 import { AdminPageHeader } from '@/components/admin/layout/AdminPageHeader';
-import { getAdminUiContext } from '@/lib/admin/require-admin-user';
+import { getAdminUiContextFromActor } from '@/lib/admin/require-admin-user';
 
 export const dynamic = 'force-dynamic';
 
 export default async function ForCreatorsCmsAdminPage() {
-  const ui = await getAdminUiContext('/admin/content/pages/for-creators');
-  const data = await getForCreatorsPageData();
+  const [ui, data] = await Promise.all([
+    getAdminUiContextFromActor(),
+    getForCreatorsPageData(),
+  ]);
 
   if (!data) {
     return (
-      <AdminShell maxWidth="1000px">
+      <AdminContent maxWidth="1000px">
         <AdminPageHeader
           title="For Creators CMS configuration not found"
           description="Please run the CMS seed migration for For Creators first."
         />
-      </AdminShell>
+      </AdminContent>
     );
   }
 
@@ -25,7 +27,7 @@ export default async function ForCreatorsCmsAdminPage() {
   const typedShared = data.shared as React.ComponentProps<typeof ForCreatorsPageEditor>['shared'];
 
   return (
-    <AdminShell maxWidth="1000px">
+    <AdminContent maxWidth="1000px">
       <AdminPageHeader
         title="For Creators CMS Editor"
         description="Manage local sections and SEO metadata for the For Creators page."
@@ -39,6 +41,6 @@ export default async function ForCreatorsCmsAdminPage() {
         role={ui.actor.role}
         canPublish={ui.canPublish}
       />
-    </AdminShell>
+    </AdminContent>
   );
 }

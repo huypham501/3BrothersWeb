@@ -1,15 +1,15 @@
 import { JobPositionEditor } from '@/components/admin/cms/editors/JobPositionEditor';
-import { AdminShell } from '@/components/admin/layout/AdminShell';
+import { AdminContent } from '@/components/admin/layout/AdminShell';
 import { AdminPageHeader } from '@/components/admin/layout/AdminPageHeader';
-import { getAdminUiContext } from '@/lib/admin/require-admin-user';
+import { getAdminUiContextFromActor } from '@/lib/admin/require-admin-user';
 
 export const dynamic = 'force-dynamic';
 
 export default async function NewJobPositionPage() {
-  const ui = await getAdminUiContext('/admin/content/pages/careers/new');
+  const ui = await getAdminUiContextFromActor();
 
   return (
-    <AdminShell maxWidth="900px">
+    <AdminContent maxWidth="900px">
       <AdminPageHeader
         title="New Job Position"
         description="Create a new draft job position. Save and publish when ready."
@@ -19,6 +19,6 @@ export default async function NewJobPositionPage() {
         role={ui.actor.role}
         canPublish={ui.canPublish}
       />
-    </AdminShell>
+    </AdminContent>
   );
 }

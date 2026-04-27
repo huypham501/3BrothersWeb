@@ -372,10 +372,16 @@ export async function saveGlobalSettingDraft(schemaKey: string, payload: unknown
     updateData.enabled = enabled;
   }
 
+  const upsertPayload = {
+    schema_key: schemaKey,
+    setting_key: schemaKey,
+    enabled: enabled ?? true,
+    ...updateData,
+  };
+
   const { data: setting, error } = await supabase
     .from('global_settings')
-    .update(updateData)
-    .eq('schema_key', schemaKey)
+    .upsert(upsertPayload, { onConflict: 'schema_key' })
     .select('id')
     .single();
 

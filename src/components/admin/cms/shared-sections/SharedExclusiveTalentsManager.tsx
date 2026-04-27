@@ -2,14 +2,12 @@
 
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
-import { useFieldArray, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { CmsSharedSection, sharedExclusiveTalentsSchema, SCHEMA_KEYS } from '@/lib/cms';
 import { saveSharedSection, publishSharedSection } from '@/lib/cms/actions';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/admin/controls/AdminForm';
-import { AdminInput as Input } from '@/components/admin/controls/AdminInput';
-import { AdminTextarea as Textarea } from '@/components/admin/controls/AdminTextarea';
+import { Form, FormControl, FormField, FormLabel } from '@/components/admin/controls/AdminForm';
 import { AdminSwitch as Switch } from '@/components/admin/controls/AdminSwitch';
 import {
   AdminAlert,
@@ -18,8 +16,15 @@ import {
   AdminBadge,
   AdminButton,
 } from '@/components/admin/layout/AdminPrimitives';
+import { FormStack, HeaderRow, ToggleFormItem } from '@/components/admin/cms/editors/EditorLayout';
+import {
+  SharedExclusiveTalentsFields,
+  getSharedExclusiveTalentsDefaultValues,
+  SharedExclusiveTalentsFormValues,
+} from '@/components/admin/cms/editors/SharedExclusiveTalentsEditor';
 
-type FormValues = z.infer<typeof sharedExclusiveTalentsSchema> & { enabled: boolean };
+type FormValues = SharedExclusiveTalentsFormValues & { enabled: boolean };
+const sharedExclusiveTalentsManagerSchema = z.object({ enabled: z.boolean() }).and(sharedExclusiveTalentsSchema);
 
 interface SharedExclusiveTalentsManagerProps {
   section: CmsSharedSection<z.infer<typeof sharedExclusiveTalentsSchema>>;
@@ -46,34 +51,11 @@ export function SharedExclusiveTalentsManager({
   const [errorMsg, setErrorMsg] = React.useState<string | null>(null);
 
   const form = useForm<FormValues>({
-    resolver: zodResolver(sharedExclusiveTalentsSchema.extend({ enabled: z.boolean() })),
+    resolver: zodResolver(sharedExclusiveTalentsManagerSchema),
     defaultValues: {
+      ...getSharedExclusiveTalentsDefaultValues(section.content),
       enabled: section.enabled,
-      section_title: section.content?.section_title || '',
-      featured_name: section.content?.featured_name || '',
-      featured_handle: section.content?.featured_handle || '',
-      featured_photo: section.content?.featured_photo || '',
-      featured_photo_alt: section.content?.featured_photo_alt || '',
-      featured_description: section.content?.featured_description || '',
-      featured_stats: section.content?.featured_stats?.length
-        ? section.content.featured_stats
-        : [
-            { label: '', value: '' },
-            { label: '', value: '' },
-          ],
-      talent_count_label: section.content?.talent_count_label || '',
-      talents: section.content?.talents?.length ? section.content.talents : [{ name: '', photo: '', photo_alt: '' }],
     },
-  });
-
-  const { fields: statFields } = useFieldArray({
-    control: form.control,
-    name: 'featured_stats',
-  });
-
-  const { fields: talentFields, append: appendTalent, remove: removeTalent } = useFieldArray({
-    control: form.control,
-    name: 'talents',
   });
 
   const clearFlash = () => {
@@ -122,17 +104,17 @@ export function SharedExclusiveTalentsManager({
 
   return (
     <Form {...form}>
-      <FormRoot onSubmit={form.handleSubmit(onSaveDraft)}>
+      <FormStack onSubmit={form.handleSubmit(onSaveDraft)}>
         <AdminAlert>
           <AdminAlertTitle>Cross-Page Impact Warning</AdminAlertTitle>
           <AdminAlertDescription>
             This shared section is used by multiple routes. Publish will update all routes listed below.
           </AdminAlertDescription>
-          <BadgeRow>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
             {usageRoutes.map((route) => (
               <AdminBadge key={`exclusive-${route}`}>{route}</AdminBadge>
             ))}
-          </BadgeRow>
+          </div>
         </AdminAlert>
 
         {errorMsg && (
@@ -147,10 +129,10 @@ export function SharedExclusiveTalentsManager({
           </AdminAlert>
         )}
 
-        <SectionCard>
-          <ActionHeader>
-            <MetaGroup>
-              <BadgeRow>
+        <div style={{ border: '1px solid #d0d5dd', borderRadius: 10, background: '#ffffff', padding: 16, display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <HeaderRow>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
                 <AdminBadge>{section.schema_key}</AdminBadge>
                 <AdminBadge tone={section.published_enabled ? 'success' : 'neutral'}>
                   {section.published_enabled ? 'Published: Enabled' : 'Published: Disabled'}
@@ -158,17 +140,17 @@ export function SharedExclusiveTalentsManager({
                 <AdminBadge tone={section.has_unpublished_changes ? 'warning' : 'neutral'}>
                   {section.has_unpublished_changes ? 'Has Unpublished Changes' : 'No Unpublished Changes'}
                 </AdminBadge>
-              </BadgeRow>
-              <MetaText>Your role: {role}</MetaText>
-              <MetaText>
+              </div>
+              <p style={{ margin: 0 }}>Your role: {role}</p>
+              <p style={{ margin: 0 }}>
                 Last edited: {section.last_edited_by_identifier ?? 'N/A'} at {formatAuditDate(section.last_edited_at)}
-              </MetaText>
-              <MetaText>
+              </p>
+              <p style={{ margin: 0 }}>
                 Last published: {section.last_published_by_identifier ?? 'N/A'} at {formatAuditDate(section.last_published_at)}
-              </MetaText>
-            </MetaGroup>
+              </p>
+            </div>
 
-            <ButtonGroup>
+            <div style={{ display: 'flex', gap: 12 }}>
               <AdminButton type="submit" variant="outline" disabled={isSaving || isPublishing || !form.formState.isDirty}>
                 {isSaving ? 'Saving Draft...' : 'Save Draft'}
               </AdminButton>
@@ -180,10 +162,10 @@ export function SharedExclusiveTalentsManager({
               >
                 {isPublishing ? 'Publishing...' : 'Publish'}
               </AdminButton>
-            </ButtonGroup>
-          </ActionHeader>
+            </div>
+          </HeaderRow>
 
-          <Divider />
+          <hr style={{ width: '100%', borderColor: '#e4e7ec', margin: 0 }} />
 
           <FormField
             control={form.control}
@@ -199,239 +181,10 @@ export function SharedExclusiveTalentsManager({
               </ToggleFormItem>
             )}
           />
-        </SectionCard>
+        </div>
 
-        <FormField
-          control={form.control}
-          name="section_title"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Section Title</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <BlockCard>
-          <BlockTitle>Featured Talent</BlockTitle>
-
-          <TwoColumnGrid>
-            <FormField
-              control={form.control}
-              name="featured_name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Name</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="featured_handle"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Handle</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </TwoColumnGrid>
-
-          <TwoColumnGrid>
-            <FormField
-              control={form.control}
-              name="featured_photo"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Featured Photo URL</FormLabel>
-                  <FormControl>
-                    <Input {...field} value={field.value || ''} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="featured_photo_alt"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Featured Photo Alt</FormLabel>
-                  <FormControl>
-                    <Input {...field} value={field.value || ''} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </TwoColumnGrid>
-
-          <FormField
-            control={form.control}
-            name="featured_description"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Featured Description</FormLabel>
-                <FormControl>
-                  <Textarea {...field} rows={6} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <Block>
-            <SubTitle>Featured Stats (exactly 2)</SubTitle>
-            <StatsGrid>
-              {statFields.map((stat, index) => (
-                <EditableRow key={stat.id}>
-                  <FormField
-                    control={form.control}
-                    name={`featured_stats.${index}.label`}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Label</FormLabel>
-                        <FormControl>
-                          <Input {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name={`featured_stats.${index}.value`}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Value</FormLabel>
-                        <FormControl>
-                          <Input {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </EditableRow>
-              ))}
-            </StatsGrid>
-          </Block>
-        </BlockCard>
-
-        <BlockCard>
-          <BlockHeader>
-            <BlockTitle>Talent Grid Items</BlockTitle>
-            <AdminButton type="button" variant="outline" onClick={() => appendTalent({ name: '', photo: '', photo_alt: '' })}>
-              Add Talent
-            </AdminButton>
-          </BlockHeader>
-
-          <FormField
-            control={form.control}
-            name="talent_count_label"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Talent Count Label</FormLabel>
-                <FormControl>
-                  <Input {...field} value={field.value || ''} placeholder="50+ TALENTS" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          {talentFields.map((talent, index) => (
-            <TalentRow key={talent.id}>
-              <FormField
-                control={form.control}
-                name={`talents.${index}.name`}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Name</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name={`talents.${index}.photo`}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Photo URL</FormLabel>
-                    <FormControl>
-                      <Input {...field} value={field.value || ''} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name={`talents.${index}.photo_alt`}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Photo Alt</FormLabel>
-                    <FormControl>
-                      <Input {...field} value={field.value || ''} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <RowActions>
-                <AdminButton
-                  type="button"
-                  variant="outline"
-                  onClick={() => removeTalent(index)}
-                  disabled={talentFields.length <= 1}
-                >
-                  Remove
-                </AdminButton>
-              </RowActions>
-            </TalentRow>
-          ))}
-        </BlockCard>
-      </FormRoot>
+        <SharedExclusiveTalentsFields form={form} />
+      </FormStack>
     </Form>
   );
 }
-
-const FormRoot = (props: React.ComponentProps<'form'>) => <form {...props} />;
-const SectionCard = (props: React.ComponentProps<'div'>) => <div {...props} />;
-const ActionHeader = (props: React.ComponentProps<'div'>) => <div {...props} />;
-const MetaGroup = (props: React.ComponentProps<'div'>) => <div {...props} />;
-const BadgeRow = (props: React.ComponentProps<'div'>) => <div {...props} />;
-const MetaText = (props: React.ComponentProps<'p'>) => <p {...props} />;
-const ButtonGroup = (props: React.ComponentProps<'div'>) => <div {...props} />;
-const Divider = (props: React.ComponentProps<'hr'>) => <hr {...props} />;
-const ToggleFormItem = (props: React.ComponentProps<typeof FormItem>) => (
-  <FormItem {...props} />
-);
-const BlockCard = (props: React.ComponentProps<'div'>) => <div {...props} />;
-const Block = (props: React.ComponentProps<'div'>) => <div {...props} />;
-const BlockHeader = (props: React.ComponentProps<'div'>) => <div {...props} />;
-const BlockTitle = (props: React.ComponentProps<'h3'>) => <h3 {...props} />;
-const SubTitle = (props: React.ComponentProps<'h4'>) => <h4 {...props} />;
-const TwoColumnGrid = (props: React.ComponentProps<'div'>) => <div {...props} />;
-const StatsGrid = (props: React.ComponentProps<'div'>) => <div {...props} />;
-const EditableRow = (props: React.ComponentProps<'div'>) => <div {...props} />;
-const TalentRow = (props: React.ComponentProps<'div'>) => <div {...props} />;
-const RowActions = (props: React.ComponentProps<'div'>) => <div {...props} />;

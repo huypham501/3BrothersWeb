@@ -124,13 +124,18 @@ export function AdminSidebar() {
   return (
     <aside style={styles.sidebar}>
       {/* ── Logo ── */}
-      <div style={styles.logo}>
+      <Link
+        href="/admin"
+        style={styles.logoLink}
+        onMouseEnter={() => router.prefetch('/admin')}
+        onFocus={() => router.prefetch('/admin')}
+      >
         <div style={styles.logoIcon}>3B</div>
         <div>
           <div style={styles.logoText}>3BROTHERS</div>
           <div style={styles.logoSub}>CMS Admin</div>
         </div>
-      </div>
+      </Link>
 
       {/* ── Ant Design Menu (inline mode) ── */}
       <div style={styles.menuWrapper}>
@@ -184,6 +189,18 @@ const styles = {
     borderBottom: '1px solid #f0f0f0',
     gap: 10,
     flexShrink: 0,
+  },
+  logoLink: {
+    height: 56,
+    display: 'flex',
+    alignItems: 'center',
+    padding: '0 16px',
+    borderBottom: '1px solid #f0f0f0',
+    gap: 10,
+    flexShrink: 0,
+    textDecoration: 'none',
+    color: 'inherit',
+    cursor: 'pointer',
   },
   logoIcon: {
     width: 30,

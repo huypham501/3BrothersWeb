@@ -1,5 +1,5 @@
 import { getCmsStorageStats } from '@/lib/cms/storage-stats';
-import { AdminShell } from '@/components/admin/layout/AdminShell';
+import { AdminContent } from '@/components/admin/layout/AdminShell';
 import { AdminPageHeader } from '@/components/admin/layout/AdminPageHeader';
 import { AssetManagerClient } from '@/components/admin/assets/AssetManagerClient';
 import { StorageUsageBar } from '@/components/admin/assets/StorageUsageBar';
@@ -11,7 +11,7 @@ export default async function AdminAssetsPage() {
   const stats = await getCmsStorageStats();
 
   return (
-    <AdminShell>
+    <AdminContent>
       <AdminPageHeader
         title="Asset Manager"
         description="Quản lý ảnh đã upload lên CMS. Theo dõi dung lượng Supabase Storage đang sử dụng."
@@ -47,6 +47,6 @@ export default async function AdminAssetsPage() {
       />
 
       <AssetManagerClient initialFiles={stats.files} />
-    </AdminShell>
+    </AdminContent>
   );
 }
