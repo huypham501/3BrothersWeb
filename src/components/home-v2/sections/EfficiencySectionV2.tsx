@@ -11,10 +11,12 @@ export function EfficiencySectionV2({ content }: { content: HomeEfficiencyPayloa
 
   return (
     <SectionContainer>
-      {/* Background ambient blurs - subtle darker blues on the blue bg */}
-      <BgBlur style={{ width: '1547px', height: '709px', left: '-54px', top: '120px', background: '#003CA6', opacity: 0.4, filter: 'blur(60px)' }} />
-      <BgBlur style={{ width: '741px', height: '745px', left: '39px', top: '233px', background: '#003CA6', opacity: 0.3, filter: 'blur(60px)' }} />
-      <BgBlur style={{ width: '637px', height: '641px', left: '91px', top: '285px', background: '#003CA6', opacity: 0.3, filter: 'blur(60px)' }} />
+      <BackgroundLayer>
+        {/* Background ambient blurs - subtle darker blues on the blue bg */}
+        <BgBlur style={{ width: '1547px', height: '709px', left: '-54px', top: '120px', background: '#003CA6', opacity: 0.4, filter: 'blur(60px)' }} />
+        <BgBlur style={{ width: '741px', height: '745px', left: '39px', top: '233px', background: '#003CA6', opacity: 0.3, filter: 'blur(60px)' }} />
+        <BgBlur style={{ width: '637px', height: '641px', left: '91px', top: '285px', background: '#003CA6', opacity: 0.3, filter: 'blur(60px)' }} />
+      </BackgroundLayer>
 
       <ContentWrapper>
         <Title>{content.section_title}</Title>
@@ -62,6 +64,8 @@ export function EfficiencySectionV2({ content }: { content: HomeEfficiencyPayloa
 const SectionContainer = styled.section`
   position: relative;
   width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
   background: transparent;
   overflow: hidden;
   font-family: 'Montserrat', 'Inter', sans-serif;
@@ -69,6 +73,28 @@ const SectionContainer = styled.section`
   ${mediaQueries.down.md} {
     /* no border-radius needed */
   }
+`;
+
+const BackgroundLayer = styled.div`
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+
+  /* Fade all 4 edges (top/right/bottom/left) like ContactCTA mask style */
+  -webkit-mask-image:
+    linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, black 14%, black 86%, transparent 100%);
+  mask-image:
+    linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, black 14%, black 86%, transparent 100%);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
 `;
 
 const BgBlur = styled.div`
