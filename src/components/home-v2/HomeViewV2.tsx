@@ -53,6 +53,4 @@ const BlueGroupWrapper = styled.div`
   background: ${colors.primaryLight};
   display: flex;
   flex-direction: column;
-  gap: 40px;
-  padding-bottom: 40px;
 `;

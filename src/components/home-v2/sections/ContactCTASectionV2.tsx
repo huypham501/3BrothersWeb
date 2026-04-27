@@ -11,12 +11,13 @@ const DEFAULT_CONTACT_CTA_CONTENT: SharedContactCtaPayload = {
   cta_label: 'Contact us',
   cta_url: '/',
 };
+const CONTACT_CTA_BG_IMAGE = '/images/home/contact-cta-bg.png';
+const CONTACT_CTA_BG_ASPECT_RATIO = '2880 / 1843';
+const CONTACT_CTA_BG_WIDTH = '1440px';
 
 export function ContactCTASectionV2({ content = DEFAULT_CONTACT_CTA_CONTENT }: { content?: SharedContactCtaPayload }) {
   return (
     <SectionContainer>
-      <BackgroundEffectsLayer src="/images/home/contact-cta-bg-from-group.svg" alt="" aria-hidden="true" />
-
       <ContentBlock>
         <Title dangerouslySetInnerHTML={{ __html: content.title.replace(/\n/g, '<br />') }} />
         <Subtitle>
@@ -39,48 +40,42 @@ export function ContactCTASectionV2({ content = DEFAULT_CONTACT_CTA_CONTENT }: {
 
 const SectionContainer = styled.section`
   position: relative;
-  box-sizing: border-box;
   width: 100%;
-  min-height: 800px;
-  padding: 150px ${spacing['5xl']} 80px;
+  padding: 120px ${spacing['5xl']};
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
   text-align: center;
   overflow: hidden;
   background: ${colors.primaryLight};
 
+  &::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: ${CONTACT_CTA_BG_WIDTH};
+    height: auto;
+    aspect-ratio: ${CONTACT_CTA_BG_ASPECT_RATIO};
+    transform: translateX(-50%);
+    background-image: url('${CONTACT_CTA_BG_IMAGE}');
+    background-repeat: no-repeat;
+    background-position: center top;
+    background-size: 100% auto;
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 20%, black 80%, transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0%, black 20%, black 80%, transparent 100%);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
   ${mediaQueries.down.sm} {
-    min-height: auto;
     padding: 80px ${spacing.lg};
-    justify-content: center;
-  }
-`;
-
-const BackgroundEffectsLayer = styled.img`
-  position: absolute;
-  top: 0;
-  left: 50%;
-  width: 1440px;
-  height: 800px;
-  transform: translateX(-50%);
-  display: block;
-  pointer-events: none;
-  z-index: 0;
-
-  ${mediaQueries.down.md} {
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    left: 0;
-    transform: none;
-    object-fit: cover;
-    object-position: center top;
-  }
-
-  ${mediaQueries.down.sm} {
-    object-position: center -40px;
+    &::before { background-position: center -40px; }
   }
 `;
 

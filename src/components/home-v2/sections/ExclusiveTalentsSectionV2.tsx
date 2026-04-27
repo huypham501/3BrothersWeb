@@ -10,9 +10,6 @@ const DESCRIPTION_LINE_HEIGHT_PX = 24; // 16px * 150%
 const CLAMP_LINES = 4;
 const CLAMP_MAX_HEIGHT = DESCRIPTION_LINE_HEIGHT_PX * CLAMP_LINES; // 96px
 
-const FULL_DESCRIPTION =
-  'Là một trong những gương mặt gắn bó cùng 3Brothers từ những ngày đầu, Nguyệt Busi đang từng bước xây dựng dấu ấn trong cộng đồng làm đẹp thông qua những nội dung được chia sẻ từ trải nghiệm thực tế. Không chỉ dừng lại ở các chuyên mục về skincare hay trang điểm, "Thánh mặt nạ dẻo" Nguyệt Busi còn ghi dấu ấn bằng các series đắp mặt nạ siêu vui nhộn, thu hút hàng triệu lượt xem mỗi tập. Cô nàng hiện đang là một trong những beauty creator được yêu thích nhất trên nền tảng TikTok và Instagram tại Việt Nam.';
-
 import { SharedExclusiveTalentsPayload } from '@/lib/cms/types';
 
 // ── Component ────────────────────────────────────────────────────────────────
