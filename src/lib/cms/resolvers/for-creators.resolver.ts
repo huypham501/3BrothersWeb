@@ -6,7 +6,6 @@ import type {
   ForCreatorsTestimonialsPayload,
   ForCreatorsCtaPayload,
   SharedExclusiveTalentsPayload,
-  SharedContactCtaPayload,
   GlobalHeaderPayload,
   GlobalFooterPayload,
 } from '../types';
@@ -32,7 +31,6 @@ export interface ForCreatorsViewModel {
   cta: ForCreatorsCtaPayload | null;
   shared: {
     exclusiveTalents: SharedExclusiveTalentsPayload | null;
-    contactCta: SharedContactCtaPayload | null;
   };
   globals: {
     header: GlobalHeaderPayload | null;
@@ -83,13 +81,6 @@ export async function resolveForCreatorsPageData(): Promise<ForCreatorsViewModel
           data.shared.exclusiveTalents
         ),
         'for-creators.shared.exclusive_talents'
-      ),
-      contactCta: validateCmsPayloadBySchemaKey(
-        SCHEMA_KEYS.SHARED_CONTACT_CTA,
-        resolveSharedContentBySchemaKey<typeof SCHEMA_KEYS.SHARED_CONTACT_CTA>(
-          data.shared.contactCta
-        ),
-        'for-creators.shared.contact_cta'
       ),
     },
     globals: {

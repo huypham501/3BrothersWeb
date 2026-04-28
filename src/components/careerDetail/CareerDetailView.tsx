@@ -10,7 +10,7 @@ import { HeroSection } from './sections/HeroSection';
 import { MainSection } from './sections/MainSection';
 import { ExploreSection } from './sections/ExploreSection';
 import { getJobBySlug, type JobPosition } from '../careers/data/jobPositions';
-import type { GlobalFooterPayload, GlobalHeaderPayload } from '@/lib/cms/types';
+import type { GlobalFooterPayload, GlobalHeaderPayload, SharedContactCtaPayload } from '@/lib/cms/types';
 
 // ── Props ─────────────────────────────────────────────────────────────────────
 
@@ -22,6 +22,7 @@ interface CareerDetailViewProps {
   relatedJobs?: JobPosition[];
   header?: GlobalHeaderPayload | null;
   footer?: GlobalFooterPayload | null;
+  contactCta?: SharedContactCtaPayload | null;
 }
 
 // ── Component ─────────────────────────────────────────────────────────────────
@@ -32,6 +33,7 @@ export function CareerDetailView({
   relatedJobs,
   header,
   footer,
+  contactCta,
 }: CareerDetailViewProps) {
   const job = jobProp ?? getJobBySlug(slug);
 
@@ -47,7 +49,7 @@ export function CareerDetailView({
         <MainSection job={job} />
         <ExploreSection currentSlug={slug} relatedJobs={relatedJobs} />
       </MainContent>
-      <ContactCTASection />
+      <ContactCTASection content={contactCta} />
       <Footer content={footer ?? undefined} />
     </Wrapper>
   );

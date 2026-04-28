@@ -12,8 +12,15 @@ import { TestimonialsSection } from './sections/TestimonialsSection';
 import { ExclusiveTalentsSection } from '@/components/home/sections/ExclusiveTalentsSection';
 import { CTASection } from './sections/CTASection';
 import type { ForCreatorsViewModel } from '@/lib/cms/resolvers/for-creators.resolver';
+import type { SharedContactCtaPayload } from '@/lib/cms/types';
 
-export function ForCreatorsView({ data }: { data: ForCreatorsViewModel | null }) {
+export function ForCreatorsView({
+  data,
+  contactCta,
+}: {
+  data: ForCreatorsViewModel | null;
+  contactCta?: SharedContactCtaPayload | null;
+}) {
   if (!data) return null;
 
   return (
@@ -26,7 +33,7 @@ export function ForCreatorsView({ data }: { data: ForCreatorsViewModel | null })
         {data.shared.exclusiveTalents && <ExclusiveTalentsSection content={data.shared.exclusiveTalents} />}
         {data.cta && <CTASection content={data.cta} />}
       </MainContent>
-      {data.shared.contactCta && <ContactCTASection content={data.shared.contactCta} />}
+      <ContactCTASection content={contactCta} />
       {data.globals.footer && <Footer content={data.globals.footer} />}
     </Wrapper>
   );

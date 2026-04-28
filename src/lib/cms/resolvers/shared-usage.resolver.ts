@@ -3,7 +3,14 @@ import type { SupportedSharedSchemaKey } from '../constants/shared-sections';
 
 export const SHARED_SECTION_USAGE_MAP: Record<SupportedSharedSchemaKey, string[]> = {
   [SCHEMA_KEYS.SHARED_EXCLUSIVE_TALENTS]: ['/', '/for-creators'],
-  [SCHEMA_KEYS.SHARED_CONTACT_CTA]: ['/', '/for-creators', '/blogs', '/blogs/[slug]'],
+  [SCHEMA_KEYS.SHARED_CONTACT_CTA]: [
+    '/',
+    '/for-creators',
+    '/blogs',
+    '/blogs/[slug]',
+    '/social-commerce',
+    '/careers/[slug]',
+  ],
 };
 
 export function resolveSharedSectionUsage(schemaKey: SupportedSharedSchemaKey): string[] {

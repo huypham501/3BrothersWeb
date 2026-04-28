@@ -79,6 +79,7 @@ export function BlogPostEditor({ post, mode, role, canPublish }: BlogPostEditorP
       cover_image_bg: post?.cover_image_bg ?? '',
       cover_image_url: post?.cover_image_url ?? '',
       cover_image_alt: post?.cover_image_alt ?? '',
+      cover_aspect_ratio: post?.cover_aspect_ratio ?? '1440/710',
       content: post?.content?.length
         ? post.content
         : [{ id: 'intro', heading: null, body: '' }],
@@ -117,6 +118,7 @@ export function BlogPostEditor({ post, mode, role, canPublish }: BlogPostEditorP
     cover_image_bg: data.cover_image_bg ?? null,
     cover_image_url: data.cover_image_url ?? null,
     cover_image_alt: data.cover_image_alt ?? null,
+    cover_aspect_ratio: data.cover_aspect_ratio ?? null,
     seo_title: data.seo_title ?? null,
     seo_description: data.seo_description ?? null,
     og_image: data.og_image ?? null,
@@ -312,6 +314,13 @@ export function BlogPostEditor({ post, mode, role, canPublish }: BlogPostEditorP
                 </Tooltip>
               </FormLabel>
               <FormControl><Input {...field} value={field.value ?? ''} placeholder="linear-gradient(...)" style={{ fontFamily: 'monospace', fontSize: 12 }} /></FormControl>
+              <FormMessage />
+            </FormItem>
+          )} />
+          <FormField control={form.control} name="cover_aspect_ratio" render={({ field }) => (
+            <FormItem>
+              <FormLabel>Cover Aspect Ratio (W/H)</FormLabel>
+              <FormControl><Input {...field} value={field.value ?? ''} placeholder="1440/710" style={{ fontFamily: 'monospace', fontSize: 12 }} /></FormControl>
               <FormMessage />
             </FormItem>
           )} />

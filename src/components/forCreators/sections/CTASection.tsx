@@ -5,38 +5,31 @@ import Link from 'next/link';
 import { colors, spacing, typography, mediaQueries, motion } from '@/styles/tokens';
 import { ForCreatorsCtaPayload } from '@/lib/cms/types';
 
+const CONTACT_CTA_BG_IMAGE = '/images/home/contact-cta-bg.png';
+const CONTACT_CTA_BG_ASPECT_RATIO = '2880 / 1843';
+const CONTACT_CTA_BG_WIDTH = '1440px';
+
 export function CTASection({ content }: { content: ForCreatorsCtaPayload }) {
   return (
     <SectionContainer>
-      <EllipseBlur1 />
-      <EllipseBlur2 />
-      <BlobLeft />
-      <BlobRight />
-      <StripeOverlay />
-
-      <Inner>
-        <ContentBox>
-          <Heading dangerouslySetInnerHTML={{ __html: content.heading.replace(/\n/g, '<br />') }} />
-          <Subtitle>{content.subtitle}</Subtitle>
-        </ContentBox>
-
+      <ContentBlock>
+        <Heading dangerouslySetInnerHTML={{ __html: content.heading.replace(/\n/g, '<br />') }} />
+        <Subtitle>{content.subtitle}</Subtitle>
         <ButtonWrapper>
           <JoinButton href={content.cta_url}>
             {content.cta_label}
-            <ArrowIcon>
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <path
-                  d="M4.167 10h11.666M10 4.167 15.833 10 10 15.833"
-                  stroke="#061530"
-                  strokeWidth="1.67"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </ArrowIcon>
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path
+                d="M4.167 10h11.666M10 4.167 15.833 10 10 15.833"
+                stroke="#061530"
+                strokeWidth="1.67"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
           </JoinButton>
         </ButtonWrapper>
-      </Inner>
+      </ContentBlock>
     </SectionContainer>
   );
 }
@@ -44,130 +37,77 @@ export function CTASection({ content }: { content: ForCreatorsCtaPayload }) {
 const SectionContainer = styled.section`
   position: relative;
   width: 100%;
-  min-height: 540px;
-  background: ${colors.primaryLight};
-  overflow: hidden;
+  padding: 120px ${spacing['5xl']};
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  text-align: center;
+  overflow: hidden;
+  background: ${colors.primaryLight};
 
-  ${mediaQueries.down.lg} {
-    min-height: 440px;
+  &::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: ${CONTACT_CTA_BG_WIDTH};
+    height: auto;
+    aspect-ratio: ${CONTACT_CTA_BG_ASPECT_RATIO};
+    transform: translateX(-50%);
+    background-image: url('${CONTACT_CTA_BG_IMAGE}');
+    background-repeat: no-repeat;
+    background-position: center top;
+    background-size: 100% auto;
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 20%, black 80%, transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0%, black 20%, black 80%, transparent 100%);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+    pointer-events: none;
+    z-index: 0;
   }
 
   ${mediaQueries.down.sm} {
-    min-height: 360px;
+    padding: 80px ${spacing.lg};
+
+    &::before {
+      background-position: center -40px;
+    }
   }
 `;
 
-const EllipseBlur1 = styled.div`
-  position: absolute;
-  width: 107%;
-  height: 624px;
-  left: -2%;
-  bottom: -161px;
-  background: ${colors.primary};
-  opacity: 0.7;
-  filter: blur(200px);
-  pointer-events: none;
-`;
-
-const EllipseBlur2 = styled.div`
-  position: absolute;
-  width: 335px;
-  height: 366px;
-  left: 24px;
-  bottom: -266px;
-  background: ${colors.secondaryDark};
-  opacity: 0.4;
-  filter: blur(200px);
-  pointer-events: none;
-`;
-
-const BlobRight = styled.div`
-  position: absolute;
-  width: 60%;
-  height: 60%;
-  right: -10%;
-  bottom: -20%;
-  background: #83B0FF;
-  opacity: 0.8;
-  filter: blur(160px);
-  transform: matrix(-0.95, 0.3, -0.18, -0.98, 0, 0);
-  pointer-events: none;
-`;
-
-const BlobLeft = styled.div`
-  position: absolute;
-  width: 60%;
-  height: 60%;
-  left: -10%;
-  top: -20%;
-  background: #83B0FF;
-  opacity: 0.8;
-  filter: blur(160px);
-  transform: matrix(0.95, -0.3, 0.18, 0.98, 0, 0);
-  pointer-events: none;
-`;
-
-const StripeOverlay = styled.div`
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: repeating-linear-gradient(
-    -68deg,
-    transparent 0px,
-    transparent 94px,
-    rgba(255, 255, 255, 0.18) 94px,
-    rgba(255, 255, 255, 0.18) 134px
-  );
-  mix-blend-mode: overlay;
-`;
-
-const Inner = styled.div`
+const ContentBlock = styled.div`
   position: relative;
-  z-index: 2;
+  z-index: 10;
+  max-width: 957px;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 32px;
-  width: 100%;
-  padding: 100px ${spacing['5xl']};
-
-  ${mediaQueries.down.lg} {
-    padding: 80px ${spacing.xl};
-  }
 
   ${mediaQueries.down.sm} {
-    padding: 60px ${spacing.lg};
+    gap: ${spacing.xl};
   }
-`;
-
-const ContentBox = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
-  max-width: 952px;
-  width: 100%;
 `;
 
 const Heading = styled.h2`
   font-family: 'Montserrat', sans-serif;
   font-weight: ${typography.fontWeight.bold};
-  font-size: 56px;
+  font-size: 68px;
   line-height: 120%;
-  text-align: center;
   text-transform: uppercase;
+  text-align: center;
   color: ${colors.white};
   margin: 0;
 
-  ${mediaQueries.down.lg} {
-    font-size: 40px;
+  ${mediaQueries.down.md} {
+    font-size: 48px;
   }
 
   ${mediaQueries.down.sm} {
-    font-size: 28px;
+    font-size: 36px;
   }
 `;
 
@@ -179,9 +119,10 @@ const Subtitle = styled.p`
   text-align: center;
   color: ${colors.white};
   margin: 0;
+  max-width: 909px;
 
   ${mediaQueries.down.sm} {
-    font-size: 14px;
+    font-size: ${typography.fontSize.base};
   }
 `;
 
@@ -194,7 +135,6 @@ const ButtonWrapper = styled.div`
 
 const JoinButton = styled(Link)`
   display: flex;
-  flex-direction: row;
   align-items: center;
   padding: 16px 32px;
   gap: 12px;
@@ -204,7 +144,7 @@ const JoinButton = styled(Link)`
   text-decoration: none;
   cursor: pointer;
   white-space: nowrap;
-  transition: background ${motion.duration.base} ease, transform ${motion.duration.base} ease;
+  transition: opacity ${motion.duration.base};
 
   font-family: 'Montserrat', sans-serif;
   font-weight: ${typography.fontWeight.bold};
@@ -213,19 +153,6 @@ const JoinButton = styled(Link)`
   color: ${colors.secondaryDark};
 
   &:hover {
-    background: #f0f4ff;
-    transform: translateY(-2px);
+    opacity: 0.85;
   }
-
-  &:active {
-    transform: translateY(0);
-  }
-`;
-
-const ArrowIcon = styled.span`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 20px;
-  height: 20px;
 `;

@@ -2,8 +2,10 @@
 
 import styled, { keyframes } from 'styled-components';
 import Link from 'next/link';
+import Image from 'next/image';
 import { colors, spacing, typography, mediaQueries, motion } from '@/styles/tokens';
 import { ForCreatorsHeroPayload } from '@/lib/cms/types';
+import { normalizeAspectRatio } from '@/lib/aspect-ratio';
 
 const fadeUp = keyframes`
   from { opacity: 0; transform: translateY(24px); }
@@ -11,8 +13,20 @@ const fadeUp = keyframes`
 `;
 
 export function HeroSection({ content }: { content: ForCreatorsHeroPayload }) {
+  const heroAspectRatio = normalizeAspectRatio(content.hero_aspect_ratio, '1440 / 670');
   return (
-    <HeroWrapper>
+    <HeroWrapper $aspectRatio={heroAspectRatio}>
+      {content.media_image ? (
+        <HeroImageLayer>
+          <HeroImage
+            src={content.media_image}
+            alt={content.media_image_alt || content.title}
+            fill
+            sizes="100vw"
+          />
+          <HeroImageDimmer />
+        </HeroImageLayer>
+      ) : null}
       <BlobLayer>
         <Blob1 />
         <Blob2 />
@@ -46,9 +60,10 @@ export function HeroSection({ content }: { content: ForCreatorsHeroPayload }) {
   );
 }
 
-const HeroWrapper = styled.section`
+const HeroWrapper = styled.section<{ $aspectRatio: string }>`
   position: relative;
   width: 100%;
+  aspect-ratio: ${({ $aspectRatio }) => $aspectRatio};
   min-height: 670px;
   overflow: hidden;
   display: flex;
@@ -72,9 +87,27 @@ const HeroWrapper = styled.section`
   }
 `;
 
+const HeroImageLayer = styled.div`
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+`;
+
+const HeroImage = styled(Image)`
+  object-fit: cover;
+  object-position: center;
+`;
+
+const HeroImageDimmer = styled.div`
+  position: absolute;
+  inset: 0;
+  background: rgba(6, 21, 48, 0.32);
+`;
+
 const BlobLayer = styled.div`
   position: absolute;
   inset: 0;
+  z-index: 1;
   pointer-events: none;
 `;
 

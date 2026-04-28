@@ -96,6 +96,7 @@ export interface CmsBlogPost {
   cover_image_bg: string | null;
   cover_image_url: string | null;
   cover_image_alt: string | null;
+  cover_aspect_ratio: string | null;
   content: Array<{ id: string; heading: string | null; body: string }>;
   mid_content: Array<{ id: string; heading: string | null; body: string }>;
 
@@ -116,6 +117,7 @@ export interface CmsBlogPost {
   published_cover_image_bg: string | null;
   published_cover_image_url: string | null;
   published_cover_image_alt: string | null;
+  published_cover_aspect_ratio: string | null;
   published_content: Array<{ id: string; heading: string | null; body: string }> | null;
   published_mid_content: Array<{ id: string; heading: string | null; body: string }> | null;
   published_seo_title: string | null;

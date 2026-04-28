@@ -1,5 +1,3 @@
-'use client';
-
 import styled from 'styled-components';
 import { colors, spacing, typography, mediaQueries, motion } from '@/styles/tokens';
 
@@ -15,17 +13,23 @@ const CONTACT_CTA_BG_IMAGE = '/images/home/contact-cta-bg.png';
 const CONTACT_CTA_BG_ASPECT_RATIO = '2880 / 1843';
 const CONTACT_CTA_BG_WIDTH = '1440px';
 
-export function ContactCTASection({ content = DEFAULT_CONTACT_CTA_CONTENT }: { content?: SharedContactCtaPayload }) {
+interface ContactCTASectionProps {
+  content?: SharedContactCtaPayload | null;
+}
+
+export function ContactCTASection({ content }: ContactCTASectionProps) {
+  const resolvedContent = content ?? DEFAULT_CONTACT_CTA_CONTENT;
+
   return (
     <SectionContainer>
       <ContentBlock>
-        <Title dangerouslySetInnerHTML={{ __html: content.title.replace(/\n/g, '<br />') }} />
+        <Title dangerouslySetInnerHTML={{ __html: resolvedContent.title.replace(/\n/g, '<br />') }} />
         <Subtitle>
-          {content.subtitle}
+          {resolvedContent.subtitle}
         </Subtitle>
         <ButtonWrapper>
-          <ContactButton href={content.cta_url || '#'}>
-            {content.cta_label}
+          <ContactButton href={resolvedContent.cta_url || '#'}>
+            {resolvedContent.cta_label}
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14M12 5l7 7-7 7" />
             </svg>

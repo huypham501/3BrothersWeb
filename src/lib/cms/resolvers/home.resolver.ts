@@ -7,7 +7,6 @@ import type {
   HomeEfficiencyPayload, 
   HomeTrendingPayload, 
   SharedExclusiveTalentsPayload, 
-  SharedContactCtaPayload,
   GlobalHeaderPayload,
   GlobalFooterPayload
 } from '../types';
@@ -34,7 +33,6 @@ export interface HomeViewModel {
   trending: HomeTrendingPayload | null;
   shared: {
     exclusiveTalents: SharedExclusiveTalentsPayload | null;
-    contactCta: SharedContactCtaPayload | null;
   };
   globals: {
     header: GlobalHeaderPayload | null;
@@ -84,12 +82,6 @@ export async function resolveHomePageData(): Promise<HomeViewModel | null> {
     'home.shared.exclusive_talents'
   );
 
-  const sharedContactCta = validateCmsPayloadBySchemaKey(
-    SCHEMA_KEYS.SHARED_CONTACT_CTA,
-    resolveSharedContentBySchemaKey<typeof SCHEMA_KEYS.SHARED_CONTACT_CTA>(data.shared.contactCta),
-    'home.shared.contact_cta'
-  );
-
   const globalHeader = validateCmsPayloadBySchemaKey(
     SCHEMA_KEYS.GLOBAL_HEADER,
     resolveGlobalContentBySchemaKey<typeof SCHEMA_KEYS.GLOBAL_HEADER>(data.globals.header),
@@ -119,7 +111,6 @@ export async function resolveHomePageData(): Promise<HomeViewModel | null> {
     trending,
     shared: {
       exclusiveTalents: sharedExclusiveTalents,
-      contactCta: sharedContactCta,
     },
     globals: {
       header: globalHeader,

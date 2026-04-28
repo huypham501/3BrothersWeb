@@ -6,7 +6,7 @@ import { colors } from '@/styles/tokens';
 import { Header } from '@/components/shared/Header';
 import { Footer } from '@/components/shared/Footer';
 import { ContactCTASection } from '@/components/shared/ContactCTASection';
-import type { GlobalFooterPayload, GlobalHeaderPayload } from '@/lib/cms/types';
+import type { GlobalFooterPayload, GlobalHeaderPayload, SharedContactCtaPayload } from '@/lib/cms/types';
 
 import { HeroSection } from './sections/HeroSection';
 import { GrowthSection } from './sections/GrowthSection';
@@ -15,9 +15,10 @@ import { ValuePropositionSection } from './sections/ValuePropositionSection';
 interface SocialCommerceViewProps {
   header?: GlobalHeaderPayload | null;
   footer?: GlobalFooterPayload | null;
+  contactCta?: SharedContactCtaPayload | null;
 }
 
-export function SocialCommerceView({ header, footer }: SocialCommerceViewProps) {
+export function SocialCommerceView({ header, footer, contactCta }: SocialCommerceViewProps) {
   return (
     <Wrapper>
       <Header content={header ?? undefined} />
@@ -26,7 +27,7 @@ export function SocialCommerceView({ header, footer }: SocialCommerceViewProps) 
         <GrowthSection />
         <ValuePropositionSection />
       </MainContent>
-      <ContactCTASection />
+      <ContactCTASection content={contactCta} />
       <Footer content={footer ?? undefined} />
     </Wrapper>
   );

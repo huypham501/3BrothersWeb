@@ -10,5 +10,11 @@ export const metadata: Metadata = {
 export default async function SocialCommercePage() {
   const layout = await resolvePublicLayoutData();
 
-  return <SocialCommerceView header={layout.header} footer={layout.footer} />;
+  return (
+    <SocialCommerceView
+      header={layout.header}
+      footer={layout.footer}
+      contactCta={layout.contactCta}
+    />
+  );
 }

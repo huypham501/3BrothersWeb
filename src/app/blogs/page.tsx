@@ -62,6 +62,12 @@ export default async function BlogPage() {
         badge: featuredRaw.published_badge ?? featuredRaw.badge,
         excerpt: featuredRaw.published_excerpt ?? featuredRaw.excerpt,
         date: formatBlogDate(featuredRaw.published_at),
+        heroImageUrl: featuredRaw.published_cover_image_url ?? featuredRaw.cover_image_url,
+        heroImageAlt: featuredRaw.published_cover_image_alt ?? featuredRaw.cover_image_alt,
+        heroAspectRatio:
+          featuredRaw.published_cover_aspect_ratio ??
+          featuredRaw.cover_aspect_ratio ??
+          null,
         heroBg:
           featuredRaw.published_cover_image_bg ??
           featuredRaw.cover_image_bg ??
@@ -86,6 +92,7 @@ export default async function BlogPage() {
       posts={posts}
       header={layout.header}
       footer={layout.footer}
+      contactCta={layout.contactCta}
     />
   );
 }

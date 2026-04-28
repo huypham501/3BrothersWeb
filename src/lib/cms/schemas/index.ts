@@ -2,6 +2,21 @@ import { z } from 'zod';
 import { SCHEMA_KEYS } from '../constants/schema-keys';
 
 const urlOrHash = z.string().regex(/^(https?:\/\/|\/|#)/, { error: 'Must be a valid URL, relative path, or #' }).max(500);
+const aspectRatioPattern = /^(\d+(\.\d+)?)\s*\/\s*(\d+(\.\d+)?)$/;
+const aspectRatioField = z.preprocess((input) => {
+  if (typeof input === 'string' && input.trim() === '') return null;
+  return input;
+}, z.string().regex(aspectRatioPattern, {
+  error: 'Aspect ratio must follow W/H format (e.g. 1440/710).',
+}).refine((value) => {
+  const match = aspectRatioPattern.exec(value.trim());
+  if (!match) return false;
+  const width = Number.parseFloat(match[1]);
+  const height = Number.parseFloat(match[3]);
+  return Number.isFinite(width) && Number.isFinite(height) && width > 0 && height > 0;
+}, {
+  message: 'Aspect ratio width/height must be greater than 0.',
+}).nullable().optional());
 
 /** Generic page settings schema — used for all CMS-managed pages (Home, For Creators, …) */
 export const pageSettingsSchema = z.object({
@@ -171,6 +186,7 @@ export const homeHeroSchema = z.object({
   secondary_cta_url: urlOrHash.nullable().optional(),
   media_image: z.string().nullable().optional(),
   media_image_alt: z.string().max(125).nullable().optional(),
+  hero_aspect_ratio: aspectRatioField,
 });
 
 export const homePartnersSchema = z.object({
@@ -235,6 +251,9 @@ export const forCreatorsHeroSchema = z.object({
   primary_cta_url: urlOrHash,
   secondary_cta_label: z.string().max(40),
   secondary_cta_url: urlOrHash,
+  media_image: z.string().nullable().optional(),
+  media_image_alt: z.string().max(125).nullable().optional(),
+  hero_aspect_ratio: aspectRatioField,
 });
 
 export const forCreatorsBenefitSchema = z.object({
@@ -314,6 +333,7 @@ export const blogPostFormSchema = z.object({
   cover_image_bg: z.string().max(500).nullable().optional(),
   cover_image_url: z.string().max(1024).nullable().optional(),
   cover_image_alt: z.string().max(125).nullable().optional(),
+  cover_aspect_ratio: aspectRatioField,
   content: z.array(blogPostContentSectionSchema).max(20),
   mid_content: z.array(blogPostContentSectionSchema).max(20),
   seo_title: z.string().max(70).nullable().optional(),

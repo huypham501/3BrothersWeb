@@ -9,13 +9,14 @@ import { ContactCTASection } from '@/components/shared/ContactCTASection';
 import { DetailMainContentSection, type ArticleData } from './sections/DetailMainContentSection';
 import { RelatedPostsSection } from './sections/RelatedPostsSection';
 import type { BlogPost } from './components/BlogPostCard';
-import type { GlobalFooterPayload, GlobalHeaderPayload } from '@/lib/cms/types';
+import type { GlobalFooterPayload, GlobalHeaderPayload, SharedContactCtaPayload } from '@/lib/cms/types';
 
 interface BlogDetailViewProps {
   article?: ArticleData;
   relatedPosts?: BlogPost[];
   header?: GlobalHeaderPayload | null;
   footer?: GlobalFooterPayload | null;
+  contactCta?: SharedContactCtaPayload | null;
 }
 
 export function BlogDetailView({
@@ -23,6 +24,7 @@ export function BlogDetailView({
   relatedPosts,
   header,
   footer,
+  contactCta,
 }: BlogDetailViewProps) {
   return (
     <Wrapper>
@@ -31,7 +33,7 @@ export function BlogDetailView({
         <DetailMainContentSection article={article} />
         <RelatedPostsSection posts={relatedPosts} />
       </MainContent>
-      <ContactCTASection />
+      <ContactCTASection content={contactCta} />
       <Footer content={footer ?? undefined} />
     </Wrapper>
   );

@@ -7,6 +7,7 @@ import { CmsPageSection, forCreatorsHeroSchema } from '@/lib/cms';
 import { savePageSection } from '@/lib/cms/actions';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/admin/controls/AdminForm';
 import { AdminInput as Input } from '@/components/admin/controls/AdminInput';
+import { AdminImageUpload } from '@/components/admin/controls/AdminImageUpload';
 import { AdminTextarea as Textarea } from '@/components/admin/controls/AdminTextarea';
 import { AdminButton as Button } from '@/components/admin/layout/AdminPrimitives';
 import { AdminSwitch as Switch } from '@/components/admin/controls/AdminSwitch';
@@ -31,6 +32,9 @@ export function ForCreatorsHeroEditor({ pageId, section }: { pageId: string; sec
       primary_cta_url: section.content?.primary_cta_url || '/',
       secondary_cta_label: section.content?.secondary_cta_label || '',
       secondary_cta_url: section.content?.secondary_cta_url || '#benefit',
+      media_image: section.content?.media_image || '',
+      media_image_alt: section.content?.media_image_alt || '',
+      hero_aspect_ratio: section.content?.hero_aspect_ratio || '1440/670',
     },
   });
 
@@ -89,6 +93,31 @@ export function ForCreatorsHeroEditor({ pageId, section }: { pageId: string; sec
           )} />
           <FormField control={form.control} name="primary_cta_url" render={({ field }) => (
             <FormItem><FormLabel>Primary CTA URL</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+          )} />
+        </TwoColumnGrid>
+
+        <TwoColumnGrid>
+          <FormField control={form.control} name="hero_aspect_ratio" render={({ field }) => (
+            <FormItem><FormLabel>Hero Aspect Ratio (W/H)</FormLabel><FormControl><Input {...field} value={field.value ?? ''} placeholder="1440/670" /></FormControl><FormMessage /></FormItem>
+          )} />
+        </TwoColumnGrid>
+
+        <TwoColumnGrid>
+          <FormField control={form.control} name="media_image" render={({ field }) => (
+            <FormItem>
+              <FormLabel>Hero Image</FormLabel>
+              <FormControl>
+                <AdminImageUpload
+                  value={field.value}
+                  onChange={field.onChange}
+                  label="Hero Image"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )} />
+          <FormField control={form.control} name="media_image_alt" render={({ field }) => (
+            <FormItem><FormLabel>Hero Image Alt</FormLabel><FormControl><Input {...field} value={field.value ?? ''} /></FormControl><FormMessage /></FormItem>
           )} />
         </TwoColumnGrid>
 

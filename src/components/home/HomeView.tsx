@@ -3,6 +3,7 @@
 import styled from 'styled-components';
 import { colors } from '@/styles/tokens';
 import { HomeViewModel } from '@/lib/cms/resolvers/home.resolver';
+import type { SharedContactCtaPayload } from '@/lib/cms/types';
 
 import { Header } from '@/components/shared/Header';
 import { HomeHeroPartnerSection } from './sections/HomeHeroPartnerSection';
@@ -13,7 +14,13 @@ import { ContactCTASection } from '@/components/shared/ContactCTASection';
 import { TrendingSection } from './sections/TrendingSection';
 import { Footer } from '@/components/shared/Footer';
 
-export function HomeView({ data }: { data: HomeViewModel | null }) {
+export function HomeView({
+  data,
+  contactCta,
+}: {
+  data: HomeViewModel | null;
+  contactCta?: SharedContactCtaPayload | null;
+}) {
   if (!data) return null;
 
   return (
@@ -27,7 +34,7 @@ export function HomeView({ data }: { data: HomeViewModel | null }) {
       <BlueGroupWrapper>
         {data.efficiency && <EfficiencySection content={data.efficiency} />}
         {data.shared.exclusiveTalents && <ExclusiveTalentsSection content={data.shared.exclusiveTalents} />}
-        {data.shared.contactCta && <ContactCTASection content={data.shared.contactCta} />}
+        <ContactCTASection content={contactCta} />
       </BlueGroupWrapper>
       
       {data.trending && <TrendingSection content={data.trending} />}

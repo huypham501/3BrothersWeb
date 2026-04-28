@@ -8,6 +8,7 @@ import { SITE_URL } from "@/lib/constants";
 import { getPageBySlug } from "@/lib/cms/queries";
 import { resolvePageMetadataModel } from "@/lib/cms/resolvers/metadata-defaults.resolver";
 import { resolveHomePageData } from "@/lib/cms/resolvers/home.resolver";
+import { resolveSharedContactCtaData } from "@/lib/cms/resolvers/shared-contact-cta.resolver";
 
 export async function generateMetadata(): Promise<Metadata> {
   const page = await getPageBySlug('home');
@@ -58,8 +59,11 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function HomePage() {
-  const data = await resolveHomePageData();
+  const [data, contactCta] = await Promise.all([
+    resolveHomePageData(),
+    resolveSharedContactCtaData(),
+  ]);
   
   // If no CMS data exists yet, we could fallback, but we assume the admin seeded it
-  return <HomeView data={data} />;
+  return <HomeView data={data} contactCta={contactCta} />;
 }

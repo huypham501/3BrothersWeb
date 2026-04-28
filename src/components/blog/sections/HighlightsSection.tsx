@@ -1,8 +1,10 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import styled from 'styled-components';
 import { colors, spacing, typography, mediaQueries, borderRadius, motion } from '@/styles/tokens';
+import { normalizeAspectRatio } from '@/lib/aspect-ratio';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -12,6 +14,9 @@ export interface FeaturedPost {
   badge: string | null;
   excerpt: string | null;
   date: string;
+  heroImageUrl?: string | null;
+  heroImageAlt?: string | null;
+  heroAspectRatio?: string | null;
   heroBg: string;
 }
 
@@ -22,6 +27,9 @@ const DEFAULT_FEATURED: FeaturedPost = {
   excerpt:
     'Traveling is an enriching experience that opens up new horizons, exposes us to different cultures, and creates memories that last a lifetime. However, traveling can also be stressful and overwhelming, especially if you don\'t plan and prepare adequately. In this blog…',
   date: '12 Jan 2026',
+  heroImageUrl: null,
+  heroImageAlt: null,
+  heroAspectRatio: '1440/710',
   heroBg: 'linear-gradient(180deg, #001a5c 0%, #003CA6 35%, #0050d0 60%, #061530 100%)',
 };
 
@@ -29,10 +37,19 @@ const DEFAULT_FEATURED: FeaturedPost = {
 
 export function HighlightsSection({ featuredPost }: { featuredPost?: FeaturedPost }) {
   const post = featuredPost ?? DEFAULT_FEATURED;
+  const heroAspectRatio = normalizeAspectRatio(post.heroAspectRatio, '1440 / 710');
   return (
     <SectionContainer>
       {/* Full-width hero image with dark overlay */}
-      <HeroImageWrapper>
+      <HeroImageWrapper $aspectRatio={heroAspectRatio}>
+        {post.heroImageUrl ? (
+          <HeroImageAsset
+            src={post.heroImageUrl}
+            alt={post.heroImageAlt || post.title}
+            fill
+            sizes="100vw"
+          />
+        ) : null}
         <HeroImage $bg={post.heroBg} />
         <HeroDimmer />
       </HeroImageWrapper>
@@ -72,27 +89,23 @@ const SectionContainer = styled.section`
 
 /* ─── Hero image ─────────────────────────────────────────────────────────── */
 
-const HeroImageWrapper = styled.div`
+const HeroImageWrapper = styled.div<{ $aspectRatio: string }>`
   position: relative;
   width: 100%;
-  height: 710px;
+  aspect-ratio: ${({ $aspectRatio }) => $aspectRatio};
   overflow: hidden;
   border-radius: 12px;
+`;
 
-  ${mediaQueries.down.lg} {
-    height: 500px;
-    border-radius: 12px;
-  }
-
-  ${mediaQueries.down.sm} {
-    height: 380px;
-    border-radius: 12px;
-  }
+const HeroImageAsset = styled(Image)`
+  object-fit: cover;
+  object-position: center;
 `;
 
 const HeroImage = styled.div<{ $bg: string }>`
   position: absolute;
   inset: 0;
+  z-index: 0;
   background: ${({ $bg }) => $bg};
   background-size: cover;
   background-position: center top;
@@ -128,6 +141,7 @@ const HeroImage = styled.div<{ $bg: string }>`
 const HeroDimmer = styled.div`
   position: absolute;
   inset: 0;
+  z-index: 1;
   background: rgba(0, 0, 0, 0.15);
   pointer-events: none;
 `;
@@ -139,6 +153,7 @@ const InfoCardLink = styled(Link)`
   bottom: 0;
   left: 84px;
   right: 84px;
+  z-index: 2;
   text-decoration: none;
   color: inherit;
 

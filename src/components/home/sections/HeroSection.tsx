@@ -7,6 +7,7 @@ import { HeroBackgroundGraphics } from '../components/HeroBackgroundGraphics';
 import { HeroMediaPlaceholder } from '../components/HeroMediaPlaceholder';
 import { PrimaryButton } from '../components/PrimaryButton';
 import { SecondaryButton } from '../components/SecondaryButton';
+import { normalizeAspectRatio } from '@/lib/aspect-ratio';
 
 import { HomeHeroPayload } from '@/lib/cms/types';
 
@@ -19,8 +20,9 @@ export function HeroSection({
   className?: string;
   isComposite?: boolean;
 }) {
+  const heroAspectRatio = normalizeAspectRatio(content.hero_aspect_ratio, '1440 / 800');
   return (
-    <HeroContainer className={className} $isComposite={isComposite}>
+    <HeroContainer className={className} $isComposite={isComposite} $aspectRatio={heroAspectRatio}>
       <HeroBackgroundGraphics />
       <ContentWrapper>
         <TextBlock>
@@ -54,9 +56,10 @@ export function HeroSection({
   );
 }
 
-const HeroContainer = styled.section<{ $isComposite: boolean }>`
+const HeroContainer = styled.section<{ $isComposite: boolean; $aspectRatio: string }>`
   position: relative;
   width: 100%;
+  aspect-ratio: ${({ $aspectRatio }) => $aspectRatio};
   min-height: 800px;
   background: #061530;
   border-radius: 0 0 120px 120px;

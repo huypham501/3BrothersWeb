@@ -1,20 +1,23 @@
 import { SCHEMA_KEYS } from '../constants/schema-keys';
 import { getGlobalSetting } from '../queries';
-import type { GlobalFooterPayload, GlobalHeaderPayload } from '../types';
+import type { GlobalFooterPayload, GlobalHeaderPayload, SharedContactCtaPayload } from '../types';
 import {
   resolveGlobalContentBySchemaKey,
   validateCmsPayloadBySchemaKey,
 } from './utils/cms-content';
+import { resolveSharedContactCtaData } from './shared-contact-cta.resolver';
 
 export interface PublicLayoutViewModel {
   header: GlobalHeaderPayload | null;
   footer: GlobalFooterPayload | null;
+  contactCta: SharedContactCtaPayload | null;
 }
 
 export async function resolvePublicLayoutData(): Promise<PublicLayoutViewModel> {
-  const [headerSetting, footerSetting] = await Promise.all([
+  const [headerSetting, footerSetting, contactCta] = await Promise.all([
     getGlobalSetting(SCHEMA_KEYS.GLOBAL_HEADER),
     getGlobalSetting(SCHEMA_KEYS.GLOBAL_FOOTER),
+    resolveSharedContactCtaData(),
   ]);
 
   return {
@@ -28,5 +31,6 @@ export async function resolvePublicLayoutData(): Promise<PublicLayoutViewModel> 
       resolveGlobalContentBySchemaKey<typeof SCHEMA_KEYS.GLOBAL_FOOTER>(footerSetting),
       'public.globals.footer'
     ),
+    contactCta,
   };
 }

@@ -120,6 +120,7 @@ export default async function BlogDetailPage({ params }: Props) {
       relatedPosts={relatedPosts}
       header={layout.header}
       footer={layout.footer}
+      contactCta={layout.contactCta}
     />
   );
 }

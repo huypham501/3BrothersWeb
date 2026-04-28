@@ -9,16 +9,17 @@ import { ContactCTASection } from '@/components/shared/ContactCTASection';
 import { HighlightsSection, type FeaturedPost } from './sections/HighlightsSection';
 import { ContentsSection } from './sections/ContentsSection';
 import type { BlogPost } from './components/BlogPostCard';
-import type { GlobalFooterPayload, GlobalHeaderPayload } from '@/lib/cms/types';
+import type { GlobalFooterPayload, GlobalHeaderPayload, SharedContactCtaPayload } from '@/lib/cms/types';
 
 interface BlogViewProps {
   featuredPost?: FeaturedPost;
   posts?: BlogPost[];
   header?: GlobalHeaderPayload | null;
   footer?: GlobalFooterPayload | null;
+  contactCta?: SharedContactCtaPayload | null;
 }
 
-export function BlogView({ featuredPost, posts, header, footer }: BlogViewProps) {
+export function BlogView({ featuredPost, posts, header, footer, contactCta }: BlogViewProps) {
   return (
     <Wrapper>
       <Header content={header ?? undefined} />
@@ -26,7 +27,7 @@ export function BlogView({ featuredPost, posts, header, footer }: BlogViewProps)
         <HighlightsSection featuredPost={featuredPost} />
         <ContentsSection posts={posts} />
       </MainContent>
-      <ContactCTASection />
+      <ContactCTASection content={contactCta} />
       <Footer content={footer ?? undefined} />
     </Wrapper>
   );

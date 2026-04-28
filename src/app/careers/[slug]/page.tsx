@@ -97,6 +97,7 @@ export default async function CareerDetailPage({ params }: Props) {
       relatedJobs={relatedJobs}
       header={layout.header}
       footer={layout.footer}
+      contactCta={layout.contactCta}
     />
   );
 }

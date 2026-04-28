@@ -36,6 +36,7 @@ export function HomeHeroEditor({ pageId, section }: { pageId: string, section: C
       secondary_cta_url: section.content.secondary_cta_url || '',
       media_image: section.content.media_image || '',
       media_image_alt: section.content.media_image_alt || '',
+      hero_aspect_ratio: section.content.hero_aspect_ratio || '1440/800',
     },
   });
 
@@ -159,6 +160,22 @@ export function HomeHeroEditor({ pageId, section }: { pageId: string, section: C
                 <FormLabel>Secondary CTA URL</FormLabel>
                 <FormControl>
                   <Input {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </TwoColumnGrid>
+
+        <TwoColumnGrid>
+          <FormField
+            control={form.control}
+            name="hero_aspect_ratio"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Hero Aspect Ratio (W/H)</FormLabel>
+                <FormControl>
+                  <Input {...field} value={field.value ?? ''} placeholder="1440/800" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
