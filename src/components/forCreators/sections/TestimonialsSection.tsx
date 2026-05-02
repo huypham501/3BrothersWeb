@@ -4,11 +4,14 @@ import styled from 'styled-components';
 import { colors, spacing, typography, mediaQueries } from '@/styles/tokens';
 import { ForCreatorsTestimonialsPayload } from '@/lib/cms/types';
 
+const TESTIMONIALS_BG_IMAGE = '/images/for-creators/testimonials-v2-bg.png';
+// const TESTIMONIALS_BG_IMAGE = '/images/for-creators/testimonials-v2-bg.svg';
+const TESTIMONIALS_BG_ASPECT_RATIO = '1440 / 1087';
+const TESTIMONIALS_BG_WIDTH = '1440px';
+
 export function TestimonialsSection({ content }: { content: ForCreatorsTestimonialsPayload }) {
   return (
     <SectionContainer>
-      <StripeOverlay />
-
       <Inner>
         <HeadingBlock>
           <Superlabel>{content.superlabel}</Superlabel>
@@ -44,6 +47,35 @@ const SectionContainer = styled.section`
   align-items: center;
   padding: 100px 0 120px;
 
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: ${TESTIMONIALS_BG_WIDTH};
+    height: auto;
+    aspect-ratio: ${TESTIMONIALS_BG_ASPECT_RATIO};
+    transform: translateX(-50%);
+    background-image: url('${TESTIMONIALS_BG_IMAGE}');
+    background-repeat: no-repeat;
+    background-position: center top;
+    background-size: 100% auto;
+    -webkit-mask-image:
+      linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%),
+      linear-gradient(to bottom, black 0%, black 82%, transparent 100%);
+    mask-image:
+      linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%),
+      linear-gradient(to bottom, black 0%, black 82%, transparent 100%);
+    -webkit-mask-repeat: no-repeat, no-repeat;
+    mask-repeat: no-repeat, no-repeat;
+    -webkit-mask-size: 100% 100%, 100% 100%;
+    mask-size: 100% 100%, 100% 100%;
+    -webkit-mask-composite: source-in;
+    mask-composite: intersect;
+    pointer-events: none;
+    z-index: 0;
+  }
+
   ${mediaQueries.down.lg} {
     padding: 80px 0 100px;
     min-height: auto;
@@ -51,23 +83,11 @@ const SectionContainer = styled.section`
 
   ${mediaQueries.down.sm} {
     padding: 60px 0 80px;
+
+    &::before {
+      background-position: center -20px;
+    }
   }
-`;
-
-const StripeOverlay = styled.div`
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  overflow: hidden;
-
-  background: repeating-linear-gradient(
-    -68deg,
-    transparent 0px,
-    transparent 94px,
-    rgba(255, 255, 255, 0.22) 94px,
-    rgba(255, 255, 255, 0.22) 134px
-  );
-  mix-blend-mode: overlay;
 `;
 
 const Inner = styled.div`

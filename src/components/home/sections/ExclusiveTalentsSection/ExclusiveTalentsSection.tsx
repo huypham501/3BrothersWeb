@@ -9,6 +9,7 @@ import {
   GlowEllipse12,
   GlowEllipse2,
   GlowEllipseBottom,
+  SectionGlowWrapper,
   SectionContainer,
   Title,
   TitleLine,
@@ -32,26 +33,28 @@ export function ExclusiveTalentsSection({ content }: { content: SharedExclusiveT
   const activeTalent = talents[activeTalentIndex] || talents[featuredIndex] || null;
 
   return (
-    <SectionContainer>
-      <GlowEllipse1 />
-      <GlowEllipse2 />
+    <SectionGlowWrapper>
+      <SectionContainer>
+        <GlowEllipse1 />
+        <GlowEllipse2 />
+
+        <TitleRow>
+          <TitleLine />
+          <Title>{content.section_title}</Title>
+          <TitleLine />
+        </TitleRow>
+
+        <FeaturedTalentPanel activeTalent={activeTalent} />
+
+        <TalentSlider
+          talents={talents}
+          talentCountLabel={content.talent_count_label}
+          activeTalentIndex={activeTalentIndex}
+          onSelectTalent={setActiveTalentIndex}
+        />
+      </SectionContainer>
       <GlowEllipseBottom />
       <GlowEllipse12 />
-
-      <TitleRow>
-        <TitleLine />
-        <Title>{content.section_title}</Title>
-        <TitleLine />
-      </TitleRow>
-
-      <FeaturedTalentPanel activeTalent={activeTalent} />
-
-      <TalentSlider
-        talents={talents}
-        talentCountLabel={content.talent_count_label}
-        activeTalentIndex={activeTalentIndex}
-        onSelectTalent={setActiveTalentIndex}
-      />
-    </SectionContainer>
+    </SectionGlowWrapper>
   );
 }

@@ -95,7 +95,7 @@ const ContentBlock = styled.div`
 const Heading = styled.h2`
   font-family: 'Montserrat', sans-serif;
   font-weight: ${typography.fontWeight.bold};
-  font-size: 68px;
+  font-size: 56px;
   line-height: 120%;
   text-transform: uppercase;
   text-align: center;
@@ -103,18 +103,18 @@ const Heading = styled.h2`
   margin: 0;
 
   ${mediaQueries.down.md} {
-    font-size: 48px;
+    font-size: 40px;
   }
 
   ${mediaQueries.down.sm} {
-    font-size: 36px;
+    font-size: 28px;
   }
 `;
 
 const Subtitle = styled.p`
   font-family: 'Montserrat', sans-serif;
   font-weight: ${typography.fontWeight.normal};
-  font-size: ${typography.fontSize.md};
+  font-size: 16px;
   line-height: 140%;
   text-align: center;
   color: ${colors.white};
@@ -148,7 +148,7 @@ const JoinButton = styled(Link)`
 
   font-family: 'Montserrat', sans-serif;
   font-weight: ${typography.fontWeight.bold};
-  font-size: ${typography.fontSize.md};
+  font-size: 16px;
   line-height: 140%;
   color: ${colors.secondaryDark};
 

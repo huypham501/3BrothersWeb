@@ -8,7 +8,6 @@ import { SITE_URL } from '@/lib/constants';
 import { getPageBySlug } from '@/lib/cms/queries';
 import { resolvePageMetadataModel } from '@/lib/cms/resolvers/metadata-defaults.resolver';
 import { resolveForCreatorsPageData } from '@/lib/cms/resolvers/for-creators.resolver';
-import { resolveSharedContactCtaData } from '@/lib/cms/resolvers/shared-contact-cta.resolver';
 
 export async function generateMetadata(): Promise<Metadata> {
   const page = await getPageBySlug('for-creators');
@@ -59,9 +58,6 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function ForCreatorsPage() {
-  const [data, contactCta] = await Promise.all([
-    resolveForCreatorsPageData(),
-    resolveSharedContactCtaData(),
-  ]);
-  return <ForCreatorsView data={data} contactCta={contactCta} />;
+  const data = await resolveForCreatorsPageData();
+  return <ForCreatorsView data={data} />;
 }

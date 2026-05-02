@@ -5,22 +5,14 @@ import { colors } from '@/styles/tokens';
 
 import { Header } from '@/components/shared/Header';
 import { Footer } from '@/components/shared/Footer';
-import { ContactCTASection } from '@/components/shared/ContactCTASection';
 import { HeroSection } from './sections/HeroSection';
 import { BenefitSection } from './sections/BenefitSection';
 import { TestimonialsSection } from './sections/TestimonialsSection';
 import { ExclusiveTalentsSection } from '@/components/home/sections/ExclusiveTalentsSection';
 import { CTASection } from './sections/CTASection';
 import type { ForCreatorsViewModel } from '@/lib/cms/resolvers/for-creators.resolver';
-import type { SharedContactCtaPayload } from '@/lib/cms/types';
 
-export function ForCreatorsView({
-  data,
-  contactCta,
-}: {
-  data: ForCreatorsViewModel | null;
-  contactCta?: SharedContactCtaPayload | null;
-}) {
+export function ForCreatorsView({ data }: { data: ForCreatorsViewModel | null }) {
   if (!data) return null;
 
   return (
@@ -29,11 +21,12 @@ export function ForCreatorsView({
       <MainContent>
         {data.hero && <HeroSection content={data.hero} />}
         {data.benefit && <BenefitSection content={data.benefit} />}
-        {data.testimonials && <TestimonialsSection content={data.testimonials} />}
-        {data.shared.exclusiveTalents && <ExclusiveTalentsSection content={data.shared.exclusiveTalents} />}
-        {data.cta && <CTASection content={data.cta} />}
+        <BlueGroupWrapper>
+          {data.testimonials && <TestimonialsSection content={data.testimonials} />}
+          {data.shared.exclusiveTalents && <ExclusiveTalentsSection content={data.shared.exclusiveTalents} />}
+          {data.cta && <CTASection content={data.cta} />}
+        </BlueGroupWrapper>
       </MainContent>
-      <ContactCTASection content={contactCta} />
       {data.globals.footer && <Footer content={data.globals.footer} />}
     </Wrapper>
   );
@@ -52,4 +45,19 @@ const Wrapper = styled.div`
 
 const MainContent = styled.main`
   width: 100%;
+`;
+
+const BlueGroupWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(
+    180deg,
+    #b4cfff 0%,
+    #b4cfff 34%,
+    #9cbcf5 42%,
+    #82acef 50%,
+    ${colors.primaryLight} 58%,
+    ${colors.primaryLight} 100%
+  );
 `;

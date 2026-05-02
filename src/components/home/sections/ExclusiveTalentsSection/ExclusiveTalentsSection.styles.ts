@@ -1,11 +1,19 @@
 import styled from 'styled-components';
 import { colors, spacing, typography, mediaQueries, motion } from '@/styles/tokens';
 
-export const SectionContainer = styled.section`
+export const SectionGlowWrapper = styled.div`
   position: relative;
   width: 100%;
   max-width: 1440px;
   margin: 0 auto;
+  overflow: visible;
+  isolation: isolate;
+`;
+
+export const SectionContainer = styled.section`
+  position: relative;
+  z-index: 1;
+  width: 100%;
   background: #061530;
   border-radius: 120px;
   padding: 120px 84px 80px;
@@ -29,7 +37,7 @@ export const GlowEllipse1 = styled.div`
   width: 741px;
   height: 745px;
   left: 39px;
-  top: 233px;
+  top: 18.2%;
   background: #003ca6;
   opacity: 0.4;
   filter: blur(60px);
@@ -43,7 +51,7 @@ export const GlowEllipse2 = styled.div`
   width: 637px;
   height: 641px;
   left: 91px;
-  top: 285px;
+  top: 22.2%;
   background: #003ca6;
   opacity: 0.4;
   filter: blur(60px);
@@ -56,28 +64,38 @@ export const GlowEllipseBottom = styled.div`
   position: absolute;
   width: 1547px;
   height: 709px;
-  left: -37px;
-  top: 1098px;
+  left: 50%;
+  top: 100%;
+  transform: translateX(-50%);
   background: #003ca6;
   opacity: 0.4;
   filter: blur(60px);
   border-radius: 50%;
   pointer-events: none;
   z-index: 0;
+
+  ${mediaQueries.down.sm} {
+    width: 130vw;
+    height: 56vw;
+  }
 `;
 
 export const GlowEllipse12 = styled.div`
   position: absolute;
   width: 964.68px;
   height: 76.66px;
-  left: calc(50% - 964.68px / 2 + 32.34px);
-  top: 1013.43px;
+  left: 50%;
+  top: 100%;
   background: #6395ed;
   opacity: 0.4;
   filter: blur(60px);
-  transform: rotate(-26.13deg);
+  transform: translateX(-50%) rotate(-26.13deg);
   pointer-events: none;
   z-index: 0;
+
+  ${mediaQueries.down.sm} {
+    width: 72vw;
+  }
 `;
 
 export const TitleRow = styled.div`
