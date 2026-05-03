@@ -44,7 +44,6 @@ const SectionContainer = styled.section`
   justify-content: center;
   text-align: center;
   overflow: hidden;
-  background: ${colors.primaryLight};
 
   &::before {
     content: '';
@@ -59,12 +58,18 @@ const SectionContainer = styled.section`
     background-repeat: no-repeat;
     background-position: center top;
     background-size: 100% auto;
-    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 20%, black 80%, transparent 100%);
-    mask-image: linear-gradient(to right, transparent 0%, black 20%, black 80%, transparent 100%);
-    -webkit-mask-repeat: no-repeat;
-    mask-repeat: no-repeat;
-    -webkit-mask-size: 100% 100%;
-    mask-size: 100% 100%;
+    -webkit-mask-image:
+      linear-gradient(to right, transparent 0%, black 20%, black 80%, transparent 100%),
+      linear-gradient(to bottom, transparent 0%, black 12%, black 100%);
+    mask-image:
+      linear-gradient(to right, transparent 0%, black 20%, black 80%, transparent 100%),
+      linear-gradient(to bottom, transparent 0%, black 12%, black 100%);
+    -webkit-mask-repeat: no-repeat, no-repeat;
+    mask-repeat: no-repeat, no-repeat;
+    -webkit-mask-size: 100% 100%, 100% 100%;
+    mask-size: 100% 100%, 100% 100%;
+    -webkit-mask-composite: source-in;
+    mask-composite: intersect;
     pointer-events: none;
     z-index: 0;
   }

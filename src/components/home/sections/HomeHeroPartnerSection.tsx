@@ -18,9 +18,7 @@ export function HomeHeroPartnerSection({
   if (hero && partners) {
     return (
       <CompositeStage>
-        <HeroLayer>
-          <HeroSection content={hero} isComposite />
-        </HeroLayer>
+        <HeroSection content={hero} isComposite />
         <PartnerLayer>
           <PartnersSection content={partners} inComposite />
         </PartnerLayer>
@@ -40,40 +38,28 @@ export function HomeHeroPartnerSection({
 }
 
 const CompositeStage = styled.section`
-  --hero-height: 800px;
-  --stage-height: 1010px;
-  --partner-band-height: calc(var(--stage-height) - var(--hero-height));
-  position: relative;
   width: 100%;
-  min-height: var(--stage-height);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
   background: linear-gradient(180deg, #000000 84.09%, #071e48 100%);
   overflow: hidden;
-
-  ${mediaQueries.down.lg} {
-    --stage-height: 960px;
-  }
-
-  ${mediaQueries.down.sm} {
-    --hero-height: 680px;
-    --stage-height: 820px;
-  }
-`;
-
-const HeroLayer = styled.div`
-  position: absolute;
-  inset: 0 0 auto 0;
-  z-index: 2;
 `;
 
 const PartnerLayer = styled.div`
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: var(--partner-band-height);
+  width: 100%;
+  min-height: 210px;
   display: flex;
   align-items: center;
-  z-index: 1;
+
+  ${mediaQueries.down.lg} {
+    min-height: 160px;
+  }
+
+  ${mediaQueries.down.sm} {
+    min-height: 140px;
+  }
 `;
 
 const HeroOnlyWrapper = styled.div`

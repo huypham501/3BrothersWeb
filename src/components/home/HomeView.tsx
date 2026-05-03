@@ -32,6 +32,7 @@ export function HomeView({
       {data.coreCompetencies && <CoreCompetenciesSection content={data.coreCompetencies} />}
       
       <BlueGroupWrapper>
+        <BlueGroupAmbient data-ambient="true" aria-hidden="true" />
         {data.efficiency && <EfficiencySection content={data.efficiency} />}
         {data.shared.exclusiveTalents && <ExclusiveTalentsSection content={data.shared.exclusiveTalents} />}
         <ContactCTASection content={contactCta} />
@@ -56,8 +57,61 @@ const Wrapper = styled.div`
 `;
 
 const BlueGroupWrapper = styled.div`
+  position: relative;
+  isolation: isolate;
   width: 100%;
   background: ${colors.primaryLight};
   display: flex;
   flex-direction: column;
+  overflow: visible;
+
+  > *:not([data-ambient='true']) {
+    position: relative;
+    z-index: 1;
+  }
+`;
+
+const BlueGroupAmbient = styled.div`
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    width: min(1440px, 100%);
+    border-radius: 120px;
+    transform: translateX(-50%);
+  }
+
+  &::before {
+    top: 28%;
+    height: 1281px;
+    background: #061530;
+    filter: blur(100px);
+  }
+
+  &::after {
+    top: 31%;
+    height: 1072px;
+    background: #003ca6;
+    filter: blur(60px);
+  }
+
+  @media (max-width: 900px) {
+    &::before {
+      height: 86vw;
+      border-radius: 60px;
+      filter: blur(56px);
+    }
+
+    &::after {
+      height: 72vw;
+      border-radius: 60px;
+      filter: blur(36px);
+    }
+  }
 `;
