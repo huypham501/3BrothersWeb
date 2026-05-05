@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import { useRouter } from 'next/navigation';
 import { useForm, useFieldArray, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CmsPageSection, homeTrendingSchema } from '@/lib/cms';
@@ -32,6 +33,7 @@ import { z } from 'zod';
 
 
 export function HomeTrendingEditor({ pageId, section }: { pageId: string, section: CmsPageSection<z.infer<typeof homeTrendingSchema>> }) {
+  const router = useRouter();
   const [isSaving, setIsSaving] = React.useState(false);
   const [success, setSuccess] = React.useState(false);
   const [errorMsg, setErrorMsg] = React.useState<string | null>(null);
@@ -68,6 +70,7 @@ export function HomeTrendingEditor({ pageId, section }: { pageId: string, sectio
       setSuccess(true);
       setTimeout(() => setSuccess(false), 3000);
       form.reset(data);
+      router.refresh();
     } catch (err) {
       setErrorMsg((err as Error).message);
     } finally {

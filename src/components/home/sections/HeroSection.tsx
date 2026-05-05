@@ -2,9 +2,8 @@
 
 import styled from 'styled-components';
 import Image from 'next/image';
-import { colors, spacing, typography, mediaQueries, borderRadius, motion } from '@/styles/tokens';
+import { colors, spacing, typography, mediaQueries } from '@/styles/tokens';
 import { HeroBackgroundGraphics } from '../components/HeroBackgroundGraphics';
-import { HeroMediaPlaceholder } from '../components/HeroMediaPlaceholder';
 import { PrimaryButton } from '../components/PrimaryButton';
 import { SecondaryButton } from '../components/SecondaryButton';
 import { normalizeAspectRatio } from '@/lib/aspect-ratio';
@@ -21,6 +20,9 @@ export function HeroSection({
   isComposite?: boolean;
 }) {
   const heroAspectRatio = normalizeAspectRatio(content.hero_aspect_ratio, '1440 / 800');
+  const hasSecondaryCta = Boolean(content.secondary_cta_label && content.secondary_cta_url);
+  const hasMediaImage = Boolean(content.media_image);
+
   return (
     <HeroContainer className={className} $isComposite={isComposite} $aspectRatio={heroAspectRatio}>
       <HeroBackgroundGraphics />
@@ -35,21 +37,24 @@ export function HeroSection({
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14M12 5l7 7-7 7" />
               </svg>
             </PrimaryButton>
-            {content.secondary_cta_label && content.secondary_cta_url && (
+            {hasSecondaryCta && (
               <SecondaryButton href={content.secondary_cta_url}>{content.secondary_cta_label}</SecondaryButton>
             )}
           </ButtonGroup>
         </TextBlock>
-        {content.media_image ? (
-          <Image
-            src={content.media_image}
-            alt={content.media_image_alt || 'Hero media'}
-            width={1200}
-            height={800}
-            style={{ maxWidth: '600px', width: '100%', height: 'auto', borderRadius: '24px' }}
-          />
-        ) : (
-          <HeroMediaPlaceholder />
+        {hasMediaImage && (
+          <HeroMediaStack>
+            <HeroMediaImageLayer>
+              <Image
+                src={content.media_image}
+                alt={content.media_image_alt || 'Hero media'}
+                fill
+                sizes="(max-width: 1024px) 100vw, 563px"
+                style={{ objectFit: 'cover' }}
+              />
+              <HeroMediaOverlay />
+            </HeroMediaImageLayer>
+          </HeroMediaStack>
         )}
       </ContentWrapper>
     </HeroContainer>
@@ -70,6 +75,8 @@ const HeroContainer = styled.section<{ $isComposite: boolean; $aspectRatio: stri
   color: ${colors.white};
 
   ${mediaQueries.down.lg} {
+    aspect-ratio: auto;
+    min-height: 1340px;
     padding: 0 ${spacing['3xl']};
   }
 
@@ -79,7 +86,6 @@ const HeroContainer = styled.section<{ $isComposite: boolean; $aspectRatio: stri
     border-radius: 0 0 80px 80px;
   }
 `;
-
 
 const ContentWrapper = styled.div`
   position: relative;
@@ -97,6 +103,51 @@ const ContentWrapper = styled.div`
     align-items: center;
     text-align: center;
   }
+`;
+
+const HeroMediaStack = styled.div`
+  width: 100%;
+  max-width: 563px;
+  aspect-ratio: 563 / 676;
+  position: relative;
+  margin-top: -300px;
+  z-index: 0;
+
+  ${mediaQueries.down.lg} {
+    margin-top: ${spacing.xl};
+    max-width: 480px;
+  }
+`;
+
+const HeroMediaImageLayer = styled.div`
+  position: absolute;
+  inset: 0;
+  border-radius: 0 0 140px 140px;
+  overflow: hidden;
+  z-index: 2;
+  transform: scale(1.035);
+  transform-origin: center;
+  box-shadow:
+    0 0 0 4px rgba(145, 191, 255, 0.9),
+    0 0 16px rgba(67, 124, 255, 0.7);
+
+  ${mediaQueries.down.lg} {
+    border-radius: 0 0 140px 140px;
+    transform: scale(1.028);
+    box-shadow:
+      0 0 0 3px rgba(145, 191, 255, 0.88),
+      0 0 16px rgba(67, 124, 255, 0.62);
+  }
+`;
+
+const HeroMediaOverlay = styled.div`
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 30%;
+  background: linear-gradient(180deg, rgba(6, 21, 48, 0) 0%, rgba(6, 21, 48, 0.7) 100%);
+  pointer-events: none;
 `;
 
 const TextBlock = styled.div`

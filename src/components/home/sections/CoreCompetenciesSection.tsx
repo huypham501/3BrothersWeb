@@ -24,6 +24,7 @@ export function CoreCompetenciesSection({ content }: { content: HomeCoreCompeten
               key={index}
               title={service.title}
               description={service.description}
+              image={service.image}
             />
           ))}
         </GridContainer>

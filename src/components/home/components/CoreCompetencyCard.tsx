@@ -4,6 +4,7 @@ import { colors, spacing, typography, mediaQueries, motion } from '@/styles/toke
 export interface CoreCompetencyCardProps {
   title: string;
   description: string;
+  image?: string | null;
 }
 
 const Montserrat = "'Montserrat', sans-serif";
@@ -14,7 +15,7 @@ const ArrowIconSVG = () => (
   </svg>
 );
 
-export function CoreCompetencyCard({ title, description }: CoreCompetencyCardProps) {
+export function CoreCompetencyCard({ title, description, image }: CoreCompetencyCardProps) {
   return (
     <CardContainer>
       <TextGroup>
@@ -27,7 +28,7 @@ export function CoreCompetencyCard({ title, description }: CoreCompetencyCardPro
         <CardDescription>{description}</CardDescription>
       </TextGroup>
       <ImageContainer>
-        <ImagePlaceholder>Image Illustration</ImagePlaceholder>
+        {image ? <CardImage src={image} alt={title} loading="lazy" /> : null}
         <HoverOverlay>
           <OverlayContent>
             <span>Xem chi tiết</span>
@@ -139,11 +140,11 @@ const ImageContainer = styled.div`
   margin-top: auto;
 `;
 
-const ImagePlaceholder = styled.div`
-  color: ${colors.primary};
-  font-family: ${Montserrat};
-  font-weight: ${typography.fontWeight.medium};
-  font-size: ${typography.fontSize.base};
+const CardImage = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 `;
 
 const HoverOverlay = styled.div`

@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CmsPage, homePageSchema } from '@/lib/cms';
@@ -16,6 +17,7 @@ import { getCmsFieldUxSpec } from '@/lib/cms/ux/field-ux-spec';
 import { z } from 'zod';
 
 export function HomePageSettingsEditor({ page }: { page: CmsPage }) {
+  const router = useRouter();
   const [isSaving, setIsSaving] = React.useState(false);
   const [success, setSuccess] = React.useState(false);
   const [errorMsg, setErrorMsg] = React.useState<string | null>(null);
@@ -45,6 +47,7 @@ export function HomePageSettingsEditor({ page }: { page: CmsPage }) {
       await saveHomePageSettings(page.id, data);
       setSuccess(true);
       setTimeout(() => setSuccess(false), 3000);
+      router.refresh();
     } catch (err) {
       setErrorMsg((err as Error).message);
     } finally {

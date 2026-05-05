@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import { useRouter } from 'next/navigation';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CmsPageSection, forCreatorsTestimonialsSchema } from '@/lib/cms';
@@ -29,6 +30,7 @@ import { z } from 'zod';
 type FormValues = z.infer<typeof forCreatorsTestimonialsSchema> & { enabled: boolean };
 
 export function ForCreatorsTestimonialsEditor({ pageId, section }: { pageId: string; section: CmsPageSection<z.infer<typeof forCreatorsTestimonialsSchema>> }) {
+  const router = useRouter();
   const [isSaving, setIsSaving] = React.useState(false);
   const [success, setSuccess] = React.useState(false);
   const [errorMsg, setErrorMsg] = React.useState<string | null>(null);
@@ -59,6 +61,7 @@ export function ForCreatorsTestimonialsEditor({ pageId, section }: { pageId: str
       setSuccess(true);
       setTimeout(() => setSuccess(false), 3000);
       form.reset(data);
+      router.refresh();
     } catch (err) {
       setErrorMsg((err as Error).message);
     } finally {

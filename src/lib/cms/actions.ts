@@ -1,5 +1,6 @@
 'use server';
 
+import { revalidatePath } from 'next/cache';
 import { requireCmsActionCapability } from '@/lib/admin/require-admin-user';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { writeCmsAuditLog } from './audit';
@@ -9,6 +10,18 @@ import { SCHEMA_KEYS } from './constants/schema-keys';
 import { CMS_REGISTRY, pageSettingsSchema } from './schemas';
 
 type SchemaRegistry = Record<string, { parse: (value: unknown) => unknown }>;
+
+const PAGE_ADMIN_PATH_BY_SLUG: Record<string, string> = {
+  home: '/admin/content/pages/home',
+  'for-creators': '/admin/content/pages/for-creators',
+};
+
+function revalidateAdminPageForSlug(slug: string) {
+  const adminPath = PAGE_ADMIN_PATH_BY_SLUG[slug];
+  if (adminPath) {
+    revalidatePath(adminPath);
+  }
+}
 
 export async function saveHomePageSettings(pageId: string, payload: unknown) {
   return savePageSettingsDraft(pageId, payload);
@@ -65,6 +78,8 @@ export async function savePageSettingsDraft(pageId: string, payload: unknown) {
     pageSlugOrSchemaKey: page.slug,
     summary: `Saved draft page settings for ${page.slug}`,
   });
+
+  revalidateAdminPageForSlug(page.slug);
 }
 
 export async function savePageSection(
@@ -129,6 +144,8 @@ export async function savePageSection(
     pageSlugOrSchemaKey: page.slug,
     summary: `Saved draft section ${schemaKey} for page ${page.slug}`,
   });
+
+  revalidateAdminPageForSlug(page.slug);
 }
 
 export async function saveSharedSection(schemaKey: string, payload: unknown, enabled?: boolean) {
@@ -265,6 +282,8 @@ export async function publishHomePage(pageId: string) {
     pageSlugOrSchemaKey: pageData.slug,
     summary: `Published page ${pageData.slug}`,
   });
+
+  revalidateAdminPageForSlug(pageData.slug);
 }
 
 export async function publishForCreatorsPage(pageId: string) {
@@ -346,6 +365,8 @@ export async function publishForCreatorsPage(pageId: string) {
     pageSlugOrSchemaKey: pageData.slug,
     summary: `Published page ${pageData.slug}`,
   });
+
+  revalidateAdminPageForSlug(pageData.slug);
 }
 
 export async function saveGlobalSettingDraft(schemaKey: string, payload: unknown, enabled?: boolean) {

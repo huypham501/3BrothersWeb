@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import { useRouter } from 'next/navigation';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CmsPageSection, forCreatorsBenefitSchema } from '@/lib/cms';
@@ -29,6 +30,7 @@ type FormValues = z.infer<typeof forCreatorsBenefitSchema> & { enabled: boolean 
 const BENEFIT_IDS: Array<FormValues['benefits'][number]['id']> = ['income', 'brand', 'management', 'content'];
 
 export function ForCreatorsBenefitEditor({ pageId, section }: { pageId: string; section: CmsPageSection<z.infer<typeof forCreatorsBenefitSchema>> }) {
+  const router = useRouter();
   const [isSaving, setIsSaving] = React.useState(false);
   const [success, setSuccess] = React.useState(false);
   const [errorMsg, setErrorMsg] = React.useState<string | null>(null);
@@ -64,6 +66,7 @@ export function ForCreatorsBenefitEditor({ pageId, section }: { pageId: string; 
       setSuccess(true);
       setTimeout(() => setSuccess(false), 3000);
       form.reset(data);
+      router.refresh();
     } catch (err) {
       setErrorMsg((err as Error).message);
     } finally {

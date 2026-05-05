@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CmsPageSection, homeHeroSchema } from '@/lib/cms';
@@ -18,6 +19,7 @@ import { z } from 'zod';
 
 
 export function HomeHeroEditor({ pageId, section }: { pageId: string, section: CmsPageSection<z.infer<typeof homeHeroSchema>> }) {
+  const router = useRouter();
   const [isSaving, setIsSaving] = React.useState(false);
   const [success, setSuccess] = React.useState(false);
   const [errorMsg, setErrorMsg] = React.useState<string | null>(null);
@@ -50,6 +52,7 @@ export function HomeHeroEditor({ pageId, section }: { pageId: string, section: C
       setSuccess(true);
       setTimeout(() => setSuccess(false), 3000);
       form.reset(data); // reset dirty state
+      router.refresh();
     } catch (err) {
       setErrorMsg((err as Error).message);
     } finally {

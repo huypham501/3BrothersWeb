@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CmsPageSection, forCreatorsCtaSchema } from '@/lib/cms';
@@ -17,6 +18,7 @@ import { z } from 'zod';
 type FormValues = z.infer<typeof forCreatorsCtaSchema> & { enabled: boolean };
 
 export function ForCreatorsCtaEditor({ pageId, section }: { pageId: string; section: CmsPageSection<z.infer<typeof forCreatorsCtaSchema>> }) {
+  const router = useRouter();
   const [isSaving, setIsSaving] = React.useState(false);
   const [success, setSuccess] = React.useState(false);
   const [errorMsg, setErrorMsg] = React.useState<string | null>(null);
@@ -42,6 +44,7 @@ export function ForCreatorsCtaEditor({ pageId, section }: { pageId: string; sect
       setSuccess(true);
       setTimeout(() => setSuccess(false), 3000);
       form.reset(data);
+      router.refresh();
     } catch (err) {
       setErrorMsg((err as Error).message);
     } finally {

@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import { useRouter } from 'next/navigation';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CmsPageSection, homePartnersSchema } from '@/lib/cms';
@@ -27,6 +28,7 @@ import { z } from 'zod';
 
 
 export function HomePartnersEditor({ pageId, section }: { pageId: string, section: CmsPageSection<z.infer<typeof homePartnersSchema>> }) {
+  const router = useRouter();
   const [isSaving, setIsSaving] = React.useState(false);
   const [success, setSuccess] = React.useState(false);
   const [errorMsg, setErrorMsg] = React.useState<string | null>(null);
@@ -56,6 +58,7 @@ export function HomePartnersEditor({ pageId, section }: { pageId: string, sectio
       setSuccess(true);
       setTimeout(() => setSuccess(false), 3000);
       form.reset(data); // reset dirty state
+      router.refresh();
     } catch (err) {
       setErrorMsg((err as Error).message);
     } finally {
