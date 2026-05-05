@@ -14,6 +14,12 @@ import {
 } from '@ant-design/icons';
 import type { CmsBlogPost } from '@/lib/cms';
 import { deleteBlogPost } from '@/lib/cms/blog-actions';
+import {
+  AdminCard,
+  AdminCardContent,
+  AdminCardHeader,
+  AdminCardTitle,
+} from '@/components/admin/layout/AdminPrimitives';
 
 interface BlogPostListTableProps {
   posts: CmsBlogPost[];
@@ -142,22 +148,33 @@ export function BlogPostListTable({ posts }: BlogPostListTableProps) {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-      <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-        <Link href="/admin/content/pages/blogs/new">
-          <Button type="primary" icon={<PlusOutlined />} style={{ background: '#7c3aed', borderColor: '#7c3aed' }}>
-            New Post
-          </Button>
-        </Link>
-      </div>
+      <AdminCard>
+        <AdminCardContent>
+          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <Link href="/admin/content/pages/blogs/new">
+              <Button type="primary" icon={<PlusOutlined />} style={{ background: '#7c3aed', borderColor: '#7c3aed' }}>
+                New Post
+              </Button>
+            </Link>
+          </div>
+        </AdminCardContent>
+      </AdminCard>
 
-      <Table
-        columns={columns}
-        dataSource={posts}
-        rowKey="id"
-        size="middle"
-        pagination={false}
-        locale={{ emptyText: 'No blog posts yet. Create your first post!' }}
-      />
+      <AdminCard>
+        <AdminCardHeader>
+          <AdminCardTitle>Posts</AdminCardTitle>
+        </AdminCardHeader>
+        <AdminCardContent>
+          <Table
+            columns={columns}
+            dataSource={posts}
+            rowKey="id"
+            size="middle"
+            pagination={false}
+            locale={{ emptyText: 'No blog posts yet. Create your first post!' }}
+          />
+        </AdminCardContent>
+      </AdminCard>
     </div>
   );
 }

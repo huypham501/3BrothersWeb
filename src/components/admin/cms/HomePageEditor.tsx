@@ -7,6 +7,7 @@ import {
   CmsPage,
   CmsPageSection,
   CmsSharedSection,
+  CmsBlogPost,
   homeCoreCompetenciesSchema,
   homeEfficiencySchema,
   homeHeroSchema,
@@ -40,6 +41,7 @@ import { z } from 'zod';
 interface HomePageEditorProps {
   page: CmsPage;
   sections: CmsPageSection[];
+  publishedBlogPosts: CmsBlogPost[];
   shared: {
     exclusiveTalents: CmsSharedSection<z.infer<typeof sharedExclusiveTalentsSchema>> | null;
     contactCta: CmsSharedSection<z.infer<typeof sharedContactCtaSchema>> | null;
@@ -52,6 +54,7 @@ interface HomePageEditorProps {
 export function HomePageEditor({
   page,
   sections,
+  publishedBlogPosts,
   shared,
   role,
   canPublish,
@@ -233,7 +236,11 @@ export function HomePageEditor({
                   </span>
                 </AccordionTrigger>
                 <AccordionContent>
-                  <HomeTrendingEditor pageId={page.id} section={trendingSection} />
+                  <HomeTrendingEditor
+                    pageId={page.id}
+                    section={trendingSection}
+                    publishedBlogPosts={publishedBlogPosts}
+                  />
                 </AccordionContent>
               </AccordionItem>
             )}

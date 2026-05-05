@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { z } from 'zod';
-import { Button, Divider, Switch, Tooltip, Typography } from 'antd';
+import { Button, Switch, Tooltip, Typography } from 'antd';
 import {
   PlusOutlined,
   DeleteOutlined,
@@ -21,6 +21,12 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { AdminInput as Input } from '@/components/admin/controls/AdminInput';
 import { AdminTextarea as Textarea } from '@/components/admin/controls/AdminTextarea';
 import { AdminAlert as Alert, AdminAlertDescription as AlertDescription } from '@/components/admin/layout/AdminPrimitives';
+import {
+  AdminCard,
+  AdminCardContent,
+  AdminCardHeader,
+  AdminCardTitle,
+} from '@/components/admin/layout/AdminPrimitives';
 import { CmsFieldHint } from '@/components/admin/cms/ux/CmsFieldHint';
 import { getCmsFieldUxSpec } from '@/lib/cms/ux/field-ux-spec';
 import {
@@ -219,115 +225,131 @@ export function BlogPostEditor({ post, mode, role, canPublish }: BlogPostEditorP
             </div>
           </HeaderRow>
 
-          {/* ── Featured toggle ── */}
-          <FormField
-            control={form.control}
-            name="is_featured"
-            render={({ field }) => (
-              <ToggleFormItem>
-                <FormLabel>{ux('is_featured').label ?? 'Featured Post'}</FormLabel>
-                <FormControl>
-                  <Switch
-                    checked={field.value}
-                    onChange={field.onChange}
-                    checkedChildren="Featured"
-                    unCheckedChildren="Normal"
-                  />
-                </FormControl>
-                <CmsFieldHint formId="blog_post" fieldPath="is_featured" />
-              </ToggleFormItem>
-            )}
-          />
+          <AdminCard>
+            <AdminCardHeader>
+              <AdminCardTitle>General</AdminCardTitle>
+            </AdminCardHeader>
+            <AdminCardContent>
+              <SectionStack>
+                <FormField
+                  control={form.control}
+                  name="is_featured"
+                  render={({ field }) => (
+                    <ToggleFormItem>
+                      <FormLabel>{ux('is_featured').label ?? 'Featured Post'}</FormLabel>
+                      <FormControl>
+                        <Switch
+                          checked={field.value}
+                          onChange={field.onChange}
+                          checkedChildren="Featured"
+                          unCheckedChildren="Normal"
+                        />
+                      </FormControl>
+                      <CmsFieldHint formId="blog_post" fieldPath="is_featured" />
+                    </ToggleFormItem>
+                  )}
+                />
 
-          {/* ── Slug field (create mode) ── */}
-          {mode === 'create' && (
-            <RawFormItem>
-              <label style={{ fontSize: 13, fontWeight: 500, display: 'block', marginBottom: 4 }}>
-                Slug <span style={{ color: '#888', fontWeight: 400 }}>(URL path, auto-derived from title)</span>
-              </label>
-              <Input
-                value={slug}
-                onChange={(e) => {
-                  setSlug(e.target.value);
-                  setSlugDirty(true);
-                }}
-                placeholder="my-post-slug"
-                style={{ fontFamily: 'monospace' }}
-              />
-              <Typography.Text type="secondary" style={{ fontSize: 12 }}>
-                Will be: /blogs/{slug || '...'}
-              </Typography.Text>
-            </RawFormItem>
-          )}
+                {mode === 'create' && (
+                  <RawFormItem>
+                    <label style={{ fontSize: 13, fontWeight: 500, display: 'block', marginBottom: 4 }}>
+                      Slug <span style={{ color: '#888', fontWeight: 400 }}>(URL path, auto-derived from title)</span>
+                    </label>
+                    <Input
+                      value={slug}
+                      onChange={(e) => {
+                        setSlug(e.target.value);
+                        setSlugDirty(true);
+                      }}
+                      placeholder="my-post-slug"
+                      style={{ fontFamily: 'monospace' }}
+                    />
+                    <Typography.Text type="secondary" style={{ fontSize: 12 }}>
+                      Will be: /blogs/{slug || '...'}
+                    </Typography.Text>
+                  </RawFormItem>
+                )}
 
-          {/* ── Core fields ── */}
-          <FormField control={form.control} name="title" render={({ field }) => (
-            <FormItem>
-              <FormLabel>Title *</FormLabel>
-              <FormControl><Textarea {...field} rows={2} placeholder="Post title" /></FormControl>
-              <FormMessage />
-            </FormItem>
-          )} />
+                <FormField control={form.control} name="title" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Title *</FormLabel>
+                    <FormControl><Textarea {...field} rows={2} placeholder="Post title" /></FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )} />
 
-          <TwoColumnGrid>
-            <FormField control={form.control} name="badge" render={({ field }) => (
-              <FormItem>
-                <FormLabel>Badge</FormLabel>
-                <FormControl><Input {...field} value={field.value ?? ''} placeholder="e.g. Event • Sắp diễn ra" /></FormControl>
-                <FormMessage />
-              </FormItem>
-            )} />
-          </TwoColumnGrid>
+                <TwoColumnGrid>
+                  <FormField control={form.control} name="badge" render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Badge</FormLabel>
+                      <FormControl><Input {...field} value={field.value ?? ''} placeholder="e.g. Event • Sắp diễn ra" /></FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )} />
+                </TwoColumnGrid>
 
-          <FormField control={form.control} name="excerpt" render={({ field }) => (
-            <FormItem>
-              <FormLabel>Excerpt</FormLabel>
-              <FormControl><Textarea {...field} value={field.value ?? ''} rows={3} placeholder="Short description shown in post cards" /></FormControl>
-              <FormMessage />
-            </FormItem>
-          )} />
+                <FormField control={form.control} name="excerpt" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Excerpt</FormLabel>
+                    <FormControl><Textarea {...field} value={field.value ?? ''} rows={3} placeholder="Short description shown in post cards" /></FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )} />
+              </SectionStack>
+            </AdminCardContent>
+          </AdminCard>
 
-          {/* ── Cover image ── */}
-          <Divider orientation="left" orientationMargin={0} style={{ fontSize: 13 }}>Cover Image</Divider>
-          <TwoColumnGrid>
-            <FormField control={form.control} name="cover_image_url" render={({ field }) => (
-              <FormItem>
-                <FormLabel>Image URL</FormLabel>
-                <FormControl><Input {...field} value={field.value ?? ''} placeholder="https://..." /></FormControl>
-                <FormMessage />
-              </FormItem>
-            )} />
-            <FormField control={form.control} name="cover_image_alt" render={({ field }) => (
-              <FormItem>
-                <FormLabel>Image Alt Text</FormLabel>
-                <FormControl><Input {...field} value={field.value ?? ''} placeholder="Describe the image" /></FormControl>
-                <FormMessage />
-              </FormItem>
-            )} />
-          </TwoColumnGrid>
-          <FormField control={form.control} name="cover_image_bg" render={({ field }) => (
-            <FormItem>
-              <FormLabel>
-                Cover Gradient Fallback{' '}
-                <Tooltip title="CSS background-image value used when no image URL is set. E.g. linear-gradient(135deg, #003CA6 0%, #1a56c4 100%)">
-                  <span style={{ cursor: 'help', color: '#999', fontSize: 12 }}>(?)</span>
-                </Tooltip>
-              </FormLabel>
-              <FormControl><Input {...field} value={field.value ?? ''} placeholder="linear-gradient(...)" style={{ fontFamily: 'monospace', fontSize: 12 }} /></FormControl>
-              <FormMessage />
-            </FormItem>
-          )} />
-          <FormField control={form.control} name="cover_aspect_ratio" render={({ field }) => (
-            <FormItem>
-              <FormLabel>Cover Aspect Ratio (W/H)</FormLabel>
-              <FormControl><Input {...field} value={field.value ?? ''} placeholder="1440/710" style={{ fontFamily: 'monospace', fontSize: 12 }} /></FormControl>
-              <FormMessage />
-            </FormItem>
-          )} />
+          <AdminCard>
+            <AdminCardHeader>
+              <AdminCardTitle>Cover Image</AdminCardTitle>
+            </AdminCardHeader>
+            <AdminCardContent>
+              <SectionStack>
+                <TwoColumnGrid>
+                  <FormField control={form.control} name="cover_image_url" render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Image URL</FormLabel>
+                      <FormControl><Input {...field} value={field.value ?? ''} placeholder="https://..." /></FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )} />
+                  <FormField control={form.control} name="cover_image_alt" render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Image Alt Text</FormLabel>
+                      <FormControl><Input {...field} value={field.value ?? ''} placeholder="Describe the image" /></FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )} />
+                </TwoColumnGrid>
+                <FormField control={form.control} name="cover_image_bg" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      Cover Gradient Fallback{' '}
+                      <Tooltip title="CSS background-image value used when no image URL is set. E.g. linear-gradient(135deg, #003CA6 0%, #1a56c4 100%)">
+                        <span style={{ cursor: 'help', color: '#999', fontSize: 12 }}>(?)</span>
+                      </Tooltip>
+                    </FormLabel>
+                    <FormControl><Input {...field} value={field.value ?? ''} placeholder="linear-gradient(...)" style={{ fontFamily: 'monospace', fontSize: 12 }} /></FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )} />
+                <FormField control={form.control} name="cover_aspect_ratio" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Cover Aspect Ratio (W/H)</FormLabel>
+                    <FormControl><Input {...field} value={field.value ?? ''} placeholder="1440/710" style={{ fontFamily: 'monospace', fontSize: 12 }} /></FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )} />
+              </SectionStack>
+            </AdminCardContent>
+          </AdminCard>
 
-          {/* ── Main content sections ── */}
-          <Divider orientation="left" orientationMargin={0} style={{ fontSize: 13 }}>Article Content</Divider>
-          <SectionStack>
+          <AdminCard>
+            <AdminCardHeader>
+              <AdminCardTitle>Article Content</AdminCardTitle>
+            </AdminCardHeader>
+            <AdminCardContent>
+              <SectionStack>
             <SectionHeaderRow>
               <SectionTitle>Sections</SectionTitle>
               <Button
@@ -377,107 +399,120 @@ export function BlogPostEditor({ post, mode, role, canPublish }: BlogPostEditorP
                 )} />
               </ItemCard>
             ))}
-          </SectionStack>
+              </SectionStack>
+            </AdminCardContent>
+          </AdminCard>
 
-          {/* ── Mid content sections ── */}
-          <Divider orientation="left" orientationMargin={0} style={{ fontSize: 13 }}>Mid-Page Sections <span style={{ fontWeight: 400, color: '#888' }}>(after cover image break)</span></Divider>
-          <SectionStack>
-            <SectionHeaderRow>
-              <SectionTitle>Mid Sections</SectionTitle>
-              <Button
-                type="dashed"
-                icon={<PlusOutlined />}
-                size="small"
-                onClick={() => appendMid({ id: `mid-${Date.now()}`, heading: '', body: '' })}
-              >
-                Add Mid Section
-              </Button>
-            </SectionHeaderRow>
-
-            {midFields.map((field, index) => (
-              <ItemCard key={field.id}>
+          <AdminCard>
+            <AdminCardHeader>
+              <AdminCardTitle>Mid-Page Sections</AdminCardTitle>
+            </AdminCardHeader>
+            <AdminCardContent>
+              <SectionStack>
                 <SectionHeaderRow>
-                  <Typography.Text strong style={{ fontSize: 13 }}>Mid Section {index + 1}</Typography.Text>
-                  <div style={{ display: 'flex', gap: 4 }}>
-                    <Button size="small" icon={<ArrowUpOutlined />} disabled={index === 0} onClick={() => moveMid(index, index - 1)} type="text" />
-                    <Button size="small" icon={<ArrowDownOutlined />} disabled={index === midFields.length - 1} onClick={() => moveMid(index, index + 1)} type="text" />
-                    <Button size="small" icon={<DeleteOutlined />} danger onClick={() => removeMid(index)} type="text" />
-                  </div>
+                  <SectionTitle>Mid Sections</SectionTitle>
+                  <Button
+                    type="dashed"
+                    icon={<PlusOutlined />}
+                    size="small"
+                    onClick={() => appendMid({ id: `mid-${Date.now()}`, heading: '', body: '' })}
+                  >
+                    Add Mid Section
+                  </Button>
                 </SectionHeaderRow>
 
-                <FormField control={form.control} name={`mid_content.${index}.id`} render={({ field }) => (
+                {midFields.map((field, index) => (
+                  <ItemCard key={field.id}>
+                    <SectionHeaderRow>
+                      <Typography.Text strong style={{ fontSize: 13 }}>Mid Section {index + 1}</Typography.Text>
+                      <div style={{ display: 'flex', gap: 4 }}>
+                        <Button size="small" icon={<ArrowUpOutlined />} disabled={index === 0} onClick={() => moveMid(index, index - 1)} type="text" />
+                        <Button size="small" icon={<ArrowDownOutlined />} disabled={index === midFields.length - 1} onClick={() => moveMid(index, index + 1)} type="text" />
+                        <Button size="small" icon={<DeleteOutlined />} danger onClick={() => removeMid(index)} type="text" />
+                      </div>
+                    </SectionHeaderRow>
+
+                    <FormField control={form.control} name={`mid_content.${index}.id`} render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{ux('mid_content.id').label ?? 'Section ID'}</FormLabel>
+                        <FormControl><Input {...field} placeholder="e.g. packing, health" style={{ fontFamily: 'monospace', fontSize: 12 }} /></FormControl>
+                        <CmsFieldHint formId="blog_post" fieldPath="mid_content.id" />
+                        <FormMessage />
+                      </FormItem>
+                    )} />
+
+                    <FormField control={form.control} name={`mid_content.${index}.heading`} render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Heading *</FormLabel>
+                        <FormControl><Input {...field} value={field.value ?? ''} onChange={(e) => field.onChange(e.target.value || null)} placeholder="Section heading" /></FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )} />
+
+                    <FormField control={form.control} name={`mid_content.${index}.body`} render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Body *</FormLabel>
+                        <FormControl><Textarea {...field} rows={5} placeholder="Article content..." /></FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )} />
+                  </ItemCard>
+                ))}
+                {midFields.length === 0 && (
+                  <Typography.Text type="secondary" style={{ fontSize: 12 }}>No mid-page sections. Add one if your article has a second half after the cover image break.</Typography.Text>
+                )}
+              </SectionStack>
+            </AdminCardContent>
+          </AdminCard>
+
+          <AdminCard>
+            <AdminCardHeader>
+              <AdminCardTitle>SEO</AdminCardTitle>
+            </AdminCardHeader>
+            <AdminCardContent>
+              <SectionStack>
+                <FormField control={form.control} name="seo_title" render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{ux('mid_content.id').label ?? 'Section ID'}</FormLabel>
-                    <FormControl><Input {...field} placeholder="e.g. packing, health" style={{ fontFamily: 'monospace', fontSize: 12 }} /></FormControl>
-                    <CmsFieldHint formId="blog_post" fieldPath="mid_content.id" />
+                    <FormLabel>SEO Title</FormLabel>
+                    <FormControl><Input {...field} value={field.value ?? ''} placeholder="Post Title | 3BROTHERS NETWORK" maxLength={70} /></FormControl>
                     <FormMessage />
                   </FormItem>
                 )} />
 
-                <FormField control={form.control} name={`mid_content.${index}.heading`} render={({ field }) => (
+                <FormField control={form.control} name="seo_description" render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Heading *</FormLabel>
-                    <FormControl><Input {...field} value={field.value ?? ''} onChange={(e) => field.onChange(e.target.value || null)} placeholder="Section heading" /></FormControl>
+                    <FormLabel>SEO Description</FormLabel>
+                    <FormControl><Textarea {...field} value={field.value ?? ''} rows={2} placeholder="Meta description, max 160 characters" maxLength={160} /></FormControl>
                     <FormMessage />
                   </FormItem>
                 )} />
 
-                <FormField control={form.control} name={`mid_content.${index}.body`} render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Body *</FormLabel>
-                    <FormControl><Textarea {...field} rows={5} placeholder="Article content..." /></FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )} />
-              </ItemCard>
-            ))}
-            {midFields.length === 0 && (
-              <Typography.Text type="secondary" style={{ fontSize: 12 }}>No mid-page sections. Add one if your article has a second half after the cover image break.</Typography.Text>
-            )}
-          </SectionStack>
-
-          {/* ── SEO ── */}
-          <Divider orientation="left" orientationMargin={0} style={{ fontSize: 13 }}>SEO</Divider>
-
-          <FormField control={form.control} name="seo_title" render={({ field }) => (
-            <FormItem>
-              <FormLabel>SEO Title</FormLabel>
-              <FormControl><Input {...field} value={field.value ?? ''} placeholder="Post Title | 3BROTHERS NETWORK" maxLength={70} /></FormControl>
-              <FormMessage />
-            </FormItem>
-          )} />
-
-          <FormField control={form.control} name="seo_description" render={({ field }) => (
-            <FormItem>
-              <FormLabel>SEO Description</FormLabel>
-              <FormControl><Textarea {...field} value={field.value ?? ''} rows={2} placeholder="Meta description, max 160 characters" maxLength={160} /></FormControl>
-              <FormMessage />
-            </FormItem>
-          )} />
-
-          <TwoColumnGrid>
-            <FormField control={form.control} name="og_image" render={({ field }) => (
-              <FormItem>
-                <FormLabel>OG Image URL</FormLabel>
-                <FormControl><Input {...field} value={field.value ?? ''} placeholder="https://..." /></FormControl>
-                <FormMessage />
-              </FormItem>
-            )} />
-            <RawFormItem>
-              <label style={{ fontSize: 13, fontWeight: 500, display: 'block', marginBottom: 4 }}>
-                Keywords{' '}
-                <span style={{ fontWeight: 400, color: '#888' }}>(comma-separated)</span>
-              </label>
-              <Input
-                value={keywordsString}
-                onChange={(e) => {
-                  const kw = e.target.value.split(',').map((k) => k.trim()).filter(Boolean);
-                  form.setValue('keywords', kw, { shouldDirty: true });
-                }}
-                placeholder="media, influence, creator"
-              />
-            </RawFormItem>
-          </TwoColumnGrid>
+                <TwoColumnGrid>
+                  <FormField control={form.control} name="og_image" render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>OG Image URL</FormLabel>
+                      <FormControl><Input {...field} value={field.value ?? ''} placeholder="https://..." /></FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )} />
+                  <RawFormItem>
+                    <label style={{ fontSize: 13, fontWeight: 500, display: 'block', marginBottom: 4 }}>
+                      Keywords{' '}
+                      <span style={{ fontWeight: 400, color: '#888' }}>(comma-separated)</span>
+                    </label>
+                    <Input
+                      value={keywordsString}
+                      onChange={(e) => {
+                        const kw = e.target.value.split(',').map((k) => k.trim()).filter(Boolean);
+                        form.setValue('keywords', kw, { shouldDirty: true });
+                      }}
+                      placeholder="media, influence, creator"
+                    />
+                  </RawFormItem>
+                </TwoColumnGrid>
+              </SectionStack>
+            </AdminCardContent>
+          </AdminCard>
 
           {/* ── Footer save ── */}
           <FooterRow>

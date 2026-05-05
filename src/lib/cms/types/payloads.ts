@@ -90,8 +90,10 @@ export interface HomeTrendingPayload {
   section_title: string;
   view_all_label?: string | null;
   view_all_url?: string | null;
-  news_source: 'manual' | 'auto_latest';
-  news_limit?: number | null;
+  mode: 'manual';
+  limit?: number | null;
+  selected_post_ids?: string[] | null;
+  // Derived at resolver layer from selected_post_ids for Home rendering.
   news_items?: Array<{
     title: string;
     date: string;

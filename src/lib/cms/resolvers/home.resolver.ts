@@ -1,4 +1,5 @@
 import { getHomePageData } from '../queries';
+import { getPublishedBlogPosts } from '../queries';
 import { SCHEMA_KEYS } from '../constants/schema-keys';
 import type {
   HomeHeroPayload, 
@@ -43,6 +44,7 @@ export interface HomeViewModel {
 export async function resolveHomePageData(): Promise<HomeViewModel | null> {
   const data = await getHomePageData();
   if (!data || !data.page) return null;
+  const publishedPosts = await getPublishedBlogPosts();
 
   const hero = validateCmsPayloadBySchemaKey(
     SCHEMA_KEYS.HOME_HERO,
@@ -73,6 +75,41 @@ export async function resolveHomePageData(): Promise<HomeViewModel | null> {
     findSectionContentBySchemaKey(data.sections, SCHEMA_KEYS.HOME_TRENDING),
     'home.sections.trending'
   );
+
+  const resolvedTrending: HomeTrendingPayload | null = (() => {
+    if (!trending) return null;
+
+    const selectedIds = trending.selected_post_ids ?? [];
+    const limit = trending.limit ?? 3;
+    const postById = new Map(publishedPosts.map((post) => [post.id, post]));
+
+    const curatedItems = selectedIds
+      .map((id) => postById.get(id))
+      .filter((post): post is NonNullable<typeof post> => Boolean(post))
+      .slice(0, limit)
+      .map((post) => {
+        const publishedDate = post.published_at ? new Date(post.published_at) : null;
+        const dateText = publishedDate
+          ? publishedDate
+              .toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
+              .toUpperCase()
+          : '';
+
+        return {
+          title: post.published_title || post.title,
+          date: dateText,
+          image: post.published_cover_image_url || post.cover_image_url,
+          image_alt: post.published_cover_image_alt || post.cover_image_alt || post.published_title || post.title,
+          url: `/blogs/${post.slug}`,
+        };
+      });
+
+    return {
+      ...trending,
+      mode: 'manual',
+      news_items: curatedItems,
+    };
+  })();
 
   const sharedExclusiveTalents = validateCmsPayloadBySchemaKey(
     SCHEMA_KEYS.SHARED_EXCLUSIVE_TALENTS,
@@ -108,7 +145,7 @@ export async function resolveHomePageData(): Promise<HomeViewModel | null> {
     partners,
     coreCompetencies,
     efficiency,
-    trending,
+    trending: resolvedTrending,
     shared: {
       exclusiveTalents: sharedExclusiveTalents,
     },

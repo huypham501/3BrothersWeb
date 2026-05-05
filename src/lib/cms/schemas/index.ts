@@ -231,17 +231,27 @@ export const homeTrendingSchema = z.object({
   section_title: z.string().max(80),
   view_all_label: z.string().max(40).nullable().optional(),
   view_all_url: urlOrHash.nullable().optional(),
-  news_source: z.enum(['manual', 'auto_latest']),
-  news_limit: z.number().min(1).max(6).nullable().optional(),
-  news_items: z.array(
-    z.object({
-      title: z.string().max(120),
-      date: z.string().max(20),
-      image: z.string().nullable().optional(),
-      image_alt: z.string().max(125).nullable().optional(),
-      url: urlOrHash.nullable().optional(),
-    })
-  ).min(1).max(6).nullable().optional(),
+  mode: z.literal('manual'),
+  limit: z.number().min(1).max(6).nullable().optional(),
+  selected_post_ids: z.array(z.string().uuid()).max(6).nullable().optional(),
+}).superRefine((value, ctx) => {
+  const ids = value.selected_post_ids ?? [];
+  const limit = value.limit ?? 3;
+  if (ids.length > limit) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: `Selected posts cannot exceed limit (${limit}).`,
+      path: ['selected_post_ids'],
+    });
+  }
+
+  if (new Set(ids).size !== ids.length) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: 'Duplicate posts are not allowed.',
+      path: ['selected_post_ids'],
+    });
+  }
 });
 
 export const forCreatorsHeroSchema = z.object({

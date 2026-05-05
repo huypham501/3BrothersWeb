@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { getHomePageData } from '@/lib/cms/queries';
+import { getHomePageData, getPublishedBlogPosts } from '@/lib/cms/queries';
 import { HomePageEditor } from '@/components/admin/cms/HomePageEditor';
 import { AdminContent } from '@/components/admin/layout/AdminShell';
 import { AdminPageHeader } from '@/components/admin/layout/AdminPageHeader';
@@ -9,9 +9,10 @@ import { getAdminUiContextFromActor } from '@/lib/admin/require-admin-user';
 export const dynamic = 'force-dynamic';
 
 export default async function HomeCmsAdminPage() {
-  const [ui, data] = await Promise.all([
+  const [ui, data, publishedBlogPosts] = await Promise.all([
     getAdminUiContextFromActor(),
     getHomePageData(),
+    getPublishedBlogPosts(),
   ]);
 
   if (!data) {
@@ -36,6 +37,7 @@ export default async function HomeCmsAdminPage() {
       <HomePageEditor
         page={data.page}
         sections={data.sections}
+        publishedBlogPosts={publishedBlogPosts}
         shared={typedShared}
         role={ui.actor.role}
         canPublish={ui.canPublish}

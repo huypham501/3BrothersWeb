@@ -9,7 +9,7 @@ export default async function NewBlogPostPage() {
   const ui = await getAdminUiContextFromActor();
 
   return (
-    <AdminContent maxWidth="900px">
+    <AdminContent maxWidth="1100px">
       <AdminPageHeader
         title="New Blog Post"
         description="Create a new draft blog post. Save it and publish when ready."

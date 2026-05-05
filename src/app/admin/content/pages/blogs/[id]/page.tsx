@@ -21,7 +21,7 @@ export default async function EditBlogPostPage({ params }: Props) {
   if (!post) notFound();
 
   return (
-    <AdminContent maxWidth="900px">
+    <AdminContent maxWidth="1100px">
       <AdminPageHeader
         title={`Edit: ${post.title}`}
         description={`Slug: /blogs/${post.slug}`}

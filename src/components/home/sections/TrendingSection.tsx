@@ -7,48 +7,50 @@ import { colors, spacing, typography, mediaQueries, borderRadius, motion } from 
 import { HomeTrendingPayload } from '@/lib/cms/types';
 
 export function TrendingSection({ content }: { content: HomeTrendingPayload }) {
-  const newsItems = (content.news_items || []).slice(0, content.news_limit || 3);
+  const newsItems = (content.news_items || []).slice(0, content.limit || 3);
 
   return (
     <SectionContainer>
-      <HeaderRow>
-        <Title>{content.section_title}</Title>
-        <DividerLine />
-      </HeaderRow>
+      <ContentWrapper>
+        <HeaderRow>
+          <Title>{content.section_title}</Title>
+          <DividerLine />
+        </HeaderRow>
 
-      <CardsGrid>
-        {newsItems.map((news, index) => (
-          <a key={index} href={news.url || '#'} style={{ display: 'contents', textDecoration: 'none' }}>
-            <NewsCard>
-              {news.image ? (
-                <CardImageWrapper>
-                  <Image
-                    src={news.image}
-                    alt={news.image_alt || news.title}
-                    fill
-                    style={{ objectFit: 'cover' }}
-                  />
-                </CardImageWrapper>
-              ) : (
-                <CardImage />
-              )}
-              <CardContent>
-                <CardTitle>{news.title}</CardTitle>
-                <CardDate>{news.date}</CardDate>
-              </CardContent>
-            </NewsCard>
-          </a>
-        ))}
-      </CardsGrid>
+        <CardsGrid>
+          {newsItems.map((news, index) => (
+            <a key={index} href={news.url || '#'} style={{ display: 'contents', textDecoration: 'none' }}>
+              <NewsCard>
+                {news.image ? (
+                  <CardImageWrapper>
+                    <Image
+                      src={news.image}
+                      alt={news.image_alt || news.title}
+                      fill
+                      style={{ objectFit: 'cover' }}
+                    />
+                  </CardImageWrapper>
+                ) : (
+                  <CardImage />
+                )}
+                <CardContent>
+                  <CardTitle>{news.title}</CardTitle>
+                  <CardDate>{news.date}</CardDate>
+                </CardContent>
+              </NewsCard>
+            </a>
+          ))}
+        </CardsGrid>
 
-      {content.view_all_label && content.view_all_url && (
-        <ViewAllLink href={content.view_all_url}>
-          {content.view_all_label}
-          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.67} d="M5 12h14M12 5l7 7-7 7" />
-          </svg>
-        </ViewAllLink>
-      )}
+        {content.view_all_label && content.view_all_url && (
+          <ViewAllLink href={content.view_all_url}>
+            {content.view_all_label}
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.67} d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          </ViewAllLink>
+        )}
+      </ContentWrapper>
     </SectionContainer>
   );
 }
@@ -59,14 +61,22 @@ const SectionContainer = styled.section`
   background: ${colors.bgDark};
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: 0;
+  align-items: center;
   color: ${colors.white};
   isolation: isolate;
 
   ${mediaQueries.down.sm} {
     padding: 60px ${spacing.lg};
   }
+`;
+
+const ContentWrapper = styled.div`
+  width: 100%;
+  max-width: 1272px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
 `;
 
 const HeaderRow = styled.div`
@@ -115,11 +125,11 @@ const CardsGrid = styled.div`
   align-items: center;
   gap: 33px;
   width: 100%;
-  padding-bottom: 24px;
+  margin-bottom: 24px;
 
   ${mediaQueries.down.lg} {
     flex-direction: column;
-    padding-bottom: 0;
+    margin-bottom: ${spacing.xl};
     gap: ${spacing['2xl']};
   }
 `;
@@ -198,7 +208,7 @@ const ViewAllLink = styled.a`
   display: flex;
   align-items: center;
   gap: ${spacing.xs};
-  margin-top: ${spacing['3xl']};
+  margin-top: 0;
 
   svg {
     stroke: ${colors.secondary};

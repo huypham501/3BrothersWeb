@@ -66,29 +66,20 @@ export const CMS_FIELD_UX_SPECS: Record<string, CmsFormUxSpec> = {
     },
   },
   home_trending: {
-    news_source: {
-      label: 'News Source',
-      what: 'Source of content for the Trending section.',
-      why: 'Determines whether editors manage cards manually or pull from blog automatically.',
-      format: 'Manual Items or Auto Latest Blog Posts.',
-      validation: 'Must be manual or auto_latest.',
-      impact: 'Auto mode ignores manual news items.',
-    },
-    news_limit: {
-      label: 'Number of Auto-fetched Items',
-      what: 'How many latest published blog posts to display.',
+    limit: {
+      label: 'Trending Limit',
+      what: 'Maximum number of blog posts shown in Home Trending.',
       format: 'Positive integer.',
       validation: 'Min 1, max 6.',
-      impact: 'Higher numbers show more cards in auto mode.',
+      impact: 'Selected post count must not exceed this value.',
       example: '3',
     },
-    'news_items.date': {
-      label: 'Date string',
-      what: 'Display date text shown on the card.',
-      why: 'Keeps card metadata consistent when using manual items.',
-      format: 'Use one format consistently across items.',
-      validation: 'Max 20 characters.',
-      example: '12 JAN 2026',
+    selected_post_ids: {
+      label: 'Selected Posts',
+      what: 'Ordered list of published blog posts to render in Trending.',
+      why: 'Lets editors curate exact cards from Blogs.',
+      validation: 'No duplicates and count must be <= limit.',
+      impact: 'Order here is the public display order on Home.',
     },
   },
   global_site_metadata: {
