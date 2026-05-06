@@ -252,7 +252,7 @@ export function SharedExclusiveTalentsEditor({ section }: { section: CmsSharedSe
 
         <HeaderRow>
           <Button type="submit" disabled={isSaving || !form.formState.isDirty}>
-            {isSaving ? 'Saving...' : 'Save Shared Section'}
+            {isSaving ? 'Saving...' : 'Save Section'}
           </Button>
         </HeaderRow>
 

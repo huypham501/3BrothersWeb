@@ -7,6 +7,8 @@ import type { ButtonProps as AntButtonProps } from 'antd';
 
 interface AdminCardProps {
   children: React.ReactNode;
+  style?: React.CSSProperties;
+  bodyStyle?: React.CSSProperties;
 }
 
 interface AdminCardSectionProps {
@@ -19,8 +21,14 @@ interface AdminBadgeProps {
 }
 
 interface AdminAlertProps extends React.HTMLAttributes<HTMLDivElement> {
-  children: React.ReactNode;
-  tone?: 'default' | 'destructive' | 'success';
+  children?: React.ReactNode;
+  /** Explicit alert title — takes priority over children as message */
+  message?: React.ReactNode;
+  /** Optional description below the message */
+  description?: React.ReactNode;
+  /** Custom icon override */
+  icon?: React.ReactNode;
+  tone?: 'default' | 'info' | 'destructive' | 'success' | 'warning';
   variant?: 'default' | 'destructive' | 'success';
 }
 
@@ -36,8 +44,12 @@ interface AdminButtonProps extends Omit<AntButtonProps, 'type' | 'size' | 'href'
   type?: 'button' | 'submit' | 'reset';
 }
 
-export function AdminCard({ children }: AdminCardProps) {
-  return <Card>{children}</Card>;
+export function AdminCard({ children, style, bodyStyle }: AdminCardProps) {
+  return (
+    <Card style={style} styles={bodyStyle ? { body: bodyStyle } : undefined}>
+      {children}
+    </Card>
+  );
 }
 
 export function AdminCardHeader({ children }: AdminCardSectionProps) {
@@ -67,12 +79,22 @@ export function AdminBadge({ children, tone = 'neutral' }: AdminBadgeProps) {
   return <Tag color={colorByTone[tone]}>{children}</Tag>;
 }
 
-export function AdminAlert({ children, tone, variant = 'default', ...props }: AdminAlertProps) {
+export function AdminAlert({ children, message, description, icon, tone, variant = 'default', ...props }: AdminAlertProps) {
   const resolvedTone = tone ?? variant;
-  const type = resolvedTone === 'destructive' ? 'error' : resolvedTone === 'success' ? 'success' : 'info';
+  const type =
+    resolvedTone === 'destructive' ? 'error'
+    : resolvedTone === 'success' ? 'success'
+    : resolvedTone === 'warning' ? 'warning'
+    : 'info';
   return (
     <div style={props.style} title={props.title}>
-      <Alert type={type} message={children} showIcon />
+      <Alert
+        type={type}
+        message={message ?? children}
+        description={description}
+        icon={icon}
+        showIcon
+      />
     </div>
   );
 }

@@ -200,11 +200,12 @@ export function GlobalSeoDefaultsEditor({
               <FormControl>
                 <SelectInput
                   value={field.value}
-                  onChange={(e) => field.onChange(e.target.value)}
-                >
-                  <option value="summary">summary</option>
-                  <option value="summary_large_image">summary_large_image</option>
-                </SelectInput>
+                  onChange={(value) => field.onChange(value)}
+                  options={[
+                    { label: 'summary', value: 'summary' },
+                    { label: 'summary_large_image', value: 'summary_large_image' },
+                  ]}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>

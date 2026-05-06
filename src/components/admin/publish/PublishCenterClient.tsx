@@ -1,8 +1,9 @@
 'use client';
 
 import * as React from 'react';
-import { Button, Typography, Alert } from 'antd';
+import { Button, Typography } from 'antd';
 import { CloudUploadOutlined, CheckCircleOutlined, WarningOutlined } from '@ant-design/icons';
+import { AdminAlert, AdminCard } from '@/components/admin/layout/AdminPrimitives';
 import { publishAllContent } from '@/lib/cms/publish';
 import type { PublishResult } from '@/lib/cms/publish';
 
@@ -36,7 +37,7 @@ export function PublishCenterClient() {
   return (
     <div style={styles.wrapper}>
       {/* ── Description card ── */}
-      <div style={styles.card}>
+      <AdminCard bodyStyle={{ padding: '24px 28px' }}>
         <Typography.Title level={5} style={{ margin: '0 0 8px' }}>
           Publish toàn bộ nội dung
         </Typography.Title>
@@ -46,9 +47,8 @@ export function PublishCenterClient() {
           hiển thị ngay lập tức.
         </Typography.Text>
 
-        <Alert
-          type="warning"
-          showIcon
+        <AdminAlert
+          tone="warning"
           icon={<WarningOutlined />}
           message={
             <span>
@@ -71,11 +71,11 @@ export function PublishCenterClient() {
         >
           {isPublishing ? 'Đang publish...' : 'Publish tất cả thay đổi'}
         </Button>
-      </div>
+      </AdminCard>
 
       {/* ── Result feedback ── */}
       {status === 'success' && result?.success && (
-        <div style={styles.card}>
+        <AdminCard bodyStyle={{ padding: '24px 28px' }}>
           <div style={styles.successHeader}>
             <CheckCircleOutlined style={{ color: '#52c41a', fontSize: 20 }} />
             <Typography.Text strong style={{ color: '#52c41a', fontSize: 15 }}>
@@ -105,13 +105,12 @@ export function PublishCenterClient() {
               </li>
             ))}
           </ul>
-        </div>
+        </AdminCard>
       )}
 
       {status === 'error' && result && (
-        <Alert
-          type="error"
-          showIcon
+        <AdminAlert
+          variant="destructive"
           message="Publish thất bại"
           description={result.error ?? 'Đã xảy ra lỗi. Vui lòng thử lại.'}
         />
@@ -126,19 +125,11 @@ const styles = {
     flexDirection: 'column' as const,
     gap: 20,
   },
-  card: {
-    background: '#fff',
-    border: '1px solid #f0f0f0',
-    borderRadius: 8,
-    padding: '24px 28px',
-  },
   publishButton: {
     height: 44,
     fontSize: 15,
     paddingLeft: 28,
     paddingRight: 28,
-    background: '#7c3aed',
-    borderColor: '#7c3aed',
   },
   successHeader: {
     display: 'flex',

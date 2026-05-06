@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import { Button, Tag, Typography, Descriptions } from 'antd';
+import { AdminCard } from '@/components/admin/layout/AdminPrimitives';
 import { CloudUploadOutlined, CheckCircleOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 
 export interface CmsEditorStatusBarProps {
@@ -47,7 +48,7 @@ export function CmsEditorStatusBar({
   publishLabel = 'Publish',
 }: CmsEditorStatusBarProps) {
   return (
-    <div style={styles.wrapper}>
+    <AdminCard bodyStyle={{ padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: 12 }}>
       {/* ── Title row ── */}
       <div style={styles.titleRow}>
         <div style={styles.titleGroup}>
@@ -86,7 +87,6 @@ export function CmsEditorStatusBar({
               ? 'Không có thay đổi cần publish.'
               : undefined
           }
-          style={hasUnpublished && canPublish ? styles.publishBtn : undefined}
         >
           {isPublishing ? 'Đang publish...' : publishLabel}
         </Button>
@@ -121,20 +121,11 @@ export function CmsEditorStatusBar({
           Role hiện tại (<strong>{role}</strong>) không có quyền publish.
         </Typography.Text>
       )}
-    </div>
+    </AdminCard>
   );
 }
 
 const styles = {
-  wrapper: {
-    background: '#fff',
-    border: '1px solid #f0f0f0',
-    borderRadius: 8,
-    padding: '16px 20px',
-    display: 'flex',
-    flexDirection: 'column' as const,
-    gap: 12,
-  },
   titleRow: {
     display: 'flex',
     alignItems: 'center',
@@ -155,10 +146,6 @@ const styles = {
   tag: {
     margin: 0,
     fontSize: 12,
-  },
-  publishBtn: {
-    background: '#7c3aed',
-    borderColor: '#7c3aed',
   },
   descriptions: {
     borderTop: '1px solid #f5f5f5',

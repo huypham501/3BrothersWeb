@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useServerInsertedHTML } from 'next/navigation';
 import { ServerStyleSheet, StyleSheetManager, ThemeProvider } from 'styled-components';
+import { ConfigProvider } from 'antd';
 import { theme } from "@/styles/theme";
 import { GlobalStyles } from "@/styles/globalStyles";
 
@@ -19,19 +20,23 @@ export default function ClientProviders({ children }: { children: React.ReactNod
 
   if (typeof window !== 'undefined') {
     return (
-      <ThemeProvider theme={theme}>
-        <GlobalStyles />
-        {children}
-      </ThemeProvider>
+      <ConfigProvider theme={{ token: { colorPrimary: '#7c3aed' } }}>
+        <ThemeProvider theme={theme}>
+          <GlobalStyles />
+          {children}
+        </ThemeProvider>
+      </ConfigProvider>
     );
   }
 
   return (
-    <StyleSheetManager sheet={styledComponentsStyleSheet.instance}>
-      <ThemeProvider theme={theme}>
-        <GlobalStyles />
-        {children}
-      </ThemeProvider>
-    </StyleSheetManager>
+    <ConfigProvider theme={{ token: { colorPrimary: '#7c3aed' } }}>
+      <StyleSheetManager sheet={styledComponentsStyleSheet.instance}>
+        <ThemeProvider theme={theme}>
+          <GlobalStyles />
+          {children}
+        </ThemeProvider>
+      </StyleSheetManager>
+    </ConfigProvider>
   );
 }

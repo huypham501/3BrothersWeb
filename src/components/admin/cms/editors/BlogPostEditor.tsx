@@ -6,13 +6,12 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { z } from 'zod';
-import { Alert as AntdAlert, Button, Switch, Tooltip, Typography } from 'antd';
+import { Button, Switch, Tooltip, Typography } from 'antd';
 import {
   PlusOutlined,
   DeleteOutlined,
   ArrowUpOutlined,
   ArrowDownOutlined,
-  SendOutlined,
 } from '@ant-design/icons';
 import { blogPostFormSchema } from '@/lib/cms';
 import type { CmsBlogPost } from '@/lib/cms';
@@ -30,7 +29,6 @@ import {
 import { CmsFieldHint } from '@/components/admin/cms/ux/CmsFieldHint';
 import { getCmsFieldUxSpec } from '@/lib/cms/ux/field-ux-spec';
 import {
-  FooterRow,
   FormStack,
   HeaderRow,
   ItemCard,
@@ -208,22 +206,9 @@ export function BlogPostEditor({ post, mode, role, canPublish }: BlogPostEditorP
             <Typography.Title level={5} style={{ margin: 0 }}>
               {mode === 'create' ? 'New Blog Post' : 'Edit Blog Post'}
             </Typography.Title>
-            <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-              {mode === 'edit' && canPublish && (
-                <Button
-                  icon={<SendOutlined />}
-                  onClick={handlePublish}
-                  disabled={isPublishing}
-                  loading={isPublishing}
-                  style={{ background: '#7c3aed', borderColor: '#7c3aed', color: '#fff' }}
-                >
-                  Publish
-                </Button>
-              )}
-              <Button type="primary" htmlType="submit" loading={isSaving} disabled={isSaving || (!form.formState.isDirty && mode === 'edit')}>
-                {isSaving ? 'Saving...' : mode === 'create' ? 'Create Post' : 'Save Draft'}
-              </Button>
-            </div>
+            <Button type="primary" htmlType="submit" loading={isSaving} disabled={isSaving || (!form.formState.isDirty && mode === 'edit')}>
+              {isSaving ? 'Saving...' : mode === 'create' ? 'Create Post' : 'Save Draft'}
+            </Button>
           </HeaderRow>
 
           <AdminCard>
@@ -334,9 +319,7 @@ export function BlogPostEditor({ post, mode, role, canPublish }: BlogPostEditorP
                     <FormMessage />
                   </FormItem>
                 )} />
-                <AntdAlert
-                  type="info"
-                  showIcon
+                <Alert
                   message="Cover Ratio is Fixed by Design"
                   description="Design aspect ratio: 1440/710. Recommended upload size: 1440x710 (or larger with same ratio)."
                 />
@@ -512,12 +495,7 @@ export function BlogPostEditor({ post, mode, role, canPublish }: BlogPostEditorP
             </AdminCardContent>
           </AdminCard>
 
-          {/* ── Footer save ── */}
-          <FooterRow>
-            <Button type="primary" htmlType="submit" loading={isSaving} disabled={isSaving || (!form.formState.isDirty && mode === 'edit')}>
-              {isSaving ? 'Saving...' : mode === 'create' ? 'Create Post' : 'Save Draft'}
-            </Button>
-          </FooterRow>
+
         </FormStack>
       </Form>
     </div>

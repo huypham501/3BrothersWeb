@@ -242,13 +242,11 @@ export function JobPositionEditor({
                 <FormItem>
                   <FormLabel>Job Type</FormLabel>
                   <FormControl>
-                    <SelectInput value={field.value} onChange={field.onChange}>
-                      {JOB_TYPES.map((t) => (
-                        <option key={t} value={t}>
-                          {t}
-                        </option>
-                      ))}
-                    </SelectInput>
+                    <SelectInput
+                      value={field.value}
+                      onChange={(value) => field.onChange(value)}
+                      options={JOB_TYPES.map((t) => ({ label: t, value: t }))}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -351,7 +349,7 @@ export function JobPositionEditor({
         {/* Footer */}
         <FooterRow>
           <Button htmlType="submit" loading={isPending} style={{ minWidth: 120 }}>
-            {mode === 'create' ? 'Create Draft' : 'Save Draft'}
+            {mode === 'create' ? 'Create Position' : 'Save Draft'}
           </Button>
         </FooterRow>
       </FormStack>

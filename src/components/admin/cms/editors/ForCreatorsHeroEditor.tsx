@@ -4,7 +4,6 @@ import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Alert as AntdAlert } from 'antd';
 import { CmsPageSection, forCreatorsHeroSchema } from '@/lib/cms';
 import { savePageSection } from '@/lib/cms/actions';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/admin/controls/AdminForm';
@@ -99,9 +98,7 @@ export function ForCreatorsHeroEditor({ pageId, section }: { pageId: string; sec
           )} />
         </TwoColumnGrid>
 
-        <AntdAlert
-          type="info"
-          showIcon
+        <Alert
           message="Hero Ratio is Fixed by Design"
           description="Design aspect ratio: 1440/670. Recommended upload size: 1440x670 (or larger with same ratio)."
         />

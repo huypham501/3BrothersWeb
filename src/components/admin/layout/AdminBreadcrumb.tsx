@@ -42,9 +42,9 @@ export function AdminBreadcrumb() {
 
 const styles = {
   wrapper: {
-    padding: '14px 0 16px',
+    padding: '16px 0',
     borderBottom: '1px solid #f0f0f0',
-    marginBottom: 24,
+    marginBottom: 20,
   },
   link: {
     color: 'inherit',

@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { Collapse } from 'antd';
-import { ChevronDownIcon, ChevronUpIcon } from 'lucide-react';
+import { DownOutlined } from '@ant-design/icons';
 
 type AccordionProps = {
   children: React.ReactNode;
@@ -45,7 +45,7 @@ export function Accordion({ children, collapsible }: AccordionProps) {
     <Collapse
       accordion={!collapsible}
       items={items}
-      expandIcon={({ isActive }) => (isActive ? <ChevronUpIcon size={16} /> : <ChevronDownIcon size={16} />)}
+      expandIcon={({ isActive }) => <DownOutlined rotate={isActive ? 180 : 0} style={{ fontSize: 12 }} />}
     />
   );
 }

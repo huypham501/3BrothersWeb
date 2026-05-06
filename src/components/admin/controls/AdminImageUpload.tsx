@@ -1,7 +1,9 @@
 'use client';
 
 import * as React from 'react';
-import { Image } from 'antd';
+import { Button, Image, Input, Space, Typography, Upload, theme } from 'antd';
+import type { UploadProps } from 'antd';
+import { CloseOutlined, UploadOutlined } from '@ant-design/icons';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -25,7 +27,7 @@ export type AdminImageUploadProps = {
   value?: string | null;
   /** Called with the new public URL after a successful upload, or with the typed URL */
   onChange?: (url: string) => void;
-  /** Forwarded to the hidden file input */
+  /** Forwarded to inputs and buttons */
   disabled?: boolean;
   /** Optional label shown above the URL input (for accessibility) */
   label?: string;
@@ -56,7 +58,7 @@ export function AdminImageUpload({
   disabled = false,
   label,
 }: AdminImageUploadProps) {
-  const fileInputRef = React.useRef<HTMLInputElement>(null);
+  const { token } = theme.useToken();
   const [uploading, setUploading] = React.useState(false);
   const [uploadError, setUploadError] = React.useState<string | null>(null);
   const [previewError, setPreviewError] = React.useState(false);
@@ -71,290 +73,149 @@ export function AdminImageUpload({
     onChange?.(e.target.value);
   };
 
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    // Reset input so the same file can be re-selected after clearing
-    e.target.value = '';
-
-    setUploadError(null);
-
-    // ── Client-side validation ──────────────────────────────────────────────
-
-    if (!ACCEPTED_IMAGE_TYPES.includes(file.type)) {
-      setUploadError('Chỉ hỗ trợ định dạng ảnh: JPEG, PNG, GIF, WebP, SVG, AVIF.');
-      return;
-    }
-
-    if (file.size > MAX_FILE_SIZE_BYTES) {
-      const sizeMB = (file.size / 1024 / 1024).toFixed(2);
-      setUploadError(`File quá lớn (${sizeMB} MB). Giới hạn tối đa là 3 MB.`);
-      return;
-    }
-
-    // ── Upload to Supabase Storage ──────────────────────────────────────────
-
-    setUploading(true);
-    try {
-      const supabase = createSupabaseBrowserClient();
-      const path = generateStoragePath(file);
-
-      const { error: uploadErr } = await supabase.storage
-        .from(CMS_ASSETS_BUCKET)
-        .upload(path, file, {
-          cacheControl: '3600',
-          upsert: false,
-        });
-
-      if (uploadErr) {
-        throw new Error(uploadErr.message);
-      }
-
-      const { data } = supabase.storage
-        .from(CMS_ASSETS_BUCKET)
-        .getPublicUrl(path);
-
-      onChange?.(data.publicUrl);
-    } catch (err) {
-      setUploadError(
-        err instanceof Error
-          ? `Upload thất bại: ${err.message}`
-          : 'Upload thất bại. Vui lòng thử lại.'
-      );
-    } finally {
-      setUploading(false);
-    }
-  };
-
   const handleClear = () => {
     setUploadError(null);
     onChange?.('');
   };
 
+  // ── antd Upload customRequest → Supabase Storage ──────────────────────────
+
+  const handleCustomRequest: UploadProps['customRequest'] = async ({
+    file,
+    onSuccess,
+    onError,
+  }) => {
+    const f = file as File;
+
+    // Client-side validation
+    if (!ACCEPTED_IMAGE_TYPES.includes(f.type)) {
+      const msg = 'Chỉ hỗ trợ định dạng ảnh: JPEG, PNG, GIF, WebP, SVG, AVIF.';
+      setUploadError(msg);
+      onError?.(new Error(msg));
+      return;
+    }
+
+    if (f.size > MAX_FILE_SIZE_BYTES) {
+      const sizeMB = (f.size / 1024 / 1024).toFixed(2);
+      const msg = `File quá lớn (${sizeMB} MB). Giới hạn tối đa là 3 MB.`;
+      setUploadError(msg);
+      onError?.(new Error(msg));
+      return;
+    }
+
+    setUploadError(null);
+    setUploading(true);
+
+    try {
+      const supabase = createSupabaseBrowserClient();
+      const path = generateStoragePath(f);
+
+      const { error: uploadErr } = await supabase.storage
+        .from(CMS_ASSETS_BUCKET)
+        .upload(path, f, { cacheControl: '3600', upsert: false });
+
+      if (uploadErr) throw new Error(uploadErr.message);
+
+      const { data } = supabase.storage.from(CMS_ASSETS_BUCKET).getPublicUrl(path);
+      onChange?.(data.publicUrl);
+      onSuccess?.(data.publicUrl);
+    } catch (err) {
+      const msg =
+        err instanceof Error
+          ? `Upload thất bại: ${err.message}`
+          : 'Upload thất bại. Vui lòng thử lại.';
+      setUploadError(msg);
+      onError?.(err instanceof Error ? err : new Error(msg));
+    } finally {
+      setUploading(false);
+    }
+  };
+
   const hasImage = Boolean(value && value.trim() !== '');
 
   return (
-    <div style={styles.wrapper}>
-      {/* ── URL Text Input Row ── */}
-      <div style={styles.inputRow}>
-        <input
-          type="text"
+    <Space direction="vertical" style={{ width: '100%' }} size={6}>
+      {/* ── URL input + Upload button + Clear button ── */}
+      <Space.Compact style={{ width: '100%' }}>
+        <Input
           value={value ?? ''}
           onChange={handleUrlChange}
           disabled={disabled || uploading}
           placeholder="https://... hoặc upload file bên dưới"
           aria-label={label ?? 'Image URL'}
-          style={styles.urlInput}
         />
 
-        {/* Upload button */}
-        <button
-          type="button"
-          onClick={() => fileInputRef.current?.click()}
+        <Upload
+          showUploadList={false}
+          customRequest={handleCustomRequest}
+          accept={ACCEPTED_IMAGE_TYPES.join(',')}
           disabled={disabled || uploading}
-          title="Tải ảnh lên từ máy tính (tối đa 3 MB)"
-          style={{
-            ...styles.uploadButton,
-            opacity: disabled || uploading ? 0.5 : 1,
-            cursor: disabled || uploading ? 'not-allowed' : 'pointer',
-          }}
         >
-          {uploading ? (
-            <span style={styles.spinnerRow}>
-              <span style={styles.spinner} />
-              Uploading...
-            </span>
-          ) : (
-            <span style={styles.uploadLabel}>
-              <UploadIcon />
-              Upload
-            </span>
-          )}
-        </button>
+          <Button
+            icon={<UploadOutlined />}
+            loading={uploading}
+            disabled={disabled}
+            title="Tải ảnh lên từ máy tính (tối đa 3 MB)"
+          >
+            Upload
+          </Button>
+        </Upload>
 
-        {/* Clear button */}
         {hasImage && !uploading && (
-          <button
-            type="button"
+          <Button
+            icon={<CloseOutlined />}
             onClick={handleClear}
             disabled={disabled}
             title="Xoá URL ảnh"
-            style={styles.clearButton}
-          >
-            ✕
-          </button>
+          />
         )}
-
-        {/* Hidden file input */}
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept={ACCEPTED_IMAGE_TYPES.join(',')}
-          onChange={handleFileChange}
-          style={{ display: 'none' }}
-          aria-hidden
-        />
-      </div>
+      </Space.Compact>
 
       {/* ── Error message ── */}
       {uploadError && (
-        <p style={styles.errorText}>{uploadError}</p>
+        <Typography.Text type="danger" style={{ fontSize: 12 }}>
+          {uploadError}
+        </Typography.Text>
       )}
 
-      {/* ── Image preview (Antd built-in preview) ── */}
+      {/* ── Image preview (antd built-in preview) ── */}
       {hasImage && !previewError && (
-        <div style={styles.previewWrapper}>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 8,
+            padding: '6px 8px',
+            background: token.colorFillAlter,
+            border: `1px solid ${token.colorBorderSecondary}`,
+            borderRadius: token.borderRadiusSM,
+          }}
+        >
           <Image
             src={value!}
             alt="Preview"
             onError={() => setPreviewError(true)}
-            style={styles.preview}
-            preview={{
-              src: value!,
-              mask: 'Xem ảnh lớn',
+            style={{
+              height: 48,
+              width: 'auto',
+              maxWidth: 120,
+              objectFit: 'contain',
+              borderRadius: token.borderRadiusXS,
+              border: `1px solid ${token.colorBorderSecondary}`,
+              cursor: 'zoom-in',
             }}
+            preview={{ src: value!, mask: 'Xem ảnh lớn' }}
           />
-          <span style={styles.previewLabel}>Preview</span>
+          <Typography.Text type="secondary" style={{ fontSize: 11 }}>
+            Preview
+          </Typography.Text>
         </div>
       )}
 
       {/* ── Helper text ── */}
-      <p style={styles.hint}>
+      <Typography.Text style={{ fontSize: 11, color: token.colorTextTertiary }}>
         Hỗ trợ JPEG, PNG, GIF, WebP, SVG, AVIF · Tối đa 3 MB
-      </p>
-    </div>
+      </Typography.Text>
+    </Space>
   );
 }
-
-// ─── Tiny inline icon ─────────────────────────────────────────────────────────
-
-function UploadIcon() {
-  return (
-    <svg
-      width="14"
-      height="14"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-    >
-      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-      <polyline points="17 8 12 3 7 8" />
-      <line x1="12" y1="3" x2="12" y2="15" />
-    </svg>
-  );
-}
-
-// ─── Styles (plain CSSProperties – no external deps) ─────────────────────────
-
-const styles = {
-  wrapper: {
-    display: 'flex',
-    flexDirection: 'column' as const,
-    gap: '6px',
-    width: '100%',
-  },
-  inputRow: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '6px',
-  },
-  urlInput: {
-    flex: 1,
-    height: '32px',
-    padding: '0 11px',
-    fontSize: '14px',
-    borderRadius: '6px',
-    border: '1px solid #d9d9d9',
-    outline: 'none',
-    background: '#fff',
-    color: '#000',
-    boxSizing: 'border-box' as const,
-    minWidth: 0,
-  },
-  uploadButton: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: '4px',
-    height: '32px',
-    padding: '0 12px',
-    fontSize: '13px',
-    fontWeight: 500,
-    borderRadius: '6px',
-    border: '1px solid #d9d9d9',
-    background: '#fff',
-    color: '#555',
-    whiteSpace: 'nowrap' as const,
-    flexShrink: 0,
-    transition: 'background 0.15s',
-  },
-  uploadLabel: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: '5px',
-  },
-  spinnerRow: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: '6px',
-  },
-  spinner: {
-    width: '12px',
-    height: '12px',
-    border: '2px solid #ccc',
-    borderTop: '2px solid #555',
-    borderRadius: '50%',
-    animation: 'spin 0.7s linear infinite',
-    display: 'inline-block',
-  },
-  clearButton: {
-    height: '32px',
-    width: '32px',
-    display: 'inline-flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontSize: '12px',
-    borderRadius: '6px',
-    border: '1px solid #d9d9d9',
-    background: '#fff',
-    color: '#999',
-    cursor: 'pointer',
-    flexShrink: 0,
-  },
-  errorText: {
-    margin: 0,
-    fontSize: '12px',
-    color: '#ff4d4f',
-  },
-  previewWrapper: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-    padding: '6px 8px',
-    background: '#fafafa',
-    border: '1px solid #f0f0f0',
-    borderRadius: '6px',
-  },
-  preview: {
-    height: '48px',
-    width: 'auto',
-    maxWidth: '120px',
-    objectFit: 'contain' as const,
-    borderRadius: '4px',
-    border: '1px solid #e8e8e8',
-    cursor: 'zoom-in',
-  },
-  previewLabel: {
-    fontSize: '11px',
-    color: '#aaa',
-  },
-  hint: {
-    margin: 0,
-    fontSize: '11px',
-    color: '#bbb',
-  },
-} as const;

@@ -3,6 +3,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { Typography, Tag } from 'antd';
+import { AdminCard } from '@/components/admin/layout/AdminPrimitives';
 import {
   CheckCircleOutlined,
   WarningOutlined,
@@ -34,7 +35,7 @@ export function CmsDependenciesCard({
   title = 'Dependencies',
 }: CmsDependenciesCardProps) {
   return (
-    <div style={styles.wrapper}>
+    <AdminCard bodyStyle={{ padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: 10 }}>
       <Typography.Text strong style={styles.sectionTitle}>
         {title}
       </Typography.Text>
@@ -74,20 +75,11 @@ export function CmsDependenciesCard({
           </div>
         ))}
       </div>
-    </div>
+    </AdminCard>
   );
 }
 
 const styles = {
-  wrapper: {
-    background: '#fff',
-    border: '1px solid #f0f0f0',
-    borderRadius: 8,
-    padding: '16px 20px',
-    display: 'flex',
-    flexDirection: 'column' as const,
-    gap: 10,
-  },
   sectionTitle: {
     fontSize: 14,
     display: 'block' as const,

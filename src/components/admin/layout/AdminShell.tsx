@@ -51,7 +51,7 @@ const styles = {
   contentOuter: {
     flex: 1,
     minWidth: 0,
-    padding: '0 28px 48px',
+    padding: '0 24px 48px',
     display: 'flex',
     flexDirection: 'column' as const,
     alignItems: 'flex-start',

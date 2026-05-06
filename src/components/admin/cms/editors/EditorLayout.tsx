@@ -1,3 +1,5 @@
+import { Select } from 'antd';
+import type { SelectProps } from 'antd';
 import { FormItem } from '@/components/admin/controls/AdminForm';
 
 const styles = {
@@ -16,28 +18,19 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     gap: 16,
-    border: '1px solid #d0d5dd',
-    borderRadius: 10,
+    border: '1px solid #d9d9d9',
+    borderRadius: 8,
     background: '#ffffff',
     padding: 16,
   } as const,
   footerRow: { display: 'flex', justifyContent: 'flex-end' } as const,
-  errorText: { margin: 0, fontSize: 14, color: '#b42318' } as const,
-  selectInput: {
-    width: '100%',
-    minHeight: 36,
-    border: '1px solid #d0d5dd',
-    borderRadius: 8,
-    padding: '8px 10px',
-    fontSize: 14,
-    background: '#ffffff',
-  } as const,
+  errorText: { margin: 0, fontSize: 14, color: '#ff4d4f' } as const,
   borderedPanel: {
     display: 'flex',
     flexDirection: 'column',
     gap: 16,
-    border: '1px solid #d0d5dd',
-    borderRadius: 10,
+    border: '1px solid #d9d9d9',
+    borderRadius: 8,
     background: '#ffffff',
     padding: 16,
   } as const,
@@ -93,9 +86,8 @@ export function ErrorText(props: React.ComponentProps<'p'>) {
   return <p style={{ ...styles.errorText, ...style }} {...rest} />;
 }
 
-export function SelectInput(props: React.ComponentProps<'select'>) {
-  const { style, ...rest } = props;
-  return <select style={{ ...styles.selectInput, ...style }} {...rest} />;
+export function SelectInput({ style, ...props }: SelectProps) {
+  return <Select style={{ width: '100%', ...style }} {...props} />;
 }
 
 export function BorderedPanel(props: React.ComponentProps<'div'>) {

@@ -87,10 +87,14 @@ export function HomePageSettingsEditor({ page }: { page: CmsPage }) {
                 <FormItem>
                   <FormLabel>{ux('status').label ?? 'Status'}</FormLabel>
                   <FormControl>
-                      <SelectInput {...field}>
-                      <option value="draft">Draft</option>
-                      <option value="published">Published</option>
-                      </SelectInput>
+                      <SelectInput
+                        value={field.value}
+                        onChange={(value) => field.onChange(value)}
+                        options={[
+                          { label: 'Draft', value: 'draft' },
+                          { label: 'Published', value: 'published' },
+                        ]}
+                      />
                   </FormControl>
                   <CmsFieldHint formId="home_page_settings" fieldPath="status" />
                   <FormMessage />

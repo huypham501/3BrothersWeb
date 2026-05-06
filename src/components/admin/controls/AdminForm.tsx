@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import { theme } from 'antd';
 import {
   Controller,
   type ControllerProps,
@@ -84,11 +85,12 @@ export const FormLabel = React.forwardRef<
   React.ComponentPropsWithoutRef<'label'>
 >(({ style, ...props }, ref) => {
   const { error, formItemId } = useFormField();
+  const { token } = theme.useToken();
 
   return (
     <label
       ref={ref}
-      style={{ fontSize: 14, fontWeight: 600, color: error ? '#b42318' : '#111827', ...style }}
+      style={{ fontSize: 14, fontWeight: 600, color: error ? token.colorError : token.colorText, ...style }}
       htmlFor={formItemId}
       {...props}
     />
@@ -123,13 +125,15 @@ export const FormDescription = React.forwardRef<
   React.HTMLAttributes<HTMLParagraphElement>
 >(({ style, ...props }, ref) => {
   const { formDescriptionId } = useFormField();
-  return <p ref={ref} id={formDescriptionId} style={{ margin: 0, fontSize: 12, color: '#667085', ...style }} {...props} />;
+  const { token } = theme.useToken();
+  return <p ref={ref} id={formDescriptionId} style={{ margin: 0, fontSize: 12, color: token.colorTextTertiary, ...style }} {...props} />;
 });
 FormDescription.displayName = 'FormDescription';
 
 export const FormMessage = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLParagraphElement>>(
   ({ style, children, ...props }, ref) => {
     const { error, formMessageId } = useFormField();
+    const { token } = theme.useToken();
     const body = error ? String(error.message ?? '') : children;
 
     if (!body) {
@@ -137,7 +141,7 @@ export const FormMessage = React.forwardRef<HTMLParagraphElement, React.HTMLAttr
     }
 
     return (
-      <p ref={ref} id={formMessageId} style={{ margin: 0, fontSize: 12, fontWeight: 600, color: '#b42318', ...style }} {...props}>
+      <p ref={ref} id={formMessageId} style={{ margin: 0, fontSize: 12, fontWeight: 600, color: token.colorError, ...style }} {...props}>
         {body}
       </p>
     );

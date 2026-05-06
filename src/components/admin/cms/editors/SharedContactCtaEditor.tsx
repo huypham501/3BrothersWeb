@@ -131,7 +131,7 @@ export function SharedContactCtaEditor({ section }: { section: CmsSharedSection<
 
         <HeaderRow>
           <Button type="submit" disabled={isSaving || !form.formState.isDirty}>
-            {isSaving ? 'Saving...' : 'Save Shared Section'}
+            {isSaving ? 'Saving...' : 'Save Section'}
           </Button>
         </HeaderRow>
 

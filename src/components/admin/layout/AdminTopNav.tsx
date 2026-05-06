@@ -1,7 +1,7 @@
 'use client';
 
-import Link from 'next/link';
-import { Button, Space } from 'antd';
+import { usePathname, useRouter } from 'next/navigation';
+import { Tabs } from 'antd';
 
 export interface AdminNavItem {
   href: string;
@@ -10,19 +10,20 @@ export interface AdminNavItem {
 
 interface AdminTopNavProps {
   items: AdminNavItem[];
-  activeHref?: string;
 }
 
-export function AdminTopNav({ items, activeHref }: AdminTopNavProps) {
+export function AdminTopNav({ items }: AdminTopNavProps) {
+  const router = useRouter();
+  const pathname = usePathname();
+
   return (
-    <nav>
-      <Space wrap>
-      {items.map((item) => (
-        <Link key={item.href} href={item.href}>
-          <Button type={activeHref === item.href ? 'primary' : 'default'}>{item.label}</Button>
-        </Link>
-      ))}
-      </Space>
-    </nav>
+    <Tabs
+      activeKey={pathname}
+      onChange={(key) => router.push(key)}
+      items={items.map((item) => ({
+        key: item.href,
+        label: item.label,
+      }))}
+    />
   );
 }

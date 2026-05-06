@@ -15,9 +15,9 @@ import {
   AdminAlert,
   AdminAlertDescription,
   AdminAlertTitle,
-  AdminBadge,
   AdminButton,
 } from '@/components/admin/layout/AdminPrimitives';
+import { CmsEditorStatusBar } from '@/components/admin/cms/CmsEditorStatusBar';
 
 type FormValues = z.infer<typeof globalHeaderSchema> & { enabled: boolean };
 
@@ -25,11 +25,6 @@ interface GlobalHeaderEditorProps {
   setting: CmsGlobalSetting<z.infer<typeof globalHeaderSchema>>;
   role: string;
   canPublish: boolean;
-}
-
-function formatAuditDate(value?: string | null) {
-  if (!value) return 'N/A';
-  return new Date(value).toLocaleString();
 }
 
 export function GlobalHeaderEditor({ setting, role, canPublish }: GlobalHeaderEditorProps) {
@@ -103,66 +98,56 @@ export function GlobalHeaderEditor({ setting, role, canPublish }: GlobalHeaderEd
   };
 
   return (
-    <Form {...form}>
-      <FormRoot onSubmit={form.handleSubmit(onSaveDraft)}>
-        <AdminAlert>
-          <AdminAlertTitle>Global Impact Warning</AdminAlertTitle>
-          <AdminAlertDescription>
-            This Header configuration is shared across multiple pages. Draft first, then publish when you are ready to update site-wide chrome.
-          </AdminAlertDescription>
-        </AdminAlert>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+      <CmsEditorStatusBar
+        pageTitle="Global Header"
+        hasUnpublished={setting.has_unpublished_changes ?? false}
+        lastEditedBy={setting.last_edited_by_identifier}
+        lastEditedAt={setting.last_edited_at}
+        lastPublishedBy={setting.last_published_by_identifier}
+        lastPublishedAt={setting.last_published_at}
+        role={role}
+        canPublish={canPublish}
+        isPublishing={isPublishing}
+        onPublish={handlePublish}
+        publishLabel="Publish Header"
+      />
 
-        {errorMsg && (
-          <AdminAlert tone="destructive">
-            <AdminAlertDescription>{errorMsg}</AdminAlertDescription>
-          </AdminAlert>
-        )}
-
-        {successMsg && (
+      <Form {...form}>
+        <FormRoot onSubmit={form.handleSubmit(onSaveDraft)}>
           <AdminAlert>
-            <AdminAlertDescription>{successMsg}</AdminAlertDescription>
+            <AdminAlertTitle>Global Impact Warning</AdminAlertTitle>
+            <AdminAlertDescription>
+              This Header configuration is shared across multiple pages. Draft first, then publish when you are ready to update site-wide chrome.
+            </AdminAlertDescription>
           </AdminAlert>
-        )}
 
-        <SectionCard>
-          <ActionHeader>
-            <MetaGroup>
-              <BadgeRow>
-                <AdminBadge>{setting.schema_key}</AdminBadge>
-                <AdminBadge tone={setting.published_enabled ? 'success' : 'neutral'}>
-                  {setting.published_enabled ? 'Published: Enabled' : 'Published: Disabled'}
-                </AdminBadge>
-                <AdminBadge tone={setting.has_unpublished_changes ? 'warning' : 'neutral'}>
-                  {setting.has_unpublished_changes ? 'Has Unpublished Changes' : 'No Unpublished Changes'}
-                </AdminBadge>
-              </BadgeRow>
-              <MetaText>Your role: {role}</MetaText>
-              <MetaText>
-                Last edited: {setting.last_edited_by_identifier ?? 'N/A'} at {formatAuditDate(setting.last_edited_at)}
-              </MetaText>
-              <MetaText>
-                Last published: {setting.last_published_by_identifier ?? 'N/A'} at {formatAuditDate(setting.last_published_at)}
-              </MetaText>
-            </MetaGroup>
+          {errorMsg && (
+            <AdminAlert tone="destructive">
+              <AdminAlertDescription>{errorMsg}</AdminAlertDescription>
+            </AdminAlert>
+          )}
 
-            <ButtonGroup>
-              <AdminButton type="submit" disabled={isSaving || isPublishing || !form.formState.isDirty} variant="outline">
+          {successMsg && (
+            <AdminAlert>
+              <AdminAlertDescription>{successMsg}</AdminAlertDescription>
+            </AdminAlert>
+          )}
+
+          <SectionCard>
+            <SaveRow>
+              <AdminButton
+                type="submit"
+                variant="outline"
+                disabled={isSaving || isPublishing || !form.formState.isDirty}
+              >
                 {isSaving ? 'Saving Draft...' : 'Save Draft'}
               </AdminButton>
-              <AdminButton
-                type="button"
-                onClick={handlePublish}
-                disabled={isSaving || isPublishing || !canPublish}
-                title={canPublish ? undefined : 'Your role cannot publish.'}
-              >
-                {isPublishing ? 'Publishing...' : 'Publish'}
-              </AdminButton>
-            </ButtonGroup>
-          </ActionHeader>
+            </SaveRow>
 
-          <Divider />
+            <Divider />
 
-          <FormField
+            <FormField
             control={form.control}
             name="enabled"
             render={({ field }) => (
@@ -297,19 +282,18 @@ export function GlobalHeaderEditor({ setting, role, canPublish }: GlobalHeaderEd
               </FormItem>
             )}
           />
-        </TwoColumnGrid>
-      </FormRoot>
-    </Form>
+          </TwoColumnGrid>
+        </FormRoot>
+      </Form>
+    </div>
   );
 }
 
 const FormRoot = (props: React.ComponentProps<'form'>) => <form {...props} />;
 const SectionCard = (props: React.ComponentProps<'div'>) => <div {...props} />;
-const ActionHeader = (props: React.ComponentProps<'div'>) => <div {...props} />;
-const MetaGroup = (props: React.ComponentProps<'div'>) => <div {...props} />;
-const BadgeRow = (props: React.ComponentProps<'div'>) => <div {...props} />;
-const MetaText = (props: React.ComponentProps<'p'>) => <p {...props} />;
-const ButtonGroup = (props: React.ComponentProps<'div'>) => <div {...props} />;
+const SaveRow = (props: React.ComponentProps<'div'>) => (
+  <div style={{ display: 'flex', justifyContent: 'flex-end' }} {...props} />
+);
 const Divider = (props: React.ComponentProps<'hr'>) => <hr {...props} />;
 const ToggleFormItem = (props: React.ComponentProps<typeof FormItem>) => (
   <FormItem {...props} />
