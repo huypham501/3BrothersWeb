@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { Button, Divider, Typography } from 'antd';
+import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 import { CmsGlobalSetting, globalFooterSchema, SCHEMA_KEYS } from '@/lib/cms';
 import { saveGlobalSettingDraft, publishGlobalSetting } from '@/lib/cms/actions';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/admin/controls/AdminForm';
@@ -14,9 +16,9 @@ import {
   AdminAlert,
   AdminAlertDescription,
   AdminAlertTitle,
-  AdminBadge,
-  AdminButton,
+  AdminCard,
 } from '@/components/admin/layout/AdminPrimitives';
+import { CmsEditorStatusBar } from '@/components/admin/cms/CmsEditorStatusBar';
 
 type FormValues = z.infer<typeof globalFooterSchema> & { enabled: boolean };
 
@@ -24,11 +26,6 @@ interface GlobalFooterEditorProps {
   setting: CmsGlobalSetting<z.infer<typeof globalFooterSchema>>;
   role: string;
   canPublish: boolean;
-}
-
-function formatAuditDate(value?: string | null) {
-  if (!value) return 'N/A';
-  return new Date(value).toLocaleString();
 }
 
 export function GlobalFooterEditor({ setting, role, canPublish }: GlobalFooterEditorProps) {
@@ -110,271 +107,258 @@ export function GlobalFooterEditor({ setting, role, canPublish }: GlobalFooterEd
   };
 
   return (
-    <Form {...form}>
-      <FormRoot onSubmit={form.handleSubmit(onSaveDraft)}>
-        <AdminAlert>
-          <AdminAlertTitle>Global Impact Warning</AdminAlertTitle>
-          <AdminAlertDescription>
-            This Footer configuration is shared across multiple pages. Draft first, then publish when you are ready to update site-wide chrome.
-          </AdminAlertDescription>
-        </AdminAlert>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+      <CmsEditorStatusBar
+        pageTitle="Global Footer"
+        hasUnpublished={setting.has_unpublished_changes ?? false}
+        lastEditedBy={setting.last_edited_by_identifier}
+        lastEditedAt={setting.last_edited_at}
+        lastPublishedBy={setting.last_published_by_identifier}
+        lastPublishedAt={setting.last_published_at}
+        role={role}
+        canPublish={canPublish}
+        isPublishing={isPublishing}
+        onPublish={handlePublish}
+        publishLabel="Publish Footer"
+      />
 
-        {errorMsg && (
-          <AdminAlert tone="destructive">
-            <AdminAlertDescription>{errorMsg}</AdminAlertDescription>
-          </AdminAlert>
-        )}
-
-        {successMsg && (
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSaveDraft)}
+          style={{ display: 'flex', flexDirection: 'column', gap: 24 }}
+        >
           <AdminAlert>
-            <AdminAlertDescription>{successMsg}</AdminAlertDescription>
+            <AdminAlertTitle>Global Impact Warning</AdminAlertTitle>
+            <AdminAlertDescription>
+              This Footer configuration is shared across multiple pages. Draft first, then publish when you are ready to update site-wide chrome.
+            </AdminAlertDescription>
           </AdminAlert>
-        )}
 
-        <SectionCard>
-          <ActionHeader>
-            <MetaGroup>
-              <BadgeRow>
-                <AdminBadge>{setting.schema_key}</AdminBadge>
-                <AdminBadge tone={setting.published_enabled ? 'success' : 'neutral'}>
-                  {setting.published_enabled ? 'Published: Enabled' : 'Published: Disabled'}
-                </AdminBadge>
-                <AdminBadge tone={setting.has_unpublished_changes ? 'warning' : 'neutral'}>
-                  {setting.has_unpublished_changes ? 'Has Unpublished Changes' : 'No Unpublished Changes'}
-                </AdminBadge>
-              </BadgeRow>
-              <MetaText>Your role: {role}</MetaText>
-              <MetaText>
-                Last edited: {setting.last_edited_by_identifier ?? 'N/A'} at {formatAuditDate(setting.last_edited_at)}
-              </MetaText>
-              <MetaText>
-                Last published: {setting.last_published_by_identifier ?? 'N/A'} at {formatAuditDate(setting.last_published_at)}
-              </MetaText>
-            </MetaGroup>
+          {errorMsg && (
+            <AdminAlert tone="destructive">
+              <AdminAlertDescription>{errorMsg}</AdminAlertDescription>
+            </AdminAlert>
+          )}
 
-            <ButtonGroup>
-              <AdminButton type="submit" disabled={isSaving || isPublishing || !form.formState.isDirty} variant="outline">
-                {isSaving ? 'Saving Draft...' : 'Save Draft'}
-              </AdminButton>
-              <AdminButton
-                type="button"
-                onClick={handlePublish}
-                disabled={isSaving || isPublishing || !canPublish}
-                title={canPublish ? undefined : 'Your role cannot publish.'}
+          {successMsg && (
+            <AdminAlert>
+              <AdminAlertDescription>{successMsg}</AdminAlertDescription>
+            </AdminAlert>
+          )}
+
+          <AdminCard>
+            <SaveRow>
+              <Button
+                type="primary"
+                htmlType="submit"
+                loading={isSaving}
+                disabled={!form.formState.isDirty}
               >
-                {isPublishing ? 'Publishing...' : 'Publish'}
-              </AdminButton>
-            </ButtonGroup>
-          </ActionHeader>
+                Save Draft
+              </Button>
+            </SaveRow>
 
-          <Divider />
+            <Divider style={{ margin: '12px 0' }} />
+
+            <FormField
+              control={form.control}
+              name="enabled"
+              render={({ field }) => (
+                <FormItem style={{ marginBottom: 0 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
+                    <FormLabel style={{ marginBottom: 0 }}>Enable Footer</FormLabel>
+                    <FormControl>
+                      <Switch checked={field.value} onCheckedChange={field.onChange} />
+                    </FormControl>
+                  </div>
+                </FormItem>
+              )}
+            />
+          </AdminCard>
 
           <FormField
             control={form.control}
-            name="enabled"
+            name="thank_you_heading"
             render={({ field }) => (
-              <ToggleFormItem>
-                <div>
-                  <FormLabel>Enable Footer</FormLabel>
+              <FormItem>
+                <FormLabel>Thank You Heading</FormLabel>
+                <FormControl>
+                  <Input {...field} maxLength={120} showCount />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 24 }}>
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input {...field} maxLength={200} showCount />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="address"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Address</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
+              <Typography.Title level={5} style={{ margin: 0 }}>Menu Links</Typography.Title>
+              <Button
+                type="dashed"
+                size="small"
+                icon={<PlusOutlined />}
+                onClick={() => menuLinksArray.append({ label: '', url: '/' })}
+                disabled={menuLinksArray.fields.length >= 10}
+              >
+                Add Menu Link
+              </Button>
+            </div>
+
+            {menuLinksArray.fields.map((field, index) => (
+              <AdminCard key={field.id} bodyStyle={{ padding: '12px 16px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr auto', gap: 16, alignItems: 'end' }}>
+                <FormField
+                  control={form.control}
+                  name={`menu_links.${index}.label`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Label</FormLabel>
+                      <FormControl>
+                        <Input {...field} maxLength={40} showCount />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name={`menu_links.${index}.url`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>URL</FormLabel>
+                      <FormControl>
+                        <Input {...field} maxLength={40} showCount />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <div style={{ paddingBottom: 4 }}>
+                  <Button
+                    type="text"
+                    danger
+                    size="small"
+                    icon={<DeleteOutlined />}
+                    onClick={() => menuLinksArray.remove(index)}
+                    disabled={menuLinksArray.fields.length <= 1}
+                  />
                 </div>
-                <FormControl>
-                  <Switch checked={field.value} onCheckedChange={field.onChange} />
-                </FormControl>
-              </ToggleFormItem>
-            )}
-          />
-        </SectionCard>
+                </div>
+              </AdminCard>
+            ))}
+          </div>
 
-        <FormField
-          control={form.control}
-          name="thank_you_heading"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Thank You Heading</FormLabel>
-              <FormControl>
-                <Input {...field} maxLength={120} showCount />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
+              <Typography.Title level={5} style={{ margin: 0 }}>Social Links</Typography.Title>
+              <Button
+                type="dashed"
+                size="small"
+                icon={<PlusOutlined />}
+                onClick={() => socialLinksArray.append({ label: '', url: '#' })}
+                disabled={socialLinksArray.fields.length >= 8}
+              >
+                Add Social Link
+              </Button>
+            </div>
 
-        <TwoColumnGrid>
+            {socialLinksArray.fields.map((field, index) => (
+              <AdminCard key={field.id} bodyStyle={{ padding: '12px 16px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr auto', gap: 16, alignItems: 'end' }}>
+                <FormField
+                  control={form.control}
+                  name={`social_links.${index}.label`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Label</FormLabel>
+                      <FormControl>
+                        <Input {...field} maxLength={500} showCount />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name={`social_links.${index}.url`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>URL</FormLabel>
+                      <FormControl>
+                        <Input {...field} maxLength={500} showCount />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <div style={{ paddingBottom: 4 }}>
+                  <Button
+                    type="text"
+                    danger
+                    size="small"
+                    icon={<DeleteOutlined />}
+                    onClick={() => socialLinksArray.remove(index)}
+                    disabled={socialLinksArray.fields.length <= 1}
+                  />
+                </div>
+                </div>
+              </AdminCard>
+            ))}
+          </div>
+
           <FormField
             control={form.control}
-            name="email"
+            name="brand_watermark"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email</FormLabel>
+                <FormLabel>Brand Watermark</FormLabel>
                 <FormControl>
-                  <Input {...field} maxLength={200} showCount />
+                  <Input {...field} maxLength={30} showCount />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-
-          <FormField
-            control={form.control}
-            name="address"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Address</FormLabel>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </TwoColumnGrid>
-
-        <Block>
-          <BlockHeader>
-            <BlockTitle>Menu Links</BlockTitle>
-            <AdminButton
-              type="button"
-              variant="outline"
-              onClick={() => menuLinksArray.append({ label: '', url: '/' })}
-              disabled={menuLinksArray.fields.length >= 10}
-            >
-              Add Menu Link
-            </AdminButton>
-          </BlockHeader>
-
-          {menuLinksArray.fields.map((field, index) => (
-            <EditableRow key={field.id}>
-              <FormField
-                control={form.control}
-                name={`menu_links.${index}.label`}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Label</FormLabel>
-                    <FormControl>
-                      <Input {...field} maxLength={40} showCount />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name={`menu_links.${index}.url`}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>URL</FormLabel>
-                    <FormControl>
-                      <Input {...field} maxLength={40} showCount />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <RowActions>
-                <AdminButton
-                  type="button"
-                  variant="outline"
-                  onClick={() => menuLinksArray.remove(index)}
-                  disabled={menuLinksArray.fields.length <= 1}
-                >
-                  Remove
-                </AdminButton>
-              </RowActions>
-            </EditableRow>
-          ))}
-        </Block>
-
-        <Block>
-          <BlockHeader>
-            <BlockTitle>Social Links</BlockTitle>
-            <AdminButton
-              type="button"
-              variant="outline"
-              onClick={() => socialLinksArray.append({ label: '', url: '#' })}
-              disabled={socialLinksArray.fields.length >= 8}
-            >
-              Add Social Link
-            </AdminButton>
-          </BlockHeader>
-
-          {socialLinksArray.fields.map((field, index) => (
-            <EditableRow key={field.id}>
-              <FormField
-                control={form.control}
-                name={`social_links.${index}.label`}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Label</FormLabel>
-                    <FormControl>
-                      <Input {...field} maxLength={500} showCount />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name={`social_links.${index}.url`}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>URL</FormLabel>
-                    <FormControl>
-                      <Input {...field} maxLength={500} showCount />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <RowActions>
-                <AdminButton
-                  type="button"
-                  variant="outline"
-                  onClick={() => socialLinksArray.remove(index)}
-                  disabled={socialLinksArray.fields.length <= 1}
-                >
-                  Remove
-                </AdminButton>
-              </RowActions>
-            </EditableRow>
-          ))}
-        </Block>
-
-        <FormField
-          control={form.control}
-          name="brand_watermark"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Brand Watermark</FormLabel>
-              <FormControl>
-                <Input {...field} maxLength={30} showCount />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-      </FormRoot>
-    </Form>
+        </form>
+      </Form>
+    </div>
   );
 }
 
-const FormRoot = (props: React.ComponentProps<'form'>) => <form {...props} />;
-const SectionCard = (props: React.ComponentProps<'div'>) => <div {...props} />;
-const ActionHeader = (props: React.ComponentProps<'div'>) => <div {...props} />;
-const MetaGroup = (props: React.ComponentProps<'div'>) => <div {...props} />;
-const BadgeRow = (props: React.ComponentProps<'div'>) => <div {...props} />;
-const MetaText = (props: React.ComponentProps<'p'>) => <p {...props} />;
-const ButtonGroup = (props: React.ComponentProps<'div'>) => <div {...props} />;
-const Divider = (props: React.ComponentProps<'hr'>) => <hr {...props} />;
-const ToggleFormItem = (props: React.ComponentProps<typeof FormItem>) => (
-  <FormItem {...props} />
+const SaveRow = (props: React.ComponentProps<'div'>) => (
+  <div style={{ display: 'flex', justifyContent: 'flex-end' }} {...props} />
 );
-const TwoColumnGrid = (props: React.ComponentProps<'div'>) => <div {...props} />;
-const Block = (props: React.ComponentProps<'div'>) => <div {...props} />;
-const BlockHeader = (props: React.ComponentProps<'div'>) => <div {...props} />;
-const BlockTitle = (props: React.ComponentProps<'h3'>) => <h3 {...props} />;
-const EditableRow = (props: React.ComponentProps<'div'>) => <div {...props} />;
-const RowActions = (props: React.ComponentProps<'div'>) => <div {...props} />;

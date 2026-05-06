@@ -11,11 +11,13 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { AdminInput as Input } from '@/components/admin/controls/AdminInput';
 import { AdminImageUpload } from '@/components/admin/controls/AdminImageUpload';
 import { AdminSwitch as Switch } from '@/components/admin/controls/AdminSwitch';
+import { Button, Divider, Typography } from 'antd';
+import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 import {
   AdminAlert,
   AdminAlertDescription,
   AdminAlertTitle,
-  AdminButton,
+  AdminCard,
 } from '@/components/admin/layout/AdminPrimitives';
 import { CmsEditorStatusBar } from '@/components/admin/cms/CmsEditorStatusBar';
 
@@ -114,7 +116,10 @@ export function GlobalHeaderEditor({ setting, role, canPublish }: GlobalHeaderEd
       />
 
       <Form {...form}>
-        <FormRoot onSubmit={form.handleSubmit(onSaveDraft)}>
+        <form
+          onSubmit={form.handleSubmit(onSaveDraft)}
+          style={{ display: 'flex', flexDirection: 'column', gap: 24 }}
+        >
           <AdminAlert>
             <AdminAlertTitle>Global Impact Warning</AdminAlertTitle>
             <AdminAlertDescription>
@@ -134,36 +139,37 @@ export function GlobalHeaderEditor({ setting, role, canPublish }: GlobalHeaderEd
             </AdminAlert>
           )}
 
-          <SectionCard>
+          <AdminCard>
             <SaveRow>
-              <AdminButton
-                type="submit"
-                variant="outline"
-                disabled={isSaving || isPublishing || !form.formState.isDirty}
+              <Button
+                type="primary"
+                htmlType="submit"
+                loading={isSaving}
+                disabled={!form.formState.isDirty}
               >
-                {isSaving ? 'Saving Draft...' : 'Save Draft'}
-              </AdminButton>
+                Save Draft
+              </Button>
             </SaveRow>
 
-            <Divider />
+            <Divider style={{ margin: '12px 0' }} />
 
             <FormField
-            control={form.control}
-            name="enabled"
-            render={({ field }) => (
-              <ToggleFormItem>
-                <div>
-                  <FormLabel>Enable Header</FormLabel>
-                </div>
-                <FormControl>
-                  <Switch checked={field.value} onCheckedChange={field.onChange} />
-                </FormControl>
-              </ToggleFormItem>
-            )}
-          />
-        </SectionCard>
+              control={form.control}
+              name="enabled"
+              render={({ field }) => (
+                <FormItem style={{ marginBottom: 0 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
+                    <FormLabel style={{ marginBottom: 0 }}>Enable Header</FormLabel>
+                    <FormControl>
+                      <Switch checked={field.value} onCheckedChange={field.onChange} />
+                    </FormControl>
+                  </div>
+                </FormItem>
+              )}
+            />
+          </AdminCard>
 
-        <TwoColumnGrid>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 24 }}>
           <FormField
             control={form.control}
             name="logo_text"
@@ -195,23 +201,25 @@ export function GlobalHeaderEditor({ setting, role, canPublish }: GlobalHeaderEd
               </FormItem>
             )}
           />
-        </TwoColumnGrid>
+          </div>
 
-        <Block>
-          <BlockHeader>
-            <BlockTitle>Navigation Links</BlockTitle>
-            <AdminButton
-              type="button"
-              variant="outline"
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
+            <Typography.Title level={5} style={{ margin: 0 }}>Navigation Links</Typography.Title>
+            <Button
+              type="dashed"
+              size="small"
+              icon={<PlusOutlined />}
               onClick={() => navLinksArray.append({ label: '', url: '/' })}
               disabled={navLinksArray.fields.length >= 8}
             >
               Add Link
-            </AdminButton>
-          </BlockHeader>
+            </Button>
+            </div>
 
           {navLinksArray.fields.map((field, index) => (
-            <EditableRow key={field.id}>
+            <AdminCard key={field.id} bodyStyle={{ padding: '12px 16px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr auto', gap: 16, alignItems: 'end' }}>
               <FormField
                 control={form.control}
                 name={`nav_links.${index}.label`}
@@ -240,21 +248,22 @@ export function GlobalHeaderEditor({ setting, role, canPublish }: GlobalHeaderEd
                 )}
               />
 
-              <RowActions>
-                <AdminButton
-                  type="button"
-                  variant="outline"
+              <div style={{ paddingBottom: 4 }}>
+                <Button
+                  type="text"
+                  danger
+                  size="small"
+                  icon={<DeleteOutlined />}
                   onClick={() => navLinksArray.remove(index)}
                   disabled={navLinksArray.fields.length <= 1}
-                >
-                  Remove
-                </AdminButton>
-              </RowActions>
-            </EditableRow>
+                />
+              </div>
+              </div>
+            </AdminCard>
           ))}
-        </Block>
+          </div>
 
-        <TwoColumnGrid>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 24 }}>
           <FormField
             control={form.control}
             name="cta_label"
@@ -282,25 +291,13 @@ export function GlobalHeaderEditor({ setting, role, canPublish }: GlobalHeaderEd
               </FormItem>
             )}
           />
-          </TwoColumnGrid>
-        </FormRoot>
+          </div>
+        </form>
       </Form>
     </div>
   );
 }
 
-const FormRoot = (props: React.ComponentProps<'form'>) => <form {...props} />;
-const SectionCard = (props: React.ComponentProps<'div'>) => <div {...props} />;
 const SaveRow = (props: React.ComponentProps<'div'>) => (
   <div style={{ display: 'flex', justifyContent: 'flex-end' }} {...props} />
 );
-const Divider = (props: React.ComponentProps<'hr'>) => <hr {...props} />;
-const ToggleFormItem = (props: React.ComponentProps<typeof FormItem>) => (
-  <FormItem {...props} />
-);
-const TwoColumnGrid = (props: React.ComponentProps<'div'>) => <div {...props} />;
-const Block = (props: React.ComponentProps<'div'>) => <div {...props} />;
-const BlockHeader = (props: React.ComponentProps<'div'>) => <div {...props} />;
-const BlockTitle = (props: React.ComponentProps<'h3'>) => <h3 {...props} />;
-const EditableRow = (props: React.ComponentProps<'div'>) => <div {...props} />;
-const RowActions = (props: React.ComponentProps<'div'>) => <div {...props} />;

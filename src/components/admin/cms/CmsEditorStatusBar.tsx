@@ -4,6 +4,7 @@ import * as React from 'react';
 import { Button, Tag, Typography, Descriptions } from 'antd';
 import { AdminCard } from '@/components/admin/layout/AdminPrimitives';
 import { CloudUploadOutlined, CheckCircleOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import { fmtAuditDate } from '@/lib/cms/utils';
 
 export interface CmsEditorStatusBarProps {
   /** Display name of the page, e.g. "Home CMS" or "For Creators CMS" */
@@ -21,17 +22,6 @@ export interface CmsEditorStatusBarProps {
   onPublish: () => void;
   /** Button label, defaults to "Publish" */
   publishLabel?: string;
-}
-
-function fmtDate(value?: string | null): string {
-  if (!value) return '—';
-  return new Date(value).toLocaleString('vi-VN', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  });
 }
 
 export function CmsEditorStatusBar({
@@ -101,7 +91,7 @@ export function CmsEditorStatusBar({
         </Descriptions.Item>
         <Descriptions.Item label="Thời điểm sửa">
           <Typography.Text type="secondary" style={styles.auditText}>
-            {fmtDate(lastEditedAt)}
+            {fmtAuditDate(lastEditedAt)}
           </Typography.Text>
         </Descriptions.Item>
         <Descriptions.Item label="Người publish cuối">
@@ -111,7 +101,7 @@ export function CmsEditorStatusBar({
         </Descriptions.Item>
         <Descriptions.Item label="Thời điểm publish">
           <Typography.Text type="secondary" style={styles.auditText}>
-            {fmtDate(lastPublishedAt)}
+            {fmtAuditDate(lastPublishedAt)}
           </Typography.Text>
         </Descriptions.Item>
       </Descriptions>

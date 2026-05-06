@@ -5,8 +5,11 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { Button, Descriptions, Divider, Typography } from 'antd';
+import { CloudUploadOutlined } from '@ant-design/icons';
 import { CmsSharedSection, sharedContactCtaSchema, SCHEMA_KEYS } from '@/lib/cms';
 import { saveSharedSection, publishSharedSection } from '@/lib/cms/actions';
+import { fmtAuditDate } from '@/lib/cms/utils';
 import { Form, FormControl, FormField, FormLabel } from '@/components/admin/controls/AdminForm';
 import { AdminSwitch as Switch } from '@/components/admin/controls/AdminSwitch';
 import {
@@ -14,7 +17,7 @@ import {
   AdminAlertDescription,
   AdminAlertTitle,
   AdminBadge,
-  AdminButton,
+  AdminCard,
 } from '@/components/admin/layout/AdminPrimitives';
 import { FormStack, HeaderRow, ToggleFormItem } from '@/components/admin/cms/editors/EditorLayout';
 import {
@@ -30,11 +33,6 @@ interface SharedContactCtaManagerProps {
   usageRoutes: string[];
   role: string;
   canPublish: boolean;
-}
-
-function formatAuditDate(value?: string | null) {
-  if (!value) return 'N/A';
-  return new Date(value).toLocaleString();
 }
 
 export function SharedContactCtaManager({
@@ -104,12 +102,12 @@ export function SharedContactCtaManager({
   return (
     <Form {...form}>
       <FormStack onSubmit={form.handleSubmit(onSaveDraft)}>
-        <AdminAlert>
+        <AdminAlert tone="warning">
           <AdminAlertTitle>Cross-Page Impact Warning</AdminAlertTitle>
           <AdminAlertDescription>
             This shared section is used by multiple routes. Publish will update all routes listed below.
           </AdminAlertDescription>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 8 }}>
             {usageRoutes.map((route) => (
               <AdminBadge key={`contact-cta-${route}`}>{route}</AdminBadge>
             ))}
@@ -123,12 +121,12 @@ export function SharedContactCtaManager({
         )}
 
         {successMsg && (
-          <AdminAlert>
+          <AdminAlert tone="success">
             <AdminAlertDescription>{successMsg}</AdminAlertDescription>
           </AdminAlert>
         )}
 
-        <div style={{ border: '1px solid #d0d5dd', borderRadius: 10, background: '#ffffff', padding: 16, display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <AdminCard bodyStyle={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           <HeaderRow>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
@@ -140,31 +138,46 @@ export function SharedContactCtaManager({
                   {section.has_unpublished_changes ? 'Has Unpublished Changes' : 'No Unpublished Changes'}
                 </AdminBadge>
               </div>
-              <p style={{ margin: 0 }}>Your role: {role}</p>
-              <p style={{ margin: 0 }}>
-                Last edited: {section.last_edited_by_identifier ?? 'N/A'} at {formatAuditDate(section.last_edited_at)}
-              </p>
-              <p style={{ margin: 0 }}>
-                Last published: {section.last_published_by_identifier ?? 'N/A'} at {formatAuditDate(section.last_published_at)}
-              </p>
+              <Descriptions size="small" column={{ xs: 1, sm: 2, md: 3 }}>
+                <Descriptions.Item label="Role">
+                  <Typography.Text type="secondary">{role}</Typography.Text>
+                </Descriptions.Item>
+                <Descriptions.Item label="Người sửa cuối">
+                  <Typography.Text type="secondary">
+                    {section.last_edited_by_identifier ?? '—'} · {fmtAuditDate(section.last_edited_at)}
+                  </Typography.Text>
+                </Descriptions.Item>
+                <Descriptions.Item label="Người publish cuối">
+                  <Typography.Text type="secondary">
+                    {section.last_published_by_identifier ?? '—'} · {fmtAuditDate(section.last_published_at)}
+                  </Typography.Text>
+                </Descriptions.Item>
+              </Descriptions>
             </div>
 
             <div style={{ display: 'flex', gap: 12 }}>
-              <AdminButton type="submit" variant="outline" disabled={isSaving || isPublishing || !form.formState.isDirty}>
-                {isSaving ? 'Saving Draft...' : 'Save Draft'}
-              </AdminButton>
-              <AdminButton
-                type="button"
-                onClick={handlePublish}
+              <Button
+                type="primary"
+                htmlType="submit"
+                loading={isSaving}
+                disabled={isPublishing || !form.formState.isDirty}
+              >
+                Save Draft
+              </Button>
+              <Button
+                type="primary"
+                icon={<CloudUploadOutlined />}
+                loading={isPublishing}
                 disabled={isSaving || isPublishing || !canPublish}
+                onClick={handlePublish}
                 title={canPublish ? undefined : 'Your role cannot publish.'}
               >
-                {isPublishing ? 'Publishing...' : 'Publish'}
-              </AdminButton>
+                Publish Contact CTA
+              </Button>
             </div>
           </HeaderRow>
 
-          <hr style={{ width: '100%', borderColor: '#e4e7ec', margin: 0 }} />
+          <Divider style={{ margin: 0 }} />
 
           <FormField
             control={form.control}
@@ -180,7 +193,7 @@ export function SharedContactCtaManager({
               </ToggleFormItem>
             )}
           />
-        </div>
+        </AdminCard>
 
         <SharedContactCtaFields form={form} />
       </FormStack>

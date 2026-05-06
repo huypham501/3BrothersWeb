@@ -118,7 +118,7 @@ export function SharedContactCtaEditor({ section }: { section: CmsSharedSection<
   return (
     <Form {...form}>
       <FormStack onSubmit={form.handleSubmit(onSubmit)}>
-        <Alert variant="default" style={{ backgroundColor: '#fffbeb', borderColor: '#fcd34d' }}>
+        <Alert tone="warning">
           <AlertTitle>Shared Content Warning</AlertTitle>
           <AlertDescription>
             This Contact CTA section is shared across multiple pages (Home, For Creators, Blogs, etc.).

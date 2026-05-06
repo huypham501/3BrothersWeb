@@ -240,7 +240,7 @@ export function SharedExclusiveTalentsEditor({ section }: { section: CmsSharedSe
   return (
     <Form {...form}>
       <FormStack onSubmit={form.handleSubmit(onSubmit)}>
-        <Alert variant="default" style={{ backgroundColor: '#fffbeb', borderColor: '#fcd34d' }}>
+        <Alert tone="warning">
           <AlertTitle>Shared Content Warning</AlertTitle>
           <AlertDescription>
             This Exclusive Talents section is shared across multiple pages. Modifying its content here will affect all pages displaying this section.

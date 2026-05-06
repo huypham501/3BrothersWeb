@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { Button, Divider, Typography } from 'antd';
 import { CmsGlobalSetting, globalSiteMetadataSchema, SCHEMA_KEYS } from '@/lib/cms';
 import { saveGlobalSettingDraft, publishGlobalSetting } from '@/lib/cms/actions';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/admin/controls/AdminForm';
@@ -15,16 +16,11 @@ import {
   AdminAlert,
   AdminAlertDescription,
   AdminAlertTitle,
-  AdminBadge,
-  AdminButton,
+  AdminCard,
 } from '@/components/admin/layout/AdminPrimitives';
+import { CmsEditorStatusBar } from '@/components/admin/cms/CmsEditorStatusBar';
 
 type FormValues = z.infer<typeof globalSiteMetadataSchema>;
-
-function formatAuditDate(value?: string | null) {
-  if (!value) return 'N/A';
-  return new Date(value).toLocaleString();
-}
 
 export function GlobalSiteMetadataEditor({
   setting,
@@ -94,96 +90,97 @@ export function GlobalSiteMetadataEditor({
   const ux = (fieldPath: string) => getCmsFieldUxSpec('global_site_metadata', fieldPath);
 
   return (
-    <Form {...form}>
-      <FormRoot onSubmit={form.handleSubmit(onSaveDraft)}>
-        <AdminAlert>
-          <AdminAlertTitle>Global Metadata Impact</AdminAlertTitle>
-          <AdminAlertDescription>
-            Site metadata controls metadata base URL, canonical base, and brand identity defaults used by CMS-driven pages.
-          </AdminAlertDescription>
-        </AdminAlert>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+      <CmsEditorStatusBar
+        pageTitle="Global Site Metadata"
+        hasUnpublished={setting.has_unpublished_changes ?? false}
+        lastEditedBy={setting.last_edited_by_identifier}
+        lastEditedAt={setting.last_edited_at}
+        lastPublishedBy={setting.last_published_by_identifier}
+        lastPublishedAt={setting.last_published_at}
+        role={role}
+        canPublish={canPublish}
+        isPublishing={isPublishing}
+        onPublish={handlePublish}
+        publishLabel="Publish Site Metadata"
+      />
 
-        {errorMsg && <AdminAlert tone="destructive"><AdminAlertDescription>{errorMsg}</AdminAlertDescription></AdminAlert>}
-        {successMsg && <AdminAlert><AdminAlertDescription>{successMsg}</AdminAlertDescription></AdminAlert>}
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSaveDraft)}
+          style={{ display: 'flex', flexDirection: 'column', gap: 24 }}
+        >
+          <AdminAlert>
+            <AdminAlertTitle>Global Metadata Impact</AdminAlertTitle>
+            <AdminAlertDescription>
+              Site metadata controls metadata base URL, canonical base, and brand identity defaults used by CMS-driven pages.
+            </AdminAlertDescription>
+          </AdminAlert>
 
-        <SectionCard>
-          <ActionHeader>
-            <BadgeRow>
-              <AdminBadge>{setting.schema_key}</AdminBadge>
-              <AdminBadge tone={setting.published_enabled ? 'success' : 'neutral'}>
-                {setting.published_enabled ? 'Published: Enabled' : 'Published: Disabled'}
-              </AdminBadge>
-              <AdminBadge tone={setting.has_unpublished_changes ? 'warning' : 'neutral'}>
-                {setting.has_unpublished_changes ? 'Has Unpublished Changes' : 'No Unpublished Changes'}
-              </AdminBadge>
-            </BadgeRow>
-            <MetaText>Your role: {role}</MetaText>
-            <MetaText>
-              Last edited: {setting.last_edited_by_identifier ?? 'N/A'} at {formatAuditDate(setting.last_edited_at)}
-            </MetaText>
-            <MetaText>
-              Last published: {setting.last_published_by_identifier ?? 'N/A'} at {formatAuditDate(setting.last_published_at)}
-            </MetaText>
-            <ButtonGroup>
-              <AdminButton type="submit" variant="outline" disabled={isSaving || isPublishing || !form.formState.isDirty}>
-                {isSaving ? 'Saving Draft...' : 'Save Draft'}
-              </AdminButton>
-              <AdminButton
-                type="button"
-                onClick={handlePublish}
-                disabled={isSaving || isPublishing || !canPublish}
-                title={canPublish ? undefined : 'Your role cannot publish.'}
+          {errorMsg && (
+            <AdminAlert tone="destructive">
+              <AdminAlertDescription>{errorMsg}</AdminAlertDescription>
+            </AdminAlert>
+          )}
+
+          {successMsg && (
+            <AdminAlert>
+              <AdminAlertDescription>{successMsg}</AdminAlertDescription>
+            </AdminAlert>
+          )}
+
+          <AdminCard>
+            <SaveRow>
+              <Button
+                type="primary"
+                htmlType="submit"
+                loading={isSaving}
+                disabled={!form.formState.isDirty}
               >
-                {isPublishing ? 'Publishing...' : 'Publish'}
-              </AdminButton>
-            </ButtonGroup>
-          </ActionHeader>
-          <Divider />
-          <ScopeText>Revalidation scope: `/`, `/for-creators`</ScopeText>
-        </SectionCard>
+                Save Draft
+              </Button>
+            </SaveRow>
+            <Divider style={{ margin: '12px 0' }} />
+            <Typography.Text type="secondary" style={{ fontSize: 12 }}>Revalidation scope: `/`, `/for-creators`</Typography.Text>
+          </AdminCard>
 
-        <FormField control={form.control} name="site_name" render={({ field }) => (
-          <FormItem><FormLabel>Site Name</FormLabel><FormControl><Input {...field} maxLength={80} showCount /></FormControl><FormMessage /></FormItem>
-        )} />
+          <FormField control={form.control} name="site_name" render={({ field }) => (
+            <FormItem><FormLabel>Site Name</FormLabel><FormControl><Input {...field} maxLength={80} showCount /></FormControl><FormMessage /></FormItem>
+          )} />
 
-        <TwoColumnGrid>
-          <FormField control={form.control} name="site_url" render={({ field }) => (
-            <FormItem>
-              <FormLabel>{ux('site_url').label ?? 'Site URL'}</FormLabel>
-              <FormControl><Input {...field} maxLength={500} showCount /></FormControl>
-              <CmsFieldHint formId="global_site_metadata" fieldPath="site_url" />
-              <FormMessage />
-            </FormItem>
-          )} />
-          <FormField control={form.control} name="default_canonical_base" render={({ field }) => (
-            <FormItem>
-              <FormLabel>{ux('default_canonical_base').label ?? 'Default Canonical Base'}</FormLabel>
-              <FormControl><Input {...field} maxLength={500} showCount /></FormControl>
-              <CmsFieldHint formId="global_site_metadata" fieldPath="default_canonical_base" />
-              <FormMessage />
-            </FormItem>
-          )} />
-        </TwoColumnGrid>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 24 }}>
+            <FormField control={form.control} name="site_url" render={({ field }) => (
+              <FormItem>
+                <FormLabel>{ux('site_url').label ?? 'Site URL'}</FormLabel>
+                <FormControl><Input {...field} maxLength={500} showCount /></FormControl>
+                <CmsFieldHint formId="global_site_metadata" fieldPath="site_url" />
+                <FormMessage />
+              </FormItem>
+            )} />
+            <FormField control={form.control} name="default_canonical_base" render={({ field }) => (
+              <FormItem>
+                <FormLabel>{ux('default_canonical_base').label ?? 'Default Canonical Base'}</FormLabel>
+                <FormControl><Input {...field} maxLength={500} showCount /></FormControl>
+                <CmsFieldHint formId="global_site_metadata" fieldPath="default_canonical_base" />
+                <FormMessage />
+              </FormItem>
+            )} />
+          </div>
 
-        <TwoColumnGrid>
-          <FormField control={form.control} name="brand_name" render={({ field }) => (
-            <FormItem><FormLabel>Brand Name</FormLabel><FormControl><Input {...field} maxLength={80} showCount /></FormControl><FormMessage /></FormItem>
-          )} />
-          <FormField control={form.control} name="publisher_name" render={({ field }) => (
-            <FormItem><FormLabel>Publisher Name</FormLabel><FormControl><Input {...field} maxLength={80} showCount /></FormControl><FormMessage /></FormItem>
-          )} />
-        </TwoColumnGrid>
-      </FormRoot>
-    </Form>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 24 }}>
+            <FormField control={form.control} name="brand_name" render={({ field }) => (
+              <FormItem><FormLabel>Brand Name</FormLabel><FormControl><Input {...field} maxLength={80} showCount /></FormControl><FormMessage /></FormItem>
+            )} />
+            <FormField control={form.control} name="publisher_name" render={({ field }) => (
+              <FormItem><FormLabel>Publisher Name</FormLabel><FormControl><Input {...field} maxLength={80} showCount /></FormControl><FormMessage /></FormItem>
+            )} />
+          </div>
+        </form>
+      </Form>
+    </div>
   );
 }
 
-const FormRoot = (props: React.ComponentProps<'form'>) => <form {...props} />;
-const SectionCard = (props: React.ComponentProps<'div'>) => <div {...props} />;
-const ActionHeader = (props: React.ComponentProps<'div'>) => <div {...props} />;
-const BadgeRow = (props: React.ComponentProps<'div'>) => <div {...props} />;
-const MetaText = (props: React.ComponentProps<'p'>) => <p {...props} />;
-const ButtonGroup = (props: React.ComponentProps<'div'>) => <div {...props} />;
-const Divider = (props: React.ComponentProps<'hr'>) => <hr {...props} />;
-const ScopeText = (props: React.ComponentProps<'p'>) => <p {...props} />;
-const TwoColumnGrid = (props: React.ComponentProps<'div'>) => <div {...props} />;
+const SaveRow = (props: React.ComponentProps<'div'>) => (
+  <div style={{ display: 'flex', justifyContent: 'flex-end' }} {...props} />
+);
