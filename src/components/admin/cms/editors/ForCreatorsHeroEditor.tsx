@@ -4,6 +4,7 @@ import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Alert as AntdAlert } from 'antd';
 import { CmsPageSection, forCreatorsHeroSchema } from '@/lib/cms';
 import { savePageSection } from '@/lib/cms/actions';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/admin/controls/AdminForm';
@@ -36,7 +37,6 @@ export function ForCreatorsHeroEditor({ pageId, section }: { pageId: string; sec
       secondary_cta_url: section.content?.secondary_cta_url || '#benefit',
       media_image: section.content?.media_image || '',
       media_image_alt: section.content?.media_image_alt || '',
-      hero_aspect_ratio: section.content?.hero_aspect_ratio || '1440/670',
     },
   });
 
@@ -83,27 +83,28 @@ export function ForCreatorsHeroEditor({ pageId, section }: { pageId: string; sec
         </HeaderRow>
 
         <FormField control={form.control} name="title" render={({ field }) => (
-          <FormItem><FormLabel>Title</FormLabel><FormControl><Textarea {...field} rows={3} /></FormControl><FormMessage /></FormItem>
+          <FormItem><FormLabel>Title</FormLabel><FormControl><Textarea {...field} rows={3} maxLength={120} showCount /></FormControl><FormMessage /></FormItem>
         )} />
 
         <FormField control={form.control} name="subtitle" render={({ field }) => (
-          <FormItem><FormLabel>Subtitle</FormLabel><FormControl><Textarea {...field} rows={4} /></FormControl><FormMessage /></FormItem>
+          <FormItem><FormLabel>Subtitle</FormLabel><FormControl><Textarea {...field} rows={4} maxLength={500} showCount /></FormControl><FormMessage /></FormItem>
         )} />
 
         <TwoColumnGrid>
           <FormField control={form.control} name="primary_cta_label" render={({ field }) => (
-            <FormItem><FormLabel>Primary CTA Label</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+            <FormItem><FormLabel>Primary CTA Label</FormLabel><FormControl><Input {...field} maxLength={40} showCount /></FormControl><FormMessage /></FormItem>
           )} />
           <FormField control={form.control} name="primary_cta_url" render={({ field }) => (
-            <FormItem><FormLabel>Primary CTA URL</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+            <FormItem><FormLabel>Primary CTA URL</FormLabel><FormControl><Input {...field} maxLength={500} showCount /></FormControl><FormMessage /></FormItem>
           )} />
         </TwoColumnGrid>
 
-        <TwoColumnGrid>
-          <FormField control={form.control} name="hero_aspect_ratio" render={({ field }) => (
-            <FormItem><FormLabel>Hero Aspect Ratio (W/H)</FormLabel><FormControl><Input {...field} value={field.value ?? ''} placeholder="1440/670" /></FormControl><FormMessage /></FormItem>
-          )} />
-        </TwoColumnGrid>
+        <AntdAlert
+          type="info"
+          showIcon
+          message="Hero Ratio is Fixed by Design"
+          description="Design aspect ratio: 1440/670. Recommended upload size: 1440x670 (or larger with same ratio)."
+        />
 
         <TwoColumnGrid>
           <FormField control={form.control} name="media_image" render={({ field }) => (
@@ -120,16 +121,16 @@ export function ForCreatorsHeroEditor({ pageId, section }: { pageId: string; sec
             </FormItem>
           )} />
           <FormField control={form.control} name="media_image_alt" render={({ field }) => (
-            <FormItem><FormLabel>Hero Image Alt</FormLabel><FormControl><Input {...field} value={field.value ?? ''} /></FormControl><FormMessage /></FormItem>
+            <FormItem><FormLabel>Hero Image Alt</FormLabel><FormControl><Input {...field} value={field.value ?? ''} maxLength={125} showCount /></FormControl><FormMessage /></FormItem>
           )} />
         </TwoColumnGrid>
 
         <TwoColumnGrid>
           <FormField control={form.control} name="secondary_cta_label" render={({ field }) => (
-            <FormItem><FormLabel>Secondary CTA Label</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+            <FormItem><FormLabel>Secondary CTA Label</FormLabel><FormControl><Input {...field} maxLength={40} showCount /></FormControl><FormMessage /></FormItem>
           )} />
           <FormField control={form.control} name="secondary_cta_url" render={({ field }) => (
-            <FormItem><FormLabel>Secondary CTA URL</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+            <FormItem><FormLabel>Secondary CTA URL</FormLabel><FormControl><Input {...field} maxLength={500} showCount /></FormControl><FormMessage /></FormItem>
           )} />
         </TwoColumnGrid>
       </FormStack>

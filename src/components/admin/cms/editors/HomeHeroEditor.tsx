@@ -4,6 +4,7 @@ import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Alert as AntdAlert } from 'antd';
 import { CmsPageSection, homeHeroSchema } from '@/lib/cms';
 import { savePageSection } from '@/lib/cms/actions';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/admin/controls/AdminForm';
@@ -38,7 +39,6 @@ export function HomeHeroEditor({ pageId, section }: { pageId: string, section: C
       secondary_cta_url: section.content.secondary_cta_url || '',
       media_image: section.content.media_image || '',
       media_image_alt: section.content.media_image_alt || '',
-      hero_aspect_ratio: section.content.hero_aspect_ratio || '1440/800',
     },
   });
 
@@ -91,7 +91,7 @@ export function HomeHeroEditor({ pageId, section }: { pageId: string, section: C
             <FormItem>
               <FormLabel>Title</FormLabel>
               <FormControl>
-                <Textarea {...field} />
+                <Textarea {...field} maxLength={120} showCount />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -105,7 +105,7 @@ export function HomeHeroEditor({ pageId, section }: { pageId: string, section: C
             <FormItem>
               <FormLabel>Subtext</FormLabel>
               <FormControl>
-                <Textarea {...field} />
+                <Textarea {...field} maxLength={300} showCount />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -120,7 +120,7 @@ export function HomeHeroEditor({ pageId, section }: { pageId: string, section: C
               <FormItem>
                 <FormLabel>Primary CTA Label</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Input {...field} maxLength={40} showCount />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -133,7 +133,7 @@ export function HomeHeroEditor({ pageId, section }: { pageId: string, section: C
               <FormItem>
                 <FormLabel>Primary CTA URL</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Input {...field} maxLength={500} showCount />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -149,7 +149,7 @@ export function HomeHeroEditor({ pageId, section }: { pageId: string, section: C
               <FormItem>
                 <FormLabel>Secondary CTA Label</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Input {...field} maxLength={40} showCount />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -162,7 +162,7 @@ export function HomeHeroEditor({ pageId, section }: { pageId: string, section: C
               <FormItem>
                 <FormLabel>Secondary CTA URL</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Input {...field} maxLength={500} showCount />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -170,21 +170,12 @@ export function HomeHeroEditor({ pageId, section }: { pageId: string, section: C
           />
         </TwoColumnGrid>
 
-        <TwoColumnGrid>
-          <FormField
-            control={form.control}
-            name="hero_aspect_ratio"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Hero Aspect Ratio (W/H)</FormLabel>
-                <FormControl>
-                  <Input {...field} value={field.value ?? ''} placeholder="1440/800" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </TwoColumnGrid>
+        <AntdAlert
+          type="info"
+          showIcon
+          message="Hero Ratio is Fixed by Design"
+          description="Design aspect ratio: 1440/800. Recommended upload size: 1440x800 (or larger with same ratio)."
+        />
 
         <TwoColumnGrid>
           <FormField
@@ -211,7 +202,7 @@ export function HomeHeroEditor({ pageId, section }: { pageId: string, section: C
               <FormItem>
                 <FormLabel>Media Image Alt</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Input {...field} maxLength={125} showCount />
                 </FormControl>
                 <FormMessage />
               </FormItem>

@@ -73,7 +73,7 @@ export function HomePageSettingsEditor({ page }: { page: CmsPage }) {
                 <FormItem>
                   <FormLabel>{ux('internal_name').label ?? 'Internal Name'}</FormLabel>
                   <FormControl>
-                    <Input placeholder="Home - Main" {...field} />
+                    <Input placeholder="Home - Main" {...field} maxLength={80} showCount />
                   </FormControl>
                   <CmsFieldHint formId="home_page_settings" fieldPath="internal_name" />
                   <FormMessage />
@@ -110,7 +110,7 @@ export function HomePageSettingsEditor({ page }: { page: CmsPage }) {
                 <FormItem>
                   <FormLabel>SEO Title</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Input {...field} maxLength={70} showCount />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -123,7 +123,7 @@ export function HomePageSettingsEditor({ page }: { page: CmsPage }) {
                 <FormItem>
                   <FormLabel>{ux('canonical_url').label ?? 'Canonical URL'}</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Input {...field} maxLength={1024} showCount />
                   </FormControl>
                   <CmsFieldHint formId="home_page_settings" fieldPath="canonical_url" />
                   <FormMessage />
@@ -139,7 +139,7 @@ export function HomePageSettingsEditor({ page }: { page: CmsPage }) {
               <FormItem>
                 <FormLabel>Meta Description</FormLabel>
                 <FormControl>
-                  <Textarea {...field} />
+                  <Textarea {...field} maxLength={160} showCount />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -154,7 +154,7 @@ export function HomePageSettingsEditor({ page }: { page: CmsPage }) {
                 <FormItem>
                   <FormLabel>OG Image URL</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Input {...field} maxLength={1024} showCount />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -167,7 +167,7 @@ export function HomePageSettingsEditor({ page }: { page: CmsPage }) {
                 <FormItem>
                   <FormLabel>OG Image Alt</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Input {...field} maxLength={125} showCount />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

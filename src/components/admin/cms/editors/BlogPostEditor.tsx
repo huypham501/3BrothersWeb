@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { z } from 'zod';
-import { Button, Switch, Tooltip, Typography } from 'antd';
+import { Alert as AntdAlert, Button, Switch, Tooltip, Typography } from 'antd';
 import {
   PlusOutlined,
   DeleteOutlined,
@@ -85,7 +85,6 @@ export function BlogPostEditor({ post, mode, role, canPublish }: BlogPostEditorP
       cover_image_bg: post?.cover_image_bg ?? '',
       cover_image_url: post?.cover_image_url ?? '',
       cover_image_alt: post?.cover_image_alt ?? '',
-      cover_aspect_ratio: post?.cover_aspect_ratio ?? '1440/710',
       content: post?.content?.length
         ? post.content
         : [{ id: 'intro', heading: null, body: '' }],
@@ -124,7 +123,6 @@ export function BlogPostEditor({ post, mode, role, canPublish }: BlogPostEditorP
     cover_image_bg: data.cover_image_bg ?? null,
     cover_image_url: data.cover_image_url ?? null,
     cover_image_alt: data.cover_image_alt ?? null,
-    cover_aspect_ratio: data.cover_aspect_ratio ?? null,
     seo_title: data.seo_title ?? null,
     seo_description: data.seo_description ?? null,
     og_image: data.og_image ?? null,
@@ -160,11 +158,14 @@ export function BlogPostEditor({ post, mode, role, canPublish }: BlogPostEditorP
   const handlePublish = () => {
     if (!post) return;
     startPublishTransition(async () => {
+      setErrorMsg(null);
+      setSuccess(null);
       try {
         // First save current form state as draft
         const data = form.getValues();
         await saveBlogPostDraft(post.id, normalizePayload(data));
         await publishBlogPost(post.id);
+        setErrorMsg(null);
         setSuccess('Published successfully!');
         setTimeout(() => setSuccess(null), 3000);
         router.refresh();
@@ -273,7 +274,7 @@ export function BlogPostEditor({ post, mode, role, canPublish }: BlogPostEditorP
                 <FormField control={form.control} name="title" render={({ field }) => (
                   <FormItem>
                     <FormLabel>Title *</FormLabel>
-                    <FormControl><Textarea {...field} rows={2} placeholder="Post title" /></FormControl>
+                    <FormControl><Textarea {...field} rows={2} placeholder="Post title" maxLength={200} showCount /></FormControl>
                     <FormMessage />
                   </FormItem>
                 )} />
@@ -282,7 +283,7 @@ export function BlogPostEditor({ post, mode, role, canPublish }: BlogPostEditorP
                   <FormField control={form.control} name="badge" render={({ field }) => (
                     <FormItem>
                       <FormLabel>Badge</FormLabel>
-                      <FormControl><Input {...field} value={field.value ?? ''} placeholder="e.g. Event • Sắp diễn ra" /></FormControl>
+                      <FormControl><Input {...field} value={field.value ?? ''} placeholder="e.g. Event • Sắp diễn ra" maxLength={60} showCount /></FormControl>
                       <FormMessage />
                     </FormItem>
                   )} />
@@ -291,7 +292,7 @@ export function BlogPostEditor({ post, mode, role, canPublish }: BlogPostEditorP
                 <FormField control={form.control} name="excerpt" render={({ field }) => (
                   <FormItem>
                     <FormLabel>Excerpt</FormLabel>
-                    <FormControl><Textarea {...field} value={field.value ?? ''} rows={3} placeholder="Short description shown in post cards" /></FormControl>
+                    <FormControl><Textarea {...field} value={field.value ?? ''} rows={3} placeholder="Short description shown in post cards" maxLength={300} showCount /></FormControl>
                     <FormMessage />
                   </FormItem>
                 )} />
@@ -309,14 +310,14 @@ export function BlogPostEditor({ post, mode, role, canPublish }: BlogPostEditorP
                   <FormField control={form.control} name="cover_image_url" render={({ field }) => (
                     <FormItem>
                       <FormLabel>Image URL</FormLabel>
-                      <FormControl><Input {...field} value={field.value ?? ''} placeholder="https://..." /></FormControl>
+                      <FormControl><Input {...field} value={field.value ?? ''} placeholder="https://..." maxLength={1024} showCount /></FormControl>
                       <FormMessage />
                     </FormItem>
                   )} />
                   <FormField control={form.control} name="cover_image_alt" render={({ field }) => (
                     <FormItem>
                       <FormLabel>Image Alt Text</FormLabel>
-                      <FormControl><Input {...field} value={field.value ?? ''} placeholder="Describe the image" /></FormControl>
+                      <FormControl><Input {...field} value={field.value ?? ''} placeholder="Describe the image" maxLength={125} showCount /></FormControl>
                       <FormMessage />
                     </FormItem>
                   )} />
@@ -329,17 +330,16 @@ export function BlogPostEditor({ post, mode, role, canPublish }: BlogPostEditorP
                         <span style={{ cursor: 'help', color: '#999', fontSize: 12 }}>(?)</span>
                       </Tooltip>
                     </FormLabel>
-                    <FormControl><Input {...field} value={field.value ?? ''} placeholder="linear-gradient(...)" style={{ fontFamily: 'monospace', fontSize: 12 }} /></FormControl>
+                    <FormControl><Input {...field} value={field.value ?? ''} placeholder="linear-gradient(...)" maxLength={500} showCount style={{ fontFamily: 'monospace', fontSize: 12 }} /></FormControl>
                     <FormMessage />
                   </FormItem>
                 )} />
-                <FormField control={form.control} name="cover_aspect_ratio" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Cover Aspect Ratio (W/H)</FormLabel>
-                    <FormControl><Input {...field} value={field.value ?? ''} placeholder="1440/710" style={{ fontFamily: 'monospace', fontSize: 12 }} /></FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )} />
+                <AntdAlert
+                  type="info"
+                  showIcon
+                  message="Cover Ratio is Fixed by Design"
+                  description="Design aspect ratio: 1440/710. Recommended upload size: 1440x710 (or larger with same ratio)."
+                />
               </SectionStack>
             </AdminCardContent>
           </AdminCard>
@@ -376,8 +376,7 @@ export function BlogPostEditor({ post, mode, role, canPublish }: BlogPostEditorP
                 <FormField control={form.control} name={`content.${index}.id`} render={({ field }) => (
                   <FormItem>
                     <FormLabel>{ux('content.id').label ?? 'Section ID'}</FormLabel>
-                    <FormControl><Input {...field} placeholder="e.g. intro, research" style={{ fontFamily: 'monospace', fontSize: 12 }} /></FormControl>
-                    <CmsFieldHint formId="blog_post" fieldPath="content.id" />
+                    <FormControl><Input {...field} placeholder="e.g. intro, research" maxLength={60} showCount style={{ fontFamily: 'monospace', fontSize: 12 }} /></FormControl>
                     <FormMessage />
                   </FormItem>
                 )} />
@@ -385,7 +384,7 @@ export function BlogPostEditor({ post, mode, role, canPublish }: BlogPostEditorP
                 <FormField control={form.control} name={`content.${index}.heading`} render={({ field }) => (
                   <FormItem>
                     <FormLabel>Heading <span style={{ color: '#888', fontWeight: 400 }}>(optional)</span></FormLabel>
-                    <FormControl><Input {...field} value={field.value ?? ''} onChange={(e) => field.onChange(e.target.value || null)} placeholder="Section heading" /></FormControl>
+                    <FormControl><Input {...field} value={field.value ?? ''} onChange={(e) => field.onChange(e.target.value || null)} placeholder="Section heading" maxLength={120} showCount /></FormControl>
                     <FormMessage />
                   </FormItem>
                 )} />
@@ -435,8 +434,7 @@ export function BlogPostEditor({ post, mode, role, canPublish }: BlogPostEditorP
                     <FormField control={form.control} name={`mid_content.${index}.id`} render={({ field }) => (
                       <FormItem>
                         <FormLabel>{ux('mid_content.id').label ?? 'Section ID'}</FormLabel>
-                        <FormControl><Input {...field} placeholder="e.g. packing, health" style={{ fontFamily: 'monospace', fontSize: 12 }} /></FormControl>
-                        <CmsFieldHint formId="blog_post" fieldPath="mid_content.id" />
+                        <FormControl><Input {...field} placeholder="e.g. packing, health" maxLength={60} showCount style={{ fontFamily: 'monospace', fontSize: 12 }} /></FormControl>
                         <FormMessage />
                       </FormItem>
                     )} />
@@ -444,7 +442,7 @@ export function BlogPostEditor({ post, mode, role, canPublish }: BlogPostEditorP
                     <FormField control={form.control} name={`mid_content.${index}.heading`} render={({ field }) => (
                       <FormItem>
                         <FormLabel>Heading *</FormLabel>
-                        <FormControl><Input {...field} value={field.value ?? ''} onChange={(e) => field.onChange(e.target.value || null)} placeholder="Section heading" /></FormControl>
+                        <FormControl><Input {...field} value={field.value ?? ''} onChange={(e) => field.onChange(e.target.value || null)} placeholder="Section heading" maxLength={120} showCount /></FormControl>
                         <FormMessage />
                       </FormItem>
                     )} />
@@ -474,7 +472,7 @@ export function BlogPostEditor({ post, mode, role, canPublish }: BlogPostEditorP
                 <FormField control={form.control} name="seo_title" render={({ field }) => (
                   <FormItem>
                     <FormLabel>SEO Title</FormLabel>
-                    <FormControl><Input {...field} value={field.value ?? ''} placeholder="Post Title | 3BROTHERS NETWORK" maxLength={70} /></FormControl>
+                    <FormControl><Input {...field} value={field.value ?? ''} placeholder="Post Title | 3BROTHERS NETWORK" maxLength={70} showCount /></FormControl>
                     <FormMessage />
                   </FormItem>
                 )} />
@@ -482,7 +480,7 @@ export function BlogPostEditor({ post, mode, role, canPublish }: BlogPostEditorP
                 <FormField control={form.control} name="seo_description" render={({ field }) => (
                   <FormItem>
                     <FormLabel>SEO Description</FormLabel>
-                    <FormControl><Textarea {...field} value={field.value ?? ''} rows={2} placeholder="Meta description, max 160 characters" maxLength={160} /></FormControl>
+                    <FormControl><Textarea {...field} value={field.value ?? ''} rows={2} placeholder="Meta description, max 160 characters" maxLength={160} showCount /></FormControl>
                     <FormMessage />
                   </FormItem>
                 )} />
@@ -491,7 +489,7 @@ export function BlogPostEditor({ post, mode, role, canPublish }: BlogPostEditorP
                   <FormField control={form.control} name="og_image" render={({ field }) => (
                     <FormItem>
                       <FormLabel>OG Image URL</FormLabel>
-                      <FormControl><Input {...field} value={field.value ?? ''} placeholder="https://..." /></FormControl>
+                      <FormControl><Input {...field} value={field.value ?? ''} placeholder="https://..." maxLength={1024} showCount /></FormControl>
                       <FormMessage />
                     </FormItem>
                   )} />

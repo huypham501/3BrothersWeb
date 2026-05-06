@@ -12,7 +12,6 @@ import { AdminTextarea as Textarea } from '@/components/admin/controls/AdminText
 import { AdminButton as Button } from '@/components/admin/layout/AdminPrimitives';
 import { AdminSwitch as Switch } from '@/components/admin/controls/AdminSwitch';
 import { AdminAlert as Alert, AdminAlertDescription as AlertDescription } from '@/components/admin/layout/AdminPrimitives';
-import { CmsFieldHint } from '@/components/admin/cms/ux/CmsFieldHint';
 import { getCmsFieldUxSpec } from '@/lib/cms/ux/field-ux-spec';
 import {
   FormStack,
@@ -101,19 +100,19 @@ export function ForCreatorsBenefitEditor({ pageId, section }: { pageId: string; 
         </HeaderRow>
 
         <FormField control={form.control} name="section_title" render={({ field }) => (
-          <FormItem><FormLabel>Section Title</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+          <FormItem><FormLabel>Section Title</FormLabel><FormControl><Input {...field} maxLength={120} showCount /></FormControl><FormMessage /></FormItem>
         )} />
 
         <FormField control={form.control} name="section_description" render={({ field }) => (
-          <FormItem><FormLabel>Section Description</FormLabel><FormControl><Textarea {...field} rows={4} /></FormControl><FormMessage /></FormItem>
+          <FormItem><FormLabel>Section Description</FormLabel><FormControl><Textarea {...field} rows={4} maxLength={500} showCount /></FormControl><FormMessage /></FormItem>
         )} />
 
         <TwoColumnGrid>
           <FormField control={form.control} name="contact_cta_label" render={({ field }) => (
-            <FormItem><FormLabel>Contact Button Label</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+            <FormItem><FormLabel>Contact Button Label</FormLabel><FormControl><Input {...field} maxLength={40} showCount /></FormControl><FormMessage /></FormItem>
           )} />
           <FormField control={form.control} name="contact_cta_url" render={({ field }) => (
-            <FormItem><FormLabel>Contact Button URL</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+            <FormItem><FormLabel>Contact Button URL</FormLabel><FormControl><Input {...field} maxLength={500} showCount /></FormControl><FormMessage /></FormItem>
           )} />
         </TwoColumnGrid>
 
@@ -127,16 +126,15 @@ export function ForCreatorsBenefitEditor({ pageId, section }: { pageId: string; 
                   <FormControl>
                     <Input {...field} readOnly />
                   </FormControl>
-                  <CmsFieldHint formId="for_creators_benefit" fieldPath="benefits.id" />
                 </FormItem>
               )} />
 
               <TwoColumnGrid>
                 <FormField control={form.control} name={`benefits.${index}.title`} render={({ field }) => (
-                  <FormItem><FormLabel>Title</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                  <FormItem><FormLabel>Title</FormLabel><FormControl><Input {...field} maxLength={80} showCount /></FormControl><FormMessage /></FormItem>
                 )} />
                 <FormField control={form.control} name={`benefits.${index}.description`} render={({ field }) => (
-                  <FormItem><FormLabel>Description</FormLabel><FormControl><Textarea {...field} rows={3} /></FormControl><FormMessage /></FormItem>
+                  <FormItem><FormLabel>Description</FormLabel><FormControl><Textarea {...field} rows={3} maxLength={300} showCount /></FormControl><FormMessage /></FormItem>
                 )} />
               </TwoColumnGrid>
             </ItemCard>

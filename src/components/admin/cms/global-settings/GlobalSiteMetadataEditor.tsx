@@ -143,14 +143,14 @@ export function GlobalSiteMetadataEditor({
         </SectionCard>
 
         <FormField control={form.control} name="site_name" render={({ field }) => (
-          <FormItem><FormLabel>Site Name</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+          <FormItem><FormLabel>Site Name</FormLabel><FormControl><Input {...field} maxLength={80} showCount /></FormControl><FormMessage /></FormItem>
         )} />
 
         <TwoColumnGrid>
           <FormField control={form.control} name="site_url" render={({ field }) => (
             <FormItem>
               <FormLabel>{ux('site_url').label ?? 'Site URL'}</FormLabel>
-              <FormControl><Input {...field} /></FormControl>
+              <FormControl><Input {...field} maxLength={500} showCount /></FormControl>
               <CmsFieldHint formId="global_site_metadata" fieldPath="site_url" />
               <FormMessage />
             </FormItem>
@@ -158,7 +158,7 @@ export function GlobalSiteMetadataEditor({
           <FormField control={form.control} name="default_canonical_base" render={({ field }) => (
             <FormItem>
               <FormLabel>{ux('default_canonical_base').label ?? 'Default Canonical Base'}</FormLabel>
-              <FormControl><Input {...field} /></FormControl>
+              <FormControl><Input {...field} maxLength={500} showCount /></FormControl>
               <CmsFieldHint formId="global_site_metadata" fieldPath="default_canonical_base" />
               <FormMessage />
             </FormItem>
@@ -167,10 +167,10 @@ export function GlobalSiteMetadataEditor({
 
         <TwoColumnGrid>
           <FormField control={form.control} name="brand_name" render={({ field }) => (
-            <FormItem><FormLabel>Brand Name</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+            <FormItem><FormLabel>Brand Name</FormLabel><FormControl><Input {...field} maxLength={80} showCount /></FormControl><FormMessage /></FormItem>
           )} />
           <FormField control={form.control} name="publisher_name" render={({ field }) => (
-            <FormItem><FormLabel>Publisher Name</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+            <FormItem><FormLabel>Publisher Name</FormLabel><FormControl><Input {...field} maxLength={80} showCount /></FormControl><FormMessage /></FormItem>
           )} />
         </TwoColumnGrid>
       </FormRoot>

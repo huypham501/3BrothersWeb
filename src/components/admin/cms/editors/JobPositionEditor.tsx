@@ -214,7 +214,7 @@ export function JobPositionEditor({
                 <FormItem>
                   <FormLabel>Job Title *</FormLabel>
                   <FormControl>
-                    <Input placeholder="Video Editor" {...field} />
+                    <Input placeholder="Video Editor" {...field} maxLength={200} showCount />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -228,7 +228,7 @@ export function JobPositionEditor({
                 <FormItem>
                   <FormLabel>Department</FormLabel>
                   <FormControl>
-                    <Input placeholder="Creative" {...field} />
+                    <Input placeholder="Creative" {...field} maxLength={80} showCount />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -262,7 +262,7 @@ export function JobPositionEditor({
                 <FormItem>
                   <FormLabel>Location</FormLabel>
                   <FormControl>
-                    <Input placeholder="Hồ Chí Minh" {...field} />
+                    <Input placeholder="Hồ Chí Minh" {...field} maxLength={120} showCount />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -276,7 +276,7 @@ export function JobPositionEditor({
                 <FormItem>
                   <FormLabel>Experience Required</FormLabel>
                   <FormControl>
-                    <Input placeholder="1-3 năm" {...field} />
+                    <Input placeholder="1-3 năm" {...field} maxLength={120} showCount />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -290,7 +290,7 @@ export function JobPositionEditor({
                 <FormItem>
                   <FormLabel>Salary</FormLabel>
                   <FormControl>
-                    <Input placeholder="Thoả thuận" {...field} />
+                    <Input placeholder="Thoả thuận" {...field} maxLength={120} showCount />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -305,7 +305,7 @@ export function JobPositionEditor({
               <FormItem>
                 <FormLabel>Short Description (shown in job card)</FormLabel>
                 <FormControl>
-                  <Textarea rows={2} placeholder="Mô tả ngắn về vị trí..." {...field} />
+                  <Textarea rows={2} placeholder="Mô tả ngắn về vị trí..." {...field} maxLength={400} showCount />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -408,6 +408,8 @@ function DynamicStringList({
                       <Textarea
                         rows={2}
                         placeholder={placeholder}
+                        maxLength={500}
+                        showCount
                         value={inputField.value as string}
                         onChange={inputField.onChange}
                         onBlur={inputField.onBlur}

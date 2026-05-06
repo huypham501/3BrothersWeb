@@ -186,7 +186,7 @@ export function GlobalHeaderEditor({ setting, role, canPublish }: GlobalHeaderEd
               <FormItem>
                 <FormLabel>Logo Text</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Input {...field} maxLength={20} showCount />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -234,7 +234,7 @@ export function GlobalHeaderEditor({ setting, role, canPublish }: GlobalHeaderEd
                   <FormItem>
                     <FormLabel>Label</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input {...field} maxLength={40} showCount />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -248,7 +248,7 @@ export function GlobalHeaderEditor({ setting, role, canPublish }: GlobalHeaderEd
                   <FormItem>
                     <FormLabel>URL</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input {...field} maxLength={500} showCount />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -277,7 +277,7 @@ export function GlobalHeaderEditor({ setting, role, canPublish }: GlobalHeaderEd
               <FormItem>
                 <FormLabel>CTA Label</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Input {...field} maxLength={30} showCount />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -291,7 +291,7 @@ export function GlobalHeaderEditor({ setting, role, canPublish }: GlobalHeaderEd
               <FormItem>
                 <FormLabel>CTA URL</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Input {...field} maxLength={500} showCount />
                 </FormControl>
                 <FormMessage />
               </FormItem>

@@ -146,7 +146,7 @@ export function CareersHeroEditor({
               <FormItem>
                 <FormLabel>Superlabel (uppercase label above title)</FormLabel>
                 <FormControl>
-                  <Input placeholder="Gia nhập đội ngũ" {...field} />
+                  <Input placeholder="Gia nhập đội ngũ" {...field} maxLength={80} showCount />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -160,7 +160,7 @@ export function CareersHeroEditor({
               <FormItem>
                 <FormLabel>Main Title</FormLabel>
                 <FormControl>
-                  <Input placeholder="3Brothers Media" {...field} />
+                  <Input placeholder="3Brothers Media" {...field} maxLength={200} showCount />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -174,7 +174,7 @@ export function CareersHeroEditor({
               <FormItem>
                 <FormLabel>Subtitle</FormLabel>
                 <FormControl>
-                  <Textarea rows={3} placeholder="Chúng tôi đang tìm kiếm..." {...field} />
+                  <Textarea rows={3} placeholder="Chúng tôi đang tìm kiếm..." {...field} maxLength={500} showCount />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -202,7 +202,7 @@ export function CareersHeroEditor({
                       <FormItem>
                         <FormLabel>Title</FormLabel>
                         <FormControl>
-                          <Input placeholder="Phát triển nhanh" {...field} />
+                          <Input placeholder="Phát triển nhanh" {...field} maxLength={80} showCount />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -216,7 +216,7 @@ export function CareersHeroEditor({
                     <FormItem>
                       <FormLabel>Description</FormLabel>
                       <FormControl>
-                        <Textarea rows={2} placeholder="Mô tả ngắn về perk này..." {...field} />
+                        <Textarea rows={2} placeholder="Mô tả ngắn về perk này..." {...field} maxLength={300} showCount />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

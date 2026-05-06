@@ -5,7 +5,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { colors, spacing, typography, mediaQueries, motion } from '@/styles/tokens';
 import { ForCreatorsHeroPayload } from '@/lib/cms/types';
-import { normalizeAspectRatio } from '@/lib/aspect-ratio';
+
+const FOR_CREATORS_HERO_ASPECT_RATIO = '1440 / 670';
 
 const fadeUp = keyframes`
   from { opacity: 0; transform: translateY(24px); }
@@ -13,9 +14,8 @@ const fadeUp = keyframes`
 `;
 
 export function HeroSection({ content }: { content: ForCreatorsHeroPayload }) {
-  const heroAspectRatio = normalizeAspectRatio(content.hero_aspect_ratio, '1440 / 670');
   return (
-    <HeroWrapper $aspectRatio={heroAspectRatio}>
+    <HeroWrapper $aspectRatio={FOR_CREATORS_HERO_ASPECT_RATIO}>
       {content.media_image ? (
         <HeroImageLayer>
           <HeroImage

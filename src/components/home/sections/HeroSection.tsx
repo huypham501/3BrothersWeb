@@ -6,9 +6,10 @@ import { colors, spacing, typography, mediaQueries } from '@/styles/tokens';
 import { HeroBackgroundGraphics } from '../components/HeroBackgroundGraphics';
 import { PrimaryButton } from '../components/PrimaryButton';
 import { SecondaryButton } from '../components/SecondaryButton';
-import { normalizeAspectRatio } from '@/lib/aspect-ratio';
 
 import { HomeHeroPayload } from '@/lib/cms/types';
+
+const HOME_HERO_ASPECT_RATIO = '1440 / 800';
 
 export function HeroSection({
   content,
@@ -19,12 +20,13 @@ export function HeroSection({
   className?: string;
   isComposite?: boolean;
 }) {
-  const heroAspectRatio = normalizeAspectRatio(content.hero_aspect_ratio, '1440 / 800');
   const hasSecondaryCta = Boolean(content.secondary_cta_label && content.secondary_cta_url);
-  const hasMediaImage = Boolean(content.media_image);
+  const mediaImage = content.media_image ?? '';
+  const hasMediaImage = mediaImage.length > 0;
+  const secondaryCtaUrl = content.secondary_cta_url ?? '#';
 
   return (
-    <HeroContainer className={className} $isComposite={isComposite} $aspectRatio={heroAspectRatio}>
+    <HeroContainer className={className} $isComposite={isComposite} $aspectRatio={HOME_HERO_ASPECT_RATIO}>
       <HeroBackgroundGraphics />
       <ContentWrapper>
         <TextBlock>
@@ -38,7 +40,7 @@ export function HeroSection({
               </svg>
             </PrimaryButton>
             {hasSecondaryCta && (
-              <SecondaryButton href={content.secondary_cta_url}>{content.secondary_cta_label}</SecondaryButton>
+              <SecondaryButton href={secondaryCtaUrl}>{content.secondary_cta_label}</SecondaryButton>
             )}
           </ButtonGroup>
         </TextBlock>
@@ -46,7 +48,7 @@ export function HeroSection({
           <HeroMediaStack>
             <HeroMediaImageLayer>
               <Image
-                src={content.media_image}
+                src={mediaImage}
                 alt={content.media_image_alt || 'Hero media'}
                 fill
                 sizes="(max-width: 1024px) 100vw, 563px"

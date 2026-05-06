@@ -44,6 +44,7 @@ export function HomeTrendingEditor({
   const [success, setSuccess] = React.useState(false);
   const [errorMsg, setErrorMsg] = React.useState<string | null>(null);
   const [selectedPostIdToAdd, setSelectedPostIdToAdd] = React.useState('');
+  const [searchKeyword, setSearchKeyword] = React.useState('');
 
   const form = useForm<FormValues>({
     resolver: zodResolver(homeTrendingFormSchema),
@@ -76,6 +77,18 @@ export function HomeTrendingEditor({
   const availablePosts = React.useMemo(
     () => publishedBlogPosts.filter((post) => !selectedSet.has(post.id)),
     [publishedBlogPosts, selectedSet]
+  );
+  const filteredAvailablePosts = React.useMemo(() => {
+    const keyword = searchKeyword.trim().toLowerCase();
+    if (!keyword) return availablePosts;
+    return availablePosts.filter((post) =>
+      `${post.title} ${post.slug}`.toLowerCase().includes(keyword)
+    );
+  }, [availablePosts, searchKeyword]);
+
+  const invalidSelectedIds = React.useMemo(
+    () => selectedIds.filter((id) => !postById.has(id)),
+    [selectedIds, postById]
   );
 
   const onSubmit = async (data: FormValues) => {
@@ -116,6 +129,13 @@ export function HomeTrendingEditor({
       <FormStack onSubmit={form.handleSubmit(onSubmit)}>
         {errorMsg && <Alert variant="destructive"><AlertDescription>{errorMsg}</AlertDescription></Alert>}
         {success && <Alert variant="success"><AlertDescription>Trending section saved successfully.</AlertDescription></Alert>}
+        {invalidSelectedIds.length > 0 && (
+          <Alert variant="destructive">
+            <AlertDescription>
+              {`Found ${invalidSelectedIds.length} invalid selected post reference(s). Please remove or replace them before publish.`}
+            </AlertDescription>
+          </Alert>
+        )}
 
         <HeaderRow>
           <FormField
@@ -143,7 +163,7 @@ export function HomeTrendingEditor({
               <FormItem>
                 <FormLabel>Section Title</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Input {...field} maxLength={80} showCount />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -178,7 +198,7 @@ export function HomeTrendingEditor({
               <FormItem>
                 <FormLabel>View All Label</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Input {...field} maxLength={40} showCount />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -191,7 +211,7 @@ export function HomeTrendingEditor({
               <FormItem>
                 <FormLabel>View All URL</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Input {...field} maxLength={500} showCount />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -206,6 +226,17 @@ export function HomeTrendingEditor({
 
           <TwoColumnGrid>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+              <label style={{ fontSize: 14, fontWeight: 500 }}>Search Published Posts</label>
+              <Input
+                value={searchKeyword}
+                onChange={(e) => setSearchKeyword(e.target.value)}
+                placeholder="Search by title or slug"
+              />
+            </div>
+          </TwoColumnGrid>
+
+          <TwoColumnGrid>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
               <label style={{ fontSize: 14, fontWeight: 500 }}>Published Posts</label>
               <select
                 value={selectedPostIdToAdd}
@@ -213,12 +244,15 @@ export function HomeTrendingEditor({
                 style={{ width: '100%', minHeight: 36, border: '1px solid #d0d5dd', borderRadius: 8, padding: '8px 10px', fontSize: 14, background: '#ffffff' }}
               >
                 <option value="">Select a post…</option>
-                {availablePosts.map((post) => (
+                {filteredAvailablePosts.map((post) => (
                   <option key={post.id} value={post.id}>
                     {post.title} (/{post.slug})
                   </option>
                 ))}
               </select>
+              <ErrorText style={{ color: '#667085' }}>
+                {filteredAvailablePosts.length} result(s)
+              </ErrorText>
             </div>
             <FooterRow style={{ alignItems: 'flex-end' }}>
               <Button type="button" variant="outline" onClick={handleAddPost} disabled={!selectedPostIdToAdd}>
@@ -254,7 +288,9 @@ export function HomeTrendingEditor({
                   </div>
                 </SectionHeaderRow>
                 <ErrorText style={{ color: '#667085' }}>
-                  {post ? `/${post.slug}` : 'This post is not published or no longer available.'}
+                  {post
+                    ? `/${post.slug}${post.published_at ? ` • ${new Date(post.published_at).toLocaleDateString('vi-VN')}` : ''}`
+                    : 'This post is not published or no longer available.'}
                 </ErrorText>
               </ItemCard>
             );

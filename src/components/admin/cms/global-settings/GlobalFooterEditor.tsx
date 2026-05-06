@@ -192,7 +192,7 @@ export function GlobalFooterEditor({ setting, role, canPublish }: GlobalFooterEd
             <FormItem>
               <FormLabel>Thank You Heading</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input {...field} maxLength={120} showCount />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -207,7 +207,7 @@ export function GlobalFooterEditor({ setting, role, canPublish }: GlobalFooterEd
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Input {...field} maxLength={200} showCount />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -251,7 +251,7 @@ export function GlobalFooterEditor({ setting, role, canPublish }: GlobalFooterEd
                   <FormItem>
                     <FormLabel>Label</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input {...field} maxLength={40} showCount />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -265,7 +265,7 @@ export function GlobalFooterEditor({ setting, role, canPublish }: GlobalFooterEd
                   <FormItem>
                     <FormLabel>URL</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input {...field} maxLength={40} showCount />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -308,7 +308,7 @@ export function GlobalFooterEditor({ setting, role, canPublish }: GlobalFooterEd
                   <FormItem>
                     <FormLabel>Label</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input {...field} maxLength={500} showCount />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -322,7 +322,7 @@ export function GlobalFooterEditor({ setting, role, canPublish }: GlobalFooterEd
                   <FormItem>
                     <FormLabel>URL</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input {...field} maxLength={500} showCount />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -350,7 +350,7 @@ export function GlobalFooterEditor({ setting, role, canPublish }: GlobalFooterEd
             <FormItem>
               <FormLabel>Brand Watermark</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input {...field} maxLength={30} showCount />
               </FormControl>
               <FormMessage />
             </FormItem>

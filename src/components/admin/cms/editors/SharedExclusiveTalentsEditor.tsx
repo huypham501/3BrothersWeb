@@ -119,7 +119,7 @@ export function SharedExclusiveTalentsFields({ form }: { form: UseFormReturn<any
           <FormItem>
             <FormLabel>Section Title</FormLabel>
             <FormControl>
-              <Input {...field} />
+              <Input {...field} maxLength={80} showCount />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -128,7 +128,7 @@ export function SharedExclusiveTalentsFields({ form }: { form: UseFormReturn<any
 
       <SectionStack>
         <FormField control={form.control} name="talent_count_label" render={({ field }) => (
-          <FormItem><FormLabel>Talent Count Label</FormLabel><FormControl><Input {...field} placeholder="50+ TALENTS" /></FormControl><FormMessage /></FormItem>
+          <FormItem><FormLabel>Talent Count Label</FormLabel><FormControl><Input {...field} placeholder="50+ TALENTS" maxLength={20} showCount /></FormControl><FormMessage /></FormItem>
         )} />
 
         <SectionHeaderRow>
@@ -166,10 +166,10 @@ export function SharedExclusiveTalentsFields({ form }: { form: UseFormReturn<any
 
             <TwoColumnGrid>
               <FormField control={form.control} name={`talents.${index}.name`} render={({ field }) => (
-                <FormItem><FormLabel>Name</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                <FormItem><FormLabel>Name</FormLabel><FormControl><Input {...field} maxLength={60} showCount /></FormControl><FormMessage /></FormItem>
               )} />
               <FormField control={form.control} name={`talents.${index}.handle`} render={({ field }) => (
-                <FormItem><FormLabel>Handle (e.g. @username)</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                <FormItem><FormLabel>Handle (e.g. @username)</FormLabel><FormControl><Input {...field} maxLength={40} showCount /></FormControl><FormMessage /></FormItem>
               )} />
             </TwoColumnGrid>
 
@@ -180,12 +180,12 @@ export function SharedExclusiveTalentsFields({ form }: { form: UseFormReturn<any
                 </FormControl><FormMessage /></FormItem>
               )} />
               <FormField control={form.control} name={`talents.${index}.photo_alt`} render={({ field }) => (
-                <FormItem><FormLabel>Photo Alt Text</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                <FormItem><FormLabel>Photo Alt Text</FormLabel><FormControl><Input {...field} maxLength={125} showCount /></FormControl><FormMessage /></FormItem>
               )} />
             </TwoColumnGrid>
 
             <FormField control={form.control} name={`talents.${index}.description`} render={({ field }) => (
-              <FormItem><FormLabel>Description</FormLabel><FormControl><Textarea {...field} rows={4} /></FormControl><FormMessage /></FormItem>
+              <FormItem><FormLabel>Description</FormLabel><FormControl><Textarea {...field} rows={4} maxLength={800} showCount /></FormControl><FormMessage /></FormItem>
             )} />
 
             <SectionStack>
@@ -194,10 +194,10 @@ export function SharedExclusiveTalentsFields({ form }: { form: UseFormReturn<any
                 {[0, 1].map((statIndex) => (
                   <ItemCard key={`talent-${item.id}-stat-${statIndex}`}>
                     <FormField control={form.control} name={`talents.${index}.stats.${statIndex}.label`} render={({ field }) => (
-                      <FormItem><FormLabel>Stat Label</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                      <FormItem><FormLabel>Stat Label</FormLabel><FormControl><Input {...field} maxLength={30} showCount /></FormControl><FormMessage /></FormItem>
                     )} />
                     <FormField control={form.control} name={`talents.${index}.stats.${statIndex}.value`} render={({ field }) => (
-                      <FormItem><FormLabel>Stat Value</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                      <FormItem><FormLabel>Stat Value</FormLabel><FormControl><Input {...field} maxLength={20} showCount /></FormControl><FormMessage /></FormItem>
                     )} />
                   </ItemCard>
                 ))}

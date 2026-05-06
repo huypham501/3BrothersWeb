@@ -99,13 +99,13 @@ export function ForCreatorsTestimonialsEditor({ pageId, section }: { pageId: str
           <FormField control={form.control} name="superlabel" render={({ field }) => (
             <FormItem>
               <FormLabel>{ux('superlabel').label ?? 'Superlabel'}</FormLabel>
-              <FormControl><Input {...field} /></FormControl>
+              <FormControl><Input {...field} maxLength={120} showCount /></FormControl>
               <CmsFieldHint formId="for_creators_testimonials" fieldPath="superlabel" />
               <FormMessage />
             </FormItem>
           )} />
           <FormField control={form.control} name="section_title" render={({ field }) => (
-            <FormItem><FormLabel>Section Title</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+            <FormItem><FormLabel>Section Title</FormLabel><FormControl><Input {...field} maxLength={120} showCount /></FormControl><FormMessage /></FormItem>
           )} />
         </TwoColumnGrid>
 
@@ -119,14 +119,14 @@ export function ForCreatorsTestimonialsEditor({ pageId, section }: { pageId: str
           {fields.map((item, index) => (
             <ItemCard key={item.id}>
               <FormField control={form.control} name={`testimonials.${index}.quote`} render={({ field }) => (
-                <FormItem><FormLabel>Quote</FormLabel><FormControl><Textarea {...field} rows={3} /></FormControl><FormMessage /></FormItem>
+                <FormItem><FormLabel>Quote</FormLabel><FormControl><Textarea {...field} rows={3} maxLength={400} showCount /></FormControl><FormMessage /></FormItem>
               )} />
               <TwoColumnGrid>
                 <FormField control={form.control} name={`testimonials.${index}.name`} render={({ field }) => (
-                  <FormItem><FormLabel>Name</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                  <FormItem><FormLabel>Name</FormLabel><FormControl><Input {...field} maxLength={60} showCount /></FormControl><FormMessage /></FormItem>
                 )} />
                 <FormField control={form.control} name={`testimonials.${index}.role`} render={({ field }) => (
-                  <FormItem><FormLabel>Role</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                  <FormItem><FormLabel>Role</FormLabel><FormControl><Input {...field} maxLength={120} showCount /></FormControl><FormMessage /></FormItem>
                 )} />
               </TwoColumnGrid>
               <FooterRow>

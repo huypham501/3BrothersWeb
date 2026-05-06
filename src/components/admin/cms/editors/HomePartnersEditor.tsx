@@ -107,7 +107,7 @@ export function HomePartnersEditor({ pageId, section }: { pageId: string, sectio
                   <FormItem>
                     <FormLabel>Name</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input {...field} maxLength={60} showCount />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -137,7 +137,7 @@ export function HomePartnersEditor({ pageId, section }: { pageId: string, sectio
                   <FormItem>
                     <FormLabel>URL</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input {...field} maxLength={500} showCount />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

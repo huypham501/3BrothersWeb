@@ -200,7 +200,17 @@ const PATH_TO_KEY: Record<string, string> = {
 };
 
 export function getActiveKey(pathname: string): string {
-  return PATH_TO_KEY[pathname] ?? 'overview';
+  if (PATH_TO_KEY[pathname]) return PATH_TO_KEY[pathname];
+
+  if (pathname.startsWith('/admin/content/pages/blogs/')) {
+    return 'blogs-cms';
+  }
+
+  if (pathname.startsWith('/admin/content/pages/careers/')) {
+    return 'careers-cms';
+  }
+
+  return 'overview';
 }
 
 // ─── Key → open group keys ─────────────────────────────────────────────────────
@@ -262,5 +272,15 @@ const PATH_TO_BREADCRUMB: Record<string, BreadcrumbSegment[]> = {
 };
 
 export function getBreadcrumb(pathname: string): BreadcrumbSegment[] {
-  return PATH_TO_BREADCRUMB[pathname] ?? [ROOT_CRUMB];
+  if (PATH_TO_BREADCRUMB[pathname]) return PATH_TO_BREADCRUMB[pathname];
+
+  if (pathname.startsWith('/admin/content/pages/blogs/')) {
+    return [ROOT_CRUMB, { label: 'Pages' }, { label: 'Blogs CMS' }, { label: 'Edit Post' }];
+  }
+
+  if (pathname.startsWith('/admin/content/pages/careers/')) {
+    return [ROOT_CRUMB, { label: 'Pages' }, { label: 'Careers CMS' }, { label: 'Edit Position' }];
+  }
+
+  return [ROOT_CRUMB];
 }

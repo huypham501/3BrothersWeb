@@ -51,7 +51,6 @@ export interface HomeHeroPayload {
   secondary_cta_url?: string | null;
   media_image?: string | null;
   media_image_alt?: string | null;
-  hero_aspect_ratio?: string | null;
 }
 
 export interface HomePartnersPayload {
@@ -136,7 +135,6 @@ export interface ForCreatorsHeroPayload {
   secondary_cta_url: string;
   media_image?: string | null;
   media_image_alt?: string | null;
-  hero_aspect_ratio?: string | null;
 }
 
 export interface ForCreatorsBenefitPayload {
@@ -214,7 +212,6 @@ export interface BlogPostFormPayload {
   cover_image_bg: string | null;
   cover_image_url: string | null;
   cover_image_alt: string | null;
-  cover_aspect_ratio: string | null;
   content: BlogPostContentSection[];
   mid_content: BlogPostContentSection[];
   seo_title: string | null;

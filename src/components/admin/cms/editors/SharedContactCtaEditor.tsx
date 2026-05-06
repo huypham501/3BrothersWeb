@@ -36,7 +36,7 @@ export function SharedContactCtaFields({ form }: { form: UseFormReturn<any> }) {
           <FormItem>
             <FormLabel>Title</FormLabel>
             <FormControl>
-              <Input {...field} />
+              <Input {...field} maxLength={120} showCount />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -50,7 +50,7 @@ export function SharedContactCtaFields({ form }: { form: UseFormReturn<any> }) {
           <FormItem>
             <FormLabel>Subtitle</FormLabel>
             <FormControl>
-              <Textarea {...field} />
+              <Textarea {...field} maxLength={400} showCount />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -65,7 +65,7 @@ export function SharedContactCtaFields({ form }: { form: UseFormReturn<any> }) {
             <FormItem>
               <FormLabel>CTA Label</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input {...field} maxLength={40} showCount />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -78,7 +78,7 @@ export function SharedContactCtaFields({ form }: { form: UseFormReturn<any> }) {
             <FormItem>
               <FormLabel>CTA URL</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input {...field} maxLength={500} showCount />
               </FormControl>
               <FormMessage />
             </FormItem>

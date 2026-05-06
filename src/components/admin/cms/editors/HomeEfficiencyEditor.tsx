@@ -104,7 +104,7 @@ export function HomeEfficiencyEditor({ pageId, section }: { pageId: string, sect
             <FormItem>
               <FormLabel>Section Title</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input {...field} maxLength={100} showCount />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -118,7 +118,7 @@ export function HomeEfficiencyEditor({ pageId, section }: { pageId: string, sect
             <FormItem>
               <FormLabel>Description</FormLabel>
               <FormControl>
-                <Textarea {...field} />
+                <Textarea {...field} maxLength={400} showCount />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -133,7 +133,7 @@ export function HomeEfficiencyEditor({ pageId, section }: { pageId: string, sect
               <FormItem>
                 <FormLabel>Primary CTA Label</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Input {...field} maxLength={40} showCount />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -146,7 +146,7 @@ export function HomeEfficiencyEditor({ pageId, section }: { pageId: string, sect
               <FormItem>
                 <FormLabel>Primary CTA URL</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Input {...field} maxLength={500} showCount />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -162,7 +162,7 @@ export function HomeEfficiencyEditor({ pageId, section }: { pageId: string, sect
               <FormItem>
                 <FormLabel>Secondary CTA Label</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Input {...field} maxLength={40} showCount />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -175,7 +175,7 @@ export function HomeEfficiencyEditor({ pageId, section }: { pageId: string, sect
               <FormItem>
                 <FormLabel>Secondary CTA URL</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Input {...field} maxLength={500} showCount />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -200,7 +200,7 @@ export function HomeEfficiencyEditor({ pageId, section }: { pageId: string, sect
                   <FormItem>
                     <FormLabel>Title</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input {...field} maxLength={60} showCount />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -213,7 +213,7 @@ export function HomeEfficiencyEditor({ pageId, section }: { pageId: string, sect
                   <FormItem>
                     <FormLabel>Description (Optional)</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input {...field} maxLength={100} showCount />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -226,7 +226,7 @@ export function HomeEfficiencyEditor({ pageId, section }: { pageId: string, sect
                   <FormItem>
                     <FormLabel>Number</FormLabel>
                     <FormControl>
-                      <Input {...field} placeholder="30M+" />
+                      <Input {...field} placeholder="30M+" maxLength={20} showCount />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

@@ -150,7 +150,7 @@ export function GlobalSeoDefaultsEditor({
         <FormField control={form.control} name="default_title_template" render={({ field }) => (
           <FormItem>
             <FormLabel>Default Title Template</FormLabel>
-            <FormControl><Input {...field} /></FormControl>
+            <FormControl><Input {...field} maxLength={120} showCount /></FormControl>
             <MetaText>
               Supported placeholders: <code>{'{{page_title}}'}</code>, <code>{'{{site_name}}'}</code>, <code>{'{{brand_name}}'}</code>
             </MetaText>
@@ -159,7 +159,7 @@ export function GlobalSeoDefaultsEditor({
         )} />
 
         <FormField control={form.control} name="default_meta_description" render={({ field }) => (
-          <FormItem><FormLabel>Default Meta Description</FormLabel><FormControl><Textarea {...field} rows={4} /></FormControl><FormMessage /></FormItem>
+          <FormItem><FormLabel>Default Meta Description</FormLabel><FormControl><Textarea {...field} rows={4} maxLength={160} showCount /></FormControl><FormMessage /></FormItem>
         )} />
 
         <FormField
@@ -189,7 +189,7 @@ export function GlobalSeoDefaultsEditor({
             </FormControl><FormMessage /></FormItem>
           )} />
           <FormField control={form.control} name="default_og_image_alt" render={({ field }) => (
-            <FormItem><FormLabel>Default OG Image Alt</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+            <FormItem><FormLabel>Default OG Image Alt</FormLabel><FormControl><Input {...field} maxLength={125} showCount /></FormControl><FormMessage /></FormItem>
           )} />
         </TwoColumnGrid>
 
@@ -212,7 +212,7 @@ export function GlobalSeoDefaultsEditor({
           <FormField control={form.control} name="default_robots" render={({ field }) => (
             <FormItem>
               <FormLabel>{ux('default_robots').label ?? 'Default Robots'}</FormLabel>
-              <FormControl><Input {...field} /></FormControl>
+              <FormControl><Input {...field} maxLength={80} showCount /></FormControl>
               <CmsFieldHint formId="global_seo_defaults" fieldPath="default_robots" />
               <FormMessage />
             </FormItem>

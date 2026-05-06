@@ -101,7 +101,7 @@ export function HomeCoreCompetenciesEditor({ pageId, section }: { pageId: string
             <FormItem>
               <FormLabel>Section Title</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input {...field} maxLength={80} showCount />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -125,7 +125,7 @@ export function HomeCoreCompetenciesEditor({ pageId, section }: { pageId: string
                   <FormItem>
                     <FormLabel>Title</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input {...field} maxLength={60} showCount />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -138,7 +138,7 @@ export function HomeCoreCompetenciesEditor({ pageId, section }: { pageId: string
                   <FormItem>
                     <FormLabel>Description</FormLabel>
                     <FormControl>
-                      <Textarea {...field} />
+                      <Textarea {...field} maxLength={300} showCount />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -169,7 +169,7 @@ export function HomeCoreCompetenciesEditor({ pageId, section }: { pageId: string
                     <FormItem>
                       <FormLabel>Link URL (Optional)</FormLabel>
                       <FormControl>
-                        <Input {...field} />
+                        <Input {...field} maxLength={500} showCount />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

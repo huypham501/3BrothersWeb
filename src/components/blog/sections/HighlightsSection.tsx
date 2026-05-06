@@ -4,7 +4,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import styled from 'styled-components';
 import { colors, spacing, typography, mediaQueries, borderRadius, motion } from '@/styles/tokens';
-import { normalizeAspectRatio } from '@/lib/aspect-ratio';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -16,9 +15,10 @@ export interface FeaturedPost {
   date: string;
   heroImageUrl?: string | null;
   heroImageAlt?: string | null;
-  heroAspectRatio?: string | null;
   heroBg: string;
 }
+
+const BLOG_FEATURED_ASPECT_RATIO = '1440 / 710';
 
 const DEFAULT_FEATURED: FeaturedPost = {
   slug: '2025-tang-toc-media-he-sinh-thai-influence',
@@ -29,7 +29,6 @@ const DEFAULT_FEATURED: FeaturedPost = {
   date: '12 Jan 2026',
   heroImageUrl: null,
   heroImageAlt: null,
-  heroAspectRatio: '1440/710',
   heroBg: 'linear-gradient(180deg, #001a5c 0%, #003CA6 35%, #0050d0 60%, #061530 100%)',
 };
 
@@ -37,11 +36,10 @@ const DEFAULT_FEATURED: FeaturedPost = {
 
 export function HighlightsSection({ featuredPost }: { featuredPost?: FeaturedPost }) {
   const post = featuredPost ?? DEFAULT_FEATURED;
-  const heroAspectRatio = normalizeAspectRatio(post.heroAspectRatio, '1440 / 710');
   return (
     <SectionContainer>
       {/* Full-width hero image with dark overlay */}
-      <HeroImageWrapper $aspectRatio={heroAspectRatio}>
+      <HeroImageWrapper $aspectRatio={BLOG_FEATURED_ASPECT_RATIO}>
         {post.heroImageUrl ? (
           <HeroImageAsset
             src={post.heroImageUrl}
