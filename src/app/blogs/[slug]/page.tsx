@@ -23,6 +23,10 @@ function formatBlogDate(dateStr: string | null): string {
   });
 }
 
+function toCoverBackground(imageUrl: string | null | undefined): string {
+  return imageUrl ? `url("${imageUrl}")` : 'none';
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const post = await getPublishedBlogPostBySlug(slug);
@@ -85,10 +89,7 @@ export default async function BlogDetailPage({ params }: Props) {
     title: post.published_title ?? post.title,
     badge: post.published_badge ?? post.badge,
     date: formatBlogDate(post.published_at),
-    heroImageBg:
-      post.published_cover_image_bg ??
-      post.cover_image_bg ??
-      'linear-gradient(135deg, #003CA6 0%, #1a56c4 50%, #0a3080 100%)',
+    heroImageBg: toCoverBackground(post.published_cover_image_url ?? post.cover_image_url),
     sections: publishedContent.map((s) => ({
       id: s.id,
       heading: s.heading,
@@ -108,10 +109,7 @@ export default async function BlogDetailPage({ params }: Props) {
     date: new Date(p.published_at ?? p.created_at)
       .toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
       .toUpperCase(),
-    imageBg:
-      p.published_cover_image_bg ??
-      p.cover_image_bg ??
-      'linear-gradient(135deg, #003CA6 0%, #1a56c4 50%, #0a3080 100%)',
+    imageBg: toCoverBackground(p.published_cover_image_url ?? p.cover_image_url),
   }));
 
   return (

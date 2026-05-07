@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { z } from 'zod';
-import { Button, Switch, Tooltip, Typography } from 'antd';
+import { Button, Switch, Typography } from 'antd';
 import {
   PlusOutlined,
   DeleteOutlined,
@@ -80,7 +80,6 @@ export function BlogPostEditor({ post, mode, role, canPublish }: BlogPostEditorP
       title: post?.title ?? '',
       badge: post?.badge ?? '',
       excerpt: post?.excerpt ?? '',
-      cover_image_bg: post?.cover_image_bg ?? '',
       cover_image_url: post?.cover_image_url ?? '',
       cover_image_alt: post?.cover_image_alt ?? '',
       content: post?.content?.length
@@ -118,7 +117,6 @@ export function BlogPostEditor({ post, mode, role, canPublish }: BlogPostEditorP
     ...data,
     badge: data.badge ?? null,
     excerpt: data.excerpt ?? null,
-    cover_image_bg: data.cover_image_bg ?? null,
     cover_image_url: data.cover_image_url ?? null,
     cover_image_alt: data.cover_image_alt ?? null,
     seo_title: data.seo_title ?? null,
@@ -307,18 +305,6 @@ export function BlogPostEditor({ post, mode, role, canPublish }: BlogPostEditorP
                     </FormItem>
                   )} />
                 </TwoColumnGrid>
-                <FormField control={form.control} name="cover_image_bg" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      Cover Gradient Fallback{' '}
-                      <Tooltip title="CSS background-image value used when no image URL is set. E.g. linear-gradient(135deg, #003CA6 0%, #1a56c4 100%)">
-                        <span style={{ cursor: 'help', color: '#999', fontSize: 12 }}>(?)</span>
-                      </Tooltip>
-                    </FormLabel>
-                    <FormControl><Input {...field} value={field.value ?? ''} placeholder="linear-gradient(...)" maxLength={500} showCount style={{ fontFamily: 'monospace', fontSize: 12 }} /></FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )} />
                 <Alert
                   message="Cover Ratio is Fixed by Design"
                   description="Design aspect ratio: 1440/710. Recommended upload size: 1440x710 (or larger with same ratio)."

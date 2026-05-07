@@ -48,6 +48,10 @@ function formatBlogDate(dateStr: string | null): string {
     .toUpperCase();
 }
 
+function toCoverBackground(imageUrl: string | null | undefined): string {
+  return imageUrl ? `url("${imageUrl}")` : 'none';
+}
+
 export default async function BlogPage() {
   const [featuredRaw, allPosts, layout] = await Promise.all([
     getFeaturedBlogPost(),
@@ -64,10 +68,7 @@ export default async function BlogPage() {
         date: formatBlogDate(featuredRaw.published_at),
         heroImageUrl: featuredRaw.published_cover_image_url ?? featuredRaw.cover_image_url,
         heroImageAlt: featuredRaw.published_cover_image_alt ?? featuredRaw.cover_image_alt,
-        heroBg:
-          featuredRaw.published_cover_image_bg ??
-          featuredRaw.cover_image_bg ??
-          'linear-gradient(180deg, #001a5c 0%, #003CA6 35%, #0050d0 60%, #061530 100%)',
+        heroBg: toCoverBackground(featuredRaw.published_cover_image_url ?? featuredRaw.cover_image_url),
       }
     : undefined;
 
@@ -76,10 +77,7 @@ export default async function BlogPage() {
     slug: p.slug,
     title: p.published_title ?? p.title,
     date: formatBlogDate(p.published_at),
-    imageBg:
-      p.published_cover_image_bg ??
-      p.cover_image_bg ??
-      'linear-gradient(135deg, #003CA6 0%, #1a56c4 50%, #0a3080 100%)',
+    imageBg: toCoverBackground(p.published_cover_image_url ?? p.cover_image_url),
   }));
 
   return (

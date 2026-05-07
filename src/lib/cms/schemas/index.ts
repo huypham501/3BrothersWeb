@@ -267,7 +267,6 @@ export const blogPostFormSchema = z.object({
   title: z.string().min(1).max(200),
   badge: z.string().max(60).nullable().optional(),
   excerpt: z.string().max(300).nullable().optional(),
-  cover_image_bg: z.string().max(500).nullable().optional(),
   cover_image_url: z.string().max(1024).nullable().optional(),
   cover_image_alt: z.string().max(125).nullable().optional(),
   content: z.array(blogPostContentSectionSchema).max(20),

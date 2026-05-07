@@ -93,7 +93,6 @@ export interface CmsBlogPost {
   title: string;
   badge: string | null;
   excerpt: string | null;
-  cover_image_bg: string | null;
   cover_image_url: string | null;
   cover_image_alt: string | null;
   content: Array<{ id: string; heading: string | null; body: string }>;
@@ -113,7 +112,6 @@ export interface CmsBlogPost {
   published_title: string | null;
   published_badge: string | null;
   published_excerpt: string | null;
-  published_cover_image_bg: string | null;
   published_cover_image_url: string | null;
   published_cover_image_alt: string | null;
   published_content: Array<{ id: string; heading: string | null; body: string }> | null;

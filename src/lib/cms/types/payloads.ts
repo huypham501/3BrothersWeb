@@ -209,7 +209,6 @@ export interface BlogPostFormPayload {
   title: string;
   badge: string | null;
   excerpt: string | null;
-  cover_image_bg: string | null;
   cover_image_url: string | null;
   cover_image_alt: string | null;
   content: BlogPostContentSection[];
