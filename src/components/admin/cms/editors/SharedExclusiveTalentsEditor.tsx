@@ -176,7 +176,17 @@ export function SharedExclusiveTalentsFields({ form }: { form: UseFormReturn<any
             <TwoColumnGrid>
               <FormField control={form.control} name={`talents.${index}.photo`} render={({ field }) => (
                 <FormItem><FormLabel>Photo</FormLabel><FormControl>
-                  <AdminImageUpload value={field.value} onChange={field.onChange} label="Talent Photo" />
+                  <AdminImageUpload
+                    value={field.value}
+                    onChange={(nextUrl) => {
+                      form.setValue(`talents.${index}.photo`, nextUrl, {
+                        shouldDirty: true,
+                        shouldTouch: true,
+                        shouldValidate: true,
+                      });
+                    }}
+                    label="Talent Photo"
+                  />
                 </FormControl><FormMessage /></FormItem>
               )} />
               <FormField control={form.control} name={`talents.${index}.photo_alt`} render={({ field }) => (

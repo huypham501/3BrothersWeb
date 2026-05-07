@@ -187,7 +187,17 @@ export function GlobalSeoDefaultsEditor({
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 24 }}>
             <FormField control={form.control} name="default_og_image" render={({ field }) => (
               <FormItem><FormLabel>Default OG Image</FormLabel><FormControl>
-                <AdminImageUpload value={field.value} onChange={field.onChange} label="Default OG Image" />
+                <AdminImageUpload
+                  value={field.value}
+                  onChange={(nextUrl) => {
+                    form.setValue('default_og_image', nextUrl, {
+                      shouldDirty: true,
+                      shouldTouch: true,
+                      shouldValidate: true,
+                    });
+                  }}
+                  label="Default OG Image"
+                />
               </FormControl><FormMessage /></FormItem>
             )} />
             <FormField control={form.control} name="default_og_image_alt" render={({ field }) => (

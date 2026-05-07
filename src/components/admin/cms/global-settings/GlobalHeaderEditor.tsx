@@ -193,7 +193,13 @@ export function GlobalHeaderEditor({ setting, role, canPublish }: GlobalHeaderEd
                 <FormControl>
                   <AdminImageUpload
                     value={field.value}
-                    onChange={field.onChange}
+                    onChange={(nextUrl) => {
+                      form.setValue('logo_image', nextUrl, {
+                        shouldDirty: true,
+                        shouldTouch: true,
+                        shouldValidate: true,
+                      });
+                    }}
                     label="Logo Image"
                   />
                 </FormControl>

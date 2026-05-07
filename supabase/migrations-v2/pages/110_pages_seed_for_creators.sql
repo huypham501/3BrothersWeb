@@ -110,22 +110,30 @@ BEGIN
         {
           "id": "income",
           "title": "Tăng trưởng thu nhập",
-          "description": "Tối ưu hoá thu nhập từ nhiều nguồn: Quảng Cáo, hợp tác thương thiệu và bán hàng trực tuyến"
+          "description": "Tối ưu hoá thu nhập từ nhiều nguồn: Quảng Cáo, hợp tác thương thiệu và bán hàng trực tuyến",
+          "icon_image": "/images/for-creators/benefits/income.svg",
+          "icon_image_alt": "Icon tăng trưởng thu nhập"
         },
         {
           "id": "brand",
           "title": "Kết nối nhãn hàng",
-          "description": "Tiếp cận với hàng trăm thương hiệu hàng đầu Việt Nam và quốc tế đang tìm kiếm KOLs phù hợp"
+          "description": "Tiếp cận với hàng trăm thương hiệu hàng đầu Việt Nam và quốc tế đang tìm kiếm KOLs phù hợp",
+          "icon_image": "/images/for-creators/benefits/brand.svg",
+          "icon_image_alt": "Icon kết nối nhãn hàng"
         },
         {
           "id": "management",
           "title": "Quản lý chuyên nghiệp",
-          "description": "Đội ngũ quản lý tận tâm, hỗ trợ bạn từ hợp đồng, lịch trình đến chiến lược phát triển dài hạn"
+          "description": "Đội ngũ quản lý tận tâm, hỗ trợ bạn từ hợp đồng, lịch trình đến chiến lược phát triển dài hạn",
+          "icon_image": "/images/for-creators/benefits/management.svg",
+          "icon_image_alt": "Icon quản lý chuyên nghiệp"
         },
         {
           "id": "content",
           "title": "Hỗ trợ nội dung",
-          "description": "Studio chuyên nghiệp, đội ngũ sản xuất sáng tạo giúp nâng tầm chất lượng video và hình ảnh"
+          "description": "Studio chuyên nghiệp, đội ngũ sản xuất sáng tạo giúp nâng tầm chất lượng video và hình ảnh",
+          "icon_image": "/images/for-creators/benefits/content.svg",
+          "icon_image_alt": "Icon hỗ trợ nội dung"
         }
       ]
     }'::jsonb,
@@ -138,22 +146,30 @@ BEGIN
         {
           "id": "income",
           "title": "Tăng trưởng thu nhập",
-          "description": "Tối ưu hoá thu nhập từ nhiều nguồn: Quảng Cáo, hợp tác thương thiệu và bán hàng trực tuyến"
+          "description": "Tối ưu hoá thu nhập từ nhiều nguồn: Quảng Cáo, hợp tác thương thiệu và bán hàng trực tuyến",
+          "icon_image": "/images/for-creators/benefits/income.svg",
+          "icon_image_alt": "Icon tăng trưởng thu nhập"
         },
         {
           "id": "brand",
           "title": "Kết nối nhãn hàng",
-          "description": "Tiếp cận với hàng trăm thương hiệu hàng đầu Việt Nam và quốc tế đang tìm kiếm KOLs phù hợp"
+          "description": "Tiếp cận với hàng trăm thương hiệu hàng đầu Việt Nam và quốc tế đang tìm kiếm KOLs phù hợp",
+          "icon_image": "/images/for-creators/benefits/brand.svg",
+          "icon_image_alt": "Icon kết nối nhãn hàng"
         },
         {
           "id": "management",
           "title": "Quản lý chuyên nghiệp",
-          "description": "Đội ngũ quản lý tận tâm, hỗ trợ bạn từ hợp đồng, lịch trình đến chiến lược phát triển dài hạn"
+          "description": "Đội ngũ quản lý tận tâm, hỗ trợ bạn từ hợp đồng, lịch trình đến chiến lược phát triển dài hạn",
+          "icon_image": "/images/for-creators/benefits/management.svg",
+          "icon_image_alt": "Icon quản lý chuyên nghiệp"
         },
         {
           "id": "content",
           "title": "Hỗ trợ nội dung",
-          "description": "Studio chuyên nghiệp, đội ngũ sản xuất sáng tạo giúp nâng tầm chất lượng video và hình ảnh"
+          "description": "Studio chuyên nghiệp, đội ngũ sản xuất sáng tạo giúp nâng tầm chất lượng video và hình ảnh",
+          "icon_image": "/images/for-creators/benefits/content.svg",
+          "icon_image_alt": "Icon hỗ trợ nội dung"
         }
       ]
     }'::jsonb,

@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { Button, Image, Input, Space, Typography, Upload, theme } from 'antd';
 import type { UploadProps } from 'antd';
-import { CloseOutlined, UploadOutlined } from '@ant-design/icons';
+import { CloseOutlined, CloudUploadOutlined } from '@ant-design/icons';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -152,7 +152,7 @@ export function AdminImageUpload({
           disabled={disabled || uploading}
         >
           <Button
-            icon={<UploadOutlined />}
+            icon={<CloudUploadOutlined style={{ fontSize: 14, width: 14, height: 14 }} />}
             loading={uploading}
             disabled={disabled}
             title="Tải ảnh lên từ máy tính (tối đa 3 MB)"

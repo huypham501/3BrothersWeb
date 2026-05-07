@@ -184,7 +184,13 @@ export function HomeHeroEditor({ pageId, section }: { pageId: string, section: C
                 <FormControl>
                   <AdminImageUpload
                     value={field.value}
-                    onChange={field.onChange}
+                    onChange={(nextUrl) => {
+                      form.setValue('media_image', nextUrl, {
+                        shouldDirty: true,
+                        shouldTouch: true,
+                        shouldValidate: true,
+                      });
+                    }}
                     label="Media Image"
                   />
                 </FormControl>

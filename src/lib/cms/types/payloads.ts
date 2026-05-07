@@ -146,6 +146,8 @@ export interface ForCreatorsBenefitPayload {
     id: 'income' | 'brand' | 'management' | 'content';
     title: string;
     description: string;
+    icon_image: string;
+    icon_image_alt?: string | null;
   }>;
 }
 

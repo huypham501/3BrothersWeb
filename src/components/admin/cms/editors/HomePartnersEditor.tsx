@@ -122,7 +122,13 @@ export function HomePartnersEditor({ pageId, section }: { pageId: string, sectio
                     <FormControl>
                       <AdminImageUpload
                         value={field.value}
-                        onChange={field.onChange}
+                        onChange={(nextUrl) => {
+                          form.setValue(`partners.${index}.logo_image`, nextUrl, {
+                            shouldDirty: true,
+                            shouldTouch: true,
+                            shouldValidate: true,
+                          });
+                        }}
                         label="Logo Image"
                       />
                     </FormControl>

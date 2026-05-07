@@ -154,7 +154,13 @@ export function HomeCoreCompetenciesEditor({ pageId, section }: { pageId: string
                       <FormControl>
                         <AdminImageUpload
                           value={field.value}
-                          onChange={field.onChange}
+                          onChange={(nextUrl) => {
+                            form.setValue(`services.${index}.image`, nextUrl, {
+                              shouldDirty: true,
+                              shouldTouch: true,
+                              shouldValidate: true,
+                            });
+                          }}
                           label="Service Image"
                         />
                       </FormControl>

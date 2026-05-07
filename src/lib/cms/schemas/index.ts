@@ -203,6 +203,8 @@ export const forCreatorsBenefitSchema = z.object({
       id: z.enum(['income', 'brand', 'management', 'content']),
       title: z.string().max(80),
       description: z.string().max(300),
+      icon_image: z.string().min(1).max(1024),
+      icon_image_alt: z.string().max(125).nullable().optional(),
     })
   ).length(4),
 });

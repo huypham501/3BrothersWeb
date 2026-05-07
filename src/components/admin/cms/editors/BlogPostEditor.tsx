@@ -18,6 +18,7 @@ import type { CmsBlogPost } from '@/lib/cms';
 import { saveBlogPostDraft, publishBlogPost, createBlogPostWithSlug } from '@/lib/cms/blog-actions';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/admin/controls/AdminForm';
 import { AdminInput as Input } from '@/components/admin/controls/AdminInput';
+import { AdminImageUpload } from '@/components/admin/controls/AdminImageUpload';
 import { AdminTextarea as Textarea } from '@/components/admin/controls/AdminTextarea';
 import { AdminAlert as Alert, AdminAlertDescription as AlertDescription } from '@/components/admin/layout/AdminPrimitives';
 import {
@@ -161,6 +162,8 @@ export function BlogPostEditor({ post, mode, role, canPublish }: BlogPostEditorP
         const data = form.getValues();
         await saveBlogPostDraft(post.id, normalizePayload(data));
         await publishBlogPost(post.id);
+        // Clear dirty state immediately so Publish button disables after success.
+        form.reset(data);
         setErrorMsg(null);
         setSuccess('Published successfully!');
         setTimeout(() => setSuccess(null), 3000);
@@ -172,6 +175,7 @@ export function BlogPostEditor({ post, mode, role, canPublish }: BlogPostEditorP
   };
 
   const hasUnpublished = post?.has_unpublished_changes ?? true;
+  const canPublishNow = hasUnpublished || form.formState.isDirty;
   const keywordsString = form.watch('keywords').join(', ');
   const ux = (fieldPath: string) => getCmsFieldUxSpec('blog_post', fieldPath);
 
@@ -181,7 +185,7 @@ export function BlogPostEditor({ post, mode, role, canPublish }: BlogPostEditorP
       {mode === 'edit' && post && (
         <CmsEditorStatusBar
           pageTitle={post.title}
-          hasUnpublished={hasUnpublished}
+          hasUnpublished={canPublishNow}
           lastEditedBy={post.last_edited_by_identifier}
           lastEditedAt={post.last_edited_at}
           lastPublishedBy={post.last_published_by_identifier}
@@ -293,7 +297,19 @@ export function BlogPostEditor({ post, mode, role, canPublish }: BlogPostEditorP
                   <FormField control={form.control} name="cover_image_url" render={({ field }) => (
                     <FormItem>
                       <FormLabel>Image URL</FormLabel>
-                      <FormControl><Input {...field} value={field.value ?? ''} placeholder="https://..." maxLength={1024} showCount /></FormControl>
+                      <FormControl>
+                        <AdminImageUpload
+                          value={field.value}
+                          onChange={(nextUrl) => {
+                            form.setValue('cover_image_url', nextUrl, {
+                              shouldDirty: true,
+                              shouldTouch: true,
+                              shouldValidate: true,
+                            });
+                          }}
+                          label="Cover Image"
+                        />
+                      </FormControl>
                       <FormMessage />
                     </FormItem>
                   )} />

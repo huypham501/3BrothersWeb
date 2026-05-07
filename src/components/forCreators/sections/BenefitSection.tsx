@@ -2,56 +2,19 @@
 
 import styled from 'styled-components';
 import Link from 'next/link';
+import Image from 'next/image';
 import { colors, spacing, typography, mediaQueries, motion } from '@/styles/tokens';
 import { ForCreatorsBenefitPayload } from '@/lib/cms/types';
 
-function IncomeIcon() {
+function renderBenefitIcon(item: ForCreatorsBenefitPayload['benefits'][number]) {
   return (
-    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M20 5v30M26.667 10H16.667C14.826 10 13.333 11.493 13.333 13.333s1.493 3.334 3.334 3.334h6.666c1.841 0 3.334 1.493 3.334 3.333S23.174 23.333 21.333 23.333H13.333" stroke="#003CA6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-    </svg>
+    <CmsIconImage
+      src={item.icon_image}
+      alt={item.icon_image_alt || item.title}
+      width={40}
+      height={40}
+    />
   );
-}
-
-function BrandIcon() {
-  return (
-    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M5 20a15 15 0 1 0 30 0A15 15 0 0 0 5 20zM15 10l10 10-10 10" stroke="#003CA6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-    </svg>
-  );
-}
-
-function ManagementIcon() {
-  return (
-    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M20 5C11.716 5 5 11.716 5 20s6.716 15 15 15 15-6.716 15-15S28.284 5 20 5z" stroke="#003CA6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-      <path d="M20 13.333v8.334l5 5" stroke="#003CA6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-    </svg>
-  );
-}
-
-function ContentIcon() {
-  return (
-    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect x="5" y="8.333" width="30" height="23.333" rx="3" stroke="#003CA6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-      <path d="M16.667 15l8.333 5-8.333 5V15z" stroke="#003CA6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-    </svg>
-  );
-}
-
-function resolveBenefitIcon(id: ForCreatorsBenefitPayload['benefits'][number]['id']) {
-  switch (id) {
-    case 'income':
-      return <IncomeIcon />;
-    case 'brand':
-      return <BrandIcon />;
-    case 'management':
-      return <ManagementIcon />;
-    case 'content':
-      return <ContentIcon />;
-    default:
-      return <IncomeIcon />;
-  }
 }
 
 export function BenefitSection({ content }: { content: ForCreatorsBenefitPayload }) {
@@ -67,16 +30,15 @@ export function BenefitSection({ content }: { content: ForCreatorsBenefitPayload
         </TopRow>
 
         <BenefitGrid>
-          {content.benefits.map((item, idx) => [
-            <BenefitItem key={item.id}>
-              <IconBox>{resolveBenefitIcon(item.id)}</IconBox>
+          {content.benefits.map((item, idx) => (
+            <BenefitItem key={item.id} $hasDivider={idx > 0}>
+              <IconBox>{renderBenefitIcon(item)}</IconBox>
               <BenefitText>
                 <BenefitTitle>{item.title}</BenefitTitle>
                 <BenefitDesc>{item.description}</BenefitDesc>
               </BenefitText>
-            </BenefitItem>,
-            idx < content.benefits.length - 1 && <Divider key={`sep-${item.id}`} />,
-          ])}
+            </BenefitItem>
+          ))}
         </BenefitGrid>
       </Inner>
     </SectionContainer>
@@ -118,14 +80,13 @@ const Inner = styled.div`
 `;
 
 const TopRow = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-  align-items: flex-end;
-  gap: 80px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  column-gap: 48px;
 
   ${mediaQueries.down.lg} {
-    flex-direction: column;
+    grid-template-columns: 1fr;
     align-items: flex-start;
     gap: ${spacing.xl};
   }
@@ -192,41 +153,39 @@ const ContactButton = styled(Link)`
 `;
 
 const BenefitGrid = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 40px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
 
   ${mediaQueries.down.lg} {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: ${spacing.xl};
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: ${spacing.xl};
+  }
+
+  ${mediaQueries.down.sm} {
+    grid-template-columns: 1fr;
   }
 `;
 
-const Divider = styled.div`
-  width: 1px;
-  height: 320px;
-  background: ${colors.secondaryDark};
-  opacity: 0.2;
-  flex-shrink: 0;
-
-  ${mediaQueries.down.lg} {
-    display: none;
-  }
-`;
-
-const BenefitItem = styled.div`
+const BenefitItem = styled.div<{ $hasDivider: boolean }>`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 56px;
-  flex: 1;
+  gap: 40px;
   min-width: 0;
+  padding: 0 40px;
+  border-left: ${({ $hasDivider }) => ($hasDivider ? `1px solid ${colors.secondaryDark}` : 'none')};
+  border-left-color: rgba(6, 21, 48, 0.2);
 
   ${mediaQueries.down.lg} {
     gap: ${spacing.xl};
     width: 100%;
+    padding: 0 24px;
+  }
+
+  ${mediaQueries.down.sm} {
+    border-left: none;
+    border-top: ${({ $hasDivider }) => ($hasDivider ? `1px solid rgba(6, 21, 48, 0.2)` : 'none')};
+    padding: 24px 0 0;
   }
 `;
 
@@ -244,6 +203,12 @@ const IconBox = styled.div`
   ${BenefitItem}:hover & {
     transform: translateY(-4px);
   }
+`;
+
+const CmsIconImage = styled(Image)`
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
 `;
 
 const BenefitText = styled.div`

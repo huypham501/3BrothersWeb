@@ -9,6 +9,7 @@ import { savePageSection } from '@/lib/cms/actions';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/admin/controls/AdminForm';
 import { AdminInput as Input } from '@/components/admin/controls/AdminInput';
 import { AdminTextarea as Textarea } from '@/components/admin/controls/AdminTextarea';
+import { AdminImageUpload } from '@/components/admin/controls/AdminImageUpload';
 import { AdminButton as Button } from '@/components/admin/layout/AdminPrimitives';
 import { AdminSwitch as Switch } from '@/components/admin/controls/AdminSwitch';
 import { AdminAlert as Alert, AdminAlertDescription as AlertDescription } from '@/components/admin/layout/AdminPrimitives';
@@ -27,7 +28,6 @@ import { z } from 'zod';
 type FormValues = z.infer<typeof forCreatorsBenefitSchema> & { enabled: boolean };
 
 const BENEFIT_IDS: Array<FormValues['benefits'][number]['id']> = ['income', 'brand', 'management', 'content'];
-
 export function ForCreatorsBenefitEditor({ pageId, section }: { pageId: string; section: CmsPageSection<z.infer<typeof forCreatorsBenefitSchema>> }) {
   const router = useRouter();
   const [isSaving, setIsSaving] = React.useState(false);
@@ -36,10 +36,18 @@ export function ForCreatorsBenefitEditor({ pageId, section }: { pageId: string; 
 
   const parsedContent = forCreatorsBenefitSchema.safeParse(section.content);
   const content = parsedContent.success ? parsedContent.data : null;
-
   const defaults = content?.benefits?.length
-    ? content.benefits
-    : BENEFIT_IDS.map((id) => ({ id, title: '', description: '' }));
+    ? content.benefits.map((item) => ({
+        ...item,
+        icon_image_alt: item.icon_image_alt || '',
+      }))
+    : BENEFIT_IDS.map((id) => ({
+        id,
+        title: '',
+        description: '',
+        icon_image: '',
+        icon_image_alt: '',
+      }));
 
   const form = useForm<FormValues>({
     resolver: zodResolver(forCreatorsBenefitSchema.extend({ enabled: z.boolean() })),
@@ -135,6 +143,31 @@ export function ForCreatorsBenefitEditor({ pageId, section }: { pageId: string; 
                 )} />
                 <FormField control={form.control} name={`benefits.${index}.description`} render={({ field }) => (
                   <FormItem><FormLabel>Description</FormLabel><FormControl><Textarea {...field} rows={3} maxLength={300} showCount /></FormControl><FormMessage /></FormItem>
+                )} />
+              </TwoColumnGrid>
+
+              <TwoColumnGrid>
+                <FormField control={form.control} name={`benefits.${index}.icon_image`} render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Icon Image</FormLabel>
+                    <FormControl>
+                      <AdminImageUpload
+                        value={field.value}
+                        onChange={(nextUrl) => {
+                          form.setValue(`benefits.${index}.icon_image`, nextUrl, {
+                            shouldDirty: true,
+                            shouldTouch: true,
+                            shouldValidate: true,
+                          });
+                        }}
+                        label="Benefit Icon Image"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )} />
+                <FormField control={form.control} name={`benefits.${index}.icon_image_alt`} render={({ field }) => (
+                  <FormItem><FormLabel>Icon Image Alt</FormLabel><FormControl><Input {...field} value={field.value ?? ''} maxLength={125} showCount /></FormControl><FormMessage /></FormItem>
                 )} />
               </TwoColumnGrid>
             </ItemCard>

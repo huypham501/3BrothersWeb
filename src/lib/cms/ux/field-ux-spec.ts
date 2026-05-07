@@ -114,7 +114,7 @@ export const CMS_FIELD_UX_SPECS: Record<string, CmsFormUxSpec> = {
     'benefits.id': {
       label: 'Benefit Key',
       what: 'System key of this benefit card.',
-      why: 'Maps this content to a fixed slot/icon in UI.',
+      why: 'Maps this content to a fixed slot in UI.',
       validation: 'Must be one of: income, brand, management, content.',
       impact: 'Read-only; changing keys requires code/schema updates.',
     },

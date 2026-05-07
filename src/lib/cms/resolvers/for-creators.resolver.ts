@@ -38,6 +38,21 @@ export interface ForCreatorsViewModel {
   };
 }
 
+function normalizeBenefitPayload(
+  payload: ForCreatorsBenefitPayload | null
+): ForCreatorsBenefitPayload | null {
+  if (!payload) return null;
+
+  return {
+    ...payload,
+    benefits: payload.benefits.map((benefit) => ({
+      ...benefit,
+      icon_image: benefit.icon_image,
+      icon_image_alt: benefit.icon_image_alt ?? null,
+    })),
+  };
+}
+
 export async function resolveForCreatorsPageData(): Promise<ForCreatorsViewModel | null> {
   const data = await getForCreatorsPageData();
   if (!data || !data.page) return null;
@@ -59,10 +74,12 @@ export async function resolveForCreatorsPageData(): Promise<ForCreatorsViewModel
       findSectionContentBySchemaKey(data.sections, SCHEMA_KEYS.FOR_CREATORS_HERO),
       'for-creators.sections.hero'
     ),
-    benefit: validateCmsPayloadBySchemaKey(
-      SCHEMA_KEYS.FOR_CREATORS_BENEFIT,
-      findSectionContentBySchemaKey(data.sections, SCHEMA_KEYS.FOR_CREATORS_BENEFIT),
-      'for-creators.sections.benefit'
+    benefit: normalizeBenefitPayload(
+      validateCmsPayloadBySchemaKey(
+        SCHEMA_KEYS.FOR_CREATORS_BENEFIT,
+        findSectionContentBySchemaKey(data.sections, SCHEMA_KEYS.FOR_CREATORS_BENEFIT),
+        'for-creators.sections.benefit'
+      )
     ),
     testimonials: validateCmsPayloadBySchemaKey(
       SCHEMA_KEYS.FOR_CREATORS_TESTIMONIALS,
