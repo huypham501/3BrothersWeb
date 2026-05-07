@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
-import { useForm, useFieldArray } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CmsBlogPost, CmsPageSection, homeTrendingSchema } from '@/lib/cms';
 import { savePageSection } from '@/lib/cms/actions';
@@ -59,11 +59,6 @@ export function HomeTrendingEditor({
     },
   });
 
-  const { fields, append, remove, move } = useFieldArray({
-    control: form.control,
-    name: 'selected_post_ids',
-  });
-
   const watchedSelectedIds = form.watch('selected_post_ids');
   const selectedIds = React.useMemo(() => watchedSelectedIds ?? [], [watchedSelectedIds]);
   const limit = form.watch('limit') || 3;
@@ -117,7 +112,10 @@ export function HomeTrendingEditor({
       return;
     }
 
-    append(selectedPostIdToAdd);
+    form.setValue('selected_post_ids', [...selectedIds, selectedPostIdToAdd], {
+      shouldDirty: true,
+      shouldValidate: true,
+    });
     setSelectedPostIdToAdd('');
     setErrorMsg(null);
   };
@@ -265,24 +263,42 @@ export function HomeTrendingEditor({
             {ux('selected_post_ids').what ?? 'Select and order published posts for Home Trending.'}
           </ErrorText>
 
-          {fields.map((field, index) => {
-            const postId = selectedIds[index];
+          {selectedIds.map((postId, index) => {
             const post = postById.get(postId);
 
+            const moveSelected = (from: number, to: number) => {
+              if (to < 0 || to >= selectedIds.length) return;
+              const next = [...selectedIds];
+              const [item] = next.splice(from, 1);
+              next.splice(to, 0, item);
+              form.setValue('selected_post_ids', next, {
+                shouldDirty: true,
+                shouldValidate: true,
+              });
+            };
+
+            const removeSelected = (targetIndex: number) => {
+              const next = selectedIds.filter((_, i) => i !== targetIndex);
+              form.setValue('selected_post_ids', next, {
+                shouldDirty: true,
+                shouldValidate: true,
+              });
+            };
+
             return (
-              <ItemCard key={field.id}>
+              <ItemCard key={`${postId}-${index}`}>
                 <SectionHeaderRow>
                   <SectionTitle style={{ margin: 0 }}>
                     {post ? post.title : `Missing post: ${postId}`}
                   </SectionTitle>
                   <div style={{ display: 'flex', gap: 8 }}>
-                    <Button type="button" variant="outline" size="sm" onClick={() => move(index, index - 1)} disabled={index === 0}>
+                    <Button type="button" variant="outline" size="sm" onClick={() => moveSelected(index, index - 1)} disabled={index === 0}>
                       Up
                     </Button>
-                    <Button type="button" variant="outline" size="sm" onClick={() => move(index, index + 1)} disabled={index === fields.length - 1}>
+                    <Button type="button" variant="outline" size="sm" onClick={() => moveSelected(index, index + 1)} disabled={index === selectedIds.length - 1}>
                       Down
                     </Button>
-                    <Button type="button" variant="destructive" size="sm" onClick={() => remove(index)}>
+                    <Button type="button" variant="destructive" size="sm" onClick={() => removeSelected(index)}>
                       Remove
                     </Button>
                   </div>
