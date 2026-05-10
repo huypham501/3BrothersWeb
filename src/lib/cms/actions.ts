@@ -501,10 +501,11 @@ export async function publishSharedSection(schemaKey: SupportedSharedSchemaKey) 
 
   if (
     schemaKey !== SCHEMA_KEYS.SHARED_EXCLUSIVE_TALENTS &&
-    schemaKey !== SCHEMA_KEYS.SHARED_CONTACT_CTA
+    schemaKey !== SCHEMA_KEYS.SHARED_CONTACT_CTA &&
+    schemaKey !== SCHEMA_KEYS.SHARED_CTA
   ) {
     throw new Error(
-      `Publishing is currently only supported for ${SCHEMA_KEYS.SHARED_EXCLUSIVE_TALENTS} and ${SCHEMA_KEYS.SHARED_CONTACT_CTA}.`
+      `Publishing is currently only supported for ${SCHEMA_KEYS.SHARED_EXCLUSIVE_TALENTS}, ${SCHEMA_KEYS.SHARED_CONTACT_CTA}, and ${SCHEMA_KEYS.SHARED_CTA}.`
     );
   }
 

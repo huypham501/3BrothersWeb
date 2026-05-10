@@ -106,6 +106,13 @@ export const sharedContactCtaSchema = z.object({
   cta_url: urlOrHash,
 });
 
+export const sharedCtaSchema = z.object({
+  heading: z.string().max(180),
+  subtitle: z.string().max(300),
+  cta_label: z.string().max(40),
+  cta_url: urlOrHash,
+});
+
 export const homeHeroSchema = z.object({
   title: z.string().max(120),
   subtext: z.string().max(300),
@@ -287,6 +294,7 @@ export const CMS_REGISTRY = {
   [SCHEMA_KEYS.GLOBAL_SITE_METADATA]: globalSiteMetadataSchema,
   [SCHEMA_KEYS.SHARED_EXCLUSIVE_TALENTS]: sharedExclusiveTalentsSchema,
   [SCHEMA_KEYS.SHARED_CONTACT_CTA]: sharedContactCtaSchema,
+  [SCHEMA_KEYS.SHARED_CTA]: sharedCtaSchema,
   [SCHEMA_KEYS.HOME_HERO]: homeHeroSchema,
   [SCHEMA_KEYS.HOME_PARTNERS]: homePartnersSchema,
   [SCHEMA_KEYS.HOME_CORE_COMPETENCIES]: homeCoreCompetenciesSchema,

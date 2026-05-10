@@ -13,6 +13,12 @@ export const SUPPORTED_SHARED_SECTIONS = [
     description: 'Shared contact call-to-action block used on multiple pages.',
     editorPath: '/admin/content/shared/contact-cta',
   },
+  {
+    schemaKey: SCHEMA_KEYS.SHARED_CTA,
+    title: 'CTA',
+    description: 'Shared CTA banner reused across creator-focused pages.',
+    editorPath: '/admin/content/shared/cta',
+  },
 ] as const;
 
 export type SupportedSharedSchemaKey = typeof SUPPORTED_SHARED_SECTIONS[number]['schemaKey'];

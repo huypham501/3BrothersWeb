@@ -10,12 +10,11 @@ import {
   CmsSharedSection,
   CmsGlobalSetting,
   forCreatorsBenefitSchema,
-  forCreatorsCtaSchema,
   forCreatorsHeroSchema,
   forCreatorsTestimonialsSchema,
   globalFooterSchema,
   globalHeaderSchema,
-  sharedContactCtaSchema,
+  sharedCtaSchema,
   sharedExclusiveTalentsSchema,
 } from '@/lib/cms';
 import { publishForCreatorsPage } from '@/lib/cms/actions';
@@ -34,7 +33,6 @@ import { HomePageSettingsEditor } from './editors/HomePageSettingsEditor';
 import { ForCreatorsHeroEditor } from './editors/ForCreatorsHeroEditor';
 import { ForCreatorsBenefitEditor } from './editors/ForCreatorsBenefitEditor';
 import { ForCreatorsTestimonialsEditor } from './editors/ForCreatorsTestimonialsEditor';
-import { ForCreatorsCtaEditor } from './editors/ForCreatorsCtaEditor';
 
 interface ForCreatorsPageEditorProps {
   page: CmsPage;
@@ -45,7 +43,7 @@ interface ForCreatorsPageEditorProps {
   };
   shared: {
     exclusiveTalents: CmsSharedSection<z.infer<typeof sharedExclusiveTalentsSchema>> | null;
-    contactCta: CmsSharedSection<z.infer<typeof sharedContactCtaSchema>> | null;
+    cta: CmsSharedSection<z.infer<typeof sharedCtaSchema>> | null;
   };
   role: string;
   canPublish: boolean;
@@ -84,13 +82,12 @@ export function ForCreatorsPageEditor({
   const heroSection = findLocal<z.infer<typeof forCreatorsHeroSchema>>('for_creators.hero.v1');
   const benefitSection = findLocal<z.infer<typeof forCreatorsBenefitSchema>>('for_creators.benefit.v1');
   const testimonialsSection = findLocal<z.infer<typeof forCreatorsTestimonialsSchema>>('for_creators.testimonials.v1');
-  const ctaSection = findLocal<z.infer<typeof forCreatorsCtaSchema>>('for_creators.cta.v1');
 
   const dependencies: CmsDependency[] = [
     { label: 'Header', connected: !!globals.header, kind: 'global', editHref: '/admin/content/settings/header' },
     { label: 'Footer', connected: !!globals.footer, kind: 'global', editHref: '/admin/content/settings/footer' },
     { label: 'Exclusive Talents', connected: !!shared.exclusiveTalents, kind: 'shared', editHref: '/admin/content/shared/exclusive-talents' },
-    { label: 'Contact CTA', connected: !!shared.contactCta, kind: 'shared', editHref: '/admin/content/shared/contact-cta' },
+    { label: 'CTA', connected: !!shared.cta, kind: 'shared', editHref: '/admin/content/shared/cta' },
   ];
 
   return (
@@ -136,12 +133,6 @@ export function ForCreatorsPageEditor({
               <AccordionItem value="testimonials">
                 <AccordionTrigger><span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>Testimonials <AdminBadge tone="info">Local</AdminBadge></span></AccordionTrigger>
                 <AccordionContent><ForCreatorsTestimonialsEditor pageId={page.id} section={testimonialsSection} /></AccordionContent>
-              </AccordionItem>
-            )}
-            {ctaSection && (
-              <AccordionItem value="cta">
-                <AccordionTrigger><span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>CTA Banner <AdminBadge tone="info">Local</AdminBadge></span></AccordionTrigger>
-                <AccordionContent><ForCreatorsCtaEditor pageId={page.id} section={ctaSection} /></AccordionContent>
               </AccordionItem>
             )}
           </Accordion>

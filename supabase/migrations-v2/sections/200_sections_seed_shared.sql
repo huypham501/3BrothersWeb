@@ -78,5 +78,24 @@ INSERT INTO shared_sections (
   }'::jsonb,
   true,
   false
+),
+(
+  'shared.cta.v1',
+  'shared.cta.v1',
+  true,
+  '{
+    "heading": "Sẵn Sàng Bắt Đầu\nHành Trình Cùng Chúng Tôi?",
+    "subtitle": "Đăng ký ngay hôm nay để trở thành một phần của cộng đồng creator hàng đầu Việt Nam.",
+    "cta_label": "Gia nhập 3Brothers",
+    "cta_url": "/contact"
+  }'::jsonb,
+  '{
+    "heading": "Sẵn Sàng Bắt Đầu\nHành Trình Cùng Chúng Tôi?",
+    "subtitle": "Đăng ký ngay hôm nay để trở thành một phần của cộng đồng creator hàng đầu Việt Nam.",
+    "cta_label": "Gia nhập 3Brothers",
+    "cta_url": "/contact"
+  }'::jsonb,
+  true,
+  false
 )
 ON CONFLICT (schema_key) DO NOTHING;

@@ -11,6 +11,10 @@ export const SHARED_SECTION_USAGE_MAP: Record<SupportedSharedSchemaKey, string[]
     '/social-commerce',
     '/careers/[slug]',
   ],
+  [SCHEMA_KEYS.SHARED_CTA]: [
+    '/for-creators',
+    '/social-commerce',
+  ],
 };
 
 export function resolveSharedSectionUsage(schemaKey: SupportedSharedSchemaKey): string[] {

@@ -161,12 +161,15 @@ export interface ForCreatorsTestimonialsPayload {
   }>;
 }
 
-export interface ForCreatorsCtaPayload {
+export interface CtaPayload {
   heading: string;
   subtitle: string;
   cta_label: string;
   cta_url: string;
 }
+
+// Backward-compatible alias for existing imports.
+export type ForCreatorsCtaPayload = CtaPayload;
 
 // ── Careers ──────────────────────────────────────────────────────────────────
 

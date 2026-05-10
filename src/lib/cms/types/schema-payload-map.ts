@@ -2,7 +2,7 @@ import type { SCHEMA_KEYS } from '../constants/schema-keys';
 import type {
   CareersHeroPayload,
   ForCreatorsBenefitPayload,
-  ForCreatorsCtaPayload,
+  CtaPayload,
   ForCreatorsHeroPayload,
   ForCreatorsTestimonialsPayload,
   GlobalFooterPayload,
@@ -30,10 +30,11 @@ export interface CmsSchemaPayloadMap {
   [SCHEMA_KEYS.HOME_TRENDING]: HomeTrendingPayload;
   [SCHEMA_KEYS.SHARED_EXCLUSIVE_TALENTS]: SharedExclusiveTalentsPayload;
   [SCHEMA_KEYS.SHARED_CONTACT_CTA]: SharedContactCtaPayload;
+  [SCHEMA_KEYS.SHARED_CTA]: CtaPayload;
   [SCHEMA_KEYS.FOR_CREATORS_HERO]: ForCreatorsHeroPayload;
   [SCHEMA_KEYS.FOR_CREATORS_BENEFIT]: ForCreatorsBenefitPayload;
   [SCHEMA_KEYS.FOR_CREATORS_TESTIMONIALS]: ForCreatorsTestimonialsPayload;
-  [SCHEMA_KEYS.FOR_CREATORS_CTA]: ForCreatorsCtaPayload;
+  [SCHEMA_KEYS.FOR_CREATORS_CTA]: CtaPayload;
   [SCHEMA_KEYS.CAREERS_HERO]: CareersHeroPayload;
 }
 
@@ -49,11 +50,13 @@ export type CmsSectionSchemaKey =
   | typeof SCHEMA_KEYS.FOR_CREATORS_CTA
   | typeof SCHEMA_KEYS.SHARED_EXCLUSIVE_TALENTS
   | typeof SCHEMA_KEYS.SHARED_CONTACT_CTA
+  | typeof SCHEMA_KEYS.SHARED_CTA
   | typeof SCHEMA_KEYS.CAREERS_HERO;
 
 export type CmsSharedSchemaKey =
   | typeof SCHEMA_KEYS.SHARED_EXCLUSIVE_TALENTS
-  | typeof SCHEMA_KEYS.SHARED_CONTACT_CTA;
+  | typeof SCHEMA_KEYS.SHARED_CONTACT_CTA
+  | typeof SCHEMA_KEYS.SHARED_CTA;
 
 export type CmsGlobalSchemaKey =
   | typeof SCHEMA_KEYS.GLOBAL_HEADER

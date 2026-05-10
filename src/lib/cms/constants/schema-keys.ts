@@ -10,6 +10,7 @@ export const SCHEMA_KEYS = {
     HOME_TRENDING: 'home.trending.v1',
     SHARED_EXCLUSIVE_TALENTS: 'shared.exclusive_talents.v1',
     SHARED_CONTACT_CTA: 'shared.contact_cta.v1',
+    SHARED_CTA: 'shared.cta.v1',
     FOR_CREATORS_HERO: 'for_creators.hero.v1',
     FOR_CREATORS_BENEFIT: 'for_creators.benefit.v1',
     FOR_CREATORS_TESTIMONIALS: 'for_creators.testimonials.v1',

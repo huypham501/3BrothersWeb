@@ -3,19 +3,20 @@
 import styled from 'styled-components';
 import Link from 'next/link';
 import { colors, spacing, typography, mediaQueries, motion } from '@/styles/tokens';
-import type { ForCreatorsCtaPayload } from '@/lib/cms/types';
+import type { CtaPayload } from '@/lib/cms/types';
 
 const CONTACT_CTA_BG_IMAGE = '/images/home/contact-cta-bg.png';
 const CONTACT_CTA_BG_ASPECT_RATIO = '2880 / 1843';
 const CONTACT_CTA_BG_WIDTH = '1440px';
 
-interface ForCreatorsCTASectionViewProps {
-  content: ForCreatorsCtaPayload;
+interface CTASectionViewProps {
+  content: CtaPayload;
 }
 
-export function ForCreatorsCTASectionView({ content }: ForCreatorsCTASectionViewProps) {
+export function CTASectionView({ content }: CTASectionViewProps) {
   return (
     <SectionContainer>
+      <BackgroundLayer aria-hidden="true" />
       <ContentBlock>
         <Heading dangerouslySetInnerHTML={{ __html: content.heading.replace(/\n/g, '<br />') }} />
         <Subtitle>{content.subtitle}</Subtitle>
@@ -49,41 +50,40 @@ const SectionContainer = styled.section`
   text-align: center;
   overflow: hidden;
 
-  &::before {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    width: ${CONTACT_CTA_BG_WIDTH};
-    height: auto;
-    aspect-ratio: ${CONTACT_CTA_BG_ASPECT_RATIO};
-    transform: translateX(-50%);
-    background-image: url('${CONTACT_CTA_BG_IMAGE}');
-    background-repeat: no-repeat;
-    background-position: center top;
-    background-size: 100% auto;
-    -webkit-mask-image:
-      linear-gradient(to right, transparent 0%, black 20%, black 80%, transparent 100%),
-      linear-gradient(to bottom, transparent 0%, black 12%, black 100%);
-    mask-image:
-      linear-gradient(to right, transparent 0%, black 20%, black 80%, transparent 100%),
-      linear-gradient(to bottom, transparent 0%, black 12%, black 100%);
-    -webkit-mask-repeat: no-repeat, no-repeat;
-    mask-repeat: no-repeat, no-repeat;
-    -webkit-mask-size: 100% 100%, 100% 100%;
-    mask-size: 100% 100%, 100% 100%;
-    -webkit-mask-composite: source-in;
-    mask-composite: intersect;
-    pointer-events: none;
-    z-index: 0;
-  }
-
   ${mediaQueries.down.sm} {
     padding: 80px ${spacing.lg};
+  }
+`;
 
-    &::before {
-      background-position: center -40px;
-    }
+const BackgroundLayer = styled.div`
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: ${CONTACT_CTA_BG_WIDTH};
+  height: auto;
+  aspect-ratio: ${CONTACT_CTA_BG_ASPECT_RATIO};
+  transform: translateX(-50%);
+  background-image: url('${CONTACT_CTA_BG_IMAGE}');
+  background-repeat: no-repeat;
+  background-position: center top;
+  background-size: 100% auto;
+  -webkit-mask-image:
+    linear-gradient(to right, transparent 0%, black 20%, black 80%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, black 12%, black 100%);
+  mask-image:
+    linear-gradient(to right, transparent 0%, black 20%, black 80%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, black 12%, black 100%);
+  -webkit-mask-repeat: no-repeat, no-repeat;
+  mask-repeat: no-repeat, no-repeat;
+  -webkit-mask-size: 100% 100%, 100% 100%;
+  mask-size: 100% 100%, 100% 100%;
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
+  pointer-events: none;
+  z-index: 0;
+
+  ${mediaQueries.down.sm} {
+    background-position: center -40px;
   }
 `;
 

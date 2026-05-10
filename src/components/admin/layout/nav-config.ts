@@ -104,6 +104,13 @@ export const CMS_NAV: NavItem[] = [
         href: '/admin/content/shared/contact-cta',
         iconName: 'LinkOutlined',
       },
+      {
+        type: 'leaf',
+        key: 'cta',
+        label: 'CTA',
+        href: '/admin/content/shared/cta',
+        iconName: 'LinkOutlined',
+      },
     ],
   },
 
@@ -189,6 +196,7 @@ const PATH_TO_KEY: Record<string, string> = {
   '/admin/content/shared': 'shared',         // group overview
   '/admin/content/shared/exclusive-talents': 'exclusive-talents',
   '/admin/content/shared/contact-cta': 'contact-cta',
+  '/admin/content/shared/cta': 'cta',
   '/admin/content/settings': 'settings',     // group overview
   '/admin/content/settings/header': 'settings-header',
   '/admin/content/settings/footer': 'settings-footer',
@@ -223,6 +231,7 @@ const KEY_TO_OPEN_GROUPS: Record<string, string[]> = {
   'shared': ['shared'],
   'exclusive-talents': ['shared'],
   'contact-cta': ['shared'],
+  'cta': ['shared'],
   'settings': ['settings'],
   'settings-header': ['settings'],
   'settings-footer': ['settings'],
@@ -257,6 +266,7 @@ const PATH_TO_BREADCRUMB: Record<string, BreadcrumbSegment[]> = {
   '/admin/content/shared': [ROOT_CRUMB, { label: 'Shared Content' }],
   '/admin/content/shared/exclusive-talents': [ROOT_CRUMB, { label: 'Shared Content' }, { label: 'Exclusive Talents' }],
   '/admin/content/shared/contact-cta': [ROOT_CRUMB, { label: 'Shared Content' }, { label: 'Contact CTA' }],
+  '/admin/content/shared/cta': [ROOT_CRUMB, { label: 'Shared Content' }, { label: 'CTA' }],
 
   // Global settings
   '/admin/content/settings': [ROOT_CRUMB, { label: 'Global Settings' }],
