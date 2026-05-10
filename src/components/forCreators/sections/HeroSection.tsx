@@ -2,9 +2,9 @@
 
 import styled, { keyframes } from 'styled-components';
 import Link from 'next/link';
-import Image from 'next/image';
 import { colors, spacing, typography, mediaQueries, motion } from '@/styles/tokens';
 import { ForCreatorsHeroPayload } from '@/lib/cms/types';
+import { ForCreatorsHeroBackground } from './ForCreatorsHeroBackground';
 
 const FOR_CREATORS_HERO_ASPECT_RATIO = '1440 / 670';
 
@@ -14,53 +14,45 @@ const fadeUp = keyframes`
 `;
 
 export function HeroSection({ content }: { content: ForCreatorsHeroPayload }) {
+  const hasSecondaryCta = Boolean(content.secondary_cta_label && content.secondary_cta_url);
+
   return (
-    <HeroWrapper $aspectRatio={FOR_CREATORS_HERO_ASPECT_RATIO}>
-      {content.media_image ? (
-        <HeroImageLayer>
-          <HeroImage
-            src={content.media_image}
-            alt={content.media_image_alt || content.title}
-            fill
-            sizes="100vw"
-          />
-          <HeroImageDimmer />
-        </HeroImageLayer>
-      ) : null}
-      <BlobLayer>
-        <Blob1 />
-        <Blob2 />
-        <Blob3 />
-        <Blob4 />
-      </BlobLayer>
+    <HeroShell>
+      <HeroWrapper $aspectRatio={FOR_CREATORS_HERO_ASPECT_RATIO}>
+        <ForCreatorsHeroBackground />
 
-      <ContentBox>
-        <HeroTitle dangerouslySetInnerHTML={{ __html: content.title.replace(/\n/g, '<br />') }} />
+        <ContentBox>
+          <HeroTitle dangerouslySetInnerHTML={{ __html: content.title.replace(/\n/g, '<br />') }} />
+          <HeroSubtitle>{content.subtitle}</HeroSubtitle>
 
-        <HeroSubtitle>
-          {content.subtitle}
-        </HeroSubtitle>
-
-        <ButtonRow>
-          <PrimaryButton href={content.primary_cta_url}>
-            {content.primary_cta_label}
-            <ArrowIcon>
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <path d="M4.167 10h11.666M10 4.167 15.833 10 10 15.833" stroke="#061530" strokeWidth="1.67" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </ArrowIcon>
-          </PrimaryButton>
-
-          <SecondaryButton href={content.secondary_cta_url}>
-            {content.secondary_cta_label}
-          </SecondaryButton>
-        </ButtonRow>
-      </ContentBox>
-    </HeroWrapper>
+          <ButtonRow>
+            <PrimaryButton href={content.primary_cta_url}>
+              {content.primary_cta_label}
+              <ArrowIcon>
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <path d="M4.167 10h11.666M10 4.167 15.833 10 10 15.833" stroke="#061530" strokeWidth="1.67" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </ArrowIcon>
+            </PrimaryButton>
+            {hasSecondaryCta ? (
+              <SecondaryButton href={content.secondary_cta_url!}>
+                {content.secondary_cta_label}
+              </SecondaryButton>
+            ) : null}
+          </ButtonRow>
+        </ContentBox>
+      </HeroWrapper>
+    </HeroShell>
   );
 }
 
-const HeroWrapper = styled.section<{ $aspectRatio: string }>`
+const HeroShell = styled.section`
+  position: relative;
+  width: 100%;
+  padding-top: 120px;
+`;
+
+const HeroWrapper = styled.div<{ $aspectRatio: string }>`
   position: relative;
   width: 100%;
   aspect-ratio: ${({ $aspectRatio }) => $aspectRatio};
@@ -69,94 +61,15 @@ const HeroWrapper = styled.section<{ $aspectRatio: string }>`
   display: flex;
   align-items: center;
   justify-content: center;
-  background: radial-gradient(
-    ellipse 120% 100% at 50% 60%,
-    #0859EA 0%,
-    #1a56c4 30%,
-    #447EE2 55%,
-    rgba(255,255,255,0.6) 80%,
-    #ffffff 100%
-  );
 
   ${mediaQueries.down.lg} {
+    aspect-ratio: auto;
     min-height: 520px;
   }
 
   ${mediaQueries.down.sm} {
     min-height: 420px;
   }
-`;
-
-const HeroImageLayer = styled.div`
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-`;
-
-const HeroImage = styled(Image)`
-  object-fit: cover;
-  object-position: center;
-`;
-
-const HeroImageDimmer = styled.div`
-  position: absolute;
-  inset: 0;
-  background: rgba(6, 21, 48, 0.32);
-`;
-
-const BlobLayer = styled.div`
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-`;
-
-const Blob1 = styled.div`
-  position: absolute;
-  width: 70%;
-  height: 120%;
-  left: -25%;
-  top: -30%;
-  background: #0859EA;
-  filter: blur(50px);
-  transform: matrix(0.95, -0.32, 0.17, 0.99, 0, 0);
-  opacity: 0.9;
-`;
-
-const Blob2 = styled.div`
-  position: absolute;
-  width: 60%;
-  height: 110%;
-  right: -30%;
-  top: -30%;
-  background: #447EE2;
-  filter: blur(50px);
-  transform: matrix(-0.96, 0.3, 0.27, 0.96, 0, 0);
-  opacity: 0.85;
-`;
-
-const Blob3 = styled.div`
-  position: absolute;
-  width: 80%;
-  height: 90%;
-  left: -20%;
-  top: 5%;
-  background: #2068E4;
-  filter: blur(17.5px);
-  transform: matrix(0.95, -0.32, 0.17, 0.99, 0, 0);
-  opacity: 0.7;
-`;
-
-const Blob4 = styled.div`
-  position: absolute;
-  width: 50%;
-  height: 80%;
-  right: -20%;
-  top: -15%;
-  background: #639CFF;
-  filter: blur(32px);
-  transform: matrix(-0.96, 0.3, 0.27, 0.96, 0, 0);
-  opacity: 0.6;
 `;
 
 const ContentBox = styled.div`
