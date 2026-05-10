@@ -27,7 +27,9 @@ export function BlogView({ featuredPost, posts, header, footer, contactCta }: Bl
         <HighlightsSection featuredPost={featuredPost} />
         <ContentsSection posts={posts} />
       </MainContent>
-      <ContactCTASection content={contactCta} />
+      <ContactCTAContainer>
+        <ContactCTASection content={contactCta} />
+      </ContactCTAContainer>
       <Footer content={footer ?? undefined} />
     </Wrapper>
   );
@@ -46,4 +48,9 @@ const Wrapper = styled.div`
 
 const MainContent = styled.main`
   width: 100%;
+`;
+
+const ContactCTAContainer = styled.div`
+  width: 100%;
+  background: ${colors.primaryLight};
 `;

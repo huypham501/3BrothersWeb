@@ -32,7 +32,10 @@ export function HomeView({
       {data.coreCompetencies && <CoreCompetenciesSection content={data.coreCompetencies} />}
       
       <BlueGroupWrapper>
-        <BlueGroupAmbient data-ambient="true" aria-hidden="true" />
+        <BlueGroupAmbient data-ambient="true" aria-hidden="true">
+          <AmbientDark />
+          <AmbientBlue />
+        </BlueGroupAmbient>
         {data.efficiency && <EfficiencySection content={data.efficiency} />}
         {data.shared.exclusiveTalents && <ExclusiveTalentsSection content={data.shared.exclusiveTalents} />}
         <ContactCTASection content={contactCta} />
@@ -76,42 +79,40 @@ const BlueGroupAmbient = styled.div`
   inset: 0;
   z-index: 0;
   pointer-events: none;
+`;
 
-  &::before,
-  &::after {
-    content: '';
-    position: absolute;
-    left: 50%;
-    width: min(1440px, 100%);
-    border-radius: 120px;
-    transform: translateX(-50%);
-  }
-
-  &::before {
-    top: 28%;
-    height: 1281px;
-    background: #061530;
-    filter: blur(100px);
-  }
-
-  &::after {
-    top: 31%;
-    height: 1072px;
-    background: #003ca6;
-    filter: blur(60px);
-  }
+const AmbientDark = styled.div`
+  position: absolute;
+  left: 50%;
+  width: min(1440px, 100%);
+  border-radius: 120px;
+  transform: translateX(-50%);
+  top: 28%;
+  height: 1281px;
+  background: #061530;
+  filter: blur(100px);
 
   @media (max-width: 900px) {
-    &::before {
-      height: 86vw;
-      border-radius: 60px;
-      filter: blur(56px);
-    }
+    height: 86vw;
+    border-radius: 60px;
+    filter: blur(56px);
+  }
+`;
 
-    &::after {
-      height: 72vw;
-      border-radius: 60px;
-      filter: blur(36px);
-    }
+const AmbientBlue = styled.div`
+  position: absolute;
+  left: 50%;
+  width: min(1440px, 100%);
+  border-radius: 120px;
+  transform: translateX(-50%);
+  top: 31%;
+  height: 1072px;
+  background: #003ca6;
+  filter: blur(60px);
+
+  @media (max-width: 900px) {
+    height: 72vw;
+    border-radius: 60px;
+    filter: blur(36px);
   }
 `;
