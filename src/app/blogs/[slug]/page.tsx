@@ -5,6 +5,7 @@ import { getPublishedBlogPostBySlug, getRelatedBlogPosts } from '@/lib/cms/queri
 import type { ArticleData } from '@/components/blog/sections/DetailMainContentSection';
 import type { BlogPost } from '@/components/blog/components/BlogPostCard';
 import { resolvePublicLayoutData } from '@/lib/cms/resolvers/public-layout.resolver';
+import { ContactCTASection } from '@/components/shared/contact/ContactCTASection';
 
 import { SITE_URL } from '@/lib/constants';
 
@@ -118,7 +119,7 @@ export default async function BlogDetailPage({ params }: Props) {
       relatedPosts={relatedPosts}
       header={layout.header}
       footer={layout.footer}
-      contactCta={layout.contactCta}
+      contactCtaSlot={<ContactCTASection />}
     />
   );
 }

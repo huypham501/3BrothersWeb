@@ -2,24 +2,23 @@
 
 import styled from 'styled-components';
 import { colors } from '@/styles/tokens';
+import type { ReactNode } from 'react';
 import { HomeViewModel } from '@/lib/cms/resolvers/home.resolver';
-import type { SharedContactCtaPayload } from '@/lib/cms/types';
 
 import { Header } from '@/components/shared/Header';
 import { HomeHeroPartnerSection } from './sections/HomeHeroPartnerSection';
 import { CoreCompetenciesSection } from './sections/CoreCompetenciesSection';
 import { EfficiencySection } from './sections/EfficiencySection';
 import { ExclusiveTalentsSection } from './sections/ExclusiveTalentsSection';
-import { ContactCTASection } from '@/components/shared/ContactCTASection';
 import { TrendingSection } from './sections/TrendingSection';
 import { Footer } from '@/components/shared/Footer';
 
 export function HomeView({
   data,
-  contactCta,
+  contactCtaSlot,
 }: {
   data: HomeViewModel | null;
-  contactCta?: SharedContactCtaPayload | null;
+  contactCtaSlot?: ReactNode;
 }) {
   if (!data) return null;
 
@@ -38,7 +37,7 @@ export function HomeView({
         </BlueGroupAmbient>
         {data.efficiency && <EfficiencySection content={data.efficiency} />}
         {data.shared.exclusiveTalents && <ExclusiveTalentsSection content={data.shared.exclusiveTalents} />}
-        <ContactCTASection content={contactCta} />
+        {contactCtaSlot}
       </BlueGroupWrapper>
       
       {data.trending && <TrendingSection content={data.trending} />}

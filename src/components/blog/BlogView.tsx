@@ -2,24 +2,24 @@
 
 import styled from 'styled-components';
 import { colors } from '@/styles/tokens';
+import type { ReactNode } from 'react';
 
 import { Header } from '@/components/shared/Header';
 import { Footer } from '@/components/shared/Footer';
-import { ContactCTASection } from '@/components/shared/ContactCTASection';
 import { HighlightsSection, type FeaturedPost } from './sections/HighlightsSection';
 import { ContentsSection } from './sections/ContentsSection';
 import type { BlogPost } from './components/BlogPostCard';
-import type { GlobalFooterPayload, GlobalHeaderPayload, SharedContactCtaPayload } from '@/lib/cms/types';
+import type { GlobalFooterPayload, GlobalHeaderPayload } from '@/lib/cms/types';
 
 interface BlogViewProps {
   featuredPost?: FeaturedPost;
   posts?: BlogPost[];
   header?: GlobalHeaderPayload | null;
   footer?: GlobalFooterPayload | null;
-  contactCta?: SharedContactCtaPayload | null;
+  contactCtaSlot?: ReactNode;
 }
 
-export function BlogView({ featuredPost, posts, header, footer, contactCta }: BlogViewProps) {
+export function BlogView({ featuredPost, posts, header, footer, contactCtaSlot }: BlogViewProps) {
   return (
     <Wrapper>
       <Header content={header ?? undefined} />
@@ -28,7 +28,7 @@ export function BlogView({ featuredPost, posts, header, footer, contactCta }: Bl
         <ContentsSection posts={posts} />
       </MainContent>
       <ContactCTAContainer>
-        <ContactCTASection content={contactCta} />
+        {contactCtaSlot}
       </ContactCTAContainer>
       <Footer content={footer ?? undefined} />
     </Wrapper>

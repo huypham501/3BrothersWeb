@@ -4,6 +4,7 @@ import { getPublishedBlogPosts, getFeaturedBlogPost } from "@/lib/cms/queries";
 import type { FeaturedPost } from "@/components/blog/sections/HighlightsSection";
 import type { BlogPost } from "@/components/blog/components/BlogPostCard";
 import { resolvePublicLayoutData } from '@/lib/cms/resolvers/public-layout.resolver';
+import { ContactCTASection } from "@/components/shared/contact/ContactCTASection";
 
 import { SITE_URL } from "@/lib/constants";
 
@@ -86,7 +87,7 @@ export default async function BlogPage() {
       posts={posts}
       header={layout.header}
       footer={layout.footer}
-      contactCta={layout.contactCta}
+      contactCtaSlot={<ContactCTASection />}
     />
   );
 }

@@ -2,15 +2,15 @@
 
 import styled from 'styled-components';
 import { notFound } from 'next/navigation';
+import type { ReactNode } from 'react';
 
 import { Header } from '@/components/shared/Header';
 import { Footer } from '@/components/shared/Footer';
-import { ContactCTASection } from '@/components/shared/ContactCTASection';
 import { HeroSection } from './sections/HeroSection';
 import { MainSection } from './sections/MainSection';
 import { ExploreSection } from './sections/ExploreSection';
 import { getJobBySlug, type JobPosition } from '../careers/data/jobPositions';
-import type { GlobalFooterPayload, GlobalHeaderPayload, SharedContactCtaPayload } from '@/lib/cms/types';
+import type { GlobalFooterPayload, GlobalHeaderPayload } from '@/lib/cms/types';
 
 // ── Props ─────────────────────────────────────────────────────────────────────
 
@@ -22,7 +22,7 @@ interface CareerDetailViewProps {
   relatedJobs?: JobPosition[];
   header?: GlobalHeaderPayload | null;
   footer?: GlobalFooterPayload | null;
-  contactCta?: SharedContactCtaPayload | null;
+  contactCtaSlot?: ReactNode;
 }
 
 // ── Component ─────────────────────────────────────────────────────────────────
@@ -33,7 +33,7 @@ export function CareerDetailView({
   relatedJobs,
   header,
   footer,
-  contactCta,
+  contactCtaSlot,
 }: CareerDetailViewProps) {
   const job = jobProp ?? getJobBySlug(slug);
 
@@ -49,7 +49,7 @@ export function CareerDetailView({
         <MainSection job={job} />
         <ExploreSection currentSlug={slug} relatedJobs={relatedJobs} />
       </MainContent>
-      <ContactCTASection content={contactCta} />
+      {contactCtaSlot}
       <Footer content={footer ?? undefined} />
     </Wrapper>
   );

@@ -2,11 +2,11 @@
 
 import styled from 'styled-components';
 import { colors } from '@/styles/tokens';
+import type { ReactNode } from 'react';
 
 import { Header } from '@/components/shared/Header';
 import { Footer } from '@/components/shared/Footer';
-import { ContactCTASection } from '@/components/shared/ContactCTASection';
-import type { GlobalFooterPayload, GlobalHeaderPayload, SharedContactCtaPayload } from '@/lib/cms/types';
+import type { GlobalFooterPayload, GlobalHeaderPayload } from '@/lib/cms/types';
 
 import { HeroSection } from './sections/HeroSection';
 import { GrowthSection } from './sections/GrowthSection';
@@ -15,10 +15,10 @@ import { ValuePropositionSection } from './sections/ValuePropositionSection';
 interface SocialCommerceViewProps {
   header?: GlobalHeaderPayload | null;
   footer?: GlobalFooterPayload | null;
-  contactCta?: SharedContactCtaPayload | null;
+  contactCtaSlot?: ReactNode;
 }
 
-export function SocialCommerceView({ header, footer, contactCta }: SocialCommerceViewProps) {
+export function SocialCommerceView({ header, footer, contactCtaSlot }: SocialCommerceViewProps) {
   return (
     <Wrapper>
       <Header content={header ?? undefined} />
@@ -27,7 +27,7 @@ export function SocialCommerceView({ header, footer, contactCta }: SocialCommerc
         <GrowthSection />
         <ValuePropositionSection />
       </MainContent>
-      <ContactCTASection content={contactCta} />
+      {contactCtaSlot}
       <Footer content={footer ?? undefined} />
     </Wrapper>
   );

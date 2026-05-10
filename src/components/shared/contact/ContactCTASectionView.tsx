@@ -1,36 +1,27 @@
+'use client';
+
 import styled from 'styled-components';
 import { colors, spacing, typography, mediaQueries, motion } from '@/styles/tokens';
+import type { SharedContactCtaPayload } from '@/lib/cms/types';
 
-import { SharedContactCtaPayload } from '@/lib/cms/types';
-
-const DEFAULT_CONTACT_CTA_CONTENT: SharedContactCtaPayload = {
-  title: 'GET IN TOUCH',
-  subtitle: '',
-  cta_label: 'Contact us',
-  cta_url: '/',
-};
 const CONTACT_CTA_BG_IMAGE = '/images/home/contact-cta-bg.png';
 const CONTACT_CTA_BG_ASPECT_RATIO = '2880 / 1843';
 const CONTACT_CTA_BG_WIDTH = '1440px';
 
-interface ContactCTASectionProps {
-  content?: SharedContactCtaPayload | null;
+interface ContactCTASectionViewProps {
+  content: SharedContactCtaPayload;
 }
 
-export function ContactCTASection({ content }: ContactCTASectionProps) {
-  const resolvedContent = content ?? DEFAULT_CONTACT_CTA_CONTENT;
-
+export function ContactCTASectionView({ content }: ContactCTASectionViewProps) {
   return (
     <SectionContainer>
       <BackgroundLayer aria-hidden="true" />
       <ContentBlock>
-        <Title dangerouslySetInnerHTML={{ __html: resolvedContent.title.replace(/\n/g, '<br />') }} />
-        <Subtitle>
-          {resolvedContent.subtitle}
-        </Subtitle>
+        <Title dangerouslySetInnerHTML={{ __html: content.title.replace(/\n/g, '<br />') }} />
+        <Subtitle>{content.subtitle}</Subtitle>
         <ButtonWrapper>
-          <ContactButton href={resolvedContent.cta_url || '#'}>
-            {resolvedContent.cta_label}
+          <ContactButton href={content.cta_url || '#'}>
+            {content.cta_label}
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14M12 5l7 7-7 7" />
             </svg>
@@ -40,8 +31,6 @@ export function ContactCTASection({ content }: ContactCTASectionProps) {
     </SectionContainer>
   );
 }
-
-/* ─── Styled Components ─────────────────────────────────────────── */
 
 const SectionContainer = styled.section`
   position: relative;
@@ -53,7 +42,7 @@ const SectionContainer = styled.section`
   justify-content: center;
   text-align: center;
   overflow: hidden;
-  
+
   ${mediaQueries.down.sm} {
     padding: 80px ${spacing.lg};
   }

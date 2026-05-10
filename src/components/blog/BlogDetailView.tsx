@@ -2,21 +2,21 @@
 
 import styled from 'styled-components';
 import { colors } from '@/styles/tokens';
+import type { ReactNode } from 'react';
 
 import { Header } from '@/components/shared/Header';
 import { Footer } from '@/components/shared/Footer';
-import { ContactCTASection } from '@/components/shared/ContactCTASection';
 import { DetailMainContentSection, type ArticleData } from './sections/DetailMainContentSection';
 import { RelatedPostsSection } from './sections/RelatedPostsSection';
 import type { BlogPost } from './components/BlogPostCard';
-import type { GlobalFooterPayload, GlobalHeaderPayload, SharedContactCtaPayload } from '@/lib/cms/types';
+import type { GlobalFooterPayload, GlobalHeaderPayload } from '@/lib/cms/types';
 
 interface BlogDetailViewProps {
   article?: ArticleData;
   relatedPosts?: BlogPost[];
   header?: GlobalHeaderPayload | null;
   footer?: GlobalFooterPayload | null;
-  contactCta?: SharedContactCtaPayload | null;
+  contactCtaSlot?: ReactNode;
 }
 
 export function BlogDetailView({
@@ -24,7 +24,7 @@ export function BlogDetailView({
   relatedPosts,
   header,
   footer,
-  contactCta,
+  contactCtaSlot,
 }: BlogDetailViewProps) {
   return (
     <Wrapper>
@@ -33,7 +33,7 @@ export function BlogDetailView({
         <DetailMainContentSection article={article} />
         <RelatedPostsSection posts={relatedPosts} />
       </MainContent>
-      <ContactCTASection content={contactCta} />
+      {contactCtaSlot}
       <Footer content={footer ?? undefined} />
     </Wrapper>
   );
