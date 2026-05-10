@@ -4,7 +4,6 @@ import type {
   ForCreatorsHeroPayload,
   ForCreatorsBenefitPayload,
   ForCreatorsTestimonialsPayload,
-  ForCreatorsCtaPayload,
   SharedExclusiveTalentsPayload,
   GlobalHeaderPayload,
   GlobalFooterPayload,
@@ -28,7 +27,6 @@ export interface ForCreatorsViewModel {
   hero: ForCreatorsHeroPayload | null;
   benefit: ForCreatorsBenefitPayload | null;
   testimonials: ForCreatorsTestimonialsPayload | null;
-  cta: ForCreatorsCtaPayload | null;
   shared: {
     exclusiveTalents: SharedExclusiveTalentsPayload | null;
   };
@@ -85,11 +83,6 @@ export async function resolveForCreatorsPageData(): Promise<ForCreatorsViewModel
       SCHEMA_KEYS.FOR_CREATORS_TESTIMONIALS,
       findSectionContentBySchemaKey(data.sections, SCHEMA_KEYS.FOR_CREATORS_TESTIMONIALS),
       'for-creators.sections.testimonials'
-    ),
-    cta: validateCmsPayloadBySchemaKey(
-      SCHEMA_KEYS.FOR_CREATORS_CTA,
-      findSectionContentBySchemaKey(data.sections, SCHEMA_KEYS.FOR_CREATORS_CTA),
-      'for-creators.sections.cta'
     ),
     shared: {
       exclusiveTalents: validateCmsPayloadBySchemaKey(

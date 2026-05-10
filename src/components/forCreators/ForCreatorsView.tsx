@@ -2,6 +2,7 @@
 
 import styled from 'styled-components';
 import { colors } from '@/styles/tokens';
+import type { ReactNode } from 'react';
 
 import { Header } from '@/components/shared/Header';
 import { Footer } from '@/components/shared/Footer';
@@ -9,10 +10,15 @@ import { HeroSection } from './sections/HeroSection';
 import { BenefitSection } from './sections/BenefitSection';
 import { TestimonialsSection } from './sections/TestimonialsSection';
 import { ExclusiveTalentsSection } from '@/components/home/sections/ExclusiveTalentsSection';
-import { CTASection } from './sections/CTASection';
 import type { ForCreatorsViewModel } from '@/lib/cms/resolvers/for-creators.resolver';
 
-export function ForCreatorsView({ data }: { data: ForCreatorsViewModel | null }) {
+export function ForCreatorsView({
+  data,
+  ctaSectionSlot,
+}: {
+  data: ForCreatorsViewModel | null;
+  ctaSectionSlot?: ReactNode;
+}) {
   if (!data) return null;
 
   return (
@@ -25,7 +31,7 @@ export function ForCreatorsView({ data }: { data: ForCreatorsViewModel | null })
           <BlueGroupAmbient data-ambient="true" aria-hidden="true" />
           {data.testimonials && <TestimonialsSection content={data.testimonials} />}
           {data.shared.exclusiveTalents && <ExclusiveTalentsSection content={data.shared.exclusiveTalents} />}
-          {data.cta && <CTASection content={data.cta} />}
+          {ctaSectionSlot}
         </BlueGroupWrapper>
       </MainContent>
       {data.globals.footer && <Footer content={data.globals.footer} />}

@@ -3,13 +3,17 @@
 import styled from 'styled-components';
 import Link from 'next/link';
 import { colors, spacing, typography, mediaQueries, motion } from '@/styles/tokens';
-import { ForCreatorsCtaPayload } from '@/lib/cms/types';
+import type { ForCreatorsCtaPayload } from '@/lib/cms/types';
 
 const CONTACT_CTA_BG_IMAGE = '/images/home/contact-cta-bg.png';
 const CONTACT_CTA_BG_ASPECT_RATIO = '2880 / 1843';
 const CONTACT_CTA_BG_WIDTH = '1440px';
 
-export function CTASection({ content }: { content: ForCreatorsCtaPayload }) {
+interface ForCreatorsCTASectionViewProps {
+  content: ForCreatorsCtaPayload;
+}
+
+export function ForCreatorsCTASectionView({ content }: ForCreatorsCTASectionViewProps) {
   return (
     <SectionContainer>
       <ContentBlock>
