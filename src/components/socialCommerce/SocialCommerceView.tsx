@@ -28,10 +28,6 @@ export function SocialCommerceView({ header, footer, ctaSectionSlot }: SocialCom
         <ValuePropositionSection />
       </MainContent>
       <BlueGroupWrapper>
-        <BlueGroupAmbient data-ambient="true" aria-hidden="true">
-          <AmbientDark />
-          <AmbientBlue />
-        </BlueGroupAmbient>
         {ctaSectionSlot}
       </BlueGroupWrapper>
       <Footer content={footer ?? undefined} />
@@ -55,67 +51,8 @@ const MainContent = styled.main`
 `;
 
 const BlueGroupWrapper = styled.div`
-  position: relative;
-  isolation: isolate;
   width: 100%;
   display: flex;
   flex-direction: column;
-  overflow: visible;
-  background: linear-gradient(
-    180deg,
-    #b4cfff 0%,
-    #b4cfff 34%,
-    #9cbcf5 42%,
-    #82acef 50%,
-    ${colors.primaryLight} 58%,
-    ${colors.primaryLight} 100%
-  );
-
-  > *:not([data-ambient='true']) {
-    position: relative;
-    z-index: 1;
-  }
-`;
-
-const BlueGroupAmbient = styled.div`
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-`;
-
-const AmbientDark = styled.div`
-  position: absolute;
-  left: 50%;
-  width: min(1440px, 100%);
-  border-radius: 120px;
-  transform: translateX(-50%);
-  top: 30%;
-  height: 1281px;
-  background: #061530;
-  filter: blur(100px);
-
-  @media (max-width: 900px) {
-    height: 86vw;
-    border-radius: 60px;
-    filter: blur(56px);
-  }
-`;
-
-const AmbientBlue = styled.div`
-  position: absolute;
-  left: 50%;
-  width: min(1440px, 100%);
-  border-radius: 120px;
-  transform: translateX(-50%);
-  top: 33%;
-  height: 1072px;
-  background: #003ca6;
-  filter: blur(60px);
-
-  @media (max-width: 900px) {
-    height: 72vw;
-    border-radius: 60px;
-    filter: blur(36px);
-  }
+  background: ${colors.primaryLight};
 `;

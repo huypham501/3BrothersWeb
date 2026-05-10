@@ -3,13 +3,11 @@ import { resolveSharedCtaData } from '@/lib/cms/resolvers/shared-cta.resolver';
 import { CTASectionView } from './CTASectionView';
 
 export async function CTASection() {
-  let content: CtaPayload | null = null;
   try {
-    content = await resolveSharedCtaData();
+    const content: CtaPayload | null = await resolveSharedCtaData();
+    if (!content) return null;
+    return <CTASectionView content={content} />;
   } catch {
     return null;
   }
-
-  if (!content) return null;
-  return <CTASectionView content={content} />;
 }

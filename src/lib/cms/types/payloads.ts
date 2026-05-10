@@ -168,9 +168,6 @@ export interface CtaPayload {
   cta_url: string;
 }
 
-// Backward-compatible alias for existing imports.
-export type ForCreatorsCtaPayload = CtaPayload;
-
 // ── Careers ──────────────────────────────────────────────────────────────────
 
 export interface CareersHeroPerk {
