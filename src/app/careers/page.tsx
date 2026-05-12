@@ -25,13 +25,13 @@ export const metadata: Metadata = {
     description: 'Gia nhập đội ngũ 3Brothers Media — nơi tài năng sáng tạo gặp cơ hội vượt bậc.',
     url: `${SITE_URL}/careers`,
     type: 'website',
-    images: [{ url: '/3brothers.png', alt: '3BROTHERS NETWORK' }],
+    images: [{ url: '/3brothers-512x512.png', alt: '3BROTHERS NETWORK' }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Careers | 3BROTHERS NETWORK',
     description: 'Gia nhập đội ngũ 3Brothers Media — nơi tài năng sáng tạo gặp cơ hội vượt bậc.',
-    images: ['/3brothers.png'],
+    images: ['/3brothers-512x512.png'],
   },
 };
 

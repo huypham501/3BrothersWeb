@@ -17,7 +17,7 @@ INSERT INTO global_settings (
     "default_title_template": "{{page_title}} | {{brand_name}}",
     "default_meta_description": "3BROTHERS NETWORK - Creator economy platform.",
     "default_keywords": ["3brothers network", "creator economy", "influencer marketing"],
-    "default_og_image": "/3brothers.png",
+    "default_og_image": "/3brothers-512x512.png",
     "default_og_image_alt": "3BROTHERS NETWORK",
     "default_twitter_card_type": "summary_large_image",
     "default_robots": "index,follow"
@@ -26,7 +26,7 @@ INSERT INTO global_settings (
     "default_title_template": "{{page_title}} | {{brand_name}}",
     "default_meta_description": "3BROTHERS NETWORK - Creator economy platform.",
     "default_keywords": ["3brothers network", "creator economy", "influencer marketing"],
-    "default_og_image": "/3brothers.png",
+    "default_og_image": "/3brothers-512x512.png",
     "default_og_image_alt": "3BROTHERS NETWORK",
     "default_twitter_card_type": "summary_large_image",
     "default_robots": "index,follow"

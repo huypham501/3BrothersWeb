@@ -43,7 +43,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     post.published_seo_description ??
     post.seo_description ??
     (post.published_excerpt ?? post.excerpt ?? '');
-  const ogImage = post.published_og_image ?? post.og_image ?? '/3brothers.png';
+  const ogImage = post.published_og_image ?? post.og_image ?? '/3brothers-512x512.png';
   const keywords = (post.published_keywords ?? post.keywords ?? []).length > 0
     ? (post.published_keywords ?? post.keywords ?? [])
     : ['blog', '3brothers', 'KOL', 'influencer', 'media'];

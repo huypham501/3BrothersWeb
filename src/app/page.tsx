@@ -19,7 +19,7 @@ export async function generateMetadata(): Promise<Metadata> {
     fallbackDescription: "Make your passion your paycheck",
     fallbackKeywords: ["youtube", "creators", "creator economy", "3brothers network"],
     fallbackSiteUrl: SITE_URL,
-    fallbackOgImage: "/3brothers.png",
+    fallbackOgImage: "/3brothers-512x512.png",
     fallbackOgImageAlt: "3BROTHERS NETWORK",
   });
 

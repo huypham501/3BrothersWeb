@@ -19,8 +19,8 @@ export default function RootLayout({
   return (
     <html lang="en" className={geist.variable}>
       <head>
-        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-512x512.png" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/favicon-512x512.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/3brothers-512x512.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/3brothers-512x512.png" />
         <link
           rel="preload"
           href="/metub/template/images/metub_video.mp4"

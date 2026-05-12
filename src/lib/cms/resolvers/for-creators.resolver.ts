@@ -60,7 +60,7 @@ export async function resolveForCreatorsPageData(): Promise<ForCreatorsViewModel
       title: data.page.published_seo_title || 'For Creators | 3BROTHERS NETWORK',
       description: data.page.published_seo_description || 'Grow your community. Maximize your opportunity.',
       canonical_url: '/for-creators',
-      og_image: data.page.published_og_image || '/3brothers.png',
+      og_image: data.page.published_og_image || '/3brothers-512x512.png',
       og_image_alt: data.page.published_og_image_alt || '3BROTHERS NETWORK',
       keywords:
         data.page.published_keywords && data.page.published_keywords.length > 0

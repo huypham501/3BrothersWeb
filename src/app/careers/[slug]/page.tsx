@@ -63,13 +63,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description,
       url: `${SITE_URL}/careers/${slug}`,
       type: 'website',
-      images: [{ url: '/3brothers.png', alt: '3BROTHERS MEDIA' }],
+      images: [{ url: '/3brothers-512x512.png', alt: '3BROTHERS MEDIA' }],
     },
     twitter: {
       card: 'summary_large_image',
       title,
       description,
-      images: ['/3brothers.png'],
+      images: ['/3brothers-512x512.png'],
     },
   };
 }

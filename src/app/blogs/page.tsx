@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/3brothers.png",
+        url: "/3brothers-512x512.png",
         alt: "3BROTHERS MEDIA Blog",
       },
     ],
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Blog | 3BROTHERS MEDIA",
     description: "Cập nhật tin tức, xu hướng và câu chuyện từ 3Brothers Media.",
-    images: ["/3brothers.png"],
+    images: ["/3brothers-512x512.png"],
   },
 };
 

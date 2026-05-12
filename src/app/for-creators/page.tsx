@@ -19,7 +19,7 @@ export async function generateMetadata(): Promise<Metadata> {
     fallbackDescription: 'Grow your community. Maximize your opportunity.',
     fallbackKeywords: ['creator', 'creators', 'creator program', '3brothers network'],
     fallbackSiteUrl: SITE_URL,
-    fallbackOgImage: '/3brothers.png',
+    fallbackOgImage: '/3brothers-512x512.png',
     fallbackOgImageAlt: '3BROTHERS NETWORK',
   });
 

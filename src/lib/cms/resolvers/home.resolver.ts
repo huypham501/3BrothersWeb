@@ -136,7 +136,7 @@ export async function resolveHomePageData(): Promise<HomeViewModel | null> {
       title: data.page.published_seo_title || data.page.seo_title || "3BROTHERS NETWORK | The Leading Creator Economy Platform",
       description: data.page.published_seo_description || data.page.seo_description || "Make your passion your paycheck",
       canonical_url: data.page.canonical_url || "",
-      og_image: data.page.published_og_image || data.page.og_image || "/3brothers.png",
+      og_image: data.page.published_og_image || data.page.og_image || "/3brothers-512x512.png",
       og_image_alt: data.page.published_og_image_alt || data.page.og_image_alt || "3BROTHERS NETWORK",
       keywords: data.page.published_keywords && data.page.published_keywords.length > 0 ? data.page.published_keywords : 
                 (data.page.keywords && data.page.keywords.length > 0 ? data.page.keywords : ["youtube", "creators", "creator economy", "3brothers network"]),

@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/3brothers.png",
+        url: "/3brothers-512x512.png",
         alt: "3BROTHERS NETWORK",
       },
     ],
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Log In | 3BROTHERS NETWORK",
     description: "Choose email or Google to sign in to your 3brothers account.",
-    images: ["/3brothers.png"],
+    images: ["/3brothers-512x512.png"],
   },
 };
 
