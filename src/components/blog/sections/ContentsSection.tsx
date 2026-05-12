@@ -113,7 +113,7 @@ export function ContentsSection({ posts: postsProp }: ContentsSectionProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const visiblePosts = allPosts.slice(0, visibleCount);
-  const hasMore = visibleCount < allPosts.length;
+  const shouldShowToggle = allPosts.length > INITIAL_VISIBLE;
 
   const handleToggle = () => {
     if (isExpanded) {
@@ -147,16 +147,18 @@ export function ContentsSection({ posts: postsProp }: ContentsSectionProps) {
       </ContentArea>
 
       {/* Xem thêm / Thu gọn button */}
-      <ButtonWrapper>
-        <LoadMoreButton onClick={handleToggle}>
-          {isExpanded ? 'Thu gọn' : 'Xem thêm'}
-          <ChevronIcon $rotated={isExpanded}>
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M5 7.5L10 12.5L15 7.5" stroke="white" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </ChevronIcon>
-        </LoadMoreButton>
-      </ButtonWrapper>
+      {shouldShowToggle && (
+        <ButtonWrapper>
+          <LoadMoreButton onClick={handleToggle}>
+            {isExpanded ? 'Thu gọn' : 'Xem thêm'}
+            <ChevronIcon $rotated={isExpanded}>
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M5 7.5L10 12.5L15 7.5" stroke="white" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </ChevronIcon>
+          </LoadMoreButton>
+        </ButtonWrapper>
+      )}
     </SectionContainer>
   );
 }

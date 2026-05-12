@@ -6,7 +6,9 @@ import { useState } from 'react';
 import { colors, spacing, typography, mediaQueries, motion } from '@/styles/tokens';
 import { JOB_POSITIONS, type JobPosition } from '../data/jobPositions';
 import { JobCard } from '../shared/JobCard';
-import { StripeOverlay } from '../shared/StripeOverlay';
+const CONTACT_CTA_BG_IMAGE = '/images/careers/open-position-bg.png';
+const CONTACT_CTA_BG_ASPECT_RATIO = '1440 / 1043';
+const CONTACT_CTA_BG_WIDTH = '1440px';
 
 // ── Props / Data ───────────────────────────────────────────────────────────────
 
@@ -26,8 +28,7 @@ export function OpenPositionSection({ positions }: OpenPositionSectionProps) {
 
   return (
     <SectionContainer>
-      {/* Background stripe overlay */}
-      <StripeOverlay opacity={0.22} />
+      <BackgroundLayer aria-hidden="true" />
 
       <Inner>
         {/* Heading row */}
@@ -77,9 +78,41 @@ const SectionContainer = styled.section`
   }
 `;
 
+const BackgroundLayer = styled.div`
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: ${CONTACT_CTA_BG_WIDTH};
+  height: auto;
+  aspect-ratio: ${CONTACT_CTA_BG_ASPECT_RATIO};
+  transform: translateX(-50%);
+  background-image: url('${CONTACT_CTA_BG_IMAGE}');
+  background-repeat: no-repeat;
+  background-position: center top;
+  background-size: 100% auto;
+  -webkit-mask-image:
+    linear-gradient(to right, transparent 0%, white 20%, white 80%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, white 12%, white 100%);
+  mask-image:
+    linear-gradient(to right, transparent 0%, white 20%, white 80%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, white 12%, white 100%);
+  -webkit-mask-repeat: no-repeat, no-repeat;
+  mask-repeat: no-repeat, no-repeat;
+  -webkit-mask-size: 100% 100%, 100% 100%;
+  mask-size: 100% 100%, 100% 100%;
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
+  pointer-events: none;
+  z-index: 0;
+
+  ${mediaQueries.down.sm} {
+    background-position: center -40px;
+  }
+`;
+
 const Inner = styled.div`
   position: relative;
-  z-index: 2;
+  z-index: 10;
   width: 100%;
   max-width: 792px;
   margin: 0 auto;
