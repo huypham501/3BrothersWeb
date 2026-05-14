@@ -3,11 +3,9 @@
 import styled from 'styled-components';
 import { colors, spacing, typography, mediaQueries } from '@/styles/tokens';
 
-// ── Data ──────────────────────────────────────────────────────────────────────
-
-const BEAMS = Array.from({ length: 22 }, (_, i) => {
-  return { left: -40 + i * 66 };
-});
+const HERO_BG_IMAGE = '/images/social-commerce/hero-background.png';
+const HERO_BG_ASPECT_RATIO = '1440 / 471';
+const HERO_BG_WIDTH = '1440px';
 
 const SERVICES = [
   'Live Commerce',
@@ -20,22 +18,9 @@ const SERVICES = [
 // ── Component ─────────────────────────────────────────────────────────────────
 
 export function HeroSection() {
-
   return (
     <SectionContainer>
-      <Ellipse15 />
-      <Ellipse16 />
-
-      <BeamsOverlay>
-        {BEAMS.map((b, i) => {
-          // Bottom positions loosely matching design staggered layout
-          // Center beams are higher up (lower bottom px value or negative)
-          let bottom = -219 + i * 20;
-          if (i > 10) bottom = bottom - (i - 10) * 40; 
-
-          return <Beam key={i} style={{ left: b.left, bottom: `${bottom}px` }} />;
-        })}
-      </BeamsOverlay>
+      <BackgroundLayer aria-hidden="true" />
 
       <Inner>
         <HeaderContent>
@@ -79,48 +64,36 @@ const SectionContainer = styled.section`
   }
 `;
 
-/* Deep blur effects */
-const Ellipse15 = styled.div`
+const BackgroundLayer = styled.div`
   position: absolute;
-  width: 1521px;
-  height: 458px;
-  left: -41px;
-  bottom: -217px;
-  background: #003085;
-  filter: blur(120px);
-  pointer-events: none;
-`;
-
-const Ellipse16 = styled.div`
-  position: absolute;
-  width: 1201px;
-  height: 228px;
+  bottom: 0;
   left: 50%;
+  width: ${HERO_BG_WIDTH};
+  height: auto;
+  aspect-ratio: ${HERO_BG_ASPECT_RATIO};
   transform: translateX(-50%);
-  bottom: -20px;
-  background: #003CA6;
-  filter: blur(120px);
+  background-image: url('${HERO_BG_IMAGE}');
+  background-repeat: no-repeat;
+  background-position: center top;
+  background-size: 100% auto;
+  -webkit-mask-image:
+    linear-gradient(to right, transparent 0%, black 18%, black 82%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, black 12%, black 100%);
+  mask-image:
+    linear-gradient(to right, transparent 0%, black 18%, black 82%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, black 12%, black 100%);
+  -webkit-mask-repeat: no-repeat, no-repeat;
+  mask-repeat: no-repeat, no-repeat;
+  -webkit-mask-size: 100% 100%, 100% 100%;
+  mask-size: 100% 100%, 100% 100%;
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
   pointer-events: none;
-`;
+  z-index: 0;
 
-/* Overlay Beams */
-const BeamsOverlay = styled.div`
-  position: absolute;
-  width: 1520px;
-  height: 800px;
-  left: 50%;
-  transform: translateX(-50%);
-  top: -110px;
-  mix-blend-mode: overlay;
-  pointer-events: none;
-`;
-
-const Beam = styled.div`
-  position: absolute;
-  width: 134px;
-  height: 590px;
-  background: linear-gradient(222.85deg, rgba(255, 255, 255, 0) 49.5%, rgba(255, 255, 255, 0.9) 100%);
-  filter: drop-shadow(0px 0px 12px rgba(255, 255, 255, 0.25));
+  ${mediaQueries.down.sm} {
+    background-position: center -20px;
+  }
 `;
 
 /* Inner Layout */
