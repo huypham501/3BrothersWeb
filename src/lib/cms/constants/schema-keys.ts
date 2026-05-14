@@ -15,6 +15,10 @@ export const SCHEMA_KEYS = {
     FOR_CREATORS_BENEFIT: 'for_creators.benefit.v1',
     FOR_CREATORS_TESTIMONIALS: 'for_creators.testimonials.v1',
     FOR_CREATORS_CTA: 'for_creators.cta.v1',
+    SOCIAL_COMMERCE_HERO: 'social_commerce.hero.v1',
+    SOCIAL_COMMERCE_GROWTH: 'social_commerce.growth.v1',
+    SOCIAL_COMMERCE_VALUE_PROPOSITION: 'social_commerce.value_proposition.v1',
+    SOCIAL_COMMERCE_SOCIAL_PROOF: 'social_commerce.social_proof.v1',
     CAREERS_HERO: 'careers.hero.v1',
 } as const;
 

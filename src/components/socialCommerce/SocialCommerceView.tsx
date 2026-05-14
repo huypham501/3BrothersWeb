@@ -3,34 +3,36 @@
 import styled from 'styled-components';
 import { colors } from '@/styles/tokens';
 import type { ReactNode } from 'react';
-
+import type { SocialCommerceViewModel } from '@/lib/cms/resolvers/social-commerce.resolver';
 import { Header } from '@/components/shared/Header';
 import { Footer } from '@/components/shared/Footer';
-import type { GlobalFooterPayload, GlobalHeaderPayload } from '@/lib/cms/types';
 
 import { HeroSection } from './sections/HeroSection';
 import { GrowthSection } from './sections/GrowthSection';
+import { SocialProofSection } from './sections/SocialProofSection';
 import { ValuePropositionSection } from './sections/ValuePropositionSection';
 
 interface SocialCommerceViewProps {
-  header?: GlobalHeaderPayload | null;
-  footer?: GlobalFooterPayload | null;
+  data: SocialCommerceViewModel | null;
   ctaSectionSlot?: ReactNode;
 }
 
-export function SocialCommerceView({ header, footer, ctaSectionSlot }: SocialCommerceViewProps) {
+export function SocialCommerceView({ data, ctaSectionSlot }: SocialCommerceViewProps) {
+  if (!data) return null;
+
   return (
     <Wrapper>
-      <Header content={header ?? undefined} />
+      <Header content={data.globals.header ?? undefined} />
       <MainContent>
-        <HeroSection />
-        <GrowthSection />
-        <ValuePropositionSection />
+        {data.hero && <HeroSection content={data.hero} />}
+        {data.socialProof && <SocialProofSection content={data.socialProof} />}
+        {data.growth && <GrowthSection content={data.growth} />}
+        {data.valueProposition && <ValuePropositionSection content={data.valueProposition} />}
       </MainContent>
       <BlueGroupWrapper>
         {ctaSectionSlot}
       </BlueGroupWrapper>
-      <Footer content={footer ?? undefined} />
+      <Footer content={data.globals.footer ?? undefined} />
     </Wrapper>
   );
 }

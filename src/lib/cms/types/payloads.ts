@@ -168,6 +168,49 @@ export interface CtaPayload {
   cta_url: string;
 }
 
+export interface SocialCommerceSocialProofPayload {
+  section_title: string;
+  section_subtitle: string;
+  items: Array<{
+    id: 'live_commerce' | 'affiliate_marketing' | 'kol_marketplace' | 'bio_link' | 'brand_partnerships';
+    title: string;
+    description: string;
+  }>;
+}
+
+export interface SocialCommerceHeroPayload {
+  eyebrow: string;
+  title: string;
+  subtitle: string;
+  services: Array<{
+    id: 'live_commerce' | 'affiliate_marketing' | 'kol_marketplace' | 'bio_link' | 'brand_partnerships';
+    label: string;
+  }>;
+}
+
+export interface SocialCommerceGrowthPayload {
+  heading: string;
+  description: string;
+  cta_label: string;
+  cta_url: string;
+  stats: Array<{
+    id: 'services' | 'creators_kols' | 'brands';
+    title: string;
+    description: string;
+  }>;
+}
+
+export interface SocialCommerceValuePropositionPayload {
+  section_title: string;
+  section_subtitle: string;
+  items: Array<{
+    id: 'diversification' | 'connection' | 'income';
+    number: string;
+    title: string;
+    description: string;
+  }>;
+}
+
 // ── Careers ──────────────────────────────────────────────────────────────────
 
 export interface CareersHeroPerk {

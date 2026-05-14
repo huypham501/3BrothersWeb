@@ -39,6 +39,7 @@ export const colors = {
   bgDark: '#061530',
   bgLight: '#F9F9F9',
   bgLightAlt: '#F5F5F6',
+  bgBrandSubtle: '#F4F8FF',
   brandLightBlue: '#E0EBFF',
   brandLightBlueDark: '#D4E2FF',
 

@@ -3,18 +3,11 @@
 import styled from 'styled-components';
 import Link from 'next/link';
 import { colors, spacing, typography, mediaQueries, motion } from '@/styles/tokens';
-
-// ── Data ──────────────────────────────────────────────────────────────────────
-
-const STAT_CARDS = [
-  { title: '5 Dịch vụ', desc: 'Tạo nguồn thu nhập đa dạng hơn' },
-  { title: '5,000+ Creators & KOLs', desc: 'Tham gia cộng tác cùng mạng lưới 3Brothers' },
-  { title: '150+ Brands', desc: 'Trở thành đối tác nền tảng' }
-];
+import type { SocialCommerceGrowthPayload } from '@/lib/cms/types';
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
-export function GrowthSection() {
+export function GrowthSection({ content }: { content: SocialCommerceGrowthPayload }) {
   return (
     <SectionContainer>
       {/* Background overlapping gradient mesh (Vectors 5, 6, 7, 8, 9, 3) representing the background blobs */}
@@ -33,17 +26,12 @@ export function GrowthSection() {
       <Inner>
         {/* Left Column: Title and CTA */}
         <LeftContent>
-          <MainHeading>
-            NHIỀU CƠ HỘI HƠN,<br />THU NHẬP CAO HƠN
-          </MainHeading>
+          <MainHeading dangerouslySetInnerHTML={{ __html: content.heading.replace(/\n/g, '<br />') }} />
           
-          <Description>
-            Nhờ vào mạng lưới Creator Economy, chúng tôi cung cấp đa dạng dịch vụ Social Commerce 
-            giúp Creator & KOL chủ động tạo ra thu nhập và mở ra các cơ hội monetization mới.
-          </Description>
+          <Description>{content.description}</Description>
 
-          <CtaButton href="#">
-            <CtaText>Bắt đầu ngay</CtaText>
+          <CtaButton href={content.cta_url}>
+            <CtaText>{content.cta_label}</CtaText>
             <ArrowIcon>
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                 <path d="M4.167 10h11.666M10 4.167 15.833 10 10 15.833" stroke="#061530" strokeWidth="1.67" strokeLinecap="round" strokeLinejoin="round" />
@@ -54,12 +42,12 @@ export function GrowthSection() {
 
         {/* Right Column: Cards */}
         <RightContent>
-          {STAT_CARDS.map((card, idx) => (
-            <StatCard key={idx}>
+          {content.stats.map((card) => (
+            <StatCard key={card.id}>
               <CardIcon />
               <CardContent>
                 <CardTitle>{card.title}</CardTitle>
-                <CardDesc>{card.desc}</CardDesc>
+                <CardDesc>{card.description}</CardDesc>
               </CardContent>
             </StatCard>
           ))}
@@ -97,7 +85,7 @@ const BackgroundMesh = styled.div`
 const MeshMask = styled.div`
   position: absolute;
   inset: 0;
-  top: 5px;
+  top: 0;
   overflow: hidden;
 `;
 

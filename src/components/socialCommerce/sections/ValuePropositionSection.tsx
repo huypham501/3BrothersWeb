@@ -2,49 +2,28 @@
 
 import styled from 'styled-components';
 import { colors, spacing, typography, mediaQueries } from '@/styles/tokens';
-
-// ── Data ──────────────────────────────────────────────────────────────────────
-
-const VALUE_PROPS = [
-  {
-    num: '01',
-    title: 'Đa dạng hoá',
-    desc: 'Mở rộng sự hiện diện thương hiệu cá nhân tới đa dạng nền tảng và nhiều kênh kinh doanh khác nhau'
-  },
-  {
-    num: '02',
-    title: 'Kết nối',
-    desc: 'Tìm kiếm tệp người xem phù hợp, phát triển cộng đồng và chuyển đổi người theo dõi thành khách hàng trung thành'
-  },
-  {
-    num: '03',
-    title: 'Thu nhập đa dạng',
-    desc: 'Xây dựng nguồn thu nhập bổ sung từ sáng tạo nội dung. Tìm kiếm người tiêu dùng và tạo ra doanh thu bền vững'
-  }
-];
+import type { SocialCommerceValuePropositionPayload } from '@/lib/cms/types';
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
-export function ValuePropositionSection() {
+export function ValuePropositionSection({ content }: { content: SocialCommerceValuePropositionPayload }) {
   return (
     <SectionContainer>
       <Inner>
         <Header>
-          <Title>Giá trị tạo nên sự khác biệt</Title>
-          <Subtitle>
-            Chúng tôi giúp Creator & KOL sống với đam mê bằng cách cung cấp công cụ mới để monetize từ thương hiệu cá nhân và nội dung sáng tạo
-          </Subtitle>
+          <Title>{content.section_title}</Title>
+          <Subtitle>{content.section_subtitle}</Subtitle>
         </Header>
 
         <GridWrapper>
-          {VALUE_PROPS.map((prop, idx) => (
-            <Column key={idx}>
-              <Number>{prop.num}</Number>
+          {content.items.map((prop, idx) => (
+            <Column key={prop.id}>
+              <Number>{prop.number}</Number>
               <ContentStack>
                 <ColTitle>{prop.title}</ColTitle>
-                <ColDesc>{prop.desc}</ColDesc>
+                <ColDesc>{prop.description}</ColDesc>
               </ContentStack>
-              {idx < VALUE_PROPS.length - 1 && <Divider />}
+              {idx < content.items.length - 1 && <Divider />}
             </Column>
           ))}
         </GridWrapper>
@@ -57,7 +36,7 @@ export function ValuePropositionSection() {
 
 const SectionContainer = styled.section`
   width: 100%;
-  background: ${colors.white};
+  background: ${colors.bgBrandSubtle};
   display: flex;
   justify-content: center;
   padding: 120px 0;

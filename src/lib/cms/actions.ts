@@ -14,6 +14,7 @@ type SchemaRegistry = Record<string, { parse: (value: unknown) => unknown }>;
 const PAGE_ADMIN_PATH_BY_SLUG: Record<string, string> = {
   home: '/admin/content/pages/home',
   'for-creators': '/admin/content/pages/for-creators',
+  'social-commerce': '/admin/content/pages/social-commerce',
 };
 
 function revalidateAdminPageForSlug(slug: string) {
@@ -287,6 +288,89 @@ export async function publishHomePage(pageId: string) {
 }
 
 export async function publishForCreatorsPage(pageId: string) {
+  const actor = await requireCmsActionCapability('publish');
+  const supabase = await createSupabaseServerClient();
+  const publishedAt = new Date().toISOString();
+
+  const { data: pageData, error: pageFetchError } = await supabase
+    .from('pages')
+    .select('*')
+    .eq('id', pageId)
+    .single();
+
+  if (pageFetchError || !pageData) {
+    throw new Error('Page not found.');
+  }
+
+  const { error: pageError } = await supabase.rpc('publish_page', { p_page_id: pageId });
+  if (pageError) {
+    await supabase
+      .from('pages')
+      .update({
+        published_seo_title: pageData.seo_title,
+        published_seo_description: pageData.seo_description,
+        published_og_image: pageData.og_image,
+        published_og_image_alt: pageData.og_image_alt,
+        published_keywords: pageData.keywords,
+        has_unpublished_changes: false,
+      })
+      .eq('id', pageId);
+  }
+
+  await supabase
+    .from('pages')
+    .update({
+      last_published_by: actor.userId,
+      last_published_by_identifier: actor.email,
+      last_published_at: publishedAt,
+    })
+    .eq('id', pageId);
+
+  const { data: sections } = await supabase.from('page_sections').select('*').eq('page_id', pageId);
+  if (sections) {
+    for (const sec of sections) {
+      await supabase
+        .from('page_sections')
+        .update({
+          published_content: sec.content,
+          published_enabled: sec.enabled,
+          has_unpublished_changes: false,
+          last_published_by: actor.userId,
+          last_published_by_identifier: actor.email,
+          last_published_at: publishedAt,
+        })
+        .eq('id', sec.id);
+
+      await writeCmsAuditLog({
+        actorUserId: actor.userId,
+        actorEmail: actor.email,
+        actorRole: actor.role,
+        actionType: 'publish',
+        entityType: 'page_section',
+        entityId: sec.id,
+        entityKeyOrId: sec.schema_key,
+        pageSlugOrSchemaKey: pageData.slug,
+        summary: `Published page section ${sec.schema_key} for ${pageData.slug}`,
+      });
+    }
+  }
+
+  await writeCmsAuditLog({
+    actorUserId: actor.userId,
+    actorEmail: actor.email,
+    actorRole: actor.role,
+    actionType: 'publish',
+    entityType: 'page',
+    entityId: pageData.id,
+    entityKeyOrId: pageData.id,
+    pageSlugOrSchemaKey: pageData.slug,
+    summary: `Published page ${pageData.slug}`,
+  });
+
+  revalidateAdminPageForSlug(pageData.slug);
+}
+
+export async function publishSocialCommercePage(pageId: string) {
   const actor = await requireCmsActionCapability('publish');
   const supabase = await createSupabaseServerClient();
   const publishedAt = new Date().toISOString();

@@ -16,6 +16,10 @@ import type {
   HomeTrendingPayload,
   SharedContactCtaPayload,
   SharedExclusiveTalentsPayload,
+  SocialCommerceGrowthPayload,
+  SocialCommerceHeroPayload,
+  SocialCommerceSocialProofPayload,
+  SocialCommerceValuePropositionPayload,
 } from './payloads';
 
 export interface CmsSchemaPayloadMap {
@@ -35,6 +39,10 @@ export interface CmsSchemaPayloadMap {
   [SCHEMA_KEYS.FOR_CREATORS_BENEFIT]: ForCreatorsBenefitPayload;
   [SCHEMA_KEYS.FOR_CREATORS_TESTIMONIALS]: ForCreatorsTestimonialsPayload;
   [SCHEMA_KEYS.FOR_CREATORS_CTA]: CtaPayload;
+  [SCHEMA_KEYS.SOCIAL_COMMERCE_HERO]: SocialCommerceHeroPayload;
+  [SCHEMA_KEYS.SOCIAL_COMMERCE_GROWTH]: SocialCommerceGrowthPayload;
+  [SCHEMA_KEYS.SOCIAL_COMMERCE_VALUE_PROPOSITION]: SocialCommerceValuePropositionPayload;
+  [SCHEMA_KEYS.SOCIAL_COMMERCE_SOCIAL_PROOF]: SocialCommerceSocialProofPayload;
   [SCHEMA_KEYS.CAREERS_HERO]: CareersHeroPayload;
 }
 
@@ -48,6 +56,10 @@ export type CmsSectionSchemaKey =
   | typeof SCHEMA_KEYS.FOR_CREATORS_BENEFIT
   | typeof SCHEMA_KEYS.FOR_CREATORS_TESTIMONIALS
   | typeof SCHEMA_KEYS.FOR_CREATORS_CTA
+  | typeof SCHEMA_KEYS.SOCIAL_COMMERCE_HERO
+  | typeof SCHEMA_KEYS.SOCIAL_COMMERCE_GROWTH
+  | typeof SCHEMA_KEYS.SOCIAL_COMMERCE_VALUE_PROPOSITION
+  | typeof SCHEMA_KEYS.SOCIAL_COMMERCE_SOCIAL_PROOF
   | typeof SCHEMA_KEYS.SHARED_EXCLUSIVE_TALENTS
   | typeof SCHEMA_KEYS.SHARED_CONTACT_CTA
   | typeof SCHEMA_KEYS.SHARED_CTA

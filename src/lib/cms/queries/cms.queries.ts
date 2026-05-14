@@ -194,3 +194,9 @@ export async function getForCreatorsPageData() {
     slug: 'for-creators',
   });
 }
+
+export async function getSocialCommercePageData() {
+  return getPageDataBundle({
+    slug: 'social-commerce',
+  });
+}

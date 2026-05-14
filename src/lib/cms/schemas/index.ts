@@ -235,6 +235,57 @@ export const forCreatorsCtaSchema = z.object({
   cta_url: urlOrHash,
 });
 
+export const socialCommerceSocialProofSchema = z.object({
+  section_title: z.string().max(120),
+  section_subtitle: z.string().max(300),
+  items: z.array(
+    z.object({
+      id: z.enum(['live_commerce', 'affiliate_marketing', 'kol_marketplace', 'bio_link', 'brand_partnerships']),
+      title: z.string().max(80),
+      description: z.string().max(300),
+    })
+  ).length(5),
+});
+
+export const socialCommerceHeroSchema = z.object({
+  eyebrow: z.string().max(80),
+  title: z.string().max(120),
+  subtitle: z.string().max(300),
+  services: z.array(
+    z.object({
+      id: z.enum(['live_commerce', 'affiliate_marketing', 'kol_marketplace', 'bio_link', 'brand_partnerships']),
+      label: z.string().max(80),
+    })
+  ).length(5),
+});
+
+export const socialCommerceGrowthSchema = z.object({
+  heading: z.string().max(180),
+  description: z.string().max(500),
+  cta_label: z.string().max(40),
+  cta_url: urlOrHash,
+  stats: z.array(
+    z.object({
+      id: z.enum(['services', 'creators_kols', 'brands']),
+      title: z.string().max(80),
+      description: z.string().max(300),
+    })
+  ).length(3),
+});
+
+export const socialCommerceValuePropositionSchema = z.object({
+  section_title: z.string().max(120),
+  section_subtitle: z.string().max(300),
+  items: z.array(
+    z.object({
+      id: z.enum(['diversification', 'connection', 'income']),
+      number: z.string().max(10),
+      title: z.string().max(80),
+      description: z.string().max(300),
+    })
+  ).length(3),
+});
+
 // ── Careers ──────────────────────────────────────────────────────────────────
 
 export const careersHeroPerkSchema = z.object({
@@ -304,5 +355,9 @@ export const CMS_REGISTRY = {
   [SCHEMA_KEYS.FOR_CREATORS_BENEFIT]: forCreatorsBenefitSchema,
   [SCHEMA_KEYS.FOR_CREATORS_TESTIMONIALS]: forCreatorsTestimonialsSchema,
   [SCHEMA_KEYS.FOR_CREATORS_CTA]: forCreatorsCtaSchema,
+  [SCHEMA_KEYS.SOCIAL_COMMERCE_HERO]: socialCommerceHeroSchema,
+  [SCHEMA_KEYS.SOCIAL_COMMERCE_GROWTH]: socialCommerceGrowthSchema,
+  [SCHEMA_KEYS.SOCIAL_COMMERCE_VALUE_PROPOSITION]: socialCommerceValuePropositionSchema,
+  [SCHEMA_KEYS.SOCIAL_COMMERCE_SOCIAL_PROOF]: socialCommerceSocialProofSchema,
   [SCHEMA_KEYS.CAREERS_HERO]: careersHeroSchema,
 };

@@ -2,22 +2,15 @@
 
 import styled from 'styled-components';
 import { colors, spacing, typography, mediaQueries } from '@/styles/tokens';
+import type { SocialCommerceHeroPayload } from '@/lib/cms/types';
 
 const HERO_BG_IMAGE = '/images/social-commerce/hero-background.png';
 const HERO_BG_ASPECT_RATIO = '1440 / 471';
 const HERO_BG_WIDTH = '1440px';
 
-const SERVICES = [
-  'Live Commerce',
-  'Affiliate Marketing',
-  'KOL Marketplace',
-  'Bio Link',
-  'Brand Partnerships'
-];
-
 // ── Component ─────────────────────────────────────────────────────────────────
 
-export function HeroSection() {
+export function HeroSection({ content }: { content: SocialCommerceHeroPayload }) {
   return (
     <SectionContainer>
       <BackgroundLayer aria-hidden="true" />
@@ -25,18 +18,18 @@ export function HeroSection() {
       <Inner>
         <HeaderContent>
           <EyebrowGroup>
-            <EyebrowText>Dịch vụ</EyebrowText>
+            <EyebrowText>{content.eyebrow}</EyebrowText>
           </EyebrowGroup>
           
-          <Title>Social Commerce</Title>
+          <Title>{content.title}</Title>
           
           <ContentLower>
-            <Subtitle>Giải pháp gia tăng thu nhập cho Creator & KOLs</Subtitle>
+            <Subtitle>{content.subtitle}</Subtitle>
             
             <ServicesRow>
-              {SERVICES.map((service, idx) => (
-                <ServicePill key={idx}>
-                  <ServiceText>{service}</ServiceText>
+              {content.services.map((service) => (
+                <ServicePill key={service.id}>
+                  <ServiceText>{service.label}</ServiceText>
                 </ServicePill>
               ))}
             </ServicesRow>

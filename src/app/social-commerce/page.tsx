@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import { SocialCommerceView } from '@/components/socialCommerce/SocialCommerceView';
-import { resolvePublicLayoutData } from '@/lib/cms/resolvers/public-layout.resolver';
+import { resolveSocialCommercePageData } from '@/lib/cms/resolvers/social-commerce.resolver';
 import { CTASection } from '@/components/shared/Cta/CTASection';
 
 export const metadata: Metadata = {
@@ -9,12 +9,11 @@ export const metadata: Metadata = {
 };
 
 export default async function SocialCommercePage() {
-  const layout = await resolvePublicLayoutData();
+  const data = await resolveSocialCommercePageData();
 
   return (
     <SocialCommerceView
-      header={layout.header}
-      footer={layout.footer}
+      data={data}
       ctaSectionSlot={<CTASection />}
     />
   );
