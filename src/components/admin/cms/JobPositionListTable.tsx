@@ -9,9 +9,12 @@ import {
   EditOutlined,
   DeleteOutlined,
   PlusOutlined,
+  ArrowUpOutlined,
+  ArrowDownOutlined,
+  SaveOutlined,
 } from '@ant-design/icons';
 import type { CmsJobPosition } from '@/lib/cms';
-import { deleteJobPosition } from '@/lib/cms/careers-actions';
+import { deleteJobPosition, updateJobPositionSortOrder } from '@/lib/cms/careers-actions';
 
 interface JobPositionListTableProps {
   positions: CmsJobPosition[];
@@ -20,6 +23,16 @@ interface JobPositionListTableProps {
 export function JobPositionListTable({ positions }: JobPositionListTableProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
+  const [orderedPositions, setOrderedPositions] = React.useState(positions);
+
+  React.useEffect(() => {
+    setOrderedPositions(positions);
+  }, [positions]);
+
+  const hasSortChanges = React.useMemo(
+    () => orderedPositions.some((pos, index) => pos.id !== positions[index]?.id),
+    [orderedPositions, positions]
+  );
 
   const handleDelete = (id: string, title: string) => {
     startTransition(async () => {
@@ -28,6 +41,33 @@ export function JobPositionListTable({ positions }: JobPositionListTableProps) {
         router.refresh();
       } catch {
         alert(`Failed to delete "${title}". Please try again.`);
+      }
+    });
+  };
+
+  const movePosition = (from: number, to: number) => {
+    if (to < 0 || to >= orderedPositions.length) return;
+    setOrderedPositions((prev) => {
+      const next = [...prev];
+      const [item] = next.splice(from, 1);
+      next.splice(to, 0, item);
+      return next;
+    });
+  };
+
+  const handleSaveOrder = () => {
+    if (!hasSortChanges) return;
+    startTransition(async () => {
+      try {
+        await updateJobPositionSortOrder(
+          orderedPositions.map((item, index) => ({
+            id: item.id,
+            sort_order: index,
+          }))
+        );
+        router.refresh();
+      } catch {
+        alert('Failed to update position order. Please try again.');
       }
     });
   };
@@ -123,6 +163,34 @@ export function JobPositionListTable({ positions }: JobPositionListTableProps) {
       ),
     },
     {
+      title: 'Order',
+      key: 'order',
+      width: 110,
+      render: (_: unknown, record: CmsJobPosition) => {
+        const index = orderedPositions.findIndex((item) => item.id === record.id);
+        return (
+          <Space size="small">
+            <Button
+              size="small"
+              type="text"
+              icon={<ArrowUpOutlined />}
+              onClick={() => movePosition(index, index - 1)}
+              disabled={index <= 0}
+              title="Move up"
+            />
+            <Button
+              size="small"
+              type="text"
+              icon={<ArrowDownOutlined />}
+              onClick={() => movePosition(index, index + 1)}
+              disabled={index < 0 || index >= orderedPositions.length - 1}
+              title="Move down"
+            />
+          </Space>
+        );
+      },
+    },
+    {
       title: 'Actions',
       key: 'actions',
       width: 100,
@@ -158,20 +226,30 @@ export function JobPositionListTable({ positions }: JobPositionListTableProps) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
       <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-        <Link href="/admin/content/pages/careers/new">
+        <Space>
           <Button
-            type="primary"
-            icon={<PlusOutlined />}
-            style={{ background: '#7c3aed', borderColor: '#7c3aed' }}
+            icon={<SaveOutlined />}
+            onClick={handleSaveOrder}
+            disabled={!hasSortChanges}
+            loading={isPending}
           >
-            New Position
+            Save Order
           </Button>
-        </Link>
+          <Link href="/admin/content/pages/careers/new">
+            <Button
+              type="primary"
+              icon={<PlusOutlined />}
+              style={{ background: '#7c3aed', borderColor: '#7c3aed' }}
+            >
+              New Position
+            </Button>
+          </Link>
+        </Space>
       </div>
 
       <Table
         columns={columns}
-        dataSource={positions}
+        dataSource={orderedPositions}
         rowKey="id"
         size="middle"
         pagination={false}

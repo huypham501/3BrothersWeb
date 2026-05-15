@@ -12,14 +12,12 @@ import { AdminImageUpload } from '@/components/admin/controls/AdminImageUpload';
 import { AdminButton as Button } from '@/components/admin/layout/AdminPrimitives';
 import { AdminSwitch as Switch } from '@/components/admin/controls/AdminSwitch';
 import { AdminAlert as Alert, AdminAlertDescription as AlertDescription } from '@/components/admin/layout/AdminPrimitives';
+import { CmsSortableList } from '@/components/admin/cms/ux/CmsSortableList';
 import {
   ErrorText,
   FormStack,
   HeaderRow,
-  ItemCard,
-  SectionHeaderRow,
   SectionStack,
-  SectionTitle,
   ToggleFormItem,
 } from './EditorLayout';
 import { z } from 'zod';
@@ -43,7 +41,7 @@ export function HomePartnersEditor({ pageId, section }: { pageId: string, sectio
     },
   });
 
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append, remove, move } = useFieldArray({
     control: form.control,
     name: "partners",
   });
@@ -91,15 +89,17 @@ export function HomePartnersEditor({ pageId, section }: { pageId: string, sectio
         </HeaderRow>
 
         <SectionStack>
-          <SectionHeaderRow>
-            <SectionTitle>Partners ({fields.length})</SectionTitle>
-            <Button type="button" variant="outline" size="sm" onClick={() => append({ name: '', logo_image: '', url: '#' })}>
-              + Add Partner
-            </Button>
-          </SectionHeaderRow>
-          
-          {fields.map((item, index) => (
-            <ItemCard key={item.id}>
+          <CmsSortableList
+            title={`Partners (${fields.length})`}
+            items={fields.map((item, index) => ({ key: item.id, value: index }))}
+            onMove={move}
+            onRemove={remove}
+            onAdd={() => append({ name: '', logo_image: '', url: '#' })}
+            addLabel="Add Partner"
+            renderItem={({ item }) => {
+              const index = item.value;
+              return (
+                <>
               <FormField
                 control={form.control}
                 name={`partners.${index}.name`}
@@ -149,11 +149,10 @@ export function HomePartnersEditor({ pageId, section }: { pageId: string, sectio
                   </FormItem>
                 )}
               />
-              <Button type="button" variant="destructive" size="sm" onClick={() => remove(index)}>
-                Remove
-              </Button>
-            </ItemCard>
-          ))}
+                </>
+              );
+            }}
+          />
           {form.formState.errors.partners && <ErrorText>{form.formState.errors.partners.message}</ErrorText>}
         </SectionStack>
 

@@ -13,15 +13,12 @@ import { AdminTextarea as Textarea } from '@/components/admin/controls/AdminText
 import { AdminButton as Button } from '@/components/admin/layout/AdminPrimitives';
 import { AdminSwitch as Switch } from '@/components/admin/controls/AdminSwitch';
 import { AdminAlert as Alert, AdminAlertDescription as AlertDescription, AdminAlertTitle as AlertTitle } from '@/components/admin/layout/AdminPrimitives';
+import { CmsSortableList } from '@/components/admin/cms/ux/CmsSortableList';
 import {
   ErrorText,
-  FooterRow,
   FormStack,
   HeaderRow,
-  ItemCard,
-  SectionHeaderRow,
   SectionStack,
-  SectionTitle,
   ToggleFormItem,
   TwoColumnGrid,
 } from './EditorLayout';
@@ -47,7 +44,7 @@ export function HomeCoreCompetenciesEditor({ pageId, section }: { pageId: string
     },
   });
 
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append, remove, move } = useFieldArray({
     control: form.control,
     name: "services",
   });
@@ -109,15 +106,17 @@ export function HomeCoreCompetenciesEditor({ pageId, section }: { pageId: string
         />
         
         <SectionStack>
-          <SectionHeaderRow>
-            <SectionTitle>Services ({fields.length})</SectionTitle>
-            <Button type="button" variant="outline" size="sm" onClick={() => append({ title: '', description: '', image: '', link_url: '#' })}>
-              + Add Service
-            </Button>
-          </SectionHeaderRow>
-          
-          {fields.map((item, index) => (
-            <ItemCard key={item.id}>
+          <CmsSortableList
+            title={`Services (${fields.length})`}
+            items={fields.map((item, index) => ({ key: item.id, value: index }))}
+            onMove={move}
+            onRemove={remove}
+            onAdd={() => append({ title: '', description: '', image: '', link_url: '#' })}
+            addLabel="Add Service"
+            renderItem={({ item }) => {
+              const index = item.value;
+              return (
+                <>
               <FormField
                 control={form.control}
                 name={`services.${index}.title`}
@@ -182,13 +181,10 @@ export function HomeCoreCompetenciesEditor({ pageId, section }: { pageId: string
                   )}
                 />
               </TwoColumnGrid>
-              <FooterRow>
-                <Button type="button" variant="destructive" size="sm" onClick={() => remove(index)}>
-                  Remove Service
-                </Button>
-              </FooterRow>
-            </ItemCard>
-          ))}
+                </>
+              );
+            }}
+          />
           {form.formState.errors.services && <ErrorText>{form.formState.errors.services.message}</ErrorText>}
         </SectionStack>
       </FormStack>

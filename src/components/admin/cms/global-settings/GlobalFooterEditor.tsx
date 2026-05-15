@@ -19,6 +19,7 @@ import {
   AdminCard,
 } from '@/components/admin/layout/AdminPrimitives';
 import { CmsEditorStatusBar } from '@/components/admin/cms/CmsEditorStatusBar';
+import { CmsSortableList } from '@/components/admin/cms/ux/CmsSortableList';
 
 type FormValues = z.infer<typeof globalFooterSchema> & { enabled: boolean };
 
@@ -221,22 +222,18 @@ export function GlobalFooterEditor({ setting, role, canPublish }: GlobalFooterEd
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
-              <Typography.Title level={5} style={{ margin: 0 }}>Menu Links</Typography.Title>
-              <Button
-                type="dashed"
-                size="small"
-                icon={<PlusOutlined />}
-                onClick={() => menuLinksArray.append({ label: '', url: '/' })}
-                disabled={menuLinksArray.fields.length >= 10}
-              >
-                Add Menu Link
-              </Button>
-            </div>
-
-            {menuLinksArray.fields.map((field, index) => (
-              <AdminCard key={field.id} bodyStyle={{ padding: '12px 16px' }}>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr auto', gap: 16, alignItems: 'end' }}>
+            <CmsSortableList
+              title={`Menu Links (${menuLinksArray.fields.length})`}
+              items={menuLinksArray.fields.map((field, index) => ({ key: field.id, value: index }))}
+              onMove={menuLinksArray.move}
+              onRemove={menuLinksArray.remove}
+              onAdd={() => menuLinksArray.append({ label: '', url: '/' })}
+              addLabel="Add Menu Link"
+              removeDisabled={(_, total) => total <= 1}
+              renderItem={({ item }) => {
+                const index = item.value;
+                return (
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, alignItems: 'end' }}>
                 <FormField
                   control={form.control}
                   name={`menu_links.${index}.label`}
@@ -264,39 +261,25 @@ export function GlobalFooterEditor({ setting, role, canPublish }: GlobalFooterEd
                     </FormItem>
                   )}
                 />
-
-                <div style={{ paddingBottom: 4 }}>
-                  <Button
-                    type="text"
-                    danger
-                    size="small"
-                    icon={<DeleteOutlined />}
-                    onClick={() => menuLinksArray.remove(index)}
-                    disabled={menuLinksArray.fields.length <= 1}
-                  />
-                </div>
-                </div>
-              </AdminCard>
-            ))}
+                  </div>
+                );
+              }}
+            />
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
-              <Typography.Title level={5} style={{ margin: 0 }}>Social Links</Typography.Title>
-              <Button
-                type="dashed"
-                size="small"
-                icon={<PlusOutlined />}
-                onClick={() => socialLinksArray.append({ label: '', url: '#' })}
-                disabled={socialLinksArray.fields.length >= 8}
-              >
-                Add Social Link
-              </Button>
-            </div>
-
-            {socialLinksArray.fields.map((field, index) => (
-              <AdminCard key={field.id} bodyStyle={{ padding: '12px 16px' }}>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr auto', gap: 16, alignItems: 'end' }}>
+            <CmsSortableList
+              title={`Social Links (${socialLinksArray.fields.length})`}
+              items={socialLinksArray.fields.map((field, index) => ({ key: field.id, value: index }))}
+              onMove={socialLinksArray.move}
+              onRemove={socialLinksArray.remove}
+              onAdd={() => socialLinksArray.append({ label: '', url: '#' })}
+              addLabel="Add Social Link"
+              removeDisabled={(_, total) => total <= 1}
+              renderItem={({ item }) => {
+                const index = item.value;
+                return (
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, alignItems: 'end' }}>
                 <FormField
                   control={form.control}
                   name={`social_links.${index}.label`}
@@ -324,20 +307,10 @@ export function GlobalFooterEditor({ setting, role, canPublish }: GlobalFooterEd
                     </FormItem>
                   )}
                 />
-
-                <div style={{ paddingBottom: 4 }}>
-                  <Button
-                    type="text"
-                    danger
-                    size="small"
-                    icon={<DeleteOutlined />}
-                    onClick={() => socialLinksArray.remove(index)}
-                    disabled={socialLinksArray.fields.length <= 1}
-                  />
-                </div>
-                </div>
-              </AdminCard>
-            ))}
+                  </div>
+                );
+              }}
+            />
           </div>
 
           <FormField

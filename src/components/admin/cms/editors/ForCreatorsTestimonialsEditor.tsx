@@ -13,15 +13,12 @@ import { AdminButton as Button } from '@/components/admin/layout/AdminPrimitives
 import { AdminSwitch as Switch } from '@/components/admin/controls/AdminSwitch';
 import { AdminAlert as Alert, AdminAlertDescription as AlertDescription } from '@/components/admin/layout/AdminPrimitives';
 import { CmsFieldHint } from '@/components/admin/cms/ux/CmsFieldHint';
+import { CmsSortableList } from '@/components/admin/cms/ux/CmsSortableList';
 import { getCmsFieldUxSpec } from '@/lib/cms/ux/field-ux-spec';
 import {
-  FooterRow,
   FormStack,
   HeaderRow,
-  ItemCard,
-  SectionHeaderRow,
   SectionStack,
-  SectionTitle,
   ToggleFormItem,
   TwoColumnGrid,
 } from './EditorLayout';
@@ -49,7 +46,7 @@ export function ForCreatorsTestimonialsEditor({ pageId, section }: { pageId: str
     },
   });
 
-  const { fields, append, remove } = useFieldArray({ control: form.control, name: 'testimonials' });
+  const { fields, append, remove, move } = useFieldArray({ control: form.control, name: 'testimonials' });
 
   const onSubmit = async (data: FormValues) => {
     setIsSaving(true);
@@ -110,14 +107,18 @@ export function ForCreatorsTestimonialsEditor({ pageId, section }: { pageId: str
         </TwoColumnGrid>
 
         <SectionStack>
-          <SectionHeaderRow>
-            <SectionTitle>Testimonials ({fields.length})</SectionTitle>
-            <Button type="button" variant="outline" size="sm" onClick={() => append({ quote: '', name: '', role: '' })}>
-              + Add Testimonial
-            </Button>
-          </SectionHeaderRow>
-          {fields.map((item, index) => (
-            <ItemCard key={item.id}>
+          <CmsSortableList
+            title={`Testimonials (${fields.length})`}
+            items={fields.map((item, index) => ({ key: item.id, value: index }))}
+            onMove={move}
+            onRemove={remove}
+            onAdd={() => append({ quote: '', name: '', role: '' })}
+            addLabel="Add Testimonial"
+            removeDisabled={(_, total) => total <= 1}
+            renderItem={({ item }) => {
+              const index = item.value;
+              return (
+                <>
               <FormField control={form.control} name={`testimonials.${index}.quote`} render={({ field }) => (
                 <FormItem><FormLabel>Quote</FormLabel><FormControl><Textarea {...field} rows={3} maxLength={400} showCount /></FormControl><FormMessage /></FormItem>
               )} />
@@ -129,13 +130,10 @@ export function ForCreatorsTestimonialsEditor({ pageId, section }: { pageId: str
                   <FormItem><FormLabel>Role</FormLabel><FormControl><Input {...field} maxLength={120} showCount /></FormControl><FormMessage /></FormItem>
                 )} />
               </TwoColumnGrid>
-              <FooterRow>
-                <Button type="button" variant="destructive" size="sm" onClick={() => remove(index)} disabled={fields.length <= 1}>
-                  Remove
-                </Button>
-              </FooterRow>
-            </ItemCard>
-          ))}
+                </>
+              );
+            }}
+          />
         </SectionStack>
       </FormStack>
     </Form>

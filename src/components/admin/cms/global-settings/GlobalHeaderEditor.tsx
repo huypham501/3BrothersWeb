@@ -20,6 +20,7 @@ import {
   AdminCard,
 } from '@/components/admin/layout/AdminPrimitives';
 import { CmsEditorStatusBar } from '@/components/admin/cms/CmsEditorStatusBar';
+import { CmsSortableList } from '@/components/admin/cms/ux/CmsSortableList';
 
 type FormValues = z.infer<typeof globalHeaderSchema> & { enabled: boolean };
 
@@ -210,22 +211,18 @@ export function GlobalHeaderEditor({ setting, role, canPublish }: GlobalHeaderEd
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
-            <Typography.Title level={5} style={{ margin: 0 }}>Navigation Links</Typography.Title>
-            <Button
-              type="dashed"
-              size="small"
-              icon={<PlusOutlined />}
-              onClick={() => navLinksArray.append({ label: '', url: '/' })}
-              disabled={navLinksArray.fields.length >= 8}
-            >
-              Add Link
-            </Button>
-            </div>
-
-          {navLinksArray.fields.map((field, index) => (
-            <AdminCard key={field.id} bodyStyle={{ padding: '12px 16px' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr auto', gap: 16, alignItems: 'end' }}>
+            <CmsSortableList
+              title={`Navigation Links (${navLinksArray.fields.length})`}
+              items={navLinksArray.fields.map((field, index) => ({ key: field.id, value: index }))}
+              onMove={navLinksArray.move}
+              onRemove={navLinksArray.remove}
+              onAdd={() => navLinksArray.append({ label: '', url: '/' })}
+              addLabel="Add Link"
+              removeDisabled={(_, total) => total <= 1}
+              renderItem={({ item }) => {
+                const index = item.value;
+                return (
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, alignItems: 'end' }}>
               <FormField
                 control={form.control}
                 name={`nav_links.${index}.label`}
@@ -253,20 +250,10 @@ export function GlobalHeaderEditor({ setting, role, canPublish }: GlobalHeaderEd
                   </FormItem>
                 )}
               />
-
-              <div style={{ paddingBottom: 4 }}>
-                <Button
-                  type="text"
-                  danger
-                  size="small"
-                  icon={<DeleteOutlined />}
-                  onClick={() => navLinksArray.remove(index)}
-                  disabled={navLinksArray.fields.length <= 1}
-                />
-              </div>
-              </div>
-            </AdminCard>
-          ))}
+                  </div>
+                );
+              }}
+            />
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 24 }}>

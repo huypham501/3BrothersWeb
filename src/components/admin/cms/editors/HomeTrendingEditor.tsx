@@ -12,13 +12,13 @@ import { AdminButton as Button } from '@/components/admin/layout/AdminPrimitives
 import { AdminSwitch as Switch } from '@/components/admin/controls/AdminSwitch';
 import { AdminAlert as Alert, AdminAlertDescription as AlertDescription } from '@/components/admin/layout/AdminPrimitives';
 import { CmsFieldHint } from '@/components/admin/cms/ux/CmsFieldHint';
+import { CmsSortableList } from '@/components/admin/cms/ux/CmsSortableList';
 import { getCmsFieldUxSpec } from '@/lib/cms/ux/field-ux-spec';
 import {
   ErrorText,
   FooterRow,
   FormStack,
   HeaderRow,
-  ItemCard,
   SectionHeaderRow,
   SectionStack,
   SectionTitle,
@@ -118,6 +118,25 @@ export function HomeTrendingEditor({
     });
     setSelectedPostIdToAdd('');
     setErrorMsg(null);
+  };
+
+  const moveSelected = (from: number, to: number) => {
+    if (to < 0 || to >= selectedIds.length) return;
+    const next = [...selectedIds];
+    const [item] = next.splice(from, 1);
+    next.splice(to, 0, item);
+    form.setValue('selected_post_ids', next, {
+      shouldDirty: true,
+      shouldValidate: true,
+    });
+  };
+
+  const removeSelected = (targetIndex: number) => {
+    const next = selectedIds.filter((_, i) => i !== targetIndex);
+    form.setValue('selected_post_ids', next, {
+      shouldDirty: true,
+      shouldValidate: true,
+    });
   };
 
   const ux = (fieldPath: string) => getCmsFieldUxSpec('home_trending', fieldPath);
@@ -263,54 +282,27 @@ export function HomeTrendingEditor({
             {ux('selected_post_ids').what ?? 'Select and order published posts for Home Trending.'}
           </ErrorText>
 
-          {selectedIds.map((postId, index) => {
-            const post = postById.get(postId);
-
-            const moveSelected = (from: number, to: number) => {
-              if (to < 0 || to >= selectedIds.length) return;
-              const next = [...selectedIds];
-              const [item] = next.splice(from, 1);
-              next.splice(to, 0, item);
-              form.setValue('selected_post_ids', next, {
-                shouldDirty: true,
-                shouldValidate: true,
-              });
-            };
-
-            const removeSelected = (targetIndex: number) => {
-              const next = selectedIds.filter((_, i) => i !== targetIndex);
-              form.setValue('selected_post_ids', next, {
-                shouldDirty: true,
-                shouldValidate: true,
-              });
-            };
-
-            return (
-              <ItemCard key={`${postId}-${index}`}>
-                <SectionHeaderRow>
-                  <SectionTitle style={{ margin: 0 }}>
-                    {post ? post.title : `Missing post: ${postId}`}
-                  </SectionTitle>
-                  <div style={{ display: 'flex', gap: 8 }}>
-                    <Button type="button" variant="outline" size="sm" onClick={() => moveSelected(index, index - 1)} disabled={index === 0}>
-                      Up
-                    </Button>
-                    <Button type="button" variant="outline" size="sm" onClick={() => moveSelected(index, index + 1)} disabled={index === selectedIds.length - 1}>
-                      Down
-                    </Button>
-                    <Button type="button" variant="destructive" size="sm" onClick={() => removeSelected(index)}>
-                      Remove
-                    </Button>
+          <CmsSortableList
+            title={`Selected Posts (${selectedIds.length}/${limit})`}
+            items={selectedIds.map((postId, index) => ({ key: `${postId}-${index}`, value: postId }))}
+            onMove={moveSelected}
+            onRemove={removeSelected}
+            renderItem={({ item }) => {
+              const post = postById.get(item.value);
+              return (
+                <>
+                  <div style={{ fontSize: 16, fontWeight: 600, marginBottom: 8 }}>
+                    {post ? post.title : `Missing post: ${item.value}`}
                   </div>
-                </SectionHeaderRow>
-                <ErrorText style={{ color: '#667085' }}>
-                  {post
-                    ? `/${post.slug}${post.published_at ? ` • ${new Date(post.published_at).toLocaleDateString('vi-VN')}` : ''}`
-                    : 'This post is not published or no longer available.'}
-                </ErrorText>
-              </ItemCard>
-            );
-          })}
+                  <ErrorText style={{ color: '#667085' }}>
+                    {post
+                      ? `/${post.slug}${post.published_at ? ` • ${new Date(post.published_at).toLocaleDateString('vi-VN')}` : ''}`
+                      : 'This post is not published or no longer available.'}
+                  </ErrorText>
+                </>
+              );
+            }}
+          />
 
           {form.formState.errors.selected_post_ids && (
             <ErrorText>{form.formState.errors.selected_post_ids.message}</ErrorText>

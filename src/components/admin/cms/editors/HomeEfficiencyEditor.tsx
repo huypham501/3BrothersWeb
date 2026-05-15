@@ -12,14 +12,12 @@ import { AdminTextarea as Textarea } from '@/components/admin/controls/AdminText
 import { AdminButton as Button } from '@/components/admin/layout/AdminPrimitives';
 import { AdminSwitch as Switch } from '@/components/admin/controls/AdminSwitch';
 import { AdminAlert as Alert, AdminAlertDescription as AlertDescription, AdminAlertTitle as AlertTitle } from '@/components/admin/layout/AdminPrimitives';
+import { CmsSortableList } from '@/components/admin/cms/ux/CmsSortableList';
 import {
   ErrorText,
   FormStack,
   HeaderRow,
-  ItemCard,
-  SectionHeaderRow,
   SectionStack,
-  SectionTitle,
   ToggleFormItem,
   TwoColumnGrid,
 } from './EditorLayout';
@@ -50,7 +48,7 @@ export function HomeEfficiencyEditor({ pageId, section }: { pageId: string, sect
     },
   });
 
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append, remove, move } = useFieldArray({
     control: form.control,
     name: "stats",
   });
@@ -184,15 +182,17 @@ export function HomeEfficiencyEditor({ pageId, section }: { pageId: string, sect
         </TwoColumnGrid>
 
         <SectionStack>
-          <SectionHeaderRow>
-            <SectionTitle>Stats ({fields.length})</SectionTitle>
-            <Button type="button" variant="outline" size="sm" onClick={() => append({ title: '', description: '', number: '' })}>
-              + Add Stat
-            </Button>
-          </SectionHeaderRow>
-          
-          {fields.map((item, index) => (
-            <ItemCard key={item.id}>
+          <CmsSortableList
+            title={`Stats (${fields.length})`}
+            items={fields.map((item, index) => ({ key: item.id, value: index }))}
+            onMove={move}
+            onRemove={remove}
+            onAdd={() => append({ title: '', description: '', number: '' })}
+            addLabel="Add Stat"
+            renderItem={({ item }) => {
+              const index = item.value;
+              return (
+                <>
               <FormField
                 control={form.control}
                 name={`stats.${index}.title`}
@@ -232,11 +232,10 @@ export function HomeEfficiencyEditor({ pageId, section }: { pageId: string, sect
                   </FormItem>
                 )}
               />
-              <Button type="button" variant="destructive" size="sm" onClick={() => remove(index)}>
-                Remove
-              </Button>
-            </ItemCard>
-          ))}
+                </>
+              );
+            }}
+          />
           {form.formState.errors.stats && <ErrorText>{form.formState.errors.stats.message}</ErrorText>}
         </SectionStack>
 

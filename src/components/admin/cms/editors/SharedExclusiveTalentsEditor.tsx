@@ -12,6 +12,7 @@ import { AdminTextarea as Textarea } from '@/components/admin/controls/AdminText
 import { AdminButton as Button } from '@/components/admin/layout/AdminPrimitives';
 import { AdminBadge } from '@/components/admin/layout/AdminPrimitives';
 import { AdminAlert as Alert, AdminAlertDescription as AlertDescription, AdminAlertTitle as AlertTitle } from '@/components/admin/layout/AdminPrimitives';
+import { CmsSortableList } from '@/components/admin/cms/ux/CmsSortableList';
 import {
   BorderedPanel,
   ErrorText,
@@ -66,7 +67,7 @@ export function getSharedExclusiveTalentsDefaultValues(
 }
 
 export function SharedExclusiveTalentsFields({ form }: { form: UseFormReturn<any> }) {
-  const { fields: talentFields, append: appendTalent, remove: removeTalent } = useFieldArray({
+  const { fields: talentFields, append: appendTalent, remove: removeTalent, move: moveTalent } = useFieldArray({
     control: form.control,
     name: 'talents',
   });
@@ -131,15 +132,16 @@ export function SharedExclusiveTalentsFields({ form }: { form: UseFormReturn<any
           <FormItem><FormLabel>Talent Count Label</FormLabel><FormControl><Input {...field} placeholder="50+ TALENTS" maxLength={20} showCount /></FormControl><FormMessage /></FormItem>
         )} />
 
-        <SectionHeaderRow>
-          <SectionTitle>Talent Grid List ({talentFields.length})</SectionTitle>
-          <Button type="button" variant="outline" size="sm" onClick={handleAddTalent}>
-            + Add Talent Item
-          </Button>
-        </SectionHeaderRow>
-
-        {talentFields.map((item, index) => (
-          <BorderedPanel key={item.id}>
+        <CmsSortableList
+          title={`Talent Grid List (${talentFields.length})`}
+          items={talentFields.map((item, index) => ({ key: item.id, value: index }))}
+          onMove={moveTalent}
+          onAdd={handleAddTalent}
+          addLabel="Add Talent Item"
+          renderItem={({ item }) => {
+            const index = item.value;
+            return (
+              <BorderedPanel key={item.key}>
             <HeaderRow style={{ alignItems: 'center', justifyContent: 'space-between' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                 <strong style={{ fontSize: 13 }}>Talent #{index + 1}</strong>
@@ -202,7 +204,7 @@ export function SharedExclusiveTalentsFields({ form }: { form: UseFormReturn<any
               <SectionTitle>Stats (exactly 2 required)</SectionTitle>
               <TwoColumnGrid>
                 {[0, 1].map((statIndex) => (
-                  <ItemCard key={`talent-${item.id}-stat-${statIndex}`}>
+                  <ItemCard key={`talent-${String(item.key)}-stat-${statIndex}`}>
                     <FormField control={form.control} name={`talents.${index}.stats.${statIndex}.label`} render={({ field }) => (
                       <FormItem><FormLabel>Stat Label</FormLabel><FormControl><Input {...field} maxLength={30} showCount /></FormControl><FormMessage /></FormItem>
                     )} />
@@ -213,8 +215,10 @@ export function SharedExclusiveTalentsFields({ form }: { form: UseFormReturn<any
                 ))}
               </TwoColumnGrid>
             </SectionStack>
-          </BorderedPanel>
-        ))}
+              </BorderedPanel>
+            );
+          }}
+        />
         {form.formState.errors.talents && <ErrorText>{form.formState.errors.talents.message as string}</ErrorText>}
       </SectionStack>
     </>
