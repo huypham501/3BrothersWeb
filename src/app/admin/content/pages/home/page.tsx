@@ -36,7 +36,7 @@ export default async function HomeCmsAdminPage() {
   return (
     <AdminContent maxWidth="1000px">
       <AdminPageHeader
-        title="Home CMS Editor"
+        title="Home"
         description="Manage the contents and SEO of the Home Page."
       />
       <HomePageEditor

@@ -28,7 +28,7 @@ export default async function GlobalFooterEditorPage() {
   return (
     <AdminContent>
       <AdminPageHeader
-        title="Edit Global Footer"
+        title="Global Footer"
         description="Configure `global.footer.v1` draft content and publish independently."
       />
       <GlobalFooterEditor

@@ -46,7 +46,7 @@ export default async function GlobalSiteMetadataEditorPage() {
   return (
     <AdminContent>
       <AdminPageHeader
-        title="Edit Site Metadata"
+        title="Site Metadata"
         description="Configure `global.site_metadata.v1` and publish independently."
       />
       <GlobalSiteMetadataEditor

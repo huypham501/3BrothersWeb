@@ -42,7 +42,7 @@ export default async function ForCreatorsCmsAdminPage() {
   return (
     <AdminContent maxWidth="1000px">
       <AdminPageHeader
-        title="For Creators CMS Editor"
+        title="For Creators"
         description="Manage local sections and SEO metadata for the For Creators page."
       />
 

@@ -31,7 +31,7 @@ export default async function SharedExclusiveTalentsPage() {
   return (
     <AdminContent>
       <AdminPageHeader
-        title="Edit Exclusive Talents Shared Section"
+        title="Exclusive Talents Shared Section"
         description="Configure `shared.exclusive_talents.v1` and publish independently across affected routes."
       />
       <SharedExclusiveTalentsManager

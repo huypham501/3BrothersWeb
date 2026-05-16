@@ -48,7 +48,7 @@ export default async function GlobalSeoDefaultsEditorPage() {
   return (
     <AdminContent>
       <AdminPageHeader
-        title="Edit SEO Defaults"
+        title="SEO Defaults"
         description="Configure `global.seo_defaults.v1` and publish independently."
       />
       <GlobalSeoDefaultsEditor

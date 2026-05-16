@@ -16,7 +16,7 @@ export default async function CmsAuditPage() {
   return (
     <AdminContent>
       <AdminPageHeader
-        title="CMS Audit Log"
+        title="Audit Log"
         description="Track draft saves and publish actions across pages, shared sections, and global settings."
       />
       <CmsAuditLogList logs={logs} />

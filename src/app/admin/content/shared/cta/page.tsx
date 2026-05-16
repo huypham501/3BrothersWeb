@@ -37,7 +37,7 @@ export default async function SharedCtaPage() {
   return (
     <AdminContent>
       <AdminPageHeader
-        title="Edit CTA Shared Section"
+        title="CTA Shared Section"
         description="Configure `shared.cta.v1` and publish independently across affected routes."
       />
       <SharedCtaManager

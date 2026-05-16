@@ -32,7 +32,7 @@ export default async function SocialCommerceCmsAdminPage() {
   return (
     <AdminContent maxWidth="1000px">
       <AdminPageHeader
-        title="Social Commerce CMS Editor"
+        title="Social Commerce"
         description="Manage the contents and SEO of the Social Commerce Page."
       />
       <SocialCommercePageEditor

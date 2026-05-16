@@ -28,7 +28,7 @@ export default async function GlobalHeaderEditorPage() {
   return (
     <AdminContent>
       <AdminPageHeader
-        title="Edit Global Header"
+        title="Global Header"
         description="Configure `global.header.v1` draft content and publish independently."
       />
       <GlobalHeaderEditor

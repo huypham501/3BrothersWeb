@@ -28,7 +28,7 @@ export default async function CareersAdminPage() {
   return (
     <AdminContent maxWidth="1100px">
       <AdminPageHeader
-        title="Careers CMS"
+        title="Careers"
         description="Manage the careers page hero section and open job positions."
       />
       <CareersAdminTabs

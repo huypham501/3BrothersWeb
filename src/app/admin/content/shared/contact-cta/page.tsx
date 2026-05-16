@@ -31,7 +31,7 @@ export default async function SharedContactCtaPage() {
   return (
     <AdminContent>
       <AdminPageHeader
-        title="Edit Contact CTA Shared Section"
+        title="Contact CTA Shared Section"
         description="Configure `shared.contact_cta.v1` and publish independently across affected routes."
       />
       <SharedContactCtaManager
