@@ -4,6 +4,11 @@ import { AdminPageHeader } from '@/components/admin/layout/AdminPageHeader';
 import { AssetManagerClient } from '@/components/admin/assets/AssetManagerClient';
 import { StorageUsageBar } from '@/components/admin/assets/StorageUsageBar';
 import { AdminAlert, AdminAlertDescription } from '@/components/admin/layout/AdminPrimitives';
+import { ADMIN_METADATA_PAGE_TITLE_LABELS } from '@/lib/admin/admin-metadata-title-map';
+
+export const metadata = {
+  title: ADMIN_METADATA_PAGE_TITLE_LABELS.assetManager,
+};
 
 export const dynamic = 'force-dynamic';
 

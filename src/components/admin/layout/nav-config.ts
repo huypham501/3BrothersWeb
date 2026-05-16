@@ -56,35 +56,35 @@ export const CMS_NAV: NavItem[] = [
       {
         type: 'leaf',
         key: 'home-cms',
-        label: 'Home CMS',
+        label: 'Home',
         href: '/admin/content/pages/home',
         iconName: 'HomeOutlined',
       },
       {
         type: 'leaf',
         key: 'for-creators',
-        label: 'For Creators CMS',
+        label: 'For Creators',
         href: '/admin/content/pages/for-creators',
         iconName: 'EditOutlined',
       },
       {
         type: 'leaf',
         key: 'social-commerce',
-        label: 'Social Commerce CMS',
+        label: 'Social Commerce',
         href: '/admin/content/pages/social-commerce',
         iconName: 'EditOutlined',
       },
       {
         type: 'leaf',
         key: 'blogs-cms',
-        label: 'Blogs CMS',
+        label: 'Blogs',
         href: '/admin/content/pages/blogs',
         iconName: 'ReadOutlined',
       },
       {
         type: 'leaf',
         key: 'careers-cms',
-        label: 'Careers CMS',
+        label: 'Careers',
         href: '/admin/content/pages/careers',
         iconName: 'TeamOutlined',
       },
@@ -264,13 +264,13 @@ const PATH_TO_BREADCRUMB: Record<string, BreadcrumbSegment[]> = {
   '/admin/content': [ROOT_CRUMB],
 
   // Pages
-  '/admin/content/pages/home': [ROOT_CRUMB, { label: 'Pages' }, { label: 'Home CMS' }],
-  '/admin/content/pages/for-creators': [ROOT_CRUMB, { label: 'Pages' }, { label: 'For Creators CMS' }],
-  '/admin/content/pages/social-commerce': [ROOT_CRUMB, { label: 'Pages' }, { label: 'Social Commerce CMS' }],
-  '/admin/content/pages/blogs': [ROOT_CRUMB, { label: 'Pages' }, { label: 'Blogs CMS' }],
-  '/admin/content/pages/blogs/new': [ROOT_CRUMB, { label: 'Pages' }, { label: 'Blogs CMS', href: '/admin/content/pages/blogs' }, { label: 'New Post' }],
-  '/admin/content/pages/careers': [ROOT_CRUMB, { label: 'Pages' }, { label: 'Careers CMS' }],
-  '/admin/content/pages/careers/new': [ROOT_CRUMB, { label: 'Pages' }, { label: 'Careers CMS', href: '/admin/content/pages/careers' }, { label: 'New Position' }],
+  '/admin/content/pages/home': [ROOT_CRUMB, { label: 'Pages' }, { label: 'Home' }],
+  '/admin/content/pages/for-creators': [ROOT_CRUMB, { label: 'Pages' }, { label: 'For Creators' }],
+  '/admin/content/pages/social-commerce': [ROOT_CRUMB, { label: 'Pages' }, { label: 'Social Commerce' }],
+  '/admin/content/pages/blogs': [ROOT_CRUMB, { label: 'Pages' }, { label: 'Blogs' }],
+  '/admin/content/pages/blogs/new': [ROOT_CRUMB, { label: 'Pages' }, { label: 'Blogs', href: '/admin/content/pages/blogs' }, { label: 'New Post' }],
+  '/admin/content/pages/careers': [ROOT_CRUMB, { label: 'Pages' }, { label: 'Careers' }],
+  '/admin/content/pages/careers/new': [ROOT_CRUMB, { label: 'Pages' }, { label: 'Careers', href: '/admin/content/pages/careers' }, { label: 'New Position' }],
 
   // Shared content
   '/admin/content/shared': [ROOT_CRUMB, { label: 'Shared Content' }],
@@ -295,11 +295,11 @@ export function getBreadcrumb(pathname: string): BreadcrumbSegment[] {
   if (PATH_TO_BREADCRUMB[pathname]) return PATH_TO_BREADCRUMB[pathname];
 
   if (pathname.startsWith('/admin/content/pages/blogs/')) {
-    return [ROOT_CRUMB, { label: 'Pages' }, { label: 'Blogs CMS' }, { label: 'Edit Post' }];
+    return [ROOT_CRUMB, { label: 'Pages' }, { label: 'Blogs' }, { label: 'Edit Post' }];
   }
 
   if (pathname.startsWith('/admin/content/pages/careers/')) {
-    return [ROOT_CRUMB, { label: 'Pages' }, { label: 'Careers CMS' }, { label: 'Edit Position' }];
+    return [ROOT_CRUMB, { label: 'Pages' }, { label: 'Careers' }, { label: 'Edit Position' }];
   }
 
   return [ROOT_CRUMB];

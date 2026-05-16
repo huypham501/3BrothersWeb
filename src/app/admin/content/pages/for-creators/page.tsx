@@ -7,6 +7,11 @@ import { getSharedSectionForAdmin } from '@/lib/cms/queries';
 import { SCHEMA_KEYS } from '@/lib/cms/constants/schema-keys';
 import { sharedCtaSchema } from '@/lib/cms';
 import { z } from 'zod';
+import { ADMIN_METADATA_PAGE_TITLE_LABELS } from '@/lib/admin/admin-metadata-title-map';
+
+export const metadata = {
+  title: ADMIN_METADATA_PAGE_TITLE_LABELS.pagesForCreators,
+};
 
 export const dynamic = 'force-dynamic';
 

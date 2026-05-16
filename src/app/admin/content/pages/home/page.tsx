@@ -4,8 +4,13 @@ import { HomePageEditor } from '@/components/admin/cms/HomePageEditor';
 import { AdminContent } from '@/components/admin/layout/AdminShell';
 import { AdminPageHeader } from '@/components/admin/layout/AdminPageHeader';
 import { getAdminUiContextFromActor } from '@/lib/admin/require-admin-user';
+import { ADMIN_METADATA_PAGE_TITLE_LABELS } from '@/lib/admin/admin-metadata-title-map';
 
 // We temporarily use a plain render because AdminPageView isn't fully adaptable for this full bleed interface without modifying it, but let's emulate the Admin context.
+export const metadata = {
+  title: ADMIN_METADATA_PAGE_TITLE_LABELS.pagesHome,
+};
+
 export const dynamic = 'force-dynamic';
 
 export default async function HomeCmsAdminPage() {

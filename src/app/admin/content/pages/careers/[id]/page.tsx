@@ -4,6 +4,11 @@ import { JobPositionEditor } from '@/components/admin/cms/editors/JobPositionEdi
 import { AdminContent } from '@/components/admin/layout/AdminShell';
 import { AdminPageHeader } from '@/components/admin/layout/AdminPageHeader';
 import { getAdminUiContextFromActor } from '@/lib/admin/require-admin-user';
+import { ADMIN_METADATA_PAGE_TITLE_LABELS } from '@/lib/admin/admin-metadata-title-map';
+
+export const metadata = {
+  title: ADMIN_METADATA_PAGE_TITLE_LABELS.careersEdit,
+};
 
 export const dynamic = 'force-dynamic';
 
