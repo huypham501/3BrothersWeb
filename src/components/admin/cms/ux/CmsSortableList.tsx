@@ -2,7 +2,16 @@
 
 import * as React from 'react';
 import { Button, Typography } from 'antd';
-import { ArrowDownOutlined, ArrowUpOutlined, DeleteOutlined, DragOutlined, PlusOutlined } from '@ant-design/icons';
+import { DeleteOutlined, PlusOutlined, UnorderedListOutlined } from '@ant-design/icons';
+import { DndContext, DragOverlay, type DragEndEvent } from '@dnd-kit/core';
+import { SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import {
+  CMS_SORTABLE_COLLISION,
+  getMoveIndexesFromDragEnd,
+  useCmsSortableSensors,
+  useDragOrderedKeys,
+} from './drag-sort-foundation';
 
 type Key = string | number;
 
@@ -29,26 +38,59 @@ const styles = {
   title: { margin: 0, fontSize: 16, fontWeight: 600 } as const,
   itemCard: {
     display: 'grid',
-    gridTemplateColumns: 'auto 1fr auto',
-    alignItems: 'start',
+    gridTemplateColumns: '1fr auto',
+    alignItems: 'stretch',
     gap: 12,
     border: '1px solid #d9d9d9',
     borderRadius: 8,
     background: '#fff',
     padding: 12,
   } as const,
+  mainContent: {
+    minWidth: 0,
+  } as const,
+  actionRail: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+  } as const,
+  itemCardDragging: {
+    opacity: 0.6,
+    boxShadow: '0 8px 20px rgba(0,0,0,0.12)',
+  } as const,
+  itemCardDropTarget: {
+    borderColor: '#1677ff',
+    boxShadow: '0 0 0 2px rgba(22, 119, 255, 0.2)',
+  } as const,
   dragHandle: {
     display: 'inline-flex',
     alignItems: 'center',
     justifyContent: 'center',
-    width: 24,
-    height: 24,
+    width: 36,
+    height: 36,
     color: '#8c8c8c',
     cursor: 'grab',
-    paddingTop: 4,
+    border: 0,
+    borderRadius: 6,
+    background: 'transparent',
   } as const,
-  actions: { display: 'flex', flexDirection: 'column', gap: 4 } as const,
+  dragHandleFocusVisible: {
+    boxShadow: '0 0 0 2px rgba(22, 119, 255, 0.25)',
+    color: '#1677ff',
+  } as const,
+  actions: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 } as const,
   empty: { margin: 0, color: '#8c8c8c', fontSize: 13 } as const,
+  srOnly: {
+    position: 'absolute',
+    width: 1,
+    height: 1,
+    margin: -1,
+    padding: 0,
+    overflow: 'hidden',
+    clip: 'rect(0, 0, 0, 0)',
+    border: 0,
+  } as const,
 };
 
 export function CmsSortableList<T>({
@@ -63,6 +105,23 @@ export function CmsSortableList<T>({
   renderItem,
 }: CmsSortableListProps<T>) {
   const total = items.length;
+  const sensors = useCmsSortableSensors();
+  const orderedKeys = useDragOrderedKeys(items);
+  const [activeKey, setActiveKey] = React.useState<Key | null>(null);
+  const [overKey, setOverKey] = React.useState<Key | null>(null);
+
+  const activeItem = React.useMemo(
+    () => (activeKey == null ? null : items.find((item) => item.key === activeKey) ?? null),
+    [activeKey, items]
+  );
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const move = getMoveIndexesFromDragEnd(orderedKeys, event);
+    setActiveKey(null);
+    setOverKey(null);
+    if (!move) return;
+    onMove(move.fromIndex, move.toIndex);
+  };
 
   return (
     <div style={styles.container}>
@@ -79,51 +138,150 @@ export function CmsSortableList<T>({
         <Typography.Paragraph style={styles.empty}>{emptyText}</Typography.Paragraph>
       ) : null}
 
-      {items.map((item, index) => {
-        const disableUp = index === 0;
-        const disableDown = index === total - 1;
-        const disableRemove = removeDisabled?.(index, total) ?? false;
-
-        return (
-          <div key={item.key} style={styles.itemCard}>
-            <span aria-hidden style={styles.dragHandle} title="Drag handle (Phase 3)">
-              <DragOutlined />
-            </span>
-
-            <div>{renderItem({ item, index, total })}</div>
-
-            <div style={styles.actions}>
-              <Button
-                size="small"
-                type="text"
-                icon={<ArrowUpOutlined />}
-                onClick={() => onMove(index, index - 1)}
-                disabled={disableUp}
-                title="Move up"
-              />
-              <Button
-                size="small"
-                type="text"
-                icon={<ArrowDownOutlined />}
-                onClick={() => onMove(index, index + 1)}
-                disabled={disableDown}
-                title="Move down"
-              />
-              {onRemove ? (
-                <Button
-                  size="small"
-                  type="text"
-                  icon={<DeleteOutlined />}
-                  danger
-                  onClick={() => onRemove(index)}
-                  disabled={disableRemove}
-                  title="Remove"
+      {total > 0 ? (
+        <DndContext
+          sensors={sensors}
+          collisionDetection={CMS_SORTABLE_COLLISION}
+          onDragStart={(event) => {
+            setActiveKey(event.active.id as Key);
+            setOverKey(event.active.id as Key);
+          }}
+          onDragOver={(event) => {
+            setOverKey((event.over?.id as Key | undefined) ?? null);
+          }}
+          onDragEnd={handleDragEnd}
+          onDragCancel={() => {
+            setActiveKey(null);
+            setOverKey(null);
+          }}
+        >
+          <SortableContext items={orderedKeys} strategy={verticalListSortingStrategy}>
+            {items.map((item, index) => {
+              const disableRemove = removeDisabled?.(index, total) ?? false;
+              const handleHelpId = `cms-sortable-hint-${String(item.key)}`;
+              return (
+                <SortableListRow
+                  key={item.key}
+                  id={item.key}
+                  isDropTarget={overKey === item.key && activeKey !== item.key}
+                  handleHelpId={handleHelpId}
+                  renderMainContent={renderItem({ item, index, total })}
+                  renderActions={
+                    onRemove ? (
+                      <Button
+                        size="small"
+                        type="text"
+                        icon={<DeleteOutlined />}
+                        danger
+                        onClick={() => onRemove(index)}
+                        disabled={disableRemove}
+                        title="Remove"
+                      />
+                    ) : null
+                  }
                 />
-              ) : null}
-            </div>
-          </div>
-        );
-      })}
+              );
+            })}
+          </SortableContext>
+
+          <DragOverlay>
+            {activeItem ? <div style={{ ...styles.itemCard, ...styles.itemCardDragging }}>{renderItem({ item: activeItem, index: 0, total })}</div> : null}
+          </DragOverlay>
+        </DndContext>
+      ) : null}
     </div>
   );
+}
+
+function SortableListRow({
+  id,
+  isDropTarget,
+  handleHelpId,
+  renderMainContent,
+  renderActions,
+}: {
+  id: Key;
+  isDropTarget: boolean;
+  handleHelpId: string;
+  renderMainContent: React.ReactNode;
+  renderActions: React.ReactNode;
+}) {
+  const { attributes, listeners, setNodeRef, setActivatorNodeRef, transform, transition, isDragging } = useSortable({
+    id,
+  });
+  const { ['aria-describedby']: _ignoredAriaDescribedBy, ...dragAttributes } = attributes;
+  const [isHandleFocusVisible, setIsHandleFocusVisible] = React.useState(false);
+  const isCoarsePointer = useIsCoarsePointer();
+  const actionRailGap = isCoarsePointer ? 10 : 8;
+  const actionButtonsGap = isCoarsePointer ? 10 : 8;
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={{
+        ...styles.itemCard,
+        ...(isDragging ? styles.itemCardDragging : null),
+        ...(isDropTarget ? styles.itemCardDropTarget : null),
+        transform: CSS.Transform.toString(transform),
+        transition,
+      }}
+    >
+      <span id={handleHelpId} style={styles.srOnly}>
+        Press Space or Enter to pick up, then use Arrow Up/Down to move, and press Space or Enter again to drop.
+      </span>
+
+      <div style={styles.mainContent}>{renderMainContent}</div>
+      <div style={{ ...styles.actionRail, gap: actionRailGap }}>
+        <button
+          ref={setActivatorNodeRef}
+          type="button"
+          style={{
+            ...styles.dragHandle,
+            ...(isHandleFocusVisible ? styles.dragHandleFocusVisible : null),
+          }}
+          aria-label="Drag to reorder item"
+          aria-describedby={handleHelpId}
+          onFocus={(event) => {
+            setIsHandleFocusVisible(event.currentTarget.matches(':focus-visible'));
+          }}
+          onBlur={() => {
+            setIsHandleFocusVisible(false);
+          }}
+          {...dragAttributes}
+          {...listeners}
+        >
+          <UnorderedListOutlined />
+        </button>
+        <div
+          style={{ ...styles.actions, gap: actionButtonsGap }}
+          onMouseDown={(event) => event.stopPropagation()}
+          onPointerDown={(event) => event.stopPropagation()}
+          onTouchStart={(event) => event.stopPropagation()}
+        >
+          {renderActions}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function useIsCoarsePointer() {
+  const [isCoarsePointer, setIsCoarsePointer] = React.useState(false);
+
+  React.useEffect(() => {
+    if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return;
+    const mediaQuery = window.matchMedia('(pointer: coarse)');
+    const update = () => setIsCoarsePointer(mediaQuery.matches);
+    update();
+
+    if (typeof mediaQuery.addEventListener === 'function') {
+      mediaQuery.addEventListener('change', update);
+      return () => mediaQuery.removeEventListener('change', update);
+    }
+
+    mediaQuery.addListener(update);
+    return () => mediaQuery.removeListener(update);
+  }, []);
+
+  return isCoarsePointer;
 }

@@ -14,8 +14,6 @@ import { Button, Divider } from 'antd';
 import {
   PlusOutlined,
   DeleteOutlined,
-  ArrowUpOutlined,
-  ArrowDownOutlined,
 } from '@ant-design/icons';
 import { jobPositionContentSchema } from '@/lib/cms/schemas';
 import type { CmsJobPosition } from '@/lib/cms';
@@ -50,6 +48,7 @@ import {
 } from './EditorLayout';
 import { FormItem as RawFormItem } from '@/components/admin/controls/AdminForm';
 import { CmsEditorStatusBar } from '@/components/admin/cms/CmsEditorStatusBar';
+import { CmsSortableList } from '@/components/admin/cms/ux/CmsSortableList';
 
 type FormValues = z.infer<typeof jobPositionContentSchema>;
 
@@ -393,10 +392,15 @@ function DynamicStringList({
         </Button>
       </SectionHeaderRow>
 
-      {fieldArray.fields.map((field: { id: string }, idx: number) => (
-        <ItemCard key={field.id}>
-          <div style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
-            <div style={{ flex: 1 }}>
+      <CmsSortableList
+        title={`${label} (${fieldArray.fields.length})`}
+        items={fieldArray.fields.map((field, idx) => ({ key: field.id, value: idx }))}
+        onMove={fieldArray.move}
+        onRemove={fieldArray.remove}
+        renderItem={({ item }) => {
+          const idx = item.value;
+          return (
+            <ItemCard key={item.key}>
               <FormField
                 control={form.control}
                 name={`${name}.${idx}` as const}
@@ -417,36 +421,10 @@ function DynamicStringList({
                   </FormItem>
                 )}
               />
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 4, paddingTop: 4 }}>
-              <Button
-                size="small"
-                icon={<ArrowUpOutlined />}
-                type="text"
-                disabled={idx === 0}
-                onClick={() => fieldArray.move(idx, idx - 1)}
-                title="Move up"
-              />
-              <Button
-                size="small"
-                icon={<ArrowDownOutlined />}
-                type="text"
-                disabled={idx === fieldArray.fields.length - 1}
-                onClick={() => fieldArray.move(idx, idx + 1)}
-                title="Move down"
-              />
-              <Button
-                size="small"
-                icon={<DeleteOutlined />}
-                type="text"
-                danger
-                onClick={() => fieldArray.remove(idx)}
-                title="Remove"
-              />
-            </div>
-          </div>
-        </ItemCard>
-      ))}
+            </ItemCard>
+          );
+        }}
+      />
 
       {fieldArray.fields.length === 0 && (
         <div style={{ color: '#999', fontSize: 13, padding: '8px 0' }}>

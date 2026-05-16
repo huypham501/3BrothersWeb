@@ -5,16 +5,23 @@ import { useRouter } from 'next/navigation';
 import { useTransition } from 'react';
 import Link from 'next/link';
 import { Table, Tag, Button, Popconfirm, Space, Typography, Tooltip } from 'antd';
+import type { TableProps } from 'antd';
 import {
   EditOutlined,
   DeleteOutlined,
   PlusOutlined,
-  ArrowUpOutlined,
-  ArrowDownOutlined,
   SaveOutlined,
 } from '@ant-design/icons';
+import { DndContext } from '@dnd-kit/core';
+import { SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import type { CmsJobPosition } from '@/lib/cms';
 import { deleteJobPosition, updateJobPositionSortOrder } from '@/lib/cms/careers-actions';
+import {
+  CMS_SORTABLE_COLLISION,
+  getMoveIndexesFromDragEnd,
+  useCmsSortableSensors,
+} from './ux/drag-sort-foundation';
 
 interface JobPositionListTableProps {
   positions: CmsJobPosition[];
@@ -24,6 +31,7 @@ export function JobPositionListTable({ positions }: JobPositionListTableProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [orderedPositions, setOrderedPositions] = React.useState(positions);
+  const sensors = useCmsSortableSensors();
 
   React.useEffect(() => {
     setOrderedPositions(positions);
@@ -72,7 +80,9 @@ export function JobPositionListTable({ positions }: JobPositionListTableProps) {
     });
   };
 
-  const columns = [
+  const rowKeys = React.useMemo(() => orderedPositions.map((item) => item.id), [orderedPositions]);
+
+  const columns: TableProps<CmsJobPosition>['columns'] = [
     {
       title: 'Title',
       dataIndex: 'title',
@@ -163,62 +173,40 @@ export function JobPositionListTable({ positions }: JobPositionListTableProps) {
       ),
     },
     {
-      title: 'Order',
-      key: 'order',
-      width: 110,
-      render: (_: unknown, record: CmsJobPosition) => {
-        const index = orderedPositions.findIndex((item) => item.id === record.id);
-        return (
-          <Space size="small">
-            <Button
-              size="small"
-              type="text"
-              icon={<ArrowUpOutlined />}
-              onClick={() => movePosition(index, index - 1)}
-              disabled={index <= 0}
-              title="Move up"
-            />
-            <Button
-              size="small"
-              type="text"
-              icon={<ArrowDownOutlined />}
-              onClick={() => movePosition(index, index + 1)}
-              disabled={index < 0 || index >= orderedPositions.length - 1}
-              title="Move down"
-            />
-          </Space>
-        );
-      },
-    },
-    {
       title: 'Actions',
       key: 'actions',
       width: 100,
       render: (_: unknown, record: CmsJobPosition) => (
-        <Space size="small">
-          <Tooltip title="Edit">
-            <Link href={`/admin/content/pages/careers/${record.id}`}>
-              <Button icon={<EditOutlined />} size="small" type="text" />
-            </Link>
-          </Tooltip>
-          <Popconfirm
-            title="Delete this position?"
-            description={`"${record.title}" will be permanently deleted.`}
-            okText="Delete"
-            okType="danger"
-            cancelText="Cancel"
-            onConfirm={() => handleDelete(record.id, record.title)}
-          >
-            <Button
-              icon={<DeleteOutlined />}
-              size="small"
-              type="text"
-              danger
-              loading={isPending}
-              title="Delete"
-            />
-          </Popconfirm>
-        </Space>
+        <div
+          onMouseDown={(e) => e.stopPropagation()}
+          onPointerDown={(e) => e.stopPropagation()}
+          onTouchStart={(e) => e.stopPropagation()}
+        >
+          <Space size="small">
+            <Tooltip title="Edit">
+              <Link href={`/admin/content/pages/careers/${record.id}`}>
+                <Button icon={<EditOutlined />} size="small" type="text" />
+              </Link>
+            </Tooltip>
+            <Popconfirm
+              title="Delete this position?"
+              description={`"${record.title}" will be permanently deleted.`}
+              okText="Delete"
+              okType="danger"
+              cancelText="Cancel"
+              onConfirm={() => handleDelete(record.id, record.title)}
+            >
+              <Button
+                icon={<DeleteOutlined />}
+                size="small"
+                type="text"
+                danger
+                loading={isPending}
+                title="Delete"
+              />
+            </Popconfirm>
+          </Space>
+        </div>
       ),
     },
   ];
@@ -247,14 +235,70 @@ export function JobPositionListTable({ positions }: JobPositionListTableProps) {
         </Space>
       </div>
 
-      <Table
-        columns={columns}
-        dataSource={orderedPositions}
-        rowKey="id"
-        size="middle"
-        pagination={false}
-        locale={{ emptyText: 'No job positions yet. Create your first position!' }}
-      />
+      <DndContext
+        sensors={sensors}
+        collisionDetection={CMS_SORTABLE_COLLISION}
+        onDragEnd={(event) => {
+          const move = getMoveIndexesFromDragEnd(rowKeys, event);
+          if (!move) return;
+          movePosition(move.fromIndex, move.toIndex);
+        }}
+      >
+        <SortableContext items={rowKeys} strategy={verticalListSortingStrategy}>
+          <Table
+            columns={columns}
+            dataSource={orderedPositions}
+            rowKey="id"
+            size="middle"
+            pagination={false}
+            locale={{ emptyText: 'No job positions yet. Create your first position!' }}
+            components={{
+              body: {
+                row: SortableTableRow,
+              },
+            }}
+          />
+        </SortableContext>
+      </DndContext>
     </div>
+  );
+}
+
+interface SortableTableRowProps extends React.HTMLAttributes<HTMLTableRowElement> {
+  'data-row-key'?: string | number;
+}
+
+function SortableTableRow(props: SortableTableRowProps) {
+  const rowKey = props['data-row-key'];
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({
+    id: String(rowKey),
+  });
+
+  return (
+    <tr
+      {...props}
+      {...attributes}
+      {...listeners}
+      ref={setNodeRef}
+      style={{
+        ...props.style,
+        transform: CSS.Transform.toString(transform),
+        transition,
+        cursor: 'grab',
+        ...(isDragging
+          ? {
+              opacity: 0.65,
+              boxShadow: '0 8px 20px rgba(0,0,0,0.12)',
+            }
+          : null),
+      }}
+    />
   );
 }

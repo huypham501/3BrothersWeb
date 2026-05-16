@@ -10,8 +10,6 @@ import { Button, Switch, Typography } from 'antd';
 import {
   PlusOutlined,
   DeleteOutlined,
-  ArrowUpOutlined,
-  ArrowDownOutlined,
 } from '@ant-design/icons';
 import { blogPostFormSchema } from '@/lib/cms';
 import type { CmsBlogPost } from '@/lib/cms';
@@ -28,11 +26,11 @@ import {
   AdminCardTitle,
 } from '@/components/admin/layout/AdminPrimitives';
 import { CmsFieldHint } from '@/components/admin/cms/ux/CmsFieldHint';
+import { CmsSortableList } from '@/components/admin/cms/ux/CmsSortableList';
 import { getCmsFieldUxSpec } from '@/lib/cms/ux/field-ux-spec';
 import {
   FormStack,
   HeaderRow,
-  ItemCard,
   SectionHeaderRow,
   SectionStack,
   SectionTitle,
@@ -347,42 +345,46 @@ export function BlogPostEditor({ post, mode, role, canPublish }: BlogPostEditorP
               </Button>
             </SectionHeaderRow>
 
-            {contentFields.map((field, index) => (
-              <ItemCard key={field.id}>
-                <SectionHeaderRow>
-                  <Typography.Text strong style={{ fontSize: 13 }}>Section {index + 1}</Typography.Text>
-                  <div style={{ display: 'flex', gap: 4 }}>
-                    <Button size="small" icon={<ArrowUpOutlined />} disabled={index === 0} onClick={() => moveContent(index, index - 1)} type="text" />
-                    <Button size="small" icon={<ArrowDownOutlined />} disabled={index === contentFields.length - 1} onClick={() => moveContent(index, index + 1)} type="text" />
-                    <Button size="small" icon={<DeleteOutlined />} danger onClick={() => removeContent(index)} type="text" />
+            <CmsSortableList
+              title={`Sections (${contentFields.length})`}
+              items={contentFields.map((field, index) => ({ key: field.id, value: index }))}
+              onMove={moveContent}
+              onRemove={removeContent}
+              renderItem={({ item }) => {
+                const index = item.value;
+                return (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                    <SectionHeaderRow>
+                      <Typography.Text strong style={{ fontSize: 13 }}>Section {index + 1}</Typography.Text>
+                    </SectionHeaderRow>
+
+                    <FormField control={form.control} name={`content.${index}.id`} render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{ux('content.id').label ?? 'Section ID'}</FormLabel>
+                        <FormControl><Input {...field} placeholder="e.g. intro, research" maxLength={60} showCount style={{ fontFamily: 'monospace', fontSize: 12 }} /></FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )} />
+
+                    <FormField control={form.control} name={`content.${index}.heading`} render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Heading <span style={{ color: '#888', fontWeight: 400 }}>(optional)</span></FormLabel>
+                        <FormControl><Input {...field} value={field.value ?? ''} onChange={(e) => field.onChange(e.target.value || null)} placeholder="Section heading" maxLength={120} showCount /></FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )} />
+
+                    <FormField control={form.control} name={`content.${index}.body`} render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Body *</FormLabel>
+                        <FormControl><Textarea {...field} rows={6} placeholder="Article content..." /></FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )} />
                   </div>
-                </SectionHeaderRow>
-
-                <FormField control={form.control} name={`content.${index}.id`} render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{ux('content.id').label ?? 'Section ID'}</FormLabel>
-                    <FormControl><Input {...field} placeholder="e.g. intro, research" maxLength={60} showCount style={{ fontFamily: 'monospace', fontSize: 12 }} /></FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )} />
-
-                <FormField control={form.control} name={`content.${index}.heading`} render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Heading <span style={{ color: '#888', fontWeight: 400 }}>(optional)</span></FormLabel>
-                    <FormControl><Input {...field} value={field.value ?? ''} onChange={(e) => field.onChange(e.target.value || null)} placeholder="Section heading" maxLength={120} showCount /></FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )} />
-
-                <FormField control={form.control} name={`content.${index}.body`} render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Body *</FormLabel>
-                    <FormControl><Textarea {...field} rows={6} placeholder="Article content..." /></FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )} />
-              </ItemCard>
-            ))}
+                );
+              }}
+            />
               </SectionStack>
             </AdminCardContent>
           </AdminCard>
@@ -405,42 +407,46 @@ export function BlogPostEditor({ post, mode, role, canPublish }: BlogPostEditorP
                   </Button>
                 </SectionHeaderRow>
 
-                {midFields.map((field, index) => (
-                  <ItemCard key={field.id}>
-                    <SectionHeaderRow>
-                      <Typography.Text strong style={{ fontSize: 13 }}>Mid Section {index + 1}</Typography.Text>
-                      <div style={{ display: 'flex', gap: 4 }}>
-                        <Button size="small" icon={<ArrowUpOutlined />} disabled={index === 0} onClick={() => moveMid(index, index - 1)} type="text" />
-                        <Button size="small" icon={<ArrowDownOutlined />} disabled={index === midFields.length - 1} onClick={() => moveMid(index, index + 1)} type="text" />
-                        <Button size="small" icon={<DeleteOutlined />} danger onClick={() => removeMid(index)} type="text" />
+                <CmsSortableList
+                  title={`Mid Sections (${midFields.length})`}
+                  items={midFields.map((field, index) => ({ key: field.id, value: index }))}
+                  onMove={moveMid}
+                  onRemove={removeMid}
+                  renderItem={({ item }) => {
+                    const index = item.value;
+                    return (
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                        <SectionHeaderRow>
+                          <Typography.Text strong style={{ fontSize: 13 }}>Mid Section {index + 1}</Typography.Text>
+                        </SectionHeaderRow>
+
+                        <FormField control={form.control} name={`mid_content.${index}.id`} render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>{ux('mid_content.id').label ?? 'Section ID'}</FormLabel>
+                            <FormControl><Input {...field} placeholder="e.g. packing, health" maxLength={60} showCount style={{ fontFamily: 'monospace', fontSize: 12 }} /></FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )} />
+
+                        <FormField control={form.control} name={`mid_content.${index}.heading`} render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Heading *</FormLabel>
+                            <FormControl><Input {...field} value={field.value ?? ''} onChange={(e) => field.onChange(e.target.value || null)} placeholder="Section heading" maxLength={120} showCount /></FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )} />
+
+                        <FormField control={form.control} name={`mid_content.${index}.body`} render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Body *</FormLabel>
+                            <FormControl><Textarea {...field} rows={5} placeholder="Article content..." /></FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )} />
                       </div>
-                    </SectionHeaderRow>
-
-                    <FormField control={form.control} name={`mid_content.${index}.id`} render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>{ux('mid_content.id').label ?? 'Section ID'}</FormLabel>
-                        <FormControl><Input {...field} placeholder="e.g. packing, health" maxLength={60} showCount style={{ fontFamily: 'monospace', fontSize: 12 }} /></FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )} />
-
-                    <FormField control={form.control} name={`mid_content.${index}.heading`} render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Heading *</FormLabel>
-                        <FormControl><Input {...field} value={field.value ?? ''} onChange={(e) => field.onChange(e.target.value || null)} placeholder="Section heading" maxLength={120} showCount /></FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )} />
-
-                    <FormField control={form.control} name={`mid_content.${index}.body`} render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Body *</FormLabel>
-                        <FormControl><Textarea {...field} rows={5} placeholder="Article content..." /></FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )} />
-                  </ItemCard>
-                ))}
+                    );
+                  }}
+                />
                 {midFields.length === 0 && (
                   <Typography.Text type="secondary" style={{ fontSize: 12 }}>No mid-page sections. Add one if your article has a second half after the cover image break.</Typography.Text>
                 )}

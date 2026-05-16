@@ -20,13 +20,14 @@ function extractRules(tsSource) {
 
 function hasReorderCapability(content) {
   const markers = [
+    // Shared drag-sort list component usage
     'CmsSortableList',
-    '.move(',
-    'moveSelected(',
-    'movePosition(',
+    // dnd-kit based reorder primitives (list + table)
+    'DndContext',
+    'SortableContext',
+    'useSortable',
+    // Persist action used by careers ordering table
     'updateJobPositionSortOrder',
-    'ArrowUpOutlined',
-    'ArrowDownOutlined',
   ];
   return markers.some((marker) => content.includes(marker));
 }
