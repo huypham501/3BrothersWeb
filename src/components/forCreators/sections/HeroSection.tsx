@@ -50,6 +50,7 @@ const HeroShell = styled.section`
   position: relative;
   width: 100%;
   padding-top: 120px;
+  background: #b4cfff;
 `;
 
 const HeroWrapper = styled.div<{ $aspectRatio: string }>`

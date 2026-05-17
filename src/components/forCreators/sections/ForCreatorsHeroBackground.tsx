@@ -13,16 +13,12 @@ export function ForCreatorsHeroBackground() {
     blur3: `for-creators-hero-blur3-${uid}`,
     blur4: `for-creators-hero-blur4-${uid}`,
     blur5: `for-creators-hero-blur5-${uid}`,
-    gradient0: `for-creators-hero-gradient0-${uid}`,
     gradient1: `for-creators-hero-gradient1-${uid}`,
   };
 
   return (
     <BackgroundWrapper>
       <svg viewBox="0 0 1440 670" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
-        <rect width="1440" height="670" fill={`url(#${ids.gradient0})`} />
-        <rect width="1440" height="670" fill="#B4CFFF" />
-
         <mask id={ids.mask} maskUnits="userSpaceOnUse" x="0" y="0" width="1440" height="670" style={{ maskType: 'alpha' }}>
           <rect width="1440" height="670" fill={`url(#${ids.gradient1})`} />
           <rect width="1440" height="670" fill="#061530" />
@@ -80,10 +76,6 @@ export function ForCreatorsHeroBackground() {
             <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
             <feGaussianBlur stdDeviation="16" result="effect1_foregroundBlur" />
           </filter>
-          <linearGradient id={ids.gradient0} x1="720" y1="0" x2="720" y2="670" gradientUnits="userSpaceOnUse">
-            <stop stopColor="#6395ED" />
-            <stop offset="1" stopColor="#003CA6" />
-          </linearGradient>
           <linearGradient id={ids.gradient1} x1="720" y1="0" x2="720" y2="670" gradientUnits="userSpaceOnUse">
             <stop stopColor="#6395ED" />
             <stop offset="1" stopColor="#003CA6" />

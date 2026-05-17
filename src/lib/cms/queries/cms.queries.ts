@@ -93,17 +93,15 @@ export async function getSharedSectionsForAdmin(schemaKeys: string[]): Promise<C
 }
 
 export async function getGlobalSettingForAdmin<T = unknown>(schemaKey: string): Promise<CmsGlobalSetting<T> | null> {
-  return getAdminReadCached('global', ['single', schemaKey], async () => {
-    const supabase = await createSupabaseServerClient();
-    const { data, error } = await supabase
-      .from('global_settings')
-      .select('*')
-      .eq('schema_key', schemaKey)
-      .single();
+  const supabase = await createSupabaseServerClient();
+  const { data, error } = await supabase
+    .from('global_settings')
+    .select('*')
+    .eq('schema_key', schemaKey)
+    .single();
 
-    if (error || !data) return null;
-    return data;
-  });
+  if (error || !data) return null;
+  return data;
 }
 
 export async function getGlobalSettingsForAdmin(schemaKeys: string[]): Promise<CmsGlobalSetting[]> {
