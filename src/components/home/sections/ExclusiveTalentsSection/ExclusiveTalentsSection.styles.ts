@@ -252,7 +252,7 @@ export const StatValue = styled.div`
 
 export const StatLabel = styled.div`
   font-family: ${typography.fontFamily.montserrat};
-  font-weight: ${typography.fontWeight.normal};
+  font-weight: 300;
   font-size: 16px;
   line-height: 140%;
   color: ${colors.white};
