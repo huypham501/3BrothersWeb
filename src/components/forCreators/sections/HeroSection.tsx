@@ -92,7 +92,7 @@ const ContentBox = styled.div`
 `;
 
 const HeroTitle = styled.h1`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.bold};
   font-size: 68px;
   line-height: 120%;
@@ -111,7 +111,7 @@ const HeroTitle = styled.h1`
 `;
 
 const HeroSubtitle = styled.p`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.medium};
   font-size: ${typography.fontSize.md};
   line-height: 150%;
@@ -147,7 +147,7 @@ const PrimaryButton = styled(Link)`
   cursor: pointer;
   transition: transform ${motion.duration.base} ease, background ${motion.duration.base} ease;
 
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.bold};
   font-size: ${typography.fontSize.md};
   line-height: 140%;
@@ -182,7 +182,7 @@ const SecondaryButton = styled(Link)`
   cursor: pointer;
   transition: background ${motion.duration.base} ease, transform ${motion.duration.base} ease;
 
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.bold};
   font-size: ${typography.fontSize.md};
   line-height: 140%;

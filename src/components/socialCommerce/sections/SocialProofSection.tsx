@@ -85,7 +85,7 @@ const Header = styled.div`
 
 const Title = styled.h2`
   margin: 0;
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.bold};
   font-size: 42px;
   line-height: 140%;
@@ -99,7 +99,7 @@ const Title = styled.h2`
 
 const Subtitle = styled.p`
   margin: 0;
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.normal};
   font-size: 16px;
   line-height: 140%;
@@ -162,7 +162,7 @@ const CardContent = styled.div`
 
 const CardTitle = styled.h3`
   margin: 0;
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.bold};
   font-size: 18px;
   line-height: 140%;
@@ -171,7 +171,7 @@ const CardTitle = styled.h3`
 
 const CardDescription = styled.p`
   margin: 0;
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.normal};
   font-size: 16px;
   line-height: 140%;

@@ -96,7 +96,7 @@ const HeaderRow = styled.div`
 `;
 
 const Title = styled.h2`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-style: normal;
   font-weight: ${typography.fontWeight.bold};
   font-size: 42px;
@@ -177,7 +177,7 @@ const CardContent = styled.div`
 `;
 
 const CardTitle = styled.h3`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-style: normal;
   font-weight: ${typography.fontWeight.bold};
   font-size: ${typography.fontSize['2xl']};
@@ -187,7 +187,7 @@ const CardTitle = styled.h3`
 `;
 
 const CardDate = styled.div`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-style: normal;
   font-weight: ${typography.fontWeight.normal};
   font-size: 12px;
@@ -198,7 +198,7 @@ const CardDate = styled.div`
 `;
 
 const ViewAllLink = styled.a`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-style: normal;
   font-weight: ${typography.fontWeight.bold};
   font-size: ${typography.fontSize.md};

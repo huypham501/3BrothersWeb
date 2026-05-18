@@ -143,7 +143,7 @@ const HeaderGroup = styled.div`
 `;
 
 const Eyebrow = styled.p`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.normal};
   font-size: 26px;
   line-height: 140%;
@@ -156,7 +156,7 @@ const Eyebrow = styled.p`
 `;
 
 const Title = styled.h2`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.bold};
   font-size: 42px;
   line-height: 140%;
@@ -200,7 +200,7 @@ const ColumnHeader = styled.div`
 `;
 
 const ColumnTitle = styled.h3`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.bold};
   font-size: 26px;
   line-height: 140%;
@@ -225,7 +225,7 @@ const Details = styled.div`
 `;
 
 const DetailTitle = styled.div`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.bold};
   font-size: 26px;
   line-height: 140%;

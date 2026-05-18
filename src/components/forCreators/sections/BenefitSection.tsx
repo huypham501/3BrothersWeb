@@ -100,7 +100,7 @@ const HeadingGroup = styled.div`
 `;
 
 const SectionTitle = styled.h2`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.bold};
   font-size: ${typography.fontSize['6xl']};
   line-height: 140%;
@@ -118,7 +118,7 @@ const SectionTitle = styled.h2`
 `;
 
 const SectionDesc = styled.p`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.normal};
   font-size: ${typography.fontSize.md};
   line-height: 150%;
@@ -140,7 +140,7 @@ const ContactButton = styled(Link)`
   flex-shrink: 0;
   transition: background ${motion.duration.base} ease, transform ${motion.duration.base} ease;
 
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.bold};
   font-size: ${typography.fontSize.md};
   line-height: 140%;
@@ -218,7 +218,7 @@ const BenefitText = styled.div`
 `;
 
 const BenefitTitle = styled.h3`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.bold};
   font-size: 26px;
   line-height: 140%;
@@ -227,7 +227,7 @@ const BenefitTitle = styled.h3`
 `;
 
 const BenefitDesc = styled.p`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.normal};
   font-size: ${typography.fontSize.md};
   line-height: 150%;

@@ -148,7 +148,7 @@ const GroupContainer = styled.div`
 `;
 
 const GroupTitle = styled.h2`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.bold};
   font-size: 26px;
   line-height: 140%;
@@ -167,7 +167,7 @@ const GroupContent = styled.div`
 `;
 
 const BulletItem = styled.p`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.normal};
   font-size: 18px;
   line-height: 150%;
@@ -214,7 +214,7 @@ const OverviewCard = styled.div`
 `;
 
 const CardTitle = styled.h3`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.bold};
   font-size: 26px;
   line-height: 140%;
@@ -259,7 +259,7 @@ const InfoText = styled.div`
 `;
 
 const InfoLabel = styled.span`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.normal};
   font-size: 16px;
   line-height: 140%;
@@ -267,7 +267,7 @@ const InfoLabel = styled.span`
 `;
 
 const InfoValue = styled.span`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.bold};
   font-size: 16px;
   line-height: 140%;
@@ -288,7 +288,7 @@ const ApplyButton = styled(Link)`
   text-decoration: none;
   transition: background ${motion.duration.base} ease, transform ${motion.duration.base} ease;
 
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.bold};
   font-size: 16px;
   line-height: 140%;
@@ -314,7 +314,7 @@ const ShareSection = styled.div`
 `;
 
 const ShareLabel = styled.span`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: 600;
   font-size: 16px;
   line-height: 140%;

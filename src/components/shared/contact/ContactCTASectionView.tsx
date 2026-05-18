@@ -95,7 +95,7 @@ const ContentBlock = styled.div`
 `;
 
 const Title = styled.h2`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.bold};
   font-size: 68px;
   line-height: 120%;
@@ -114,7 +114,7 @@ const Title = styled.h2`
 `;
 
 const Subtitle = styled.p`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.normal};
   font-size: ${typography.fontSize.md};
   line-height: 140%;
@@ -142,7 +142,7 @@ const ContactButton = styled.a`
   border-radius: 48px;
   color: #061530;
   text-decoration: none;
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.bold};
   font-size: ${typography.fontSize.md};
   line-height: 140%;

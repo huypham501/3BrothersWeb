@@ -212,7 +212,7 @@ const Badge = styled.div`
 `;
 
 const BadgeText = styled.span`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-style: normal;
   font-weight: ${typography.fontWeight.normal};
   font-size: ${typography.fontSize.md};
@@ -223,7 +223,7 @@ const BadgeText = styled.span`
 
 /* Article title */
 const CardTitle = styled.h2`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-style: normal;
   font-weight: ${typography.fontWeight.bold};
   font-size: ${typography.fontSize['6xl']}; /* 42px */
@@ -243,7 +243,7 @@ const CardTitle = styled.h2`
 
 /* Excerpt */
 const CardArticle = styled.p`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-style: normal;
   font-weight: ${typography.fontWeight.normal};
   font-size: ${typography.fontSize.lg}; /* 18px */
@@ -273,7 +273,7 @@ const ShortInfo = styled.div`
 `;
 
 const DateText = styled.span`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-style: normal;
   font-weight: ${typography.fontWeight.normal};
   font-size: ${typography.fontSize.md}; /* 16px */

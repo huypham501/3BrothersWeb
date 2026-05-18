@@ -2,6 +2,7 @@
 
 import styled from 'styled-components';
 import Link from 'next/link';
+import { typography } from '@/styles/tokens';
 
 interface HeaderContactButtonProps {
   $isFloating: boolean;
@@ -31,7 +32,7 @@ const ContactButton = styled(Link) <{ $isFloating: boolean }>`
   background: ${({ $isFloating }) => $isFloating ? '#003CA6' : '#FFFFFF'};
   border-radius: 44px;
   color: ${({ $isFloating }) => $isFloating ? '#FFFFFF' : '#061530'};
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: 700;
   font-size: 16px;
   line-height: 160%;

@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import Link from 'next/link';
 import Image from 'next/image';
 import { HeaderContactButton } from '@/components/home/components/HeaderContactButton';
+import { typography } from '@/styles/tokens';
 
 import { GlobalHeaderPayload } from '@/lib/cms/types';
 
@@ -126,7 +127,7 @@ const NavLinks = styled.nav`
 `;
 
 const NavItem = styled(Link) <{ $isFloating: boolean }>`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: 600;
   font-size: 16px;
   line-height: 160%;

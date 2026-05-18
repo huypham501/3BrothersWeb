@@ -63,7 +63,7 @@ const HeadingWrap = styled.div`
 const Title = styled.h2`
   margin: 0;
   color: ${colors.secondaryDark};
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-size: ${typography.fontSize['6xl']};
   line-height: 140%;
   font-weight: ${typography.fontWeight.bold};
@@ -73,7 +73,7 @@ const Title = styled.h2`
 const Subtitle = styled.p`
   margin: 0;
   color: rgba(6, 21, 48, 0.8);
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-size: ${typography.fontSize.md};
   line-height: 140%;
 `;
@@ -122,7 +122,7 @@ const StepIcon = styled.div`
 const StepTitle = styled.h3`
   margin: 0;
   color: ${colors.secondaryDark};
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-size: 38px;
   line-height: 120%;
   font-weight: ${typography.fontWeight.bold};
@@ -131,7 +131,7 @@ const StepTitle = styled.h3`
 const StepDescription = styled.p`
   margin: 0;
   color: rgba(6, 21, 48, 0.7);
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-size: 33px;
   line-height: 140%;
 `;

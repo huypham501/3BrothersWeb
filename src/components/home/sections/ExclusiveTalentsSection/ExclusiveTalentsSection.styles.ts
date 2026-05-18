@@ -119,7 +119,7 @@ export const TitleLine = styled.div`
 `;
 
 export const Title = styled.h2`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.bold};
   font-size: 42px;
   line-height: 140%;
@@ -191,7 +191,7 @@ export const TalentInfoContent = styled.div`
 `;
 
 export const TalentName = styled.h3`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.bold};
   font-size: 68px;
   line-height: 140%;
@@ -206,7 +206,7 @@ export const TalentName = styled.h3`
 `;
 
 export const TalentHandle = styled.div`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.normal};
   font-size: 26px;
   line-height: 140%;
@@ -238,7 +238,7 @@ export const Stat = styled.div`
 `;
 
 export const StatValue = styled.div`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.medium};
   font-size: 42px;
   line-height: 140%;
@@ -251,7 +251,7 @@ export const StatValue = styled.div`
 `;
 
 export const StatLabel = styled.div`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.normal};
   font-size: 16px;
   line-height: 140%;
@@ -272,7 +272,7 @@ export const DescriptionInner = styled.div`
 `;
 
 export const TalentDescription = styled.p`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.normal};
   font-size: 16px;
   line-height: 150%;
@@ -292,7 +292,7 @@ export const ReadMoreButton = styled.button`
   padding: 0;
   display: inline-block;
   margin-left: 0;
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.bold};
   font-size: 16px;
   line-height: inherit;
@@ -317,7 +317,7 @@ export const MeasureDescription = styled.p`
   pointer-events: none;
   visibility: hidden;
   z-index: -1;
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.normal};
   font-size: 16px;
   line-height: 150%;
@@ -347,7 +347,7 @@ export const BottomSlidersArea = styled.div`
 export const VerticalText = styled.div`
   writing-mode: vertical-rl;
   transform: rotate(180deg);
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: 300;
   font-size: 42px;
   line-height: 140%;
@@ -419,7 +419,7 @@ export const ThumbImagePlaceholder = styled.div`
 `;
 
 export const ThumbName = styled.div`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.bold};
   font-size: 16px;
   line-height: 140%;

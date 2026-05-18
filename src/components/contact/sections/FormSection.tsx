@@ -155,7 +155,7 @@ const HeaderArea = styled.div`
 `;
 
 const Eyebrow = styled.p`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.normal};
   font-size: 26px;
   line-height: 140%;
@@ -169,7 +169,7 @@ const Eyebrow = styled.p`
 `;
 
 const Title = styled.h1`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.bold};
   font-size: 56px;
   line-height: 140%;
@@ -256,7 +256,7 @@ const StyledInput = styled.input`
   border: none;
   border-bottom: 1px solid #CACACA;
   background: transparent;
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.normal};
   font-size: 16px;
   line-height: 140%;
@@ -279,7 +279,7 @@ const StyledTextarea = styled.textarea`
   border: none;
   border-bottom: 1px solid #CACACA;
   background: transparent;
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.normal};
   font-size: 16px;
   line-height: 140%;
@@ -315,7 +315,7 @@ const SubmitButton = styled.button`
   cursor: pointer;
   transition: box-shadow ${motion.duration.base} ease, transform ${motion.duration.base} ease;
 
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.bold};
   font-size: 16px;
   line-height: 140%;

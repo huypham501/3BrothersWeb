@@ -196,7 +196,7 @@ const HeadingRow = styled.div`
 `;
 
 const SectionTitle = styled.h2`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-style: normal;
   font-weight: ${typography.fontWeight.bold};
   font-size: 26px;
@@ -265,7 +265,7 @@ const LoadMoreButton = styled.button`
   border: none;
   cursor: pointer;
 
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-style: normal;
   font-weight: ${typography.fontWeight.bold};
   font-size: ${typography.fontSize.md};

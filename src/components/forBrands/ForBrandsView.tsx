@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import { Header } from '@/components/shared/Header';
 import { Footer } from '@/components/shared/Footer';
-import { colors } from '@/styles/tokens';
+import { colors, typography } from '@/styles/tokens';
 import type { GlobalFooterPayload, GlobalHeaderPayload } from '@/lib/cms/types';
 import { HeroSection } from './sections/HeroSection';
 import { SolutionsSection } from './sections/SolutionsSection';
@@ -86,7 +86,7 @@ const Wrapper = styled.div`
   background: ${colors.white};
   box-shadow: 0px 4.5px 225px rgba(6, 21, 48, 0.6);
   overflow-x: hidden;
-  font-family: 'Montserrat', 'Inter', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
 `;
 
 const MainContent = styled.main`

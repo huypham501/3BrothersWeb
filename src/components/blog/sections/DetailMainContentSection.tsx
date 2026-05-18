@@ -325,7 +325,7 @@ const Badge = styled.div`
 `;
 
 const BadgeText = styled.span`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.normal};
   font-size: ${typography.fontSize.md};
   line-height: 140%;
@@ -335,7 +335,7 @@ const BadgeText = styled.span`
 
 /* Article H1 */
 const ArticleTitle = styled.h1`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.bold};
   font-size: ${typography.fontSize['6xl']}; /* 42px */
   line-height: 140%;
@@ -411,7 +411,7 @@ const ArticleSection = styled.div`
 
 /* Blue section heading — h2 visually but inside h1 article */
 const SectionHeading = styled.h2`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.bold};
   font-size: 26px;
   line-height: 140%;
@@ -426,7 +426,7 @@ const SectionHeading = styled.h2`
 
 /* Body paragraph */
 const ArticleParagraph = styled.p`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.normal};
   font-size: ${typography.fontSize.lg}; /* 18px */
   line-height: 150%;

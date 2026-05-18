@@ -68,7 +68,7 @@ const SectionContainer = styled.section`
   margin: 0 auto;
   background: transparent;
   overflow: hidden;
-  font-family: 'Montserrat', 'Inter', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
 
   ${mediaQueries.down.md} {
     /* no border-radius needed */
@@ -145,7 +145,7 @@ const TextContent = styled.div`
 `;
 
 const Title = styled.h2`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.bold};
   font-size: 68px;
   line-height: 140%;
@@ -170,7 +170,7 @@ const Title = styled.h2`
 `;
 
 const Description = styled.p`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.normal};
   font-size: ${typography.fontSize.md};
   line-height: 150%;
@@ -200,7 +200,7 @@ const PrimaryButton = styled.a`
   border-radius: 48px;
   color: ${colors.secondaryDark};
   text-decoration: none;
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.bold};
   font-size: ${typography.fontSize.md};
   line-height: 140%;
@@ -229,7 +229,7 @@ const SecondaryButton = styled.a`
   border-radius: 48px;
   color: ${colors.white};
   text-decoration: none;
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.bold};
   font-size: ${typography.fontSize.md};
   line-height: 140%;
@@ -287,7 +287,7 @@ const StatLabelGroup = styled.div`
 `;
 
 const StatTitle = styled.div`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.bold};
   font-size: 26px;
   line-height: 140%;
@@ -295,7 +295,7 @@ const StatTitle = styled.div`
 `;
 
 const StatDescription = styled.div`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.normal};
   font-size: ${typography.fontSize.md};
   line-height: 140%;
@@ -303,7 +303,7 @@ const StatDescription = styled.div`
 `;
 
 const StatNumber = styled.div`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.bold};
   font-size: 68px;
   line-height: 140%;

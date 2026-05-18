@@ -165,7 +165,7 @@ const TextBlock = styled.div`
 `;
 
 const Title = styled.h1`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.bold};
   font-size: 68px;
   line-height: 120%;
@@ -178,7 +178,7 @@ const Title = styled.h1`
 `;
 
 const SubText = styled.p`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-style: normal;
   font-weight: ${typography.fontWeight.normal};
   font-size: ${typography.fontSize.md};

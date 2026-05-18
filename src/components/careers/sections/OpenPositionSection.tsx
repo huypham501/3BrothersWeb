@@ -139,7 +139,7 @@ const HeadingRow = styled.div`
 
 /* "Vị trí đang tuyển" — 42px cobalt bold */
 const SectionTitle = styled.h2`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.bold};
   font-size: ${typography.fontSize['6xl']}; /* 42px */
   line-height: 140%;
@@ -157,7 +157,7 @@ const SectionTitle = styled.h2`
 
 /* "6 vị trí đang mở" — 16px regular dark */
 const OpenCount = styled.span`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.normal};
   font-size: ${typography.fontSize.md};
   line-height: 140%;
@@ -193,7 +193,7 @@ const ShowMoreButton = styled.button`
   cursor: pointer;
   transition: background ${motion.duration.base} ease, transform ${motion.duration.base} ease;
 
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.bold};
   font-size: ${typography.fontSize.md};
   line-height: 140%;

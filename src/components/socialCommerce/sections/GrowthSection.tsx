@@ -195,7 +195,7 @@ const LeftContent = styled.div`
 `;
 
 const MainHeading = styled.h2`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.bold};
   font-size: 42px;
   line-height: 140%;
@@ -209,7 +209,7 @@ const MainHeading = styled.h2`
 `;
 
 const Description = styled.p`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.normal};
   font-size: 16px;
   line-height: 140%;
@@ -240,7 +240,7 @@ const CtaButton = styled(Link)`
 `;
 
 const CtaText = styled.span`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.bold};
   font-size: 16px;
   line-height: 140%;
@@ -313,7 +313,7 @@ const CardContent = styled.div`
 `;
 
 const CardTitle = styled.h3`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.bold};
   font-size: 26px;
   line-height: 140%;
@@ -326,7 +326,7 @@ const CardTitle = styled.h3`
 `;
 
 const CardDesc = styled.p`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.normal};
   font-size: 16px;
   line-height: 140%;

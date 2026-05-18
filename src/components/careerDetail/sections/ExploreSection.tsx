@@ -76,7 +76,7 @@ const Inner = styled.div`
 
 /* "CÓ THỂ BẠN CŨNG QUAN TÂM" — 26px bold uppercase #181A2A */
 const SectionTitle = styled.h2`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.bold};
   font-size: 26px;
   line-height: 140%;

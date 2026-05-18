@@ -48,7 +48,6 @@ const fadeUp = keyframes`
 const HeroShell = styled.section`
   position: relative;
   width: 100%;
-  padding-top: 120px;
   background: #b4cfff;
 `;
 
@@ -93,7 +92,7 @@ const ContentBox = styled.div`
 
 const HeroTitle = styled.h1`
   margin: 0;
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.bold};
   font-size: 68px;
   line-height: 120%;
@@ -118,7 +117,7 @@ const HeroTitleLine = styled.span`
 const HeroSubtitle = styled.p`
   margin: 0;
   max-width: 620px;
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.medium};
   font-size: ${typography.fontSize.md};
   line-height: 150%;
@@ -152,7 +151,7 @@ const PrimaryButton = styled(Link)`
   text-decoration: none;
   transition: transform ${motion.duration.base} ease, background ${motion.duration.base} ease;
 
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.bold};
   font-size: ${typography.fontSize.md};
   line-height: 140%;
@@ -187,7 +186,7 @@ const SecondaryButton = styled(Link)`
   cursor: pointer;
   transition: background ${motion.duration.base} ease, transform ${motion.duration.base} ease;
 
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.bold};
   font-size: ${typography.fontSize.md};
   line-height: 140%;

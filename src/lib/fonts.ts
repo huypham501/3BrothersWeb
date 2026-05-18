@@ -22,7 +22,7 @@ export const poppins = Poppins({
  * Montserrat - Secondary font family for V2 components
  */
 export const montserrat = Montserrat({
-  weight: ['400', '500', '600', '700', '800', '900'],
+  weight: ['300', '400', '500', '600', '700', '800', '900'],
   subsets: ['latin', 'latin-ext'],
   display: 'swap',
   variable: '--font-montserrat',

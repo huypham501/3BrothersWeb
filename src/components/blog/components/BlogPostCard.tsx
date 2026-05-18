@@ -83,7 +83,7 @@ export const CardText = styled.div`
 `;
 
 export const CardTitle = styled.h3`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-style: normal;
   font-weight: ${typography.fontWeight.bold};
   font-size: 24px;
@@ -97,7 +97,7 @@ export const CardTitle = styled.h3`
 `;
 
 export const CardDate = styled.div`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-style: normal;
   font-weight: ${typography.fontWeight.normal};
   font-size: 12px;

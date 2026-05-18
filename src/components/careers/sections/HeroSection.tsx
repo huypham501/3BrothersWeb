@@ -135,7 +135,7 @@ const HeadingGroup = styled.div`
 
 /* "GIA NHẬP ĐỘI NGŨ" — 26px uppercase navy */
 const Superlabel = styled.p`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.bold};
   font-size: 26px;
   line-height: 140%;
@@ -152,7 +152,7 @@ const Superlabel = styled.p`
 
 /* "3Brothers Media" — 68px cobalt blue */
 const MainTitle = styled.h1`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.bold};
   font-size: 68px;
   line-height: 140%;
@@ -172,7 +172,7 @@ const MainTitle = styled.h1`
 
 /* Subtitle — 16px regular dark */
 const Subtitle = styled.p`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.normal};
   font-size: ${typography.fontSize.md};
   line-height: 150%;
@@ -235,7 +235,7 @@ const IconWrapper = styled.div`
 
 /* Card title — 26px bold #061530 */
 const PerkTitle = styled.h3`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.bold};
   font-size: 26px;
   line-height: 140%;
@@ -245,7 +245,7 @@ const PerkTitle = styled.h3`
 
 /* Card description — 16px regular, 70% opacity navy */
 const PerkDesc = styled.p`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.normal};
   font-size: ${typography.fontSize.md};
   line-height: 140%;

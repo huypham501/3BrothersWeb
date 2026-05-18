@@ -122,7 +122,7 @@ const HeadingBlock = styled.div`
 `;
 
 const Superlabel = styled.p`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.normal};
   font-size: 26px;
   line-height: 140%;
@@ -135,7 +135,7 @@ const Superlabel = styled.p`
 `;
 
 const SectionTitle = styled.h2`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.bold};
   font-size: ${typography.fontSize['6xl']};
   line-height: 140%;
@@ -194,7 +194,7 @@ const CardInner = styled.div`
 `;
 
 const QuoteText = styled.p`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.normal};
   font-size: ${typography.fontSize.md};
   line-height: 150%;
@@ -219,7 +219,7 @@ const AuthorBlock = styled.div`
 
 const AuthorName = styled.span`
   display: block;
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.bold};
   font-size: ${typography.fontSize.md};
   line-height: 140%;
@@ -228,7 +228,7 @@ const AuthorName = styled.span`
 
 const AuthorRole = styled.span`
   display: block;
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.normal};
   font-size: 14px;
   line-height: 140%;

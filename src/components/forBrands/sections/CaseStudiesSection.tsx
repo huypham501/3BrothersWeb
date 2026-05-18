@@ -91,16 +91,18 @@ const HeadingWrap = styled.div`
 const Eyebrow = styled.p`
   margin: 0;
   color: ${colors.secondary};
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
+  font-weight: 300;
   font-size: ${typography.fontSize.md};
   line-height: 140%;
+  letter-spacing: 0;
   text-transform: uppercase;
 `;
 
 const Title = styled.h2`
   margin: 0;
   color: ${colors.white};
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-size: ${typography.fontSize['6xl']};
   font-weight: ${typography.fontWeight.bold};
   line-height: 140%;
@@ -127,7 +129,7 @@ const FeaturedMedia = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.semibold};
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -147,7 +149,7 @@ const FeaturedContent = styled.div`
 const Brand = styled.h3`
   margin: 0;
   color: ${colors.white};
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-size: 68px;
   line-height: 140%;
   font-weight: ${typography.fontWeight.bold};
@@ -160,7 +162,7 @@ const Brand = styled.h3`
 const Project = styled.p`
   margin: 0;
   color: ${colors.white};
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-size: 26px;
   line-height: 140%;
 `;
@@ -179,7 +181,7 @@ const Stat = styled.div`
 const StatValue = styled.p`
   margin: 0;
   color: ${colors.secondary};
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-size: 52px;
   line-height: 110%;
   font-weight: ${typography.fontWeight.bold};
@@ -188,7 +190,7 @@ const StatValue = styled.p`
 const StatLabel = styled.p`
   margin: 0;
   color: ${colors.white};
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-size: ${typography.fontSize['3xl']};
   line-height: 140%;
 `;
@@ -196,7 +198,7 @@ const StatLabel = styled.p`
 const Description = styled.p`
   margin: 0;
   color: rgba(255, 255, 255, 0.82);
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-size: ${typography.fontSize['2xl']};
   line-height: 150%;
 `;
@@ -213,7 +215,7 @@ const VerticalLabel = styled.p`
   color: rgba(255, 255, 255, 0.6);
   writing-mode: vertical-rl;
   transform: rotate(180deg);
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-size: ${typography.fontSize['4xl']};
   line-height: 100%;
   text-transform: uppercase;
@@ -248,7 +250,7 @@ const BrandCard = styled.div<{ $active: boolean }>`
 const BrandCardName = styled.p`
   margin: 0;
   color: ${colors.white};
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-size: 48px;
   line-height: 110%;
   font-weight: ${typography.fontWeight.bold};
@@ -257,7 +259,7 @@ const BrandCardName = styled.p`
 const BrandCardMetric = styled.p`
   margin: 0;
   color: ${colors.secondary};
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-size: ${typography.fontSize['3xl']};
   line-height: 140%;
   font-weight: ${typography.fontWeight.bold};
@@ -272,7 +274,7 @@ const CategoryRow = styled.div`
 const CategoryItem = styled.p`
   margin: 0;
   color: rgba(255, 255, 255, 0.72);
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-size: 42px;
   line-height: 140%;
   text-transform: uppercase;

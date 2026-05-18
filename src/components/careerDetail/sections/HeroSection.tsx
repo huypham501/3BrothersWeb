@@ -155,7 +155,7 @@ const Breadcrumb = styled.nav`
 `;
 
 const BreadcrumbLink = styled(Link)`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.normal};
   font-size: ${typography.fontSize.md};
   line-height: 140%;
@@ -169,13 +169,13 @@ const BreadcrumbLink = styled(Link)`
 `;
 
 const BreadcrumbSep = styled.span`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-size: ${typography.fontSize.md};
   color: rgba(255, 255, 255, 0.5);
 `;
 
 const BreadcrumbCurrent = styled.span`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: 600;
   font-size: ${typography.fontSize.md};
   line-height: 140%;
@@ -184,7 +184,7 @@ const BreadcrumbCurrent = styled.span`
 
 /* Job title — 68px bold white */
 const JobTitle = styled.h1`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.bold};
   font-size: 68px;
   line-height: 140%;
@@ -211,7 +211,7 @@ const MetaBlock = styled.div`
 
 /* Short description — 16px regular white */
 const ShortDesc = styled.p`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.normal};
   font-size: ${typography.fontSize.md};
   line-height: 140%;
@@ -240,7 +240,7 @@ const MetaItem = styled.span`
   flex-direction: row;
   align-items: center;
   gap: 4px;
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.normal};
   font-size: ${typography.fontSize.md};
   line-height: 140%;
@@ -262,7 +262,7 @@ const ApplyButton = styled(Link)`
   cursor: pointer;
   transition: transform ${motion.duration.base} ease, box-shadow ${motion.duration.base} ease;
 
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.bold};
   font-size: ${typography.fontSize.md};
   line-height: 140%;

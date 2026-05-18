@@ -3,6 +3,7 @@
 import styled from 'styled-components';
 import { notFound } from 'next/navigation';
 import type { ReactNode } from 'react';
+import { typography } from '@/styles/tokens';
 
 import { Header } from '@/components/shared/Header';
 import { Footer } from '@/components/shared/Footer';
@@ -65,7 +66,7 @@ const Wrapper = styled.div`
   background: #F4F8FF;
   box-shadow: 0px 4.5px 225px rgba(6, 21, 48, 0.6);
   overflow-x: hidden;
-  font-family: 'Montserrat', 'Inter', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
 `;
 
 const MainContent = styled.main`

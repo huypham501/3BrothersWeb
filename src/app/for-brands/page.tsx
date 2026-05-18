@@ -41,7 +41,7 @@ const FOR_BRANDS_FALLBACK_DATA = {
     brandCards: [
       { brand: 'Gillette', metric: '70M+ Video views', active: true },
       { brand: 'Dior', metric: '70M+ Video views' },
-      { brand: \"L'Oréal\", metric: '70M+ Video views' },
+      { brand: "L'Oréal", metric: '70M+ Video views' },
       { brand: 'klairs', metric: '70M+ Video views' },
       { brand: 'YSL', metric: '70M+ Video views' },
     ],

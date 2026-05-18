@@ -60,7 +60,7 @@ export function JobCard({ job, variant = 'list' }: JobCardProps) {
 // --- Shared Styled Components ---
 
 const JobTitle = styled.h3`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.bold};
   font-size: 26px;
   line-height: 140%;
@@ -85,7 +85,7 @@ const MetaItem = styled.span`
   flex-direction: row;
   align-items: center;
   gap: 4px;
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.normal};
   font-size: ${typography.fontSize.md};
   line-height: 140%;
@@ -107,7 +107,7 @@ const BaseButton = styled(Link)`
   cursor: pointer;
   transition: background ${motion.duration.base} ease, transform ${motion.duration.base} ease;
 
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.bold};
   font-size: ${typography.fontSize.md};
   line-height: 140%;
@@ -206,7 +206,7 @@ const HeadingBlock = styled.div`
 `;
 
 const DeptLabel = styled.span`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.normal};
   font-size: ${typography.fontSize.md};
   line-height: 140%;

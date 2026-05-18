@@ -125,7 +125,7 @@ const EyebrowGroup = styled.div`
 `;
 
 const EyebrowText = styled.span`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.normal};
   font-size: 16px;
   line-height: 140%;
@@ -134,7 +134,7 @@ const EyebrowText = styled.span`
 
 /* Title */
 const Title = styled.h1`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.bold};
   font-size: 68px;
   line-height: 140%;
@@ -161,7 +161,7 @@ const ContentLower = styled.div`
 `;
 
 const Subtitle = styled.p`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.normal};
   font-size: 16px;
   line-height: 140%;
@@ -194,7 +194,7 @@ const ServicePill = styled.div`
 `;
 
 const ServiceText = styled.span`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.normal};
   font-size: 16px;
   line-height: 140%;

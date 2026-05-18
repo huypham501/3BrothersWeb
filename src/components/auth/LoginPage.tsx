@@ -249,7 +249,7 @@ const PageRoot = styled.div`
   min-height: 100vh;
   /* Reverted to original neutral background */
   background: #F4F8FF;
-  font-family: 'Montserrat', 'Inter', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   overflow: hidden;
 
   ${mediaQueries.down.lg} {
@@ -442,7 +442,7 @@ const HeaderGroup = styled.div`
 
 /* "Đăng nhập" — 42px bold #061530 */
 const PageTitle = styled.h1`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.bold};
   font-size: 42px;
   line-height: 140%;
@@ -457,7 +457,7 @@ const PageTitle = styled.h1`
 
 /* "Nhập thông tin..." — 16px regular #454545 */
 const SubTitle = styled.p`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.normal};
   font-size: 16px;
   line-height: 140%;
@@ -468,7 +468,7 @@ const SubTitle = styled.p`
 
 /* "3BROTHERS.MEDIA" — 26px bold uppercase #003CA6 */
 const BrandName = styled.span`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.bold};
   font-size: 26px;
   line-height: 140%;
@@ -511,7 +511,7 @@ const StyledInput = styled.input`
   background: transparent;
   outline: none;
 
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.normal};
   font-size: 16px;
   line-height: 140%;
@@ -549,7 +549,7 @@ const CheckboxLabel = styled.label`
   flex: 1;
   cursor: pointer;
 
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.normal};
   font-size: 16px;
   line-height: 140%;
@@ -585,7 +585,7 @@ const Checkbox = styled.input`
 
 /* "Quên mật khẩu?" — 16px semibold #003CA6 */
 const ForgotLink = styled.a`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: 600;
   font-size: 16px;
   line-height: 140%;
@@ -614,7 +614,7 @@ const SubmitButton = styled.button`
   cursor: pointer;
   transition: background ${motion.duration.base} ease, transform ${motion.duration.base} ease;
 
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.bold};
   font-size: 16px;
   line-height: 150%;
@@ -651,7 +651,7 @@ const DividerLine = styled.div`
 `;
 
 const DividerText = styled.span`
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.normal};
   font-size: 16px;
   line-height: 140%;
@@ -676,7 +676,7 @@ const GoogleButton = styled.button`
   cursor: pointer;
   transition: background ${motion.duration.base} ease, border-color ${motion.duration.base} ease;
 
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.bold};
   font-size: 16px;
   line-height: 150%;
@@ -704,7 +704,7 @@ const InlineAlert = styled.div<{ $tone: 'error' | 'success' }>`
     ${({ $tone }) =>
     $tone === 'error' ? 'rgba(220, 38, 38, 0.3)' : 'rgba(22, 163, 74, 0.3)'};
   color: ${({ $tone }) => ($tone === 'error' ? '#dc2626' : '#16a34a')};
-  font-family: 'Montserrat', sans-serif;
+  font-family: ${typography.fontFamily.montserrat};
   font-size: 14px;
   line-height: 1.5;
 `;
