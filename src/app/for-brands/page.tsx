@@ -18,6 +18,64 @@ const FOR_BRANDS_FALLBACK_DATA = {
     secondaryCtaLabel: 'Xem case studies',
     secondaryCtaUrl: '/social-commerce',
   },
+  solutions: {
+    title: 'Giải Pháp Influencer Marketing\nToàn Diện',
+    items: [
+      'Content partnership',
+      'Sponsorship',
+      'Distribution',
+      'Influencer marketing',
+    ] as [string, string, string, string],
+  },
+  caseStudies: {
+    eyebrow: 'Case studies',
+    title: 'Chiến Dịch Thực Tế',
+    featuredBrand: 'Gillette',
+    featuredProject: 'Dự án ABC',
+    featuredStats: [
+      { value: '3.5M+', label: 'Followers' },
+      { value: '71.2M+', label: 'Likes' },
+    ],
+    featuredDescription:
+      'Là một trong những gương mặt gắn bó cùng 3Brothers từ những ngày đầu, Nguyệt Busi đang từng bước xây dựng dấu ấn trong cộng đồng làm đẹp thông qua những nội dung được chia sẻ từ trải nghiệm thực tế.',
+    brandCards: [
+      { brand: 'Gillette', metric: '70M+ Video views', active: true },
+      { brand: 'Dior', metric: '70M+ Video views' },
+      { brand: \"L'Oréal\", metric: '70M+ Video views' },
+      { brand: 'klairs', metric: '70M+ Video views' },
+      { brand: 'YSL', metric: '70M+ Video views' },
+    ],
+    categories: ['Lifestyle', 'Beauty', 'Gaming', 'Entertainment', 'Pets', 'Travel', 'Sport'],
+  },
+  progress: {
+    title: 'Chúng Tôi Làm Việc Như Thế Nào',
+    subtitle: 'Quy trình 4 bước rõ ràng và minh bạch, từ lúc nhận brief đến khi báo cáo kết quả cuối cùng.',
+    steps: [
+      {
+        title: 'Tiếp Nhận Brief',
+        description: 'Hiểu rõ nhu cầu, mục tiêu và ngân sách của thương hiệu.',
+      },
+      {
+        title: 'Lập Chiến Lược',
+        description: 'Xây dựng chiến lược và lựa chọn influencers phù hợp nhất với thương hiệu.',
+      },
+      {
+        title: 'Triển Khai',
+        description: 'Thực thi chiến dịch, sản xuất nội dung và phân phối trên các nền tảng.',
+      },
+      {
+        title: 'Báo Cáo Kết Quả',
+        description: 'Đánh giá chi tiết hiệu quả, ROI và tối ưu chiến dịch liên tục.',
+      },
+    ],
+  },
+  cta: {
+    heading: 'Sẵn Sàng Nâng Tầm\nChiến Dịch Marketing?',
+    subtitle:
+      'Liên hệ ngay để nhận tư vấn miễn phí và bắt đầu chiến dịch influencer marketing hiệu quả nhất.',
+    ctaLabel: 'Liên hệ hợp tác',
+    ctaUrl: '/contact',
+  },
   globals: {
     header: null,
     footer: {

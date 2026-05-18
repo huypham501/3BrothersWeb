@@ -7,6 +7,10 @@ import { Footer } from '@/components/shared/Footer';
 import { colors } from '@/styles/tokens';
 import type { GlobalFooterPayload, GlobalHeaderPayload } from '@/lib/cms/types';
 import { HeroSection } from './sections/HeroSection';
+import { SolutionsSection } from './sections/SolutionsSection';
+import { CaseStudiesSection } from './sections/CaseStudiesSection';
+import { ProgressSection } from './sections/ProgressSection';
+import { CtaSection } from './sections/CtaSection';
 
 interface ForBrandsHeroContent {
   title: string;
@@ -17,8 +21,41 @@ interface ForBrandsHeroContent {
   secondaryCtaUrl?: string;
 }
 
+interface ForBrandsSolutionsContent {
+  title: string;
+  items: [string, string, string, string];
+}
+
+interface ForBrandsCaseStudiesContent {
+  eyebrow: string;
+  title: string;
+  featuredBrand: string;
+  featuredProject: string;
+  featuredStats: Array<{ value: string; label: string }>;
+  featuredDescription: string;
+  categories: string[];
+  brandCards: Array<{ brand: string; metric: string; active?: boolean }>;
+}
+
+interface ForBrandsProgressContent {
+  title: string;
+  subtitle: string;
+  steps: Array<{ title: string; description: string }>;
+}
+
+interface ForBrandsCtaContent {
+  heading: string;
+  subtitle: string;
+  ctaLabel: string;
+  ctaUrl: string;
+}
+
 export interface ForBrandsViewModel {
   hero: ForBrandsHeroContent;
+  solutions: ForBrandsSolutionsContent;
+  caseStudies: ForBrandsCaseStudiesContent;
+  progress: ForBrandsProgressContent;
+  cta: ForBrandsCtaContent;
   globals: {
     header?: GlobalHeaderPayload | null;
     footer?: GlobalFooterPayload | null;
@@ -31,6 +68,10 @@ export function ForBrandsView({ data }: { data: ForBrandsViewModel }) {
       {data.globals.header ? <Header content={data.globals.header} /> : null}
       <MainContent>
         <HeroSection content={data.hero} />
+        <SolutionsSection content={data.solutions} />
+        <CaseStudiesSection content={data.caseStudies} />
+        <ProgressSection content={data.progress} />
+        <CtaSection content={data.cta} />
       </MainContent>
       {data.globals.footer ? <Footer content={data.globals.footer} /> : null}
     </Wrapper>
