@@ -11,32 +11,30 @@ export function HeroSection({ content }: { content: ForBrandsViewModel['hero'] }
   const hasSecondaryCta = Boolean(content.secondaryCtaLabel && content.secondaryCtaUrl);
   const titleLines = content.title.split('\n').filter(Boolean);
   return (
-    <HeroShell>
-      <HeroWrapper>
-        <ForBrandsHeroBackground />
-        <ContentBox>
-          <HeroTitle>
-            {titleLines.map((line, idx) => (
-              <HeroTitleLine key={`${line}-${idx}`}>{line}</HeroTitleLine>
-            ))}
-          </HeroTitle>
-          <HeroSubtitle>{content.subtitle}</HeroSubtitle>
-          <ButtonRow>
-            <PrimaryButton href={content.primaryCtaUrl}>
-              {content.primaryCtaLabel}
-              <ArrowIcon>
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M4.167 10h11.666M10 4.167 15.833 10 10 15.833" stroke="#061530" strokeWidth="1.67" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </ArrowIcon>
-            </PrimaryButton>
-            {hasSecondaryCta ? (
-              <SecondaryButton href={content.secondaryCtaUrl!}>{content.secondaryCtaLabel}</SecondaryButton>
-            ) : null}
-          </ButtonRow>
-        </ContentBox>
-      </HeroWrapper>
-    </HeroShell>
+    <HeroSectionRoot>
+      <ForBrandsHeroBackground />
+      <ContentBox>
+        <HeroTitle>
+          {titleLines.map((line, idx) => (
+            <HeroTitleLine key={`${line}-${idx}`}>{line}</HeroTitleLine>
+          ))}
+        </HeroTitle>
+        <HeroSubtitle>{content.subtitle}</HeroSubtitle>
+        <ButtonRow>
+          <PrimaryButton href={content.primaryCtaUrl}>
+            {content.primaryCtaLabel}
+            <ArrowIcon>
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M4.167 10h11.666M10 4.167 15.833 10 10 15.833" stroke="#061530" strokeWidth="1.67" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </ArrowIcon>
+          </PrimaryButton>
+          {hasSecondaryCta ? (
+            <SecondaryButton href={content.secondaryCtaUrl!}>{content.secondaryCtaLabel}</SecondaryButton>
+          ) : null}
+        </ButtonRow>
+      </ContentBox>
+    </HeroSectionRoot>
   );
 }
 
@@ -45,15 +43,10 @@ const fadeUp = keyframes`
   to   { opacity: 1; transform: translateY(0); }
 `;
 
-const HeroShell = styled.section`
+const HeroSectionRoot = styled.section`
   position: relative;
   width: 100%;
   background: #b4cfff;
-`;
-
-const HeroWrapper = styled.div`
-  position: relative;
-  width: 100%;
   aspect-ratio: 1440 / 670;
   min-height: 670px;
   overflow: hidden;

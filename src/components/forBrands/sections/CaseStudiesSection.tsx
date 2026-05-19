@@ -6,6 +6,7 @@ import { colors, mediaQueries, spacing, typography } from '@/styles/tokens';
 import { ForBrandsViewModel } from '../ForBrandsView';
 import { useInlineDescriptionClamp } from '../../home/sections/ExclusiveTalentsSection/hooks/useInlineDescriptionClamp';
 import { useHorizontalSlider } from '../../home/sections/ExclusiveTalentsSection/hooks/useHorizontalSlider';
+import { ForBrandsCaseStudiesBackground } from './ForBrandsCaseStudiesBackground';
 
 export function CaseStudiesSection({ content }: { content: ForBrandsViewModel['caseStudies'] }) {
   const {
@@ -33,6 +34,7 @@ export function CaseStudiesSection({ content }: { content: ForBrandsViewModel['c
 
   return (
     <SectionContainer>
+      <ForBrandsCaseStudiesBackground />
       <Inner>
         <HeadingWrap>
           <Eyebrow>{content.eyebrow}</Eyebrow>
@@ -144,9 +146,12 @@ const SectionContainer = styled.section`
   background: ${colors.secondaryDark};
   padding: 120px 0 64px;
   overflow: hidden;
+  isolation: isolate;
 `;
 
 const Inner = styled.div`
+  position: relative;
+  z-index: 1;
   width: min(1440px, 100%);
   margin: 0 auto;
   padding: 0 80px;
