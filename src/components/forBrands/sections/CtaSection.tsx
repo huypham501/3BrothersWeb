@@ -4,9 +4,9 @@ import styled from 'styled-components';
 import Link from 'next/link';
 import { colors, spacing, typography, mediaQueries, motion } from '@/styles/tokens';
 
-const CONTACT_CTA_BG_IMAGE = '/images/home/contact-cta-bg.png';
-const CONTACT_CTA_BG_ASPECT_RATIO = '2880 / 1843';
-const CONTACT_CTA_BG_WIDTH = '1440px';
+const FOR_BRANDS_CTA_BG_IMAGE = '/images/home/contact-cta-bg.png';
+const FOR_BRANDS_CTA_BG_ASPECT_RATIO = '2880 / 1843';
+const FOR_BRANDS_CTA_BG_WIDTH = '1440px';
 
 interface ForBrandsCtaContent {
   heading: string;
@@ -61,11 +61,11 @@ const BackgroundLayer = styled.div`
   position: absolute;
   bottom: 0;
   left: 50%;
-  width: ${CONTACT_CTA_BG_WIDTH};
+  width: ${FOR_BRANDS_CTA_BG_WIDTH};
   height: auto;
-  aspect-ratio: ${CONTACT_CTA_BG_ASPECT_RATIO};
+  aspect-ratio: ${FOR_BRANDS_CTA_BG_ASPECT_RATIO};
   transform: translateX(-50%);
-  background-image: url('${CONTACT_CTA_BG_IMAGE}');
+  background-image: url('${FOR_BRANDS_CTA_BG_IMAGE}');
   background-repeat: no-repeat;
   background-position: center top;
   background-size: 100% auto;

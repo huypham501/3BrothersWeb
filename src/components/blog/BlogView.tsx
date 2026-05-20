@@ -26,10 +26,10 @@ export function BlogView({ featuredPost, posts, header, footer, contactCtaSlot }
       <MainContent>
         <HighlightsSection featuredPost={featuredPost} />
         <ContentsSection posts={posts} />
+        <ContactCTAContainer>
+          {contactCtaSlot}
+        </ContactCTAContainer>
       </MainContent>
-      <ContactCTAContainer>
-        {contactCtaSlot}
-      </ContactCTAContainer>
       <Footer content={footer ?? undefined} />
     </Wrapper>
   );

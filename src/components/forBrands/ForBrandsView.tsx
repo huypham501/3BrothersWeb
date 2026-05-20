@@ -71,7 +71,9 @@ export function ForBrandsView({ data }: { data: ForBrandsViewModel }) {
         <SolutionsSection content={data.solutions} />
         <CaseStudiesSection content={data.caseStudies} />
         <ProgressSection content={data.progress} />
-        <CtaSection content={data.cta} />
+        <CtaContainer>
+          <CtaSection content={data.cta} />
+        </CtaContainer>
       </MainContent>
       {data.globals.footer ? <Footer content={data.globals.footer} /> : null}
     </Wrapper>
@@ -91,4 +93,9 @@ const Wrapper = styled.div`
 
 const MainContent = styled.main`
   width: 100%;
+`;
+
+const CtaContainer = styled.div`
+  width: 100%;
+  background: ${colors.primaryLight};
 `;
