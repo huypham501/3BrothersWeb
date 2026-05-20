@@ -3,9 +3,9 @@
 import styled from 'styled-components';
 
 import { colors, mediaQueries, spacing, typography } from '@/styles/tokens';
-import { ForBrandsViewModel } from '../ForBrandsView';
+import type { ForBrandsProgressContent } from '../ForBrandsView';
 
-export function ProgressSection({ content }: { content: ForBrandsViewModel['progress'] }) {
+export function ProgressSection({ content }: { content: ForBrandsProgressContent }) {
   return (
     <SectionContainer>
       <Inner>

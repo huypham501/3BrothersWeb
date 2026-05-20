@@ -3,7 +3,7 @@
 import styled from 'styled-components';
 
 import { colors, mediaQueries, spacing, typography } from '@/styles/tokens';
-import { ForBrandsViewModel } from '../ForBrandsView';
+import type { ForBrandsSolutionsContent } from '../ForBrandsView';
 
 const ARROW_PATH = 'M10 24H38M24 38L38 24L24 10';
 const LEFT_CONNECTOR_PATHS = [
@@ -15,7 +15,7 @@ const RIGHT_CONNECTOR_PATHS = [
   'M0.000325441 78.666C0.000325441 77.1933 1.19423 75.9993 2.66699 75.9993C4.13975 75.9993 5.33366 77.1933 5.33366 78.666C5.33366 80.1388 4.13975 81.3327 2.66699 81.3327C1.19423 81.3327 0.000325441 80.1388 0.000325441 78.666ZM218 154.666C218 153.193 219.194 151.999 220.667 151.999C222.14 151.999 223.334 153.193 223.334 154.666C223.334 156.139 222.14 157.333 220.667 157.333C219.194 157.333 218 156.139 218 154.666ZM2.66699 78.666V78.166H204.667V78.666V79.166H2.66699V78.666ZM220.667 94.666H221.167V154.666H220.667H220.167V94.666H220.667ZM204.667 78.666V78.166C213.78 78.166 221.167 85.5533 221.167 94.666H220.667H220.167C220.167 86.1056 213.227 79.166 204.667 79.166V78.666Z',
 ] as const;
 
-export function SolutionsSection({ content }: { content: ForBrandsViewModel['solutions'] }) {
+export function SolutionsSection({ content }: { content: ForBrandsSolutionsContent }) {
   const [topLeft, topRight, bottomLeft, bottomRight] = content.items;
   const cards = [
     { area: 'topLeft', label: topLeft },

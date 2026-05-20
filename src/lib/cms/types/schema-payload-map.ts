@@ -1,6 +1,11 @@
 import type { SCHEMA_KEYS } from '../constants/schema-keys';
 import type {
   CareersHeroPayload,
+  ForBrandsCaseStudiesPayload,
+  ForBrandsCtaPayload,
+  ForBrandsHeroPayload,
+  ForBrandsProgressPayload,
+  ForBrandsSolutionsPayload,
   ForCreatorsBenefitPayload,
   CtaPayload,
   ForCreatorsHeroPayload,
@@ -39,6 +44,11 @@ export interface CmsSchemaPayloadMap {
   [SCHEMA_KEYS.FOR_CREATORS_BENEFIT]: ForCreatorsBenefitPayload;
   [SCHEMA_KEYS.FOR_CREATORS_TESTIMONIALS]: ForCreatorsTestimonialsPayload;
   [SCHEMA_KEYS.FOR_CREATORS_CTA]: CtaPayload;
+  [SCHEMA_KEYS.FOR_BRANDS_HERO]: ForBrandsHeroPayload;
+  [SCHEMA_KEYS.FOR_BRANDS_SOLUTIONS]: ForBrandsSolutionsPayload;
+  [SCHEMA_KEYS.FOR_BRANDS_CASE_STUDIES]: ForBrandsCaseStudiesPayload;
+  [SCHEMA_KEYS.FOR_BRANDS_PROGRESS]: ForBrandsProgressPayload;
+  [SCHEMA_KEYS.FOR_BRANDS_CTA]: ForBrandsCtaPayload;
   [SCHEMA_KEYS.SOCIAL_COMMERCE_HERO]: SocialCommerceHeroPayload;
   [SCHEMA_KEYS.SOCIAL_COMMERCE_GROWTH]: SocialCommerceGrowthPayload;
   [SCHEMA_KEYS.SOCIAL_COMMERCE_VALUE_PROPOSITION]: SocialCommerceValuePropositionPayload;
@@ -56,6 +66,11 @@ export type CmsSectionSchemaKey =
   | typeof SCHEMA_KEYS.FOR_CREATORS_BENEFIT
   | typeof SCHEMA_KEYS.FOR_CREATORS_TESTIMONIALS
   | typeof SCHEMA_KEYS.FOR_CREATORS_CTA
+  | typeof SCHEMA_KEYS.FOR_BRANDS_HERO
+  | typeof SCHEMA_KEYS.FOR_BRANDS_SOLUTIONS
+  | typeof SCHEMA_KEYS.FOR_BRANDS_CASE_STUDIES
+  | typeof SCHEMA_KEYS.FOR_BRANDS_PROGRESS
+  | typeof SCHEMA_KEYS.FOR_BRANDS_CTA
   | typeof SCHEMA_KEYS.SOCIAL_COMMERCE_HERO
   | typeof SCHEMA_KEYS.SOCIAL_COMMERCE_GROWTH
   | typeof SCHEMA_KEYS.SOCIAL_COMMERCE_VALUE_PROPOSITION

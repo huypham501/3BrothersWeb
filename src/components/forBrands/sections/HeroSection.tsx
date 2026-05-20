@@ -5,9 +5,9 @@ import styled, { keyframes } from 'styled-components';
 
 import { colors, mediaQueries, motion, spacing, typography } from '@/styles/tokens';
 import { ForBrandsHeroBackground } from './ForBrandsHeroBackground';
-import { ForBrandsViewModel } from '../ForBrandsView';
+import type { ForBrandsHeroContent } from '../ForBrandsView';
 
-export function HeroSection({ content }: { content: ForBrandsViewModel['hero'] }) {
+export function HeroSection({ content }: { content: ForBrandsHeroContent }) {
   const hasSecondaryCta = Boolean(content.secondaryCtaLabel && content.secondaryCtaUrl);
   const titleLines = content.title.split('\n').filter(Boolean);
   return (

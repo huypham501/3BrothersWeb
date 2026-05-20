@@ -69,6 +69,13 @@ export const CMS_NAV: NavItem[] = [
       },
       {
         type: 'leaf',
+        key: 'for-brands',
+        label: 'For Brands',
+        href: '/admin/content/pages/for-brands',
+        iconName: 'EditOutlined',
+      },
+      {
+        type: 'leaf',
         key: 'social-commerce',
         label: 'Social Commerce',
         href: '/admin/content/pages/social-commerce',
@@ -196,6 +203,7 @@ const PATH_TO_KEY: Record<string, string> = {
   '/admin/content': 'overview',
   '/admin/content/pages/home': 'home-cms',
   '/admin/content/pages/for-creators': 'for-creators',
+  '/admin/content/pages/for-brands': 'for-brands',
   '/admin/content/pages/social-commerce': 'social-commerce',
   '/admin/content/pages/blogs': 'blogs-cms',
   '/admin/content/pages/blogs/new': 'blogs-cms',
@@ -234,6 +242,7 @@ export function getActiveKey(pathname: string): string {
 const KEY_TO_OPEN_GROUPS: Record<string, string[]> = {
   'home-cms': ['pages'],
   'for-creators': ['pages'],
+  'for-brands': ['pages'],
   'social-commerce': ['pages'],
   'blogs-cms': ['pages'],
   'careers-cms': ['pages'],
@@ -266,6 +275,7 @@ const PATH_TO_BREADCRUMB: Record<string, BreadcrumbSegment[]> = {
   // Pages
   '/admin/content/pages/home': [ROOT_CRUMB, { label: 'Pages' }, { label: 'Home' }],
   '/admin/content/pages/for-creators': [ROOT_CRUMB, { label: 'Pages' }, { label: 'For Creators' }],
+  '/admin/content/pages/for-brands': [ROOT_CRUMB, { label: 'Pages' }, { label: 'For Brands' }],
   '/admin/content/pages/social-commerce': [ROOT_CRUMB, { label: 'Pages' }, { label: 'Social Commerce' }],
   '/admin/content/pages/blogs': [ROOT_CRUMB, { label: 'Pages' }, { label: 'Blogs' }],
   '/admin/content/pages/blogs/new': [ROOT_CRUMB, { label: 'Pages' }, { label: 'Blogs', href: '/admin/content/pages/blogs' }, { label: 'New Post' }],

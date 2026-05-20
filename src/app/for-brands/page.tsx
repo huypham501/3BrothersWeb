@@ -1,127 +1,118 @@
-import { ForBrandsView } from '@/components/forBrands/ForBrandsView';
-import { getGlobalSetting } from '@/lib/cms/queries';
-import { SCHEMA_KEYS } from '@/lib/cms/constants/schema-keys';
-import {
-  resolveGlobalContentBySchemaKey,
-  validateCmsPayloadBySchemaKey,
-} from '@/lib/cms/resolvers/utils/cms-content';
+import type { Metadata } from 'next';
 
+// Public page — served from ISR cache, revalidated only via Publish Center.
 export const revalidate = false;
 
-const FOR_BRANDS_FALLBACK_DATA = {
-  hero: {
-    title: 'Kết Nối Thương Hiệu\nVới Influencers',
-    subtitle:
-      'Giải pháp influencer marketing toàn diện giúp thương hiệu tiếp cận đúng khách hàng, đúng thời điểm, với đúng người ảnh hưởng.',
-    primaryCtaLabel: 'Liên hệ tư vấn',
-    primaryCtaUrl: '/contact',
-    secondaryCtaLabel: 'Xem case studies',
-    secondaryCtaUrl: '/social-commerce',
-  },
-  solutions: {
-    title: 'Giải Pháp Influencer Marketing\nToàn Diện',
-    items: [
-      'Content partnership',
-      'Sponsorship',
-      'Distribution',
-      'Influencer marketing',
-    ] as [string, string, string, string],
-  },
-  caseStudies: {
-    eyebrow: 'Case studies',
-    title: 'Chiến Dịch Thực Tế',
-    featuredBrand: 'Gillette',
-    featuredProject: 'Dự án ABC',
-    featuredStats: [
-      { value: '3.5M+', label: 'Followers' },
-      { value: '71.2M+', label: 'Likes' },
-    ],
-    featuredDescription:
-      'Là một trong những gương mặt gắn bó cùng 3Brothers từ những ngày đầu, Nguyệt Busi đang từng bước xây dựng dấu ấn trong cộng đồng làm đẹp thông qua những nội dung được chia sẻ từ trải nghiệm thực tế.',
-    brandCards: [
-      { brand: 'Gillette', metric: '70M+ Video views', active: true },
-      { brand: 'Dior', metric: '70M+ Video views' },
-      { brand: "L'Oréal", metric: '70M+ Video views' },
-      { brand: 'klairs', metric: '70M+ Video views' },
-      { brand: 'YSL', metric: '70M+ Video views' },
-    ],
-    categories: ['Lifestyle', 'Beauty', 'Gaming', 'Entertainment', 'Pets', 'Travel', 'Sport'],
-  },
-  progress: {
-    title: 'Chúng Tôi Làm Việc Như Thế Nào',
-    subtitle: 'Quy trình 4 bước rõ ràng và minh bạch, từ lúc nhận brief đến khi báo cáo kết quả cuối cùng.',
-    steps: [
-      {
-        title: 'Tiếp Nhận Brief',
-        description: 'Hiểu rõ nhu cầu, mục tiêu và ngân sách của thương hiệu.',
+import { ForBrandsView } from '@/components/forBrands/ForBrandsView';
+import { SITE_URL } from '@/lib/constants';
+import { getPageBySlug } from '@/lib/cms/queries';
+import { resolvePageMetadataModel } from '@/lib/cms/resolvers/metadata-defaults.resolver';
+import { resolveForBrandsPageData } from '@/lib/cms/resolvers/for-brands.resolver';
+
+export async function generateMetadata(): Promise<Metadata> {
+  const page = await getPageBySlug('for-brands');
+  const metadata = await resolvePageMetadataModel({
+    page,
+    pagePath: '/for-brands',
+    fallbackTitle: 'For Brands | 3BROTHERS NETWORK',
+    fallbackDescription:
+      'Kết nối thương hiệu với influencers phù hợp để tăng trưởng chiến dịch marketing.',
+    fallbackKeywords: ['for brands', 'influencer marketing', 'creator economy', '3brothers network'],
+    fallbackSiteUrl: SITE_URL,
+    fallbackOgImage: '/3brothers-512x512.png',
+    fallbackOgImageAlt: '3BROTHERS NETWORK',
+  });
+
+  return {
+    metadataBase: new URL(metadata.metadata_base_url),
+    title: metadata.title,
+    description: metadata.description,
+    keywords: metadata.keywords,
+    robots: metadata.robots,
+    alternates: {
+      canonical: metadata.canonical_url,
+      languages: {
+        en: `${SITE_URL}/en/for-brands`,
+        vi: `${SITE_URL}/vi/for-brands`,
       },
-      {
-        title: 'Lập Chiến Lược',
-        description: 'Xây dựng chiến lược và lựa chọn influencers phù hợp nhất với thương hiệu.',
-      },
-      {
-        title: 'Triển Khai',
-        description: 'Thực thi chiến dịch, sản xuất nội dung và phân phối trên các nền tảng.',
-      },
-      {
-        title: 'Báo Cáo Kết Quả',
-        description: 'Đánh giá chi tiết hiệu quả, ROI và tối ưu chiến dịch liên tục.',
-      },
-    ],
-  },
-  cta: {
-    heading: 'Sẵn Sàng Nâng Tầm\nChiến Dịch Marketing?',
-    subtitle:
-      'Liên hệ ngay để nhận tư vấn miễn phí và bắt đầu chiến dịch influencer marketing hiệu quả nhất.',
-    ctaLabel: 'Liên hệ hợp tác',
-    ctaUrl: '/contact',
-  },
-  globals: {
-    header: null,
-    footer: {
-      thank_you_heading: 'THANK YOU!',
-      email: 'hello@3brothers.media',
-      address: 'Ho Chi Minh City, Vietnam',
-      menu_links: [
-        { label: 'Home', url: '/' },
-        { label: 'For Creators', url: '/for-creators' },
-        { label: 'For Brands', url: '/for-brands' },
-      ],
-      social_links: [
-        { label: 'Facebook', url: '#' },
-        { label: 'LinkedIn', url: '#' },
-      ],
-      brand_watermark: '3BROTHERS.MEDIA',
     },
-  },
-};
+    openGraph: {
+      title: metadata.title,
+      description: metadata.description,
+      url: metadata.canonical_url,
+      siteName: metadata.site_name,
+      type: 'website',
+      images: [
+        {
+          url: metadata.og_image,
+          alt: metadata.og_image_alt,
+        },
+      ],
+    },
+    twitter: {
+      card: metadata.twitter_card,
+      title: metadata.title,
+      description: metadata.description,
+      images: [metadata.og_image],
+    },
+  };
+}
 
 export default async function ForBrandsPage() {
-  const [headerSetting, footerSetting] = await Promise.all([
-    getGlobalSetting(SCHEMA_KEYS.GLOBAL_HEADER),
-    getGlobalSetting(SCHEMA_KEYS.GLOBAL_FOOTER),
-  ]);
-
-  const header = validateCmsPayloadBySchemaKey(
-    SCHEMA_KEYS.GLOBAL_HEADER,
-    resolveGlobalContentBySchemaKey<typeof SCHEMA_KEYS.GLOBAL_HEADER>(headerSetting),
-    'for-brands.globals.header'
-  );
-
-  const footer = validateCmsPayloadBySchemaKey(
-    SCHEMA_KEYS.GLOBAL_FOOTER,
-    resolveGlobalContentBySchemaKey<typeof SCHEMA_KEYS.GLOBAL_FOOTER>(footerSetting),
-    'for-brands.globals.footer'
-  );
+  const data = await resolveForBrandsPageData();
+  if (!data) return null;
 
   return (
     <ForBrandsView
       data={{
-        ...FOR_BRANDS_FALLBACK_DATA,
-        globals: {
-          header: header ?? FOR_BRANDS_FALLBACK_DATA.globals.header,
-          footer: footer ?? FOR_BRANDS_FALLBACK_DATA.globals.footer,
-        },
+        hero: data.hero
+          ? {
+              title: data.hero.title,
+              subtitle: data.hero.subtitle,
+              primaryCtaLabel: data.hero.primary_cta_label,
+              primaryCtaUrl: data.hero.primary_cta_url,
+              secondaryCtaLabel: data.hero.secondary_cta_label ?? undefined,
+              secondaryCtaUrl: data.hero.secondary_cta_url ?? undefined,
+            }
+          : null,
+        solutions: data.solutions
+          ? {
+              title: data.solutions.section_title,
+              items: data.solutions.items,
+            }
+          : null,
+        caseStudies: data.caseStudies
+          ? {
+              eyebrow: data.caseStudies.eyebrow,
+              title: data.caseStudies.section_title,
+              featuredBrand: data.caseStudies.featured_brand,
+              featuredProject: data.caseStudies.featured_project,
+              featuredStats: data.caseStudies.featured_stats,
+              featuredDescription: data.caseStudies.featured_description,
+              categories: data.caseStudies.categories,
+              brandCards: data.caseStudies.brand_cards.map((card) => ({
+                brand: card.brand,
+                metric: card.metric,
+                active: card.active,
+              })),
+            }
+          : null,
+        progress: data.progress
+          ? {
+              title: data.progress.section_title,
+              subtitle: data.progress.section_subtitle,
+              steps: data.progress.steps,
+            }
+          : null,
+        cta: data.cta
+          ? {
+              heading: data.cta.heading,
+              subtitle: data.cta.subtitle,
+              ctaLabel: data.cta.cta_label,
+              ctaUrl: data.cta.cta_url,
+            }
+          : null,
+        globals: data.globals,
       }}
     />
   );

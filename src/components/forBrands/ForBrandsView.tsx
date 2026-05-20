@@ -12,7 +12,7 @@ import { CaseStudiesSection } from './sections/CaseStudiesSection';
 import { ProgressSection } from './sections/ProgressSection';
 import { CtaSection } from './sections/CtaSection';
 
-interface ForBrandsHeroContent {
+export interface ForBrandsHeroContent {
   title: string;
   subtitle: string;
   primaryCtaLabel: string;
@@ -21,12 +21,12 @@ interface ForBrandsHeroContent {
   secondaryCtaUrl?: string;
 }
 
-interface ForBrandsSolutionsContent {
+export interface ForBrandsSolutionsContent {
   title: string;
   items: [string, string, string, string];
 }
 
-interface ForBrandsCaseStudiesContent {
+export interface ForBrandsCaseStudiesContent {
   eyebrow: string;
   title: string;
   featuredBrand: string;
@@ -37,13 +37,13 @@ interface ForBrandsCaseStudiesContent {
   brandCards: Array<{ brand: string; metric: string; active?: boolean }>;
 }
 
-interface ForBrandsProgressContent {
+export interface ForBrandsProgressContent {
   title: string;
   subtitle: string;
   steps: Array<{ title: string; description: string }>;
 }
 
-interface ForBrandsCtaContent {
+export interface ForBrandsCtaContent {
   heading: string;
   subtitle: string;
   ctaLabel: string;
@@ -51,11 +51,11 @@ interface ForBrandsCtaContent {
 }
 
 export interface ForBrandsViewModel {
-  hero: ForBrandsHeroContent;
-  solutions: ForBrandsSolutionsContent;
-  caseStudies: ForBrandsCaseStudiesContent;
-  progress: ForBrandsProgressContent;
-  cta: ForBrandsCtaContent;
+  hero: ForBrandsHeroContent | null;
+  solutions: ForBrandsSolutionsContent | null;
+  caseStudies: ForBrandsCaseStudiesContent | null;
+  progress: ForBrandsProgressContent | null;
+  cta: ForBrandsCtaContent | null;
   globals: {
     header?: GlobalHeaderPayload | null;
     footer?: GlobalFooterPayload | null;
@@ -67,13 +67,15 @@ export function ForBrandsView({ data }: { data: ForBrandsViewModel }) {
     <Wrapper>
       {data.globals.header ? <Header content={data.globals.header} /> : null}
       <MainContent>
-        <HeroSection content={data.hero} />
-        <SolutionsSection content={data.solutions} />
-        <CaseStudiesSection content={data.caseStudies} />
-        <ProgressSection content={data.progress} />
-        <CtaContainer>
-          <CtaSection content={data.cta} />
-        </CtaContainer>
+        {data.hero ? <HeroSection content={data.hero} /> : null}
+        {data.solutions ? <SolutionsSection content={data.solutions} /> : null}
+        {data.caseStudies ? <CaseStudiesSection content={data.caseStudies} /> : null}
+        {data.progress ? <ProgressSection content={data.progress} /> : null}
+        {data.cta ? (
+          <CtaContainer>
+            <CtaSection content={data.cta} />
+          </CtaContainer>
+        ) : null}
       </MainContent>
       {data.globals.footer ? <Footer content={data.globals.footer} /> : null}
     </Wrapper>

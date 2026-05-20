@@ -3,12 +3,12 @@
 import styled, { css, keyframes } from 'styled-components';
 
 import { colors, mediaQueries, spacing, typography } from '@/styles/tokens';
-import { ForBrandsViewModel } from '../ForBrandsView';
+import type { ForBrandsCaseStudiesContent } from '../ForBrandsView';
 import { useInlineDescriptionClamp } from '../../home/sections/ExclusiveTalentsSection/hooks/useInlineDescriptionClamp';
 import { useHorizontalSlider } from '../../home/sections/ExclusiveTalentsSection/hooks/useHorizontalSlider';
 import { ForBrandsCaseStudiesBackground } from './ForBrandsCaseStudiesBackground';
 
-export function CaseStudiesSection({ content }: { content: ForBrandsViewModel['caseStudies'] }) {
+export function CaseStudiesSection({ content }: { content: ForBrandsCaseStudiesContent }) {
   const {
     rowRef,
     fillRef,

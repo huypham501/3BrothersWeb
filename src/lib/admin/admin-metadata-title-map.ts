@@ -4,6 +4,7 @@ export const ADMIN_METADATA_PAGE_TITLE_LABELS = {
   contentPagesIndex: 'Page Editors',
   pagesHome: 'Home',
   pagesForCreators: 'For Creators',
+  pagesForBrands: 'For Brands',
   pagesSocialCommerce: 'Social Commerce',
   blogsList: 'Blogs',
   blogsNew: 'New Blog Post',

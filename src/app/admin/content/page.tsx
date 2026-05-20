@@ -71,6 +71,16 @@ export default async function AdminContentIndexPage() {
 
           <AdminCard>
             <AdminCardHeader>
+              <AdminCardTitle>For Brands CMS</AdminCardTitle>
+              <AdminCardDescription>Manage For Brands page-level and local section content.</AdminCardDescription>
+            </AdminCardHeader>
+            <AdminCardContent>
+              <AdminButton href="/admin/content/pages/for-brands">Open For Brands Editor</AdminButton>
+            </AdminCardContent>
+          </AdminCard>
+
+          <AdminCard>
+            <AdminCardHeader>
               <AdminCardTitle>Social Commerce CMS</AdminCardTitle>
               <AdminCardDescription>Manage Social Commerce page-level and local section content.</AdminCardDescription>
             </AdminCardHeader>

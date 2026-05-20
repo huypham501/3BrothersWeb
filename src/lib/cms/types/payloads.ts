@@ -168,6 +168,58 @@ export interface CtaPayload {
   cta_url: string;
 }
 
+export interface ForBrandsHeroPayload {
+  title: string;
+  subtitle: string;
+  primary_cta_label: string;
+  primary_cta_url: string;
+  secondary_cta_label?: string | null;
+  secondary_cta_url?: string | null;
+}
+
+export interface ForBrandsSolutionsPayload {
+  section_title: string;
+  items: [string, string, string, string];
+}
+
+export interface ForBrandsCaseStudiesPayload {
+  eyebrow: string;
+  section_title: string;
+  featured_brand: string;
+  featured_project: string;
+  featured_description: string;
+  featured_media_image?: string | null;
+  featured_media_image_alt?: string | null;
+  featured_stats: Array<{
+    value: string;
+    label: string;
+  }>;
+  brand_cards: Array<{
+    brand: string;
+    metric: string;
+    active?: boolean;
+    image?: string | null;
+    image_alt?: string | null;
+  }>;
+  categories: string[];
+}
+
+export interface ForBrandsProgressPayload {
+  section_title: string;
+  section_subtitle: string;
+  steps: Array<{
+    title: string;
+    description: string;
+  }>;
+}
+
+export interface ForBrandsCtaPayload {
+  heading: string;
+  subtitle: string;
+  cta_label: string;
+  cta_url: string;
+}
+
 export interface SocialCommerceSocialProofPayload {
   section_title: string;
   section_subtitle: string;

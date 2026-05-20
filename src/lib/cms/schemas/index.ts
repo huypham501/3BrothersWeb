@@ -235,6 +235,64 @@ export const forCreatorsCtaSchema = z.object({
   cta_url: urlOrHash,
 });
 
+export const forBrandsHeroSchema = z.object({
+  title: z.string().max(120),
+  subtitle: z.string().max(500),
+  primary_cta_label: z.string().max(40),
+  primary_cta_url: urlOrHash,
+  secondary_cta_label: z.string().max(40).nullable().optional(),
+  secondary_cta_url: urlOrHash.nullable().optional(),
+});
+
+export const forBrandsSolutionsSchema = z.object({
+  section_title: z.string().max(120),
+  items: z.array(z.string().max(80)).length(4),
+});
+
+export const forBrandsCaseStudiesSchema = z.object({
+  eyebrow: z.string().max(80),
+  section_title: z.string().max(120),
+  featured_brand: z.string().max(80),
+  featured_project: z.string().max(120),
+  featured_description: z.string().max(1000),
+  featured_media_image: z.string().max(1024).nullable().optional(),
+  featured_media_image_alt: z.string().max(125).nullable().optional(),
+  featured_stats: z.array(
+    z.object({
+      value: z.string().max(40),
+      label: z.string().max(60),
+    })
+  ).max(4),
+  brand_cards: z.array(
+    z.object({
+      brand: z.string().max(80),
+      metric: z.string().max(120),
+      active: z.boolean().optional(),
+      image: z.string().max(1024).nullable().optional(),
+      image_alt: z.string().max(125).nullable().optional(),
+    })
+  ).max(20),
+  categories: z.array(z.string().max(60)).max(20),
+});
+
+export const forBrandsProgressSchema = z.object({
+  section_title: z.string().max(120),
+  section_subtitle: z.string().max(500),
+  steps: z.array(
+    z.object({
+      title: z.string().max(120),
+      description: z.string().max(500),
+    })
+  ).length(4),
+});
+
+export const forBrandsCtaSchema = z.object({
+  heading: z.string().max(180),
+  subtitle: z.string().max(300),
+  cta_label: z.string().max(40),
+  cta_url: urlOrHash,
+});
+
 export const socialCommerceSocialProofSchema = z.object({
   section_title: z.string().max(120),
   section_subtitle: z.string().max(300),
@@ -355,6 +413,11 @@ export const CMS_REGISTRY = {
   [SCHEMA_KEYS.FOR_CREATORS_BENEFIT]: forCreatorsBenefitSchema,
   [SCHEMA_KEYS.FOR_CREATORS_TESTIMONIALS]: forCreatorsTestimonialsSchema,
   [SCHEMA_KEYS.FOR_CREATORS_CTA]: forCreatorsCtaSchema,
+  [SCHEMA_KEYS.FOR_BRANDS_HERO]: forBrandsHeroSchema,
+  [SCHEMA_KEYS.FOR_BRANDS_SOLUTIONS]: forBrandsSolutionsSchema,
+  [SCHEMA_KEYS.FOR_BRANDS_CASE_STUDIES]: forBrandsCaseStudiesSchema,
+  [SCHEMA_KEYS.FOR_BRANDS_PROGRESS]: forBrandsProgressSchema,
+  [SCHEMA_KEYS.FOR_BRANDS_CTA]: forBrandsCtaSchema,
   [SCHEMA_KEYS.SOCIAL_COMMERCE_HERO]: socialCommerceHeroSchema,
   [SCHEMA_KEYS.SOCIAL_COMMERCE_GROWTH]: socialCommerceGrowthSchema,
   [SCHEMA_KEYS.SOCIAL_COMMERCE_VALUE_PROPOSITION]: socialCommerceValuePropositionSchema,
