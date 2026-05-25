@@ -8,7 +8,6 @@ import { colors, mediaQueries, spacing, typography } from '@/styles/tokens';
 import type { ForBrandsCaseStudiesContent } from '../ForBrandsView';
 import { useInlineDescriptionClamp } from '../../home/sections/ExclusiveTalentsSection/hooks/useInlineDescriptionClamp';
 import { useHorizontalSlider } from '../../home/sections/ExclusiveTalentsSection/hooks/useHorizontalSlider';
-import { ForBrandsCaseStudiesBackground } from './ForBrandsCaseStudiesBackground';
 
 export function CaseStudiesSection({ content }: { content: ForBrandsCaseStudiesContent }) {
   const {
@@ -49,10 +48,10 @@ export function CaseStudiesSection({ content }: { content: ForBrandsCaseStudiesC
 
   return (
     <SectionContainer>
-      <ForBrandsCaseStudiesBackground />
       <Inner>
         <HeadingWrap>
-          <Title>{content.title}</Title>
+          <Eyebrow>CASE STUDIES</Eyebrow>
+          <Title>{content.title || 'CHIẾN DỊCH THỰC TẾ'}</Title>
         </HeadingWrap>
 
         {featuredCard ? (
@@ -138,11 +137,9 @@ export function CaseStudiesSection({ content }: { content: ForBrandsCaseStudiesC
 
 const SectionContainer = styled.section`
   position: relative;
+  z-index: 1;
   width: 100%;
-  background: ${colors.secondaryDark};
   padding: 120px 0 64px;
-  overflow: hidden;
-  isolation: isolate;
 `;
 
 const Inner = styled.div`
@@ -168,17 +165,40 @@ const Inner = styled.div`
 const HeadingWrap = styled.div`
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 16px;
+  width: min(909px, 100%);
+`;
+
+const Eyebrow = styled.p`
+  margin: 0;
+  width: 100%;
+  color: #ffe773;
+  font-family: ${typography.fontFamily.montserrat};
+  font-style: normal;
+  font-weight: ${typography.fontWeight.normal};
+  font-size: 16px;
+  line-height: 140%;
+  display: flex;
+  align-items: center;
+  text-transform: uppercase;
 `;
 
 const Title = styled.h2`
   margin: 0;
   color: ${colors.white};
   font-family: ${typography.fontFamily.montserrat};
-  font-size: ${typography.fontSize['6xl']};
+  font-size: 42px;
   font-weight: ${typography.fontWeight.bold};
   line-height: 140%;
+  width: 100%;
+  display: flex;
+  align-items: center;
   text-transform: uppercase;
+
+  ${mediaQueries.down.sm} {
+    font-size: 32px;
+  }
 `;
 
 const FeaturedRow = styled.div`

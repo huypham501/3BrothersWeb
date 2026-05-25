@@ -9,6 +9,7 @@ import type { GlobalFooterPayload, GlobalHeaderPayload } from '@/lib/cms/types';
 import { HeroSection } from './sections/HeroSection';
 import { SolutionsSection } from './sections/SolutionsSection';
 import { CaseStudiesSection } from './sections/CaseStudiesSection';
+import { ForBrandsCaseStudiesBackground } from './sections/ForBrandsCaseStudiesBackground';
 import { CategoriesSection } from './sections/CategoriesSection';
 import { ProgressSection } from './sections/ProgressSection';
 import { CtaSection } from './sections/CtaSection';
@@ -79,8 +80,13 @@ export function ForBrandsView({ data }: { data: ForBrandsViewModel }) {
       <MainContent>
         {data.hero ? <HeroSection content={data.hero} /> : null}
         {data.solutions ? <SolutionsSection content={data.solutions} /> : null}
-        {data.caseStudies ? <CaseStudiesSection content={data.caseStudies} /> : null}
-        {data.categories ? <CategoriesSection content={data.categories} /> : null}
+        {data.caseStudies || data.categories ? (
+          <CaseStudiesBackgroundWrapper>
+            <ForBrandsCaseStudiesBackground />
+            {data.caseStudies ? <CaseStudiesSection content={data.caseStudies} /> : null}
+            {data.categories ? <CategoriesSection content={data.categories} /> : null}
+          </CaseStudiesBackgroundWrapper>
+        ) : null}
         {data.progress ? <ProgressSection content={data.progress} /> : null}
         {data.cta ? (
           <CtaContainer>
@@ -106,6 +112,14 @@ const Wrapper = styled.div`
 
 const MainContent = styled.main`
   width: 100%;
+`;
+
+const CaseStudiesBackgroundWrapper = styled.div`
+  position: relative;
+  width: 100%;
+  background: ${colors.secondaryDark};
+  overflow: hidden;
+  isolation: isolate;
 `;
 
 const CtaContainer = styled.div`

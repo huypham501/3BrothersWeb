@@ -2,7 +2,7 @@
 
 import styled, { css, keyframes } from 'styled-components';
 
-import { colors, mediaQueries, typography } from '@/styles/tokens';
+import { mediaQueries, typography } from '@/styles/tokens';
 import type { ForBrandsCategoriesContent } from '../ForBrandsView';
 
 export function CategoriesSection({ content }: { content: ForBrandsCategoriesContent }) {
@@ -59,9 +59,10 @@ const categoryMarquee = keyframes`
   }
 `;
 
-const CategoryMarquee = styled.div`
+const CategoryMarquee = styled.section`
+  position: relative;
+  z-index: 1;
   width: 100%;
-  background: ${colors.secondaryDark};
   padding: 0 0 64px;
 
   &:hover [data-marquee-track='true'],
@@ -121,7 +122,7 @@ const CategoryItem = styled.p`
   margin: 0;
   color: rgba(255, 255, 255, 0.72);
   font-family: ${typography.fontFamily.montserrat};
-  font-size: 42px;
+  font-size: 26px;
   line-height: 140%;
   text-transform: uppercase;
   font-weight: ${typography.fontWeight.bold};
