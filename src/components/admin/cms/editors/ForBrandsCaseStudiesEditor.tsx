@@ -29,6 +29,7 @@ type LegacyCard = {
   photo?: string | null;
   photo_alt?: string | null;
   description?: string;
+  brand_card_stat?: string;
   stats?: Array<{ value?: unknown; label?: unknown }>;
   is_featured?: boolean;
 };
@@ -43,7 +44,7 @@ type FormValues = {
     photo: string;
     photo_alt: string;
     description: string;
-    stats: Array<{ value: string; label: string }>;
+    brand_card_stat: string;
     is_featured: boolean;
   }>;
 };
@@ -59,12 +60,7 @@ const formSchema = z.object({
       photo: z.string().max(1024),
       photo_alt: z.string().max(125),
       description: z.string().max(1000),
-      stats: z.array(
-        z.object({
-          value: z.string().max(40),
-          label: z.string().max(60),
-        })
-      ).length(2),
+      brand_card_stat: z.string().max(120),
       is_featured: z.boolean(),
     })
   ).min(1).max(20),
@@ -85,32 +81,18 @@ function normalizeText(value: unknown): string {
   return '';
 }
 
-function normalizeStats(stats: unknown, legacyMetric: unknown): Array<{ value: string; label: string }> {
-  if (Array.isArray(stats) && stats.length === 2) {
-    const first = (stats[0] && typeof stats[0] === 'object' ? stats[0] : {}) as Record<string, unknown>;
-    const second = (stats[1] && typeof stats[1] === 'object' ? stats[1] : {}) as Record<string, unknown>;
-    return [
-      { label: normalizeText(first.label), value: normalizeText(first.value) },
-      { label: normalizeText(second.label), value: normalizeText(second.value) },
-    ];
-  }
-  return [
-    { label: 'Metric', value: normalizeText(legacyMetric) },
-    { label: '', value: '' },
-  ];
-}
-
 function normalizeCards(cards: unknown): FormValues['brand_cards'] {
   const rawCards = Array.isArray(cards) ? cards : [];
   return rawCards.map((item) => {
     const raw = (item && typeof item === 'object' ? item : {}) as LegacyCard;
+    const firstLegacyStatValue = Array.isArray(raw.stats) ? normalizeText(raw.stats[0]?.value) : '';
     return {
       name: raw.name || raw.brand || '',
       handle: raw.handle || '',
       photo: raw.photo ?? raw.image ?? '',
       photo_alt: raw.photo_alt ?? raw.image_alt ?? '',
       description: raw.description || raw.metric || '',
-      stats: normalizeStats(raw.stats, raw.metric),
+      brand_card_stat: raw.brand_card_stat || firstLegacyStatValue || normalizeText(raw.metric),
       is_featured: raw.is_featured ?? !!raw.active,
     };
   });
@@ -119,10 +101,9 @@ function normalizeCards(cards: unknown): FormValues['brand_cards'] {
 function mapIssuePathToFormPath(path: PropertyKey[]): string | null {
   if (path.length === 0 || path.some((segment) => typeof segment === 'symbol')) return null;
   const [root, second, third] = path;
-  if (root === 'brand_cards' && typeof second === 'number' && (third === 'name' || third === 'handle' || third === 'photo' || third === 'photo_alt' || third === 'description' || third === 'is_featured')) {
+  if (root === 'brand_cards' && typeof second === 'number' && (third === 'name' || third === 'handle' || third === 'photo' || third === 'photo_alt' || third === 'description' || third === 'brand_card_stat' || third === 'is_featured')) {
     return `brand_cards.${second}.${third}`;
   }
-  if (root === 'brand_cards' && typeof second === 'number' && third === 'stats') return 'brand_cards';
   if (root === 'enabled' || root === 'section_title' || root === 'brand_count_label') return root;
   return null;
 }
@@ -179,7 +160,7 @@ export function ForBrandsCaseStudiesEditor({ pageId, section }: { pageId: string
       photo: '',
       photo_alt: '',
       description: '',
-      stats: [{ label: '', value: '' }, { label: '', value: '' }],
+      brand_card_stat: '3.5M+ FOLLOWERS',
       is_featured: existingCards.length === 0,
     });
   };
@@ -200,7 +181,7 @@ export function ForBrandsCaseStudiesEditor({ pageId, section }: { pageId: string
           photo: item.photo || null,
           photo_alt: item.photo_alt || null,
           description: item.description,
-          stats: item.stats,
+          brand_card_stat: item.brand_card_stat,
           is_featured: item.is_featured,
         })),
       };
@@ -320,21 +301,9 @@ export function ForBrandsCaseStudiesEditor({ pageId, section }: { pageId: string
                     <FormItem><FormLabel>Description</FormLabel><FormControl><Textarea {...field} rows={4} maxLength={1000} showCount /></FormControl><FormMessage /></FormItem>
                   )} />
 
-                  <SectionStack>
-                    <strong style={{ fontSize: 13 }}>Stats (exactly 2 required)</strong>
-                    <TwoColumnGrid>
-                      {[0, 1].map((statIndex) => (
-                        <BorderedPanel key={`${item.key}-stat-${statIndex}`}>
-                          <FormField control={form.control} name={`brand_cards.${index}.stats.${statIndex}.label`} render={({ field }) => (
-                            <FormItem><FormLabel>Stat Label</FormLabel><FormControl><Input {...field} maxLength={60} showCount /></FormControl><FormMessage /></FormItem>
-                          )} />
-                          <FormField control={form.control} name={`brand_cards.${index}.stats.${statIndex}.value`} render={({ field }) => (
-                            <FormItem><FormLabel>Stat Value</FormLabel><FormControl><Input {...field} maxLength={40} showCount /></FormControl><FormMessage /></FormItem>
-                          )} />
-                        </BorderedPanel>
-                      ))}
-                    </TwoColumnGrid>
-                  </SectionStack>
+                  <FormField control={form.control} name={`brand_cards.${index}.brand_card_stat`} render={({ field }) => (
+                    <FormItem><FormLabel>Brand Card Stat</FormLabel><FormControl><Input {...field} maxLength={120} placeholder="3.5M+ FOLLOWERS" showCount /></FormControl><FormMessage /></FormItem>
+                  )} />
                 </BorderedPanel>
               );
             }}

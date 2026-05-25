@@ -191,7 +191,8 @@ export interface ForBrandsCaseStudiesPayload {
     photo?: string | null;
     photo_alt?: string | null;
     description: string;
-    stats: Array<{
+    brand_card_stat: string;
+    stats?: Array<{
       value: string;
       label: string;
     }>;

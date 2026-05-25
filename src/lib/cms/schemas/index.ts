@@ -259,12 +259,7 @@ export const forBrandsCaseStudiesSchema = z.object({
       photo: z.string().max(1024).nullable().optional(),
       photo_alt: z.string().max(125).nullable().optional(),
       description: z.string().max(1000),
-      stats: z.array(
-        z.object({
-          value: z.string().max(40),
-          label: z.string().max(60),
-        })
-      ).length(2),
+      brand_card_stat: z.string().max(120),
       is_featured: z.boolean(),
     })
   ).min(1).max(20),

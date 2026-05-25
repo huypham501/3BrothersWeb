@@ -35,7 +35,8 @@ export interface ForBrandsCaseStudiesContent {
     photo?: string;
     photoAlt?: string;
     description: string;
-    stats: Array<{ value: string; label: string }>;
+    brandCardStat: string;
+    stats?: Array<{ value: string; label: string }>;
     isFeatured: boolean;
   }>;
 }

@@ -36,18 +36,17 @@ export interface ForBrandsViewModel {
   };
 }
 
-const caseStudiesStatItemSchema = z.object({
-  value: z.string().max(40),
-  label: z.string().max(60),
-});
-
 const caseStudiesBrandCardSchema = z.object({
   name: z.string().max(80),
   handle: z.string().max(40),
   photo: z.string().max(1024).nullable().optional(),
   photo_alt: z.string().max(125).nullable().optional(),
   description: z.string().max(1000),
-  stats: z.array(caseStudiesStatItemSchema).length(2),
+  brand_card_stat: z.string().max(120),
+  stats: z.array(z.object({
+    value: z.string().max(40),
+    label: z.string().max(60),
+  })).length(2).optional(),
   is_featured: z.boolean(),
 });
 const caseStudiesMetaSchema = z.object({
@@ -71,28 +70,28 @@ function normalizeCaseStudiesPayload(
   }
   const rawCards = Array.isArray(record.brand_cards) ? record.brand_cards : [];
 
-  const normalizeStatItemValue = (value: unknown): string => {
+  const normalizeText = (value: unknown): string => {
     if (typeof value === 'string') return value;
     if (typeof value === 'number' || typeof value === 'boolean') return String(value);
     return '';
   };
 
-  const normalizeFixedStats = (value: unknown, legacyMetric: unknown): [{ value: string; label: string }, { value: string; label: string }] => {
+  const normalizeLegacyStats = (value: unknown, legacyMetric: unknown): [{ value: string; label: string }, { value: string; label: string }] => {
     if (Array.isArray(value) && value.length === 2) {
       return [
         {
-          label: normalizeStatItemValue((value[0] as Record<string, unknown> | undefined)?.label),
-          value: normalizeStatItemValue((value[0] as Record<string, unknown> | undefined)?.value),
+          label: normalizeText((value[0] as Record<string, unknown> | undefined)?.label),
+          value: normalizeText((value[0] as Record<string, unknown> | undefined)?.value),
         },
         {
-          label: normalizeStatItemValue((value[1] as Record<string, unknown> | undefined)?.label),
-          value: normalizeStatItemValue((value[1] as Record<string, unknown> | undefined)?.value),
+          label: normalizeText((value[1] as Record<string, unknown> | undefined)?.label),
+          value: normalizeText((value[1] as Record<string, unknown> | undefined)?.value),
         },
       ];
     }
 
     return [
-      { label: 'Metric', value: normalizeStatItemValue(legacyMetric) },
+      { label: 'Metric', value: normalizeText(legacyMetric) },
       { label: '', value: '' },
     ];
   };
@@ -116,7 +115,10 @@ function normalizeCaseStudiesPayload(
         description: typeof raw.description === 'string'
           ? raw.description
           : (typeof raw.metric === 'string' ? raw.metric : ''),
-        stats: normalizeFixedStats(raw.stats, raw.metric),
+        brand_card_stat: typeof raw.brand_card_stat === 'string' && raw.brand_card_stat.trim().length > 0
+          ? raw.brand_card_stat
+          : normalizeText((raw.stats as Array<Record<string, unknown>> | undefined)?.[0]?.value || raw.metric),
+        stats: normalizeLegacyStats(raw.stats, raw.metric),
         is_featured: typeof raw.is_featured === 'boolean'
           ? raw.is_featured
           : (typeof raw.active === 'boolean' ? raw.active : false),
@@ -138,11 +140,15 @@ function normalizeCaseStudiesPayload(
       ...card,
       is_featured: index === 0,
     }));
+  const featuredCard = normalizedBrandCards.find((card) => card.is_featured);
+  const orderedBrandCards = featuredCard
+    ? [featuredCard, ...normalizedBrandCards.filter((card) => card !== featuredCard)]
+    : normalizedBrandCards;
 
   return {
     section_title: meta.data.section_title,
     brand_count_label: meta.data.brand_count_label ?? null,
-    brand_cards: normalizedBrandCards,
+    brand_cards: orderedBrandCards,
   };
 }
 

@@ -1,5 +1,7 @@
 'use client';
 
+import Image from 'next/image';
+import { useEffect, useState } from 'react';
 import styled, { css, keyframes } from 'styled-components';
 
 import { colors, mediaQueries, spacing, typography } from '@/styles/tokens';
@@ -19,7 +21,20 @@ export function CaseStudiesSection({ content }: { content: ForBrandsCaseStudiesC
     trackEvents,
   } = useHorizontalSlider();
 
-  const featuredCard = content.brandCards.find((card) => card.isFeatured) ?? content.brandCards[0];
+  const initialFeaturedCard = content.brandCards.find((card) => card.isFeatured) ?? content.brandCards[0];
+  const orderedBrandCards = initialFeaturedCard
+    ? [initialFeaturedCard, ...content.brandCards.filter((card) => card !== initialFeaturedCard)]
+    : content.brandCards;
+  const [activeBrandCardIndex, setActiveBrandCardIndex] = useState(0);
+
+  useEffect(() => {
+    setActiveBrandCardIndex(0);
+  }, [content]);
+
+  const featuredCard = orderedBrandCards[activeBrandCardIndex] ?? orderedBrandCards[0];
+  const featuredStats = (featuredCard?.stats && featuredCard.stats.length > 0)
+    ? featuredCard.stats
+    : [{ value: featuredCard?.brandCardStat || '', label: '' }];
   const descriptionText = featuredCard?.description || '';
   const {
     containerRef,
@@ -32,7 +47,7 @@ export function CaseStudiesSection({ content }: { content: ForBrandsCaseStudiesC
     visibleText,
   } = useInlineDescriptionClamp(descriptionText);
 
-  const categories = content.brandCards.map((card) => card.name).filter(Boolean);
+  const categories = orderedBrandCards.map((card) => card.name).filter(Boolean);
   const shouldAnimateCategories = categories.length >= 4;
 
   return (
@@ -54,10 +69,10 @@ export function CaseStudiesSection({ content }: { content: ForBrandsCaseStudiesC
               <Project>{featuredCard.handle}</Project>
 
               <Stats>
-                {featuredCard.stats.map((stat, idx) => (
+                {featuredStats.map((stat, idx) => (
                   <Stat key={`${stat.label}-${idx}`}>
                     <StatValue>{stat.value}</StatValue>
-                    <StatLabel>{stat.label}</StatLabel>
+                    {stat.label ? <StatLabel>{stat.label}</StatLabel> : null}
                   </Stat>
                 ))}
               </Stats>
@@ -90,30 +105,26 @@ export function CaseStudiesSection({ content }: { content: ForBrandsCaseStudiesC
           <VerticalLabel>{content.brandCountLabel || '50+ BRANDS'}</VerticalLabel>
           <CardsSliderTrack>
             <CardsTrack ref={rowRef} $isDragging={isRowDragging} {...rowEvents}>
-              {content.brandCards.map((card, idx) => (
-                <BrandCard key={`${card.name}-${idx}`} $active={card.isFeatured}>
-                  <BrandCardTop>
-                    <BrandIdentity>
-                      <BrandCardName>{card.name}</BrandCardName>
-                      <BrandCardHandle>{card.handle}</BrandCardHandle>
-                    </BrandIdentity>
-                    {card.isFeatured ? <FeaturedTag>Featured</FeaturedTag> : null}
-                  </BrandCardTop>
-
+              {orderedBrandCards.map((card, idx) => (
+                <BrandCard
+                  key={`${card.name}-${idx}`}
+                  $active={idx === activeBrandCardIndex}
+                  onClick={() => setActiveBrandCardIndex(idx)}
+                >
                   <BrandCardImageFrame aria-label={card.photoAlt || `${card.name} image`}>
-                    <BrandCardImage $photo={card.photo} />
+                    {card.photo ? (
+                      <BrandCardImage
+                        src={card.photo}
+                        alt={card.photoAlt || `${card.name} image`}
+                        fill
+                        sizes="220px"
+                      />
+                    ) : (
+                      <BrandCardImagePlaceholder />
+                    )}
                   </BrandCardImageFrame>
 
-                  <BrandCardDescription>{card.description}</BrandCardDescription>
-
-                  <BrandCardStats>
-                    {card.stats.map((stat, statIdx) => (
-                      <BrandCardStat key={`${card.name}-${stat.label}-${statIdx}`}>
-                        <BrandCardStatValue>{stat.value}</BrandCardStatValue>
-                        <BrandCardStatLabel>{stat.label}</BrandCardStatLabel>
-                      </BrandCardStat>
-                    ))}
-                  </BrandCardStats>
+                  <BrandCardStat $active={idx === activeBrandCardIndex}>{card.brandCardStat}</BrandCardStat>
                 </BrandCard>
               ))}
             </CardsTrack>
@@ -375,9 +386,11 @@ const MeasureSuffix = styled.span`
 const BrandCards = styled.div`
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: flex-start;
   gap: 24px;
   width: 100%;
+  min-height: 226px;
+  z-index: 3;
 
   ${mediaQueries.down.sm} {
     flex-direction: column;
@@ -387,13 +400,12 @@ const BrandCards = styled.div`
 
 const VerticalLabel = styled.p`
   margin: 0;
-  color: ${colors.white};
-  opacity: 0.5;
   writing-mode: vertical-rl;
   transform: rotate(180deg);
-  margin-top: -30px;
+  color: ${colors.white};
+  opacity: 0.5;
   font-family: ${typography.fontFamily.montserrat};
-  font-weight: 300;
+  font-weight: ${typography.fontWeight.normal};
   font-size: 26px;
   line-height: 140%;
   text-align: center;
@@ -420,7 +432,7 @@ const CardsSliderTrack = styled.div`
 const CardsTrack = styled.div<{ $isDragging: boolean }>`
   display: flex;
   flex-direction: row;
-  align-items: stretch;
+  align-items: center;
   gap: 24px;
   width: 100%;
   overflow-x: scroll;
@@ -437,65 +449,18 @@ const CardsTrack = styled.div<{ $isDragging: boolean }>`
 `;
 
 const BrandCard = styled.div<{ $active: boolean }>`
-  width: 320px;
-  min-height: 280px;
-  max-width: 100%;
-  border-radius: 24px;
-  padding: 18px 16px;
-  background: ${({ $active }) => ($active ? '#1143A8' : 'rgba(10, 28, 72, 0.65)')};
-  border: 2px solid ${({ $active }) => ($active ? colors.secondary : 'rgba(255,255,255,0.2)')};
+  width: 236px;
+  height: 178px;
+  border-radius: 32px;
+  padding: 12px 8px 24px;
+  background: ${({ $active }) => ($active ? '#003CA6' : 'transparent')};
+  border: 2px solid ${({ $active }) => ($active ? '#FFE773' : '#83B0FF')};
   display: flex;
   flex-direction: column;
-  align-items: stretch;
+  align-items: center;
   gap: 12px;
+  cursor: pointer;
   flex: none;
-`;
-
-const BrandCardTop = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 8px;
-`;
-
-const BrandIdentity = styled.div`
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-`;
-
-const BrandCardName = styled.p`
-  margin: 0;
-  color: ${colors.white};
-  font-family: ${typography.fontFamily.montserrat};
-  font-weight: ${typography.fontWeight.bold};
-  font-size: 18px;
-  line-height: 130%;
-  text-transform: uppercase;
-`;
-
-const BrandCardHandle = styled.p`
-  margin: 0;
-  color: rgba(255, 255, 255, 0.72);
-  font-family: ${typography.fontFamily.montserrat};
-  font-weight: ${typography.fontWeight.medium};
-  font-size: 13px;
-  line-height: 140%;
-`;
-
-const FeaturedTag = styled.span`
-  flex: none;
-  border-radius: 999px;
-  padding: 4px 10px;
-  background: rgba(255, 231, 115, 0.2);
-  border: 1px solid rgba(255, 231, 115, 0.7);
-  color: #ffe773;
-  font-family: ${typography.fontFamily.montserrat};
-  font-size: 11px;
-  font-weight: ${typography.fontWeight.bold};
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
 `;
 
 const CardsScrollbarTrack = styled.div<{ $isDragging: boolean }>`
@@ -520,64 +485,45 @@ const CardsScrollbarFill = styled.div`
 `;
 
 const BrandCardImageFrame = styled.div`
-  width: 100%;
+  width: 220px;
   height: 120px;
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 14px;
   overflow: hidden;
-  background: rgba(255, 255, 255, 0.08);
   flex: none;
 `;
 
-const BrandCardImage = styled.div<{ $photo?: string }>`
+const BrandCardImage = styled(Image)`
   width: 100%;
   height: 100%;
-  background: ${({ $photo }) => ($photo ? `center / cover no-repeat url(${$photo})` : 'linear-gradient(135deg, #29b6f6 0%, #0d47a1 100%)')};
+  object-fit: contain;
   flex: none;
 `;
 
-const BrandCardDescription = styled.p`
-  margin: 0;
-  color: rgba(255, 255, 255, 0.82);
-  font-family: ${typography.fontFamily.montserrat};
-  font-weight: ${typography.fontWeight.normal};
-  font-size: 14px;
-  line-height: 145%;
-  min-height: 40px;
+const BrandCardImagePlaceholder = styled.div`
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #29b6f6 0%, #0d47a1 100%);
+  flex: none;
 `;
 
-const BrandCardStats = styled.div`
-  display: flex;
-  align-items: stretch;
-  gap: 12px;
+const BrandCardStat = styled.p<{ $active: boolean }>`
+  margin: 0;
   margin-top: auto;
-`;
-
-const BrandCardStat = styled.div`
-  flex: 1;
-  min-width: 0;
-`;
-
-const BrandCardStatValue = styled.p`
-  margin: 0;
-  color: ${colors.secondary};
+  width: 151px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: ${({ $active }) => ($active ? '#FFE773' : '#FFFFFF')};
   font-family: ${typography.fontFamily.montserrat};
-  font-size: 20px;
+  font-size: 16px;
   font-weight: ${typography.fontWeight.bold};
-  line-height: 130%;
-  text-transform: uppercase;
-`;
-
-const BrandCardStatLabel = styled.p`
-  margin: 2px 0 0;
-  color: rgba(255, 255, 255, 0.72);
-  font-family: ${typography.fontFamily.montserrat};
-  font-size: 11px;
-  font-weight: ${typography.fontWeight.medium};
-  line-height: 130%;
-  text-transform: uppercase;
+  line-height: 140%;
 `;
 
 const categoryMarquee = keyframes`
