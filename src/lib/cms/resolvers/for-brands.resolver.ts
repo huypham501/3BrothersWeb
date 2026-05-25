@@ -36,16 +36,6 @@ export interface ForBrandsViewModel {
   };
 }
 
-const caseStudiesCoreSchema = z.object({
-  eyebrow: z.string().max(80),
-  section_title: z.string().max(120),
-  featured_brand: z.string().max(80),
-  featured_project: z.string().max(120),
-  featured_description: z.string().max(1000),
-  featured_media_image: z.string().max(1024).nullable().optional(),
-  featured_media_image_alt: z.string().max(125).nullable().optional(),
-});
-
 const caseStudiesStatItemSchema = z.object({
   value: z.string().max(40),
   label: z.string().max(60),
@@ -60,8 +50,10 @@ const caseStudiesBrandCardSchema = z.object({
   stats: z.array(caseStudiesStatItemSchema).length(2),
   is_featured: z.boolean(),
 });
-
-const caseStudiesCategorySchema = z.string().max(60);
+const caseStudiesMetaSchema = z.object({
+  section_title: z.string().max(120),
+  brand_count_label: z.string().max(20).nullable().optional(),
+});
 
 function normalizeCaseStudiesPayload(
   payload: unknown
@@ -70,20 +62,14 @@ function normalizeCaseStudiesPayload(
     return null;
   }
 
-  const core = caseStudiesCoreSchema.safeParse(payload);
-  if (!core.success) {
-    const details = core.error.issues
-      .map((issue) => `${issue.path.join('.') || '(root)'}: ${issue.message}`)
-      .join('; ');
+  const record = payload as Record<string, unknown>;
+  const meta = caseStudiesMetaSchema.safeParse(record);
+  if (!meta.success) {
+    const details = meta.error.issues.map((issue) => `${issue.path.join('.') || '(root)'}: ${issue.message}`).join('; ');
     console.warn(`[cms:read-validation] Invalid core payload key=${SCHEMA_KEYS.FOR_BRANDS_CASE_STUDIES}; ${details}`);
     return null;
   }
-
-  const record = payload as Record<string, unknown>;
-
-  const rawStats = Array.isArray(record.featured_stats) ? record.featured_stats : [];
   const rawCards = Array.isArray(record.brand_cards) ? record.brand_cards : [];
-  const rawCategories = Array.isArray(record.categories) ? record.categories : [];
 
   const normalizeStatItemValue = (value: unknown): string => {
     if (typeof value === 'string') return value;
@@ -110,18 +96,6 @@ function normalizeCaseStudiesPayload(
       { label: '', value: '' },
     ];
   };
-
-  const featured_stats = rawStats
-    .map((item, index) => ({ parsed: caseStudiesStatItemSchema.safeParse(item), index }))
-    .filter(({ parsed, index }) => {
-      if (parsed.success) return true;
-      const details = parsed.error.issues.map((issue) => issue.message).join('; ');
-      console.warn(`[cms:read-validation] Filtered invalid item key=${SCHEMA_KEYS.FOR_BRANDS_CASE_STUDIES}.featured_stats index=${index}; ${details}`);
-      return false;
-    })
-    .map(({ parsed }) => parsed)
-    .filter((parsed): parsed is z.ZodSafeParseSuccess<{ value: string; label: string }> => parsed.success)
-    .map((parsed) => parsed.data);
 
   const brand_cards = rawCards
     .map((item, index) => {
@@ -165,23 +139,10 @@ function normalizeCaseStudiesPayload(
       is_featured: index === 0,
     }));
 
-  const categories = rawCategories
-    .map((item, index) => ({ parsed: caseStudiesCategorySchema.safeParse(item), index }))
-    .filter(({ parsed, index }) => {
-      if (parsed.success) return true;
-      const details = parsed.error.issues.map((issue) => issue.message).join('; ');
-      console.warn(`[cms:read-validation] Filtered invalid item key=${SCHEMA_KEYS.FOR_BRANDS_CASE_STUDIES}.categories index=${index}; ${details}`);
-      return false;
-    })
-    .map(({ parsed }) => parsed)
-    .filter((parsed): parsed is z.ZodSafeParseSuccess<string> => parsed.success)
-    .map((parsed) => parsed.data);
-
   return {
-    ...core.data,
-    featured_stats,
+    section_title: meta.data.section_title,
+    brand_count_label: meta.data.brand_count_label ?? null,
     brand_cards: normalizedBrandCards,
-    categories,
   };
 }
 

@@ -250,19 +250,8 @@ export const forBrandsSolutionsSchema = z.object({
 });
 
 export const forBrandsCaseStudiesSchema = z.object({
-  eyebrow: z.string().max(80),
   section_title: z.string().max(120),
-  featured_brand: z.string().max(80),
-  featured_project: z.string().max(120),
-  featured_description: z.string().max(1000),
-  featured_media_image: z.string().max(1024).nullable().optional(),
-  featured_media_image_alt: z.string().max(125).nullable().optional(),
-  featured_stats: z.array(
-    z.object({
-      value: z.string().max(40),
-      label: z.string().max(60),
-    })
-  ).max(4),
+  brand_count_label: z.string().max(20).nullable().optional(),
   brand_cards: z.array(
     z.object({
       name: z.string().max(80),
@@ -279,7 +268,6 @@ export const forBrandsCaseStudiesSchema = z.object({
       is_featured: z.boolean(),
     })
   ).min(1).max(20),
-  categories: z.array(z.string().max(60)).max(20),
 }).superRefine((value, ctx) => {
   const featuredCount = value.brand_cards.filter((card) => card.is_featured).length;
   if (featuredCount !== 1) {

@@ -183,17 +183,8 @@ export interface ForBrandsSolutionsPayload {
 }
 
 export interface ForBrandsCaseStudiesPayload {
-  eyebrow: string;
   section_title: string;
-  featured_brand: string;
-  featured_project: string;
-  featured_description: string;
-  featured_media_image?: string | null;
-  featured_media_image_alt?: string | null;
-  featured_stats: Array<{
-    value: string;
-    label: string;
-  }>;
+  brand_count_label?: string | null;
   brand_cards: Array<{
     name: string;
     handle: string;
@@ -206,7 +197,6 @@ export interface ForBrandsCaseStudiesPayload {
     }>;
     is_featured: boolean;
   }>;
-  categories: string[];
 }
 
 export interface ForBrandsProgressPayload {

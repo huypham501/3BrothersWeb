@@ -19,7 +19,8 @@ export function CaseStudiesSection({ content }: { content: ForBrandsCaseStudiesC
     trackEvents,
   } = useHorizontalSlider();
 
-  const descriptionText = content.featuredDescription || '';
+  const featuredCard = content.brandCards.find((card) => card.isFeatured) ?? content.brandCards[0];
+  const descriptionText = featuredCard?.description || '';
   const {
     containerRef,
     measureRef,
@@ -30,58 +31,63 @@ export function CaseStudiesSection({ content }: { content: ForBrandsCaseStudiesC
     setIsExpanded,
     visibleText,
   } = useInlineDescriptionClamp(descriptionText);
-  const shouldAnimateCategories = content.categories.length >= 4;
+
+  const categories = content.brandCards.map((card) => card.name).filter(Boolean);
+  const shouldAnimateCategories = categories.length >= 4;
 
   return (
     <SectionContainer>
       <ForBrandsCaseStudiesBackground />
       <Inner>
         <HeadingWrap>
-          <Eyebrow>{content.eyebrow}</Eyebrow>
           <Title>{content.title}</Title>
         </HeadingWrap>
 
-        <FeaturedRow>
-          <FeaturedMedia aria-label="Case study image placeholder">Case Study Image</FeaturedMedia>
+        {featuredCard ? (
+          <FeaturedRow>
+            <FeaturedMedia aria-label={featuredCard.photoAlt || `${featuredCard.name} image`}>
+              <FeaturedMediaImage $photo={featuredCard.photo} />
+            </FeaturedMedia>
 
-          <FeaturedContent>
-            <Brand>{content.featuredBrand}</Brand>
-            <Project>{content.featuredProject}</Project>
+            <FeaturedContent>
+              <Brand>{featuredCard.name}</Brand>
+              <Project>{featuredCard.handle}</Project>
 
-            <Stats>
-              {content.featuredStats.map((stat) => (
-                <Stat key={stat.label}>
-                  <StatValue>{stat.value}</StatValue>
-                  <StatLabel>{stat.label}</StatLabel>
-                </Stat>
-              ))}
-            </Stats>
+              <Stats>
+                {featuredCard.stats.map((stat, idx) => (
+                  <Stat key={`${stat.label}-${idx}`}>
+                    <StatValue>{stat.value}</StatValue>
+                    <StatLabel>{stat.label}</StatLabel>
+                  </Stat>
+                ))}
+              </Stats>
 
-            <DescriptionBlock>
-              <DescriptionInner ref={containerRef}>
-                <DescriptionText>
-                  {!isExpandable || isExpanded ? (
-                    descriptionText
-                  ) : (
-                    <>
-                      {visibleText}
-                      <ReadMoreSuffix>... </ReadMoreSuffix>
-                      <ReadMoreButton onClick={() => setIsExpanded(true)}>xem thêm</ReadMoreButton>
-                    </>
-                  )}
-                </DescriptionText>
+              <DescriptionBlock>
+                <DescriptionInner ref={containerRef}>
+                  <DescriptionText>
+                    {!isExpandable || isExpanded ? (
+                      descriptionText
+                    ) : (
+                      <>
+                        {visibleText}
+                        <ReadMoreSuffix>... </ReadMoreSuffix>
+                        <ReadMoreButton onClick={() => setIsExpanded(true)}>xem thêm</ReadMoreButton>
+                      </>
+                    )}
+                  </DescriptionText>
 
-                <MeasureDescription ref={measureRef} aria-hidden="true">
-                  <span ref={measureTextRef} />
-                  <MeasureSuffix ref={measureSuffixRef}>... xem thêm</MeasureSuffix>
-                </MeasureDescription>
-              </DescriptionInner>
-            </DescriptionBlock>
-          </FeaturedContent>
-        </FeaturedRow>
+                  <MeasureDescription ref={measureRef} aria-hidden="true">
+                    <span ref={measureTextRef} />
+                    <MeasureSuffix ref={measureSuffixRef}>... xem thêm</MeasureSuffix>
+                  </MeasureDescription>
+                </DescriptionInner>
+              </DescriptionBlock>
+            </FeaturedContent>
+          </FeaturedRow>
+        ) : null}
 
         <BrandCards>
-          <VerticalLabel>50+ BRANDS</VerticalLabel>
+          <VerticalLabel>{content.brandCountLabel || '50+ BRANDS'}</VerticalLabel>
           <CardsSliderTrack>
             <CardsTrack ref={rowRef} $isDragging={isRowDragging} {...rowEvents}>
               {content.brandCards.map((card, idx) => (
@@ -117,13 +123,14 @@ export function CaseStudiesSection({ content }: { content: ForBrandsCaseStudiesC
             </CardsScrollbarTrack>
           </CardsSliderTrack>
         </BrandCards>
-
       </Inner>
-      <CategoryMarquee>
-        <CategoryViewport>
-          <CategoryTrack data-marquee-track="true" $animate={shouldAnimateCategories}>
+
+      {categories.length > 0 ? (
+        <CategoryMarquee>
+          <CategoryViewport>
+            <CategoryTrack data-marquee-track="true" $animate={shouldAnimateCategories}>
               <CategorySet $animate={shouldAnimateCategories}>
-                {content.categories.map((item, idx) => (
+                {categories.map((item, idx) => (
                   <CategoryToken key={`category-original-${item}-${idx}`}>
                     <CategoryIcon aria-hidden="true" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M26.6663 35V31.6667C26.6663 29.8986 25.964 28.2029 24.7137 26.9526C23.4635 25.7024 21.7678 25 19.9997 25H9.99967C8.23156 25 6.53587 25.7024 5.28563 26.9526C4.03539 28.2029 3.33301 29.8986 3.33301 31.6667V35" stroke="#83B0FF" strokeWidth="3.33333" strokeLinecap="round" strokeLinejoin="round"/>
@@ -136,9 +143,9 @@ export function CaseStudiesSection({ content }: { content: ForBrandsCaseStudiesC
                 ))}
               </CategorySet>
 
-            {shouldAnimateCategories && (
+              {shouldAnimateCategories ? (
                 <CategorySet aria-hidden="true" $animate={shouldAnimateCategories}>
-                  {content.categories.map((item, idx) => (
+                  {categories.map((item, idx) => (
                     <CategoryToken key={`category-clone-${item}-${idx}`}>
                       <CategoryIcon aria-hidden="true" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M26.6663 35V31.6667C26.6663 29.8986 25.964 28.2029 24.7137 26.9526C23.4635 25.7024 21.7678 25 19.9997 25H9.99967C8.23156 25 6.53587 25.7024 5.28563 26.9526C4.03539 28.2029 3.33301 29.8986 3.33301 31.6667V35" stroke="#83B0FF" strokeWidth="3.33333" strokeLinecap="round" strokeLinejoin="round"/>
@@ -150,10 +157,11 @@ export function CaseStudiesSection({ content }: { content: ForBrandsCaseStudiesC
                     </CategoryToken>
                   ))}
                 </CategorySet>
-              )}
-          </CategoryTrack>
-        </CategoryViewport>
-      </CategoryMarquee>
+              ) : null}
+            </CategoryTrack>
+          </CategoryViewport>
+        </CategoryMarquee>
+      ) : null}
     </SectionContainer>
   );
 }
@@ -193,17 +201,6 @@ const HeadingWrap = styled.div`
   gap: 16px;
 `;
 
-const Eyebrow = styled.p`
-  margin: 0;
-  color: ${colors.secondary};
-  font-family: ${typography.fontFamily.montserrat};
-  font-weight: 300;
-  font-size: ${typography.fontSize.md};
-  line-height: 140%;
-  letter-spacing: 0;
-  text-transform: uppercase;
-`;
-
 const Title = styled.h2`
   margin: 0;
   color: ${colors.white};
@@ -228,16 +225,15 @@ const FeaturedMedia = styled.div`
   width: 100%;
   aspect-ratio: 623 / 386;
   border-radius: 40px;
-  background: linear-gradient(135deg, #29b6f6 0%, #0d47a1 100%);
   border: 1px solid rgba(255, 255, 255, 0.18);
-  color: rgba(255, 255, 255, 0.92);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: ${typography.fontFamily.montserrat};
-  font-weight: ${typography.fontWeight.semibold};
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.06);
+`;
+
+const FeaturedMediaImage = styled.div<{ $photo?: string }>`
+  width: 100%;
+  height: 100%;
+  background: ${({ $photo }) => ($photo ? `center / cover no-repeat url(${$photo})` : 'linear-gradient(135deg, #29b6f6 0%, #0d47a1 100%)')};
 `;
 
 const FeaturedContent = styled.div`
@@ -546,38 +542,40 @@ const BrandCardDescription = styled.p`
   margin: 0;
   color: rgba(255, 255, 255, 0.82);
   font-family: ${typography.fontFamily.montserrat};
-  font-size: 13px;
+  font-weight: ${typography.fontWeight.normal};
+  font-size: 14px;
   line-height: 145%;
-  font-weight: ${typography.fontWeight.medium};
+  min-height: 40px;
 `;
 
 const BrandCardStats = styled.div`
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
+  display: flex;
+  align-items: stretch;
+  gap: 12px;
+  margin-top: auto;
 `;
 
 const BrandCardStat = styled.div`
+  flex: 1;
   min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
 `;
 
 const BrandCardStatValue = styled.p`
   margin: 0;
-  color: #ffe773;
+  color: ${colors.secondary};
   font-family: ${typography.fontFamily.montserrat};
-  font-size: 15px;
-  line-height: 130%;
+  font-size: 20px;
   font-weight: ${typography.fontWeight.bold};
+  line-height: 130%;
+  text-transform: uppercase;
 `;
 
 const BrandCardStatLabel = styled.p`
-  margin: 0;
-  color: rgba(255, 255, 255, 0.64);
+  margin: 2px 0 0;
+  color: rgba(255, 255, 255, 0.72);
   font-family: ${typography.fontFamily.montserrat};
   font-size: 11px;
+  font-weight: ${typography.fontWeight.medium};
   line-height: 130%;
   text-transform: uppercase;
 `;

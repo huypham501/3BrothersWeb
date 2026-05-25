@@ -27,13 +27,8 @@ export interface ForBrandsSolutionsContent {
 }
 
 export interface ForBrandsCaseStudiesContent {
-  eyebrow: string;
   title: string;
-  featuredBrand: string;
-  featuredProject: string;
-  featuredStats: Array<{ value: string; label: string }>;
-  featuredDescription: string;
-  categories: string[];
+  brandCountLabel?: string;
   brandCards: Array<{
     name: string;
     handle: string;
