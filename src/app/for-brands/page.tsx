@@ -91,9 +91,13 @@ export default async function ForBrandsPage() {
               featuredDescription: data.caseStudies.featured_description,
               categories: data.caseStudies.categories,
               brandCards: data.caseStudies.brand_cards.map((card) => ({
-                brand: card.brand,
-                metric: card.metric,
-                active: card.active,
+                name: card.name,
+                handle: card.handle,
+                photo: card.photo ?? undefined,
+                photoAlt: card.photo_alt ?? undefined,
+                description: card.description,
+                stats: card.stats,
+                isFeatured: card.is_featured,
               })),
             }
           : null,

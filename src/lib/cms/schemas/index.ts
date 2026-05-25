@@ -265,14 +265,30 @@ export const forBrandsCaseStudiesSchema = z.object({
   ).max(4),
   brand_cards: z.array(
     z.object({
-      brand: z.string().max(80),
-      metric: z.string().max(120),
-      active: z.boolean().optional(),
-      image: z.string().max(1024).nullable().optional(),
-      image_alt: z.string().max(125).nullable().optional(),
+      name: z.string().max(80),
+      handle: z.string().max(40),
+      photo: z.string().max(1024).nullable().optional(),
+      photo_alt: z.string().max(125).nullable().optional(),
+      description: z.string().max(1000),
+      stats: z.array(
+        z.object({
+          value: z.string().max(40),
+          label: z.string().max(60),
+        })
+      ).length(2),
+      is_featured: z.boolean(),
     })
-  ).max(20),
+  ).min(1).max(20),
   categories: z.array(z.string().max(60)).max(20),
+}).superRefine((value, ctx) => {
+  const featuredCount = value.brand_cards.filter((card) => card.is_featured).length;
+  if (featuredCount !== 1) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: 'Exactly one brand card must be featured.',
+      path: ['brand_cards'],
+    });
+  }
 });
 
 export const forBrandsProgressSchema = z.object({

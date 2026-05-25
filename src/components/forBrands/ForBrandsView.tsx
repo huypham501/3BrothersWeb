@@ -34,7 +34,15 @@ export interface ForBrandsCaseStudiesContent {
   featuredStats: Array<{ value: string; label: string }>;
   featuredDescription: string;
   categories: string[];
-  brandCards: Array<{ brand: string; metric: string; active?: boolean }>;
+  brandCards: Array<{
+    name: string;
+    handle: string;
+    photo?: string;
+    photoAlt?: string;
+    description: string;
+    stats: Array<{ value: string; label: string }>;
+    isFeatured: boolean;
+  }>;
 }
 
 export interface ForBrandsProgressContent {

@@ -195,11 +195,16 @@ export interface ForBrandsCaseStudiesPayload {
     label: string;
   }>;
   brand_cards: Array<{
-    brand: string;
-    metric: string;
-    active?: boolean;
-    image?: string | null;
-    image_alt?: string | null;
+    name: string;
+    handle: string;
+    photo?: string | null;
+    photo_alt?: string | null;
+    description: string;
+    stats: Array<{
+      value: string;
+      label: string;
+    }>;
+    is_featured: boolean;
   }>;
   categories: string[];
 }

@@ -52,11 +52,13 @@ const caseStudiesStatItemSchema = z.object({
 });
 
 const caseStudiesBrandCardSchema = z.object({
-  brand: z.string().max(80),
-  metric: z.string().max(120),
-  active: z.boolean().optional(),
-  image: z.string().max(1024).nullable().optional(),
-  image_alt: z.string().max(125).nullable().optional(),
+  name: z.string().max(80),
+  handle: z.string().max(40),
+  photo: z.string().max(1024).nullable().optional(),
+  photo_alt: z.string().max(125).nullable().optional(),
+  description: z.string().max(1000),
+  stats: z.array(caseStudiesStatItemSchema).length(2),
+  is_featured: z.boolean(),
 });
 
 const caseStudiesCategorySchema = z.string().max(60);
@@ -83,6 +85,32 @@ function normalizeCaseStudiesPayload(
   const rawCards = Array.isArray(record.brand_cards) ? record.brand_cards : [];
   const rawCategories = Array.isArray(record.categories) ? record.categories : [];
 
+  const normalizeStatItemValue = (value: unknown): string => {
+    if (typeof value === 'string') return value;
+    if (typeof value === 'number' || typeof value === 'boolean') return String(value);
+    return '';
+  };
+
+  const normalizeFixedStats = (value: unknown, legacyMetric: unknown): [{ value: string; label: string }, { value: string; label: string }] => {
+    if (Array.isArray(value) && value.length === 2) {
+      return [
+        {
+          label: normalizeStatItemValue((value[0] as Record<string, unknown> | undefined)?.label),
+          value: normalizeStatItemValue((value[0] as Record<string, unknown> | undefined)?.value),
+        },
+        {
+          label: normalizeStatItemValue((value[1] as Record<string, unknown> | undefined)?.label),
+          value: normalizeStatItemValue((value[1] as Record<string, unknown> | undefined)?.value),
+        },
+      ];
+    }
+
+    return [
+      { label: 'Metric', value: normalizeStatItemValue(legacyMetric) },
+      { label: '', value: '' },
+    ];
+  };
+
   const featured_stats = rawStats
     .map((item, index) => ({ parsed: caseStudiesStatItemSchema.safeParse(item), index }))
     .filter(({ parsed, index }) => {
@@ -96,22 +124,46 @@ function normalizeCaseStudiesPayload(
     .map((parsed) => parsed.data);
 
   const brand_cards = rawCards
-    .map((item, index) => ({ parsed: caseStudiesBrandCardSchema.safeParse(item), index }))
-    .filter(({ parsed, index }) => {
-      if (parsed.success) return true;
-      const details = parsed.error.issues.map((issue) => issue.message).join('; ');
-      console.warn(`[cms:read-validation] Filtered invalid item key=${SCHEMA_KEYS.FOR_BRANDS_CASE_STUDIES}.brand_cards index=${index}; ${details}`);
-      return false;
+    .map((item, index) => {
+      if (!item || typeof item !== 'object') {
+        console.warn(`[cms:read-validation] Filtered invalid item key=${SCHEMA_KEYS.FOR_BRANDS_CASE_STUDIES}.brand_cards index=${index}; Invalid object`);
+        return null;
+      }
+      const raw = item as Record<string, unknown>;
+      const normalized = {
+        name: typeof raw.name === 'string' ? raw.name : (typeof raw.brand === 'string' ? raw.brand : ''),
+        handle: typeof raw.handle === 'string' ? raw.handle : '',
+        photo: typeof raw.photo === 'string'
+          ? raw.photo
+          : (typeof raw.image === 'string' ? raw.image : null),
+        photo_alt: typeof raw.photo_alt === 'string'
+          ? raw.photo_alt
+          : (typeof raw.image_alt === 'string' ? raw.image_alt : null),
+        description: typeof raw.description === 'string'
+          ? raw.description
+          : (typeof raw.metric === 'string' ? raw.metric : ''),
+        stats: normalizeFixedStats(raw.stats, raw.metric),
+        is_featured: typeof raw.is_featured === 'boolean'
+          ? raw.is_featured
+          : (typeof raw.active === 'boolean' ? raw.active : false),
+      };
+      const parsed = caseStudiesBrandCardSchema.safeParse(normalized);
+      if (!parsed.success) {
+        const details = parsed.error.issues.map((issue) => issue.message).join('; ');
+        console.warn(`[cms:read-validation] Filtered invalid item key=${SCHEMA_KEYS.FOR_BRANDS_CASE_STUDIES}.brand_cards index=${index}; ${details}`);
+        return null;
+      }
+      return parsed.data;
     })
-    .map(({ parsed }) => parsed)
-    .filter((parsed): parsed is z.ZodSafeParseSuccess<{
-      brand: string;
-      metric: string;
-      active?: boolean;
-      image?: string | null;
-      image_alt?: string | null;
-    }> => parsed.success)
-    .map((parsed) => parsed.data);
+    .filter((item): item is z.infer<typeof caseStudiesBrandCardSchema> => !!item);
+
+  const featuredCount = brand_cards.filter((card) => card.is_featured).length;
+  const normalizedBrandCards = featuredCount === 1
+    ? brand_cards
+    : brand_cards.map((card, index) => ({
+      ...card,
+      is_featured: index === 0,
+    }));
 
   const categories = rawCategories
     .map((item, index) => ({ parsed: caseStudiesCategorySchema.safeParse(item), index }))
@@ -128,7 +180,7 @@ function normalizeCaseStudiesPayload(
   return {
     ...core.data,
     featured_stats,
-    brand_cards,
+    brand_cards: normalizedBrandCards,
     categories,
   };
 }

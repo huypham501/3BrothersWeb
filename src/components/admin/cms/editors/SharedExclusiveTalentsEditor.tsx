@@ -136,8 +136,10 @@ export function SharedExclusiveTalentsFields({ form }: { form: UseFormReturn<any
           title={`Talent Grid List (${talentFields.length})`}
           items={talentFields.map((item, index) => ({ key: item.id, value: index }))}
           onMove={moveTalent}
+          onRemove={handleRemoveTalent}
           onAdd={handleAddTalent}
           addLabel="Add Talent Item"
+          removeDisabled={(_, total) => total <= 1}
           renderItem={({ item }) => {
             const index = item.value;
             return (
@@ -159,9 +161,6 @@ export function SharedExclusiveTalentsFields({ form }: { form: UseFormReturn<any
                   onClick={() => setFeaturedTalent(index)}
                 >
                   {form.watch(`talents.${index}.is_featured`) ? 'Featured Talent' : 'Set as Featured'}
-                </Button>
-                <Button type="button" variant="destructive" size="sm" onClick={() => handleRemoveTalent(index)}>
-                  Remove
                 </Button>
               </div>
             </HeaderRow>

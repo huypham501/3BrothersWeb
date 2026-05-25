@@ -85,11 +85,29 @@ export function CaseStudiesSection({ content }: { content: ForBrandsCaseStudiesC
           <CardsSliderTrack>
             <CardsTrack ref={rowRef} $isDragging={isRowDragging} {...rowEvents}>
               {content.brandCards.map((card, idx) => (
-                <BrandCard key={`${card.brand}-${idx}`} $active={Boolean(card.active)}>
-                  <BrandCardImageFrame aria-label={`${card.brand} image placeholder`}>
-                    <BrandCardImage />
+                <BrandCard key={`${card.name}-${idx}`} $active={card.isFeatured}>
+                  <BrandCardTop>
+                    <BrandIdentity>
+                      <BrandCardName>{card.name}</BrandCardName>
+                      <BrandCardHandle>{card.handle}</BrandCardHandle>
+                    </BrandIdentity>
+                    {card.isFeatured ? <FeaturedTag>Featured</FeaturedTag> : null}
+                  </BrandCardTop>
+
+                  <BrandCardImageFrame aria-label={card.photoAlt || `${card.name} image`}>
+                    <BrandCardImage $photo={card.photo} />
                   </BrandCardImageFrame>
-                  <BrandCardMetric>{card.metric}</BrandCardMetric>
+
+                  <BrandCardDescription>{card.description}</BrandCardDescription>
+
+                  <BrandCardStats>
+                    {card.stats.map((stat, statIdx) => (
+                      <BrandCardStat key={`${card.name}-${stat.label}-${statIdx}`}>
+                        <BrandCardStatValue>{stat.value}</BrandCardStatValue>
+                        <BrandCardStatLabel>{stat.label}</BrandCardStatLabel>
+                      </BrandCardStat>
+                    ))}
+                  </BrandCardStats>
                 </BrandCard>
               ))}
             </CardsTrack>
@@ -423,19 +441,65 @@ const CardsTrack = styled.div<{ $isDragging: boolean }>`
 `;
 
 const BrandCard = styled.div<{ $active: boolean }>`
-  width: 236px;
-  height: 178px;
+  width: 320px;
+  min-height: 280px;
   max-width: 100%;
-  border-radius: 32px;
-  padding: 12px 8px 24px;
+  border-radius: 24px;
+  padding: 18px 16px;
   background: ${({ $active }) => ($active ? '#1143A8' : 'rgba(10, 28, 72, 0.65)')};
   border: 2px solid ${({ $active }) => ($active ? colors.secondary : 'rgba(255,255,255,0.2)')};
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 0;
+  align-items: stretch;
+  gap: 12px;
   flex: none;
+`;
+
+const BrandCardTop = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+`;
+
+const BrandIdentity = styled.div`
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+`;
+
+const BrandCardName = styled.p`
+  margin: 0;
+  color: ${colors.white};
+  font-family: ${typography.fontFamily.montserrat};
+  font-weight: ${typography.fontWeight.bold};
+  font-size: 18px;
+  line-height: 130%;
+  text-transform: uppercase;
+`;
+
+const BrandCardHandle = styled.p`
+  margin: 0;
+  color: rgba(255, 255, 255, 0.72);
+  font-family: ${typography.fontFamily.montserrat};
+  font-weight: ${typography.fontWeight.medium};
+  font-size: 13px;
+  line-height: 140%;
+`;
+
+const FeaturedTag = styled.span`
+  flex: none;
+  border-radius: 999px;
+  padding: 4px 10px;
+  background: rgba(255, 231, 115, 0.2);
+  border: 1px solid rgba(255, 231, 115, 0.7);
+  color: #ffe773;
+  font-family: ${typography.fontFamily.montserrat};
+  font-size: 11px;
+  font-weight: ${typography.fontWeight.bold};
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 `;
 
 const CardsScrollbarTrack = styled.div<{ $isDragging: boolean }>`
@@ -460,35 +524,62 @@ const CardsScrollbarFill = styled.div`
 `;
 
 const BrandCardImageFrame = styled.div`
-  width: 220px;
+  width: 100%;
   height: 120px;
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 14px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.08);
   flex: none;
 `;
 
-const BrandCardImage = styled.div`
-  width: 188px;
-  height: 80px;
-  background: transparent;
+const BrandCardImage = styled.div<{ $photo?: string }>`
+  width: 100%;
+  height: 100%;
+  background: ${({ $photo }) => ($photo ? `center / cover no-repeat url(${$photo})` : 'linear-gradient(135deg, #29b6f6 0%, #0d47a1 100%)')};
   flex: none;
 `;
 
-const BrandCardMetric = styled.p`
-  width: 151px;
-  height: 22px;
+const BrandCardDescription = styled.p`
+  margin: 0;
+  color: rgba(255, 255, 255, 0.82);
+  font-family: ${typography.fontFamily.montserrat};
+  font-size: 13px;
+  line-height: 145%;
+  font-weight: ${typography.fontWeight.medium};
+`;
+
+const BrandCardStats = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+`;
+
+const BrandCardStat = styled.div`
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+`;
+
+const BrandCardStatValue = styled.p`
   margin: 0;
   color: #ffe773;
   font-family: ${typography.fontFamily.montserrat};
-  font-size: 16px;
-  line-height: 140%;
+  font-size: 15px;
+  line-height: 130%;
   font-weight: ${typography.fontWeight.bold};
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  flex: none;
+`;
+
+const BrandCardStatLabel = styled.p`
+  margin: 0;
+  color: rgba(255, 255, 255, 0.64);
+  font-family: ${typography.fontFamily.montserrat};
+  font-size: 11px;
+  line-height: 130%;
+  text-transform: uppercase;
 `;
 
 const categoryMarquee = keyframes`
