@@ -47,7 +47,7 @@ export function CaseStudiesSection({ content }: { content: ForBrandsCaseStudiesC
     visibleText,
   } = useInlineDescriptionClamp(descriptionText);
 
-  const categories = orderedBrandCards.map((card) => card.name).filter(Boolean);
+  const categories = content.categories.map((item) => item.trim()).filter(Boolean);
   const shouldAnimateCategories = categories.length >= 4;
 
   return (

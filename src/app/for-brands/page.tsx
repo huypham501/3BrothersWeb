@@ -85,6 +85,7 @@ export default async function ForBrandsPage() {
           ? {
               title: data.caseStudies.section_title,
               brandCountLabel: data.caseStudies.brand_count_label ?? undefined,
+              categories: data.caseStudies.categories ?? [],
               brandCards: data.caseStudies.brand_cards.map((card) => ({
                 name: card.name,
                 handle: card.handle,

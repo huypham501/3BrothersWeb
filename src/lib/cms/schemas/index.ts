@@ -252,6 +252,7 @@ export const forBrandsSolutionsSchema = z.object({
 export const forBrandsCaseStudiesSchema = z.object({
   section_title: z.string().max(120),
   brand_count_label: z.string().max(20).nullable().optional(),
+  categories: z.array(z.string().max(60)).min(1).max(20),
   brand_cards: z.array(
     z.object({
       name: z.string().max(80),
@@ -260,6 +261,12 @@ export const forBrandsCaseStudiesSchema = z.object({
       photo_alt: z.string().max(125).nullable().optional(),
       description: z.string().max(1000),
       brand_card_stat: z.string().max(120),
+      stats: z.array(
+        z.object({
+          value: z.string().max(20),
+          label: z.string().max(30),
+        })
+      ).length(2),
       is_featured: z.boolean(),
     })
   ).min(1).max(20),

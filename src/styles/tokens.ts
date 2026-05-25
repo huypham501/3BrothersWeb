@@ -95,6 +95,7 @@ export const typography = {
     founders: "'FoundersGrotesk-Regular', sans-serif",
     poppins: "var(--font-poppins, 'Poppins', sans-serif)",
     montserrat: "var(--font-montserrat, 'Montserrat', sans-serif)",
+    inter: "var(--font-inter, 'Inter', sans-serif)",
     mono: 'var(--bs-font-monospace)',
   },
 

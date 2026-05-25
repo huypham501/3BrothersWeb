@@ -3,7 +3,7 @@
  * next/font optimized Google Fonts setup
  */
 
-import { Poppins, Montserrat } from 'next/font/google';
+import { Poppins, Montserrat, Inter } from 'next/font/google';
 
 /**
  * Poppins - Primary font family
@@ -26,5 +26,16 @@ export const montserrat = Montserrat({
   subsets: ['latin', 'latin-ext'],
   display: 'swap',
   variable: '--font-montserrat',
+  fallback: ['sans-serif'],
+});
+
+/**
+ * Inter - Utility/body font for specific sections from design
+ */
+export const inter = Inter({
+  weight: ['200', '300', '400', '500', '600', '700'],
+  subsets: ['latin', 'latin-ext'],
+  display: 'swap',
+  variable: '--font-inter',
   fallback: ['sans-serif'],
 });

@@ -124,7 +124,7 @@ export function GlobalHeaderEditor({ setting, role, canPublish }: GlobalHeaderEd
           <AdminAlert>
             <AdminAlertTitle>Global Impact Warning</AdminAlertTitle>
             <AdminAlertDescription>
-              This Header configuration is shared across multiple pages. Draft first, then publish when you are ready to update site-wide chrome.
+              This Header configuration is shared across multiple pages.
             </AdminAlertDescription>
           </AdminAlert>
 

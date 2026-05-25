@@ -131,7 +131,7 @@ export function GlobalFooterEditor({ setting, role, canPublish }: GlobalFooterEd
           <AdminAlert>
             <AdminAlertTitle>Global Impact Warning</AdminAlertTitle>
             <AdminAlertDescription>
-              This Footer configuration is shared across multiple pages. Draft first, then publish when you are ready to update site-wide chrome.
+              This Footer configuration is shared across multiple pages.
             </AdminAlertDescription>
           </AdminAlert>
 

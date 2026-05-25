@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { poppins, montserrat } from "@/lib/fonts";
+import { poppins, montserrat, inter } from "@/lib/fonts";
 import ClientProviders from "@/components/ClientProviders";
 
 // Import Swiper styles
@@ -28,7 +28,7 @@ export default function RootLayout({
           type="video/mp4"
         />
       </head>
-      <body suppressHydrationWarning className={`${poppins.variable} ${montserrat.variable}`}>
+      <body suppressHydrationWarning className={`${poppins.variable} ${montserrat.variable} ${inter.variable}`}>
         <ClientProviders>
           {children}
         </ClientProviders>

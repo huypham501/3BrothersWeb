@@ -16,7 +16,7 @@ import { AdminBadge } from '@/components/admin/layout/AdminPrimitives';
 import { AdminSwitch as Switch } from '@/components/admin/controls/AdminSwitch';
 import { AdminAlert as Alert, AdminAlertDescription as AlertDescription } from '@/components/admin/layout/AdminPrimitives';
 import { CmsSortableList } from '@/components/admin/cms/ux/CmsSortableList';
-import { BorderedPanel, ErrorText, FormStack, HeaderRow, SectionStack, ToggleFormItem, TwoColumnGrid } from './EditorLayout';
+import { BorderedPanel, ErrorText, FormStack, HeaderRow, ItemCard, SectionStack, SectionTitle, ToggleFormItem, TwoColumnGrid } from './EditorLayout';
 
 type LegacyCard = {
   brand?: string;
@@ -38,6 +38,9 @@ type FormValues = {
   enabled: boolean;
   section_title: string;
   brand_count_label: string;
+  categories: Array<{
+    label: string;
+  }>;
   brand_cards: Array<{
     name: string;
     handle: string;
@@ -45,6 +48,10 @@ type FormValues = {
     photo_alt: string;
     description: string;
     brand_card_stat: string;
+    stats: Array<{
+      value: string;
+      label: string;
+    }>;
     is_featured: boolean;
   }>;
 };
@@ -53,6 +60,11 @@ const formSchema = z.object({
   enabled: z.boolean(),
   section_title: z.string().max(120),
   brand_count_label: z.string().max(20),
+  categories: z.array(
+    z.object({
+      label: z.string().max(60),
+    })
+  ).min(1).max(20),
   brand_cards: z.array(
     z.object({
       name: z.string().max(80),
@@ -61,6 +73,12 @@ const formSchema = z.object({
       photo_alt: z.string().max(125),
       description: z.string().max(1000),
       brand_card_stat: z.string().max(120),
+      stats: z.array(
+        z.object({
+          value: z.string().max(20),
+          label: z.string().max(30),
+        })
+      ).length(2),
       is_featured: z.boolean(),
     })
   ).min(1).max(20),
@@ -93,6 +111,15 @@ function normalizeCards(cards: unknown): FormValues['brand_cards'] {
       photo_alt: raw.photo_alt ?? raw.image_alt ?? '',
       description: raw.description || raw.metric || '',
       brand_card_stat: raw.brand_card_stat || firstLegacyStatValue || normalizeText(raw.metric),
+      stats: Array.isArray(raw.stats) && raw.stats.length === 2
+        ? raw.stats.map((stat) => ({
+          label: normalizeText(stat?.label),
+          value: normalizeText(stat?.value),
+        }))
+        : [
+          { label: 'Metric', value: raw.brand_card_stat || firstLegacyStatValue || normalizeText(raw.metric) },
+          { label: '', value: '' },
+        ],
       is_featured: raw.is_featured ?? !!raw.active,
     };
   });
@@ -104,6 +131,13 @@ function mapIssuePathToFormPath(path: PropertyKey[]): string | null {
   if (root === 'brand_cards' && typeof second === 'number' && (third === 'name' || third === 'handle' || third === 'photo' || third === 'photo_alt' || third === 'description' || third === 'brand_card_stat' || third === 'is_featured')) {
     return `brand_cards.${second}.${third}`;
   }
+  if (root === 'brand_cards' && typeof second === 'number' && third === 'stats' && typeof path[3] === 'number' && (path[4] === 'label' || path[4] === 'value')) {
+    return `brand_cards.${second}.stats.${path[3]}.${path[4]}`;
+  }
+  if (root === 'categories' && typeof second === 'number' && third === 'label') {
+    return `categories.${second}.label`;
+  }
+  if (root === 'categories') return 'categories';
   if (root === 'enabled' || root === 'section_title' || root === 'brand_count_label') return root;
   return null;
 }
@@ -122,8 +156,21 @@ export function ForBrandsCaseStudiesEditor({ pageId, section }: { pageId: string
       enabled: section.enabled,
       section_title: typeof section.content?.section_title === 'string' ? section.content.section_title : '',
       brand_count_label: typeof section.content?.brand_count_label === 'string' ? section.content.brand_count_label : '',
+      categories: Array.isArray(section.content?.categories)
+        ? section.content.categories.map((item: unknown) => ({ label: normalizeText(item) }))
+        : [],
       brand_cards: defaultCards,
     },
+  });
+
+  const {
+    fields: categoryFields,
+    append: appendCategory,
+    remove: removeCategory,
+    move: moveCategory,
+  } = useFieldArray({
+    control: form.control,
+    name: 'categories',
   });
 
   const { fields: brandCardFields, append: appendBrandCard, remove: removeBrandCard, move: moveBrandCard } = useFieldArray({
@@ -161,6 +208,7 @@ export function ForBrandsCaseStudiesEditor({ pageId, section }: { pageId: string
       photo_alt: '',
       description: '',
       brand_card_stat: '3.5M+ FOLLOWERS',
+      stats: [{ label: '', value: '' }, { label: '', value: '' }],
       is_featured: existingCards.length === 0,
     });
   };
@@ -175,15 +223,20 @@ export function ForBrandsCaseStudiesEditor({ pageId, section }: { pageId: string
       const payload = {
         section_title: data.section_title,
         brand_count_label: data.brand_count_label || null,
-        brand_cards: data.brand_cards.map((item) => ({
-          name: item.name,
-          handle: item.handle,
-          photo: item.photo || null,
-          photo_alt: item.photo_alt || null,
-          description: item.description,
-          brand_card_stat: item.brand_card_stat,
-          is_featured: item.is_featured,
-        })),
+        categories: data.categories.map((item) => item.label),
+          brand_cards: data.brand_cards.map((item) => ({
+            name: item.name,
+            handle: item.handle,
+            photo: item.photo || null,
+            photo_alt: item.photo_alt || null,
+            description: item.description,
+            brand_card_stat: item.brand_card_stat,
+            stats: item.stats.map((stat) => ({
+              label: stat.label,
+              value: stat.value,
+            })),
+            is_featured: item.is_featured,
+          })),
       };
 
       const parsed = forBrandsCaseStudiesSchema.safeParse(payload);
@@ -237,6 +290,30 @@ export function ForBrandsCaseStudiesEditor({ pageId, section }: { pageId: string
             <FormItem><FormLabel>Brand Count Label</FormLabel><FormControl><Input {...field} placeholder="50+ BRANDS" maxLength={20} showCount /></FormControl><FormMessage /></FormItem>
           )} />
         </TwoColumnGrid>
+
+        <SectionStack>
+          <CmsSortableList
+            title={`Marquee Categories (${categoryFields.length}/20)`}
+            items={categoryFields.map((item, index) => ({ key: item.id, value: index }))}
+            onMove={moveCategory}
+            onRemove={removeCategory}
+            onAdd={() => appendCategory({ label: '' })}
+            addLabel="Add Category"
+            renderItem={({ item }) => {
+              const index = item.value;
+              return (
+                <FormField control={form.control} name={`categories.${index}.label`} render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Category Label</FormLabel>
+                    <FormControl><Input {...field} maxLength={60} showCount /></FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )} />
+              );
+            }}
+          />
+          {form.formState.errors.categories && <ErrorText>{form.formState.errors.categories.message as string}</ErrorText>}
+        </SectionStack>
 
         <SectionStack>
           <CmsSortableList
@@ -304,6 +381,22 @@ export function ForBrandsCaseStudiesEditor({ pageId, section }: { pageId: string
                   <FormField control={form.control} name={`brand_cards.${index}.brand_card_stat`} render={({ field }) => (
                     <FormItem><FormLabel>Brand Card Stat</FormLabel><FormControl><Input {...field} maxLength={120} placeholder="3.5M+ FOLLOWERS" showCount /></FormControl><FormMessage /></FormItem>
                   )} />
+
+                  <SectionStack>
+                    <SectionTitle>Stats (exactly 2 required)</SectionTitle>
+                    <TwoColumnGrid>
+                      {[0, 1].map((statIndex) => (
+                        <ItemCard key={`brand-card-${String(item.key)}-stat-${statIndex}`}>
+                          <FormField control={form.control} name={`brand_cards.${index}.stats.${statIndex}.label`} render={({ field }) => (
+                            <FormItem><FormLabel>Stat Label</FormLabel><FormControl><Input {...field} maxLength={30} showCount /></FormControl><FormMessage /></FormItem>
+                          )} />
+                          <FormField control={form.control} name={`brand_cards.${index}.stats.${statIndex}.value`} render={({ field }) => (
+                            <FormItem><FormLabel>Stat Value</FormLabel><FormControl><Input {...field} maxLength={20} showCount /></FormControl><FormMessage /></FormItem>
+                          )} />
+                        </ItemCard>
+                      ))}
+                    </TwoColumnGrid>
+                  </SectionStack>
                 </BorderedPanel>
               );
             }}

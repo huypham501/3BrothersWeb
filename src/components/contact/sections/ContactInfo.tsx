@@ -222,6 +222,11 @@ const Details = styled.div`
   align-items: flex-start;
   gap: 25px;
   width: 100%;
+  max-width: 185.75px;
+
+  ${mediaQueries.down.md} {
+    max-width: 100%;
+  }
 `;
 
 const DetailTitle = styled.div`
@@ -238,10 +243,11 @@ const DetailTitle = styled.div`
 `;
 
 const DetailDesc = styled.p`
-  font-family: 'Inter', sans-serif;
-  font-weight: ${typography.fontWeight.normal};
+  font-family: ${typography.fontFamily.inter};
+  font-weight: 200;
   font-size: 20px;
   line-height: 32px; /* 160% */
+  letter-spacing: 0;
   color: ${colors.white};
   margin: 0;
 

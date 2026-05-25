@@ -73,6 +73,14 @@ export const CMS_LIST_ORDER_RULES: CmsListOrderRule[] = [
     editorPath: 'src/components/admin/cms/editors/HomeTrendingEditor.tsx',
   },
   {
+    id: 'for_brands_case_studies.categories',
+    formId: 'for_brands_case_studies',
+    fieldPath: 'categories',
+    policy: 'required',
+    reason: 'Case studies marquee categories are rendered in list order.',
+    editorPath: 'src/components/admin/cms/editors/ForBrandsCaseStudiesEditor.tsx',
+  },
+  {
     id: 'for_creators_testimonials.testimonials',
     formId: 'for_creators_testimonials',
     fieldPath: 'testimonials',

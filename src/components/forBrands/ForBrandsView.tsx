@@ -29,6 +29,7 @@ export interface ForBrandsSolutionsContent {
 export interface ForBrandsCaseStudiesContent {
   title: string;
   brandCountLabel?: string;
+  categories: string[];
   brandCards: Array<{
     name: string;
     handle: string;

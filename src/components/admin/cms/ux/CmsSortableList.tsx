@@ -160,13 +160,11 @@ export function CmsSortableList<T>({
           <SortableContext items={orderedKeys} strategy={verticalListSortingStrategy}>
             {items.map((item, index) => {
               const disableRemove = removeDisabled?.(index, total) ?? false;
-              const handleHelpId = `cms-sortable-hint-${String(item.key)}`;
               return (
                 <SortableListRow
                   key={item.key}
                   id={item.key}
                   isDropTarget={overKey === item.key && activeKey !== item.key}
-                  handleHelpId={handleHelpId}
                   renderMainContent={renderItem({ item, index, total })}
                   renderActions={
                     onRemove ? (
@@ -198,13 +196,11 @@ export function CmsSortableList<T>({
 function SortableListRow({
   id,
   isDropTarget,
-  handleHelpId,
   renderMainContent,
   renderActions,
 }: {
   id: Key;
   isDropTarget: boolean;
-  handleHelpId: string;
   renderMainContent: React.ReactNode;
   renderActions: React.ReactNode;
 }) {
@@ -212,6 +208,7 @@ function SortableListRow({
     id,
   });
   const { ['aria-describedby']: _ignoredAriaDescribedBy, ...dragAttributes } = attributes;
+  const handleHelpId = React.useId();
   const [isHandleFocusVisible, setIsHandleFocusVisible] = React.useState(false);
   const isCoarsePointer = useIsCoarsePointer();
   const actionRailGap = isCoarsePointer ? 10 : 8;
