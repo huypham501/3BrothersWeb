@@ -9,6 +9,7 @@ import {
   CmsPage,
   CmsPageSection,
   forBrandsCaseStudiesSchema,
+  forBrandsCategoriesSchema,
   forBrandsCtaSchema,
   forBrandsHeroSchema,
   forBrandsProgressSchema,
@@ -32,6 +33,7 @@ import { HomePageSettingsEditor } from './editors/HomePageSettingsEditor';
 import { ForBrandsHeroEditor } from './editors/ForBrandsHeroEditor';
 import { ForBrandsSolutionsEditor } from './editors/ForBrandsSolutionsEditor';
 import { ForBrandsCaseStudiesEditor } from './editors/ForBrandsCaseStudiesEditor';
+import { ForBrandsCategoriesEditor } from './editors/ForBrandsCategoriesEditor';
 import { ForBrandsProgressEditor } from './editors/ForBrandsProgressEditor';
 import { ForBrandsCtaEditor } from './editors/ForBrandsCtaEditor';
 
@@ -58,6 +60,7 @@ export function ForBrandsPageEditor({ page, sections, globals, role, canPublish 
   const heroSection = findLocal<z.infer<typeof forBrandsHeroSchema>>('for_brands.hero.v1');
   const solutionsSection = findLocal<z.infer<typeof forBrandsSolutionsSchema>>('for_brands.solutions.v1');
   const caseStudiesSection = findLocal<z.infer<typeof forBrandsCaseStudiesSchema>>('for_brands.case_studies.v1');
+  const categoriesSection = findLocal<z.infer<typeof forBrandsCategoriesSchema>>('for_brands.categories.v1');
   const progressSection = findLocal<z.infer<typeof forBrandsProgressSchema>>('for_brands.progress.v1');
   const ctaSection = findLocal<z.infer<typeof forBrandsCtaSchema>>('for_brands.cta.v1');
 
@@ -122,6 +125,12 @@ export function ForBrandsPageEditor({ page, sections, globals, role, canPublish 
               <AccordionItem value="case-studies">
                 <AccordionTrigger><span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>Case Studies <AdminBadge tone="info">Local</AdminBadge></span></AccordionTrigger>
                 <AccordionContent><ForBrandsCaseStudiesEditor pageId={page.id} section={caseStudiesSection} /></AccordionContent>
+              </AccordionItem>
+            )}
+            {categoriesSection && (
+              <AccordionItem value="categories">
+                <AccordionTrigger><span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>Categories <AdminBadge tone="info">Local</AdminBadge></span></AccordionTrigger>
+                <AccordionContent><ForBrandsCategoriesEditor pageId={page.id} section={categoriesSection} /></AccordionContent>
               </AccordionItem>
             )}
             {progressSection && (

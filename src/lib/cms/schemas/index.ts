@@ -252,7 +252,6 @@ export const forBrandsSolutionsSchema = z.object({
 export const forBrandsCaseStudiesSchema = z.object({
   section_title: z.string().max(120),
   brand_count_label: z.string().max(20).nullable().optional(),
-  categories: z.array(z.string().max(60)).min(1).max(20),
   brand_cards: z.array(
     z.object({
       name: z.string().max(80),
@@ -279,6 +278,10 @@ export const forBrandsCaseStudiesSchema = z.object({
       path: ['brand_cards'],
     });
   }
+});
+
+export const forBrandsCategoriesSchema = z.object({
+  categories: z.array(z.string().max(60)).min(1).max(40),
 });
 
 export const forBrandsProgressSchema = z.object({
@@ -422,6 +425,7 @@ export const CMS_REGISTRY = {
   [SCHEMA_KEYS.FOR_BRANDS_HERO]: forBrandsHeroSchema,
   [SCHEMA_KEYS.FOR_BRANDS_SOLUTIONS]: forBrandsSolutionsSchema,
   [SCHEMA_KEYS.FOR_BRANDS_CASE_STUDIES]: forBrandsCaseStudiesSchema,
+  [SCHEMA_KEYS.FOR_BRANDS_CATEGORIES]: forBrandsCategoriesSchema,
   [SCHEMA_KEYS.FOR_BRANDS_PROGRESS]: forBrandsProgressSchema,
   [SCHEMA_KEYS.FOR_BRANDS_CTA]: forBrandsCtaSchema,
   [SCHEMA_KEYS.SOCIAL_COMMERCE_HERO]: socialCommerceHeroSchema,

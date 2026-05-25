@@ -185,7 +185,6 @@ export interface ForBrandsSolutionsPayload {
 export interface ForBrandsCaseStudiesPayload {
   section_title: string;
   brand_count_label?: string | null;
-  categories: string[];
   brand_cards: Array<{
     name: string;
     handle: string;
@@ -199,6 +198,10 @@ export interface ForBrandsCaseStudiesPayload {
     }>;
     is_featured: boolean;
   }>;
+}
+
+export interface ForBrandsCategoriesPayload {
+  categories: string[];
 }
 
 export interface ForBrandsProgressPayload {

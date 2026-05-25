@@ -18,6 +18,7 @@ export const SCHEMA_KEYS = {
     FOR_BRANDS_HERO: 'for_brands.hero.v1',
     FOR_BRANDS_SOLUTIONS: 'for_brands.solutions.v1',
     FOR_BRANDS_CASE_STUDIES: 'for_brands.case_studies.v1',
+    FOR_BRANDS_CATEGORIES: 'for_brands.categories.v1',
     FOR_BRANDS_PROGRESS: 'for_brands.progress.v1',
     FOR_BRANDS_CTA: 'for_brands.cta.v1',
     SOCIAL_COMMERCE_HERO: 'social_commerce.hero.v1',

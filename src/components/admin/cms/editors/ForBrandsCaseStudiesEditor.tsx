@@ -38,9 +38,6 @@ type FormValues = {
   enabled: boolean;
   section_title: string;
   brand_count_label: string;
-  categories: Array<{
-    label: string;
-  }>;
   brand_cards: Array<{
     name: string;
     handle: string;
@@ -60,11 +57,6 @@ const formSchema = z.object({
   enabled: z.boolean(),
   section_title: z.string().max(120),
   brand_count_label: z.string().max(20),
-  categories: z.array(
-    z.object({
-      label: z.string().max(60),
-    })
-  ).min(1).max(20),
   brand_cards: z.array(
     z.object({
       name: z.string().max(80),
@@ -134,10 +126,6 @@ function mapIssuePathToFormPath(path: PropertyKey[]): string | null {
   if (root === 'brand_cards' && typeof second === 'number' && third === 'stats' && typeof path[3] === 'number' && (path[4] === 'label' || path[4] === 'value')) {
     return `brand_cards.${second}.stats.${path[3]}.${path[4]}`;
   }
-  if (root === 'categories' && typeof second === 'number' && third === 'label') {
-    return `categories.${second}.label`;
-  }
-  if (root === 'categories') return 'categories';
   if (root === 'enabled' || root === 'section_title' || root === 'brand_count_label') return root;
   return null;
 }
@@ -156,21 +144,8 @@ export function ForBrandsCaseStudiesEditor({ pageId, section }: { pageId: string
       enabled: section.enabled,
       section_title: typeof section.content?.section_title === 'string' ? section.content.section_title : '',
       brand_count_label: typeof section.content?.brand_count_label === 'string' ? section.content.brand_count_label : '',
-      categories: Array.isArray(section.content?.categories)
-        ? section.content.categories.map((item: unknown) => ({ label: normalizeText(item) }))
-        : [],
       brand_cards: defaultCards,
     },
-  });
-
-  const {
-    fields: categoryFields,
-    append: appendCategory,
-    remove: removeCategory,
-    move: moveCategory,
-  } = useFieldArray({
-    control: form.control,
-    name: 'categories',
   });
 
   const { fields: brandCardFields, append: appendBrandCard, remove: removeBrandCard, move: moveBrandCard } = useFieldArray({
@@ -223,7 +198,6 @@ export function ForBrandsCaseStudiesEditor({ pageId, section }: { pageId: string
       const payload = {
         section_title: data.section_title,
         brand_count_label: data.brand_count_label || null,
-        categories: data.categories.map((item) => item.label),
           brand_cards: data.brand_cards.map((item) => ({
             name: item.name,
             handle: item.handle,
@@ -290,30 +264,6 @@ export function ForBrandsCaseStudiesEditor({ pageId, section }: { pageId: string
             <FormItem><FormLabel>Brand Count Label</FormLabel><FormControl><Input {...field} placeholder="50+ BRANDS" maxLength={20} showCount /></FormControl><FormMessage /></FormItem>
           )} />
         </TwoColumnGrid>
-
-        <SectionStack>
-          <CmsSortableList
-            title={`Marquee Categories (${categoryFields.length}/20)`}
-            items={categoryFields.map((item, index) => ({ key: item.id, value: index }))}
-            onMove={moveCategory}
-            onRemove={removeCategory}
-            onAdd={() => appendCategory({ label: '' })}
-            addLabel="Add Category"
-            renderItem={({ item }) => {
-              const index = item.value;
-              return (
-                <FormField control={form.control} name={`categories.${index}.label`} render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Category Label</FormLabel>
-                    <FormControl><Input {...field} maxLength={60} showCount /></FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )} />
-              );
-            }}
-          />
-          {form.formState.errors.categories && <ErrorText>{form.formState.errors.categories.message as string}</ErrorText>}
-        </SectionStack>
 
         <SectionStack>
           <CmsSortableList

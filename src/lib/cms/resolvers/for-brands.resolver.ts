@@ -3,6 +3,7 @@ import { getForBrandsPageData } from '../queries';
 import { SCHEMA_KEYS } from '../constants/schema-keys';
 import type {
   ForBrandsCaseStudiesPayload,
+  ForBrandsCategoriesPayload,
   ForBrandsCtaPayload,
   ForBrandsHeroPayload,
   ForBrandsProgressPayload,
@@ -28,6 +29,7 @@ export interface ForBrandsViewModel {
   hero: ForBrandsHeroPayload | null;
   solutions: ForBrandsSolutionsPayload | null;
   caseStudies: ForBrandsCaseStudiesPayload | null;
+  categories: ForBrandsCategoriesPayload | null;
   progress: ForBrandsProgressPayload | null;
   cta: ForBrandsCtaPayload | null;
   globals: {
@@ -144,15 +146,10 @@ function normalizeCaseStudiesPayload(
   const orderedBrandCards = featuredCard
     ? [featuredCard, ...normalizedBrandCards.filter((card) => card !== featuredCard)]
     : normalizedBrandCards;
-  const rawCategories = Array.isArray(record.categories) ? record.categories : [];
-  const categories = rawCategories
-    .map((item) => normalizeText(item).trim())
-    .filter((item): item is string => item.length > 0);
 
   return {
     section_title: meta.data.section_title,
     brand_count_label: meta.data.brand_count_label ?? null,
-    categories,
     brand_cards: orderedBrandCards,
   };
 }
@@ -187,6 +184,11 @@ export async function resolveForBrandsPageData(): Promise<ForBrandsViewModel | n
     ),
     caseStudies: normalizeCaseStudiesPayload(
       findSectionContentBySchemaKey(data.sections, SCHEMA_KEYS.FOR_BRANDS_CASE_STUDIES)
+    ),
+    categories: validateCmsPayloadBySchemaKey(
+      SCHEMA_KEYS.FOR_BRANDS_CATEGORIES,
+      findSectionContentBySchemaKey(data.sections, SCHEMA_KEYS.FOR_BRANDS_CATEGORIES),
+      'for-brands.sections.categories'
     ),
     progress: validateCmsPayloadBySchemaKey(
       SCHEMA_KEYS.FOR_BRANDS_PROGRESS,

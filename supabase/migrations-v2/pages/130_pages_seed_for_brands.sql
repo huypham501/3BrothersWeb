@@ -146,8 +146,7 @@ BEGIN
         { "brand": "L''Oréal", "metric": "70M+ Video views", "active": false, "image": null, "image_alt": null },
         { "brand": "klairs", "metric": "70M+ Video views", "active": false, "image": null, "image_alt": null },
         { "brand": "YSL", "metric": "70M+ Video views", "active": false, "image": null, "image_alt": null }
-      ],
-      "categories": ["Lifestyle", "Beauty", "Gaming", "Entertainment", "Pets", "Travel", "Sport"]
+      ]
     }'::jsonb,
     '{
       "eyebrow": "Case studies",
@@ -167,7 +166,21 @@ BEGIN
         { "brand": "L''Oréal", "metric": "70M+ Video views", "active": false, "image": null, "image_alt": null },
         { "brand": "klairs", "metric": "70M+ Video views", "active": false, "image": null, "image_alt": null },
         { "brand": "YSL", "metric": "70M+ Video views", "active": false, "image": null, "image_alt": null }
-      ],
+      ]
+    }'::jsonb,
+    true,
+    false
+  ),
+  (
+    for_brands_page_id,
+    'for_brands.categories.v1',
+    'for_brands.categories.v1',
+    4,
+    true,
+    '{
+      "categories": ["Lifestyle", "Beauty", "Gaming", "Entertainment", "Pets", "Travel", "Sport"]
+    }'::jsonb,
+    '{
       "categories": ["Lifestyle", "Beauty", "Gaming", "Entertainment", "Pets", "Travel", "Sport"]
     }'::jsonb,
     true,
@@ -177,7 +190,7 @@ BEGIN
     for_brands_page_id,
     'for_brands.progress.v1',
     'for_brands.progress.v1',
-    4,
+    5,
     true,
     '{
       "section_title": "Chúng Tôi Làm Việc Như Thế Nào",
@@ -230,7 +243,7 @@ BEGIN
     for_brands_page_id,
     'for_brands.cta.v1',
     'for_brands.cta.v1',
-    5,
+    6,
     true,
     '{
       "heading": "Sẵn Sàng Nâng Tầm\nChiến Dịch Marketing?",

@@ -1,5 +1,6 @@
 import type { SCHEMA_KEYS } from '../constants/schema-keys';
 import type {
+  ForBrandsCategoriesPayload,
   CareersHeroPayload,
   ForBrandsCaseStudiesPayload,
   ForBrandsCtaPayload,
@@ -47,6 +48,7 @@ export interface CmsSchemaPayloadMap {
   [SCHEMA_KEYS.FOR_BRANDS_HERO]: ForBrandsHeroPayload;
   [SCHEMA_KEYS.FOR_BRANDS_SOLUTIONS]: ForBrandsSolutionsPayload;
   [SCHEMA_KEYS.FOR_BRANDS_CASE_STUDIES]: ForBrandsCaseStudiesPayload;
+  [SCHEMA_KEYS.FOR_BRANDS_CATEGORIES]: ForBrandsCategoriesPayload;
   [SCHEMA_KEYS.FOR_BRANDS_PROGRESS]: ForBrandsProgressPayload;
   [SCHEMA_KEYS.FOR_BRANDS_CTA]: ForBrandsCtaPayload;
   [SCHEMA_KEYS.SOCIAL_COMMERCE_HERO]: SocialCommerceHeroPayload;
@@ -69,6 +71,7 @@ export type CmsSectionSchemaKey =
   | typeof SCHEMA_KEYS.FOR_BRANDS_HERO
   | typeof SCHEMA_KEYS.FOR_BRANDS_SOLUTIONS
   | typeof SCHEMA_KEYS.FOR_BRANDS_CASE_STUDIES
+  | typeof SCHEMA_KEYS.FOR_BRANDS_CATEGORIES
   | typeof SCHEMA_KEYS.FOR_BRANDS_PROGRESS
   | typeof SCHEMA_KEYS.FOR_BRANDS_CTA
   | typeof SCHEMA_KEYS.SOCIAL_COMMERCE_HERO

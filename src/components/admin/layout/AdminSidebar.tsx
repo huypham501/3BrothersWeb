@@ -100,6 +100,7 @@ function buildGroup(
 export function AdminSidebar() {
   const pathname = usePathname();
   const router = useRouter();
+  const [hydrated, setHydrated] = React.useState(false);
   const activeKey = getActiveKey(pathname);
   const [openKeys, setOpenKeys] = React.useState<string[]>(
     getDefaultOpenGroups(pathname)
@@ -121,6 +122,10 @@ export function AdminSidebar() {
     });
   }, [pathname]);
 
+  React.useEffect(() => {
+    setHydrated(true);
+  }, []);
+
   return (
     <aside style={styles.sidebar}>
       {/* ── Logo ── */}
@@ -139,14 +144,16 @@ export function AdminSidebar() {
 
       {/* ── Ant Design Menu (inline mode) ── */}
       <div style={styles.menuWrapper}>
-        <Menu
-          mode="inline"
-          selectedKeys={[activeKey]}
-          openKeys={openKeys}
-          onOpenChange={(keys) => setOpenKeys(keys as string[])}
-          items={menuItems}
-          style={styles.menu}
-        />
+        {hydrated ? (
+          <Menu
+            mode="inline"
+            selectedKeys={[activeKey]}
+            openKeys={openKeys}
+            onOpenChange={(keys) => setOpenKeys(keys as string[])}
+            items={menuItems}
+            style={styles.menu}
+          />
+        ) : null}
       </div>
 
       {/* ── Asset Manager quick link ── */}

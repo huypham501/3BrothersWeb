@@ -9,6 +9,7 @@ import type { GlobalFooterPayload, GlobalHeaderPayload } from '@/lib/cms/types';
 import { HeroSection } from './sections/HeroSection';
 import { SolutionsSection } from './sections/SolutionsSection';
 import { CaseStudiesSection } from './sections/CaseStudiesSection';
+import { CategoriesSection } from './sections/CategoriesSection';
 import { ProgressSection } from './sections/ProgressSection';
 import { CtaSection } from './sections/CtaSection';
 
@@ -29,7 +30,6 @@ export interface ForBrandsSolutionsContent {
 export interface ForBrandsCaseStudiesContent {
   title: string;
   brandCountLabel?: string;
-  categories: string[];
   brandCards: Array<{
     name: string;
     handle: string;
@@ -40,6 +40,10 @@ export interface ForBrandsCaseStudiesContent {
     stats?: Array<{ value: string; label: string }>;
     isFeatured: boolean;
   }>;
+}
+
+export interface ForBrandsCategoriesContent {
+  categories: string[];
 }
 
 export interface ForBrandsProgressContent {
@@ -59,6 +63,7 @@ export interface ForBrandsViewModel {
   hero: ForBrandsHeroContent | null;
   solutions: ForBrandsSolutionsContent | null;
   caseStudies: ForBrandsCaseStudiesContent | null;
+  categories: ForBrandsCategoriesContent | null;
   progress: ForBrandsProgressContent | null;
   cta: ForBrandsCtaContent | null;
   globals: {
@@ -75,6 +80,7 @@ export function ForBrandsView({ data }: { data: ForBrandsViewModel }) {
         {data.hero ? <HeroSection content={data.hero} /> : null}
         {data.solutions ? <SolutionsSection content={data.solutions} /> : null}
         {data.caseStudies ? <CaseStudiesSection content={data.caseStudies} /> : null}
+        {data.categories ? <CategoriesSection content={data.categories} /> : null}
         {data.progress ? <ProgressSection content={data.progress} /> : null}
         {data.cta ? (
           <CtaContainer>
