@@ -154,10 +154,10 @@ const NavItemActiveLine = styled.div<{ $isActive: boolean; $isFloating: boolean 
   width: 101px;
   height: 0;
   left: 50%;
-  bottom: -22px;
+  bottom: -23px;
   transform: translateX(-50%) scaleX(${({ $isActive }) => ($isActive ? 1 : 0)});
   transform-origin: center;
-  border: 1.5px solid ${({ $isFloating }) => ($isFloating ? '#FFFFFF' : '#003CA6')};
+  border: 1.5px solid ${({ $isFloating }) => ($isFloating ? '#003CA6' : '#FFFFFF')};
   opacity: ${({ $isActive }) => ($isActive ? 1 : 0)};
   pointer-events: none;
   transition: opacity 0.2s ease, transform 0.2s ease, border-color 0.3s ease;
