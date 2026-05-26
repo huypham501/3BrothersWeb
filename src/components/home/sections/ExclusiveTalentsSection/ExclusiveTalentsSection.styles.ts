@@ -148,6 +148,45 @@ export const MainTalentArea = styled.div`
   }
 `;
 
+export const MainTalentPhotoLayout = styled.div`
+  position: relative;
+  flex: none;
+  width: 560px;
+
+  ${mediaQueries.down.lg} {
+    width: 100%;
+  }
+`;
+
+export const MainTalentPhotoBackgroundEffect = styled.svg`
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+`;
+
+export const MainTalentPhotoWrap = styled.div`
+  position: relative;
+  flex: none;
+  z-index: 1;
+  width: 560px;
+
+  ${mediaQueries.down.lg} {
+    width: 100%;
+  }
+`;
+
+export const MainTalentPhotoEffectLine = styled.svg`
+  position: absolute;
+  width: 100%;
+  height: 3px;
+  left: 0;
+  bottom: -2px;
+  pointer-events: none;
+`;
+
 export const TalentPhotoMain = styled.div`
   flex: none;
   width: 560px;
@@ -408,6 +447,22 @@ export const TalentThumb = styled.div<{ $active: boolean }>`
   &:hover {
     transform: translateY(-6px);
   }
+`;
+
+export const TalentThumbImageWrap = styled.div`
+  position: relative;
+  width: 240px;
+  height: 240px;
+  flex: none;
+`;
+
+export const TalentThumbEffectLine = styled.svg`
+  position: absolute;
+  width: 240px;
+  height: 1px;
+  left: 0;
+  bottom: 0;
+  pointer-events: none;
 `;
 
 export const ThumbImagePlaceholder = styled.div`

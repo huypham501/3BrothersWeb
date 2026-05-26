@@ -45,6 +45,7 @@ export function CaseStudiesSection({ content }: { content: ForBrandsCaseStudiesC
     setIsExpanded,
     visibleText,
   } = useInlineDescriptionClamp(descriptionText);
+  const hasFeaturedMedia = !!featuredCard?.featuredPhoto;
 
   return (
     <SectionContainer>
@@ -55,10 +56,12 @@ export function CaseStudiesSection({ content }: { content: ForBrandsCaseStudiesC
         </HeadingWrap>
 
         {featuredCard ? (
-          <FeaturedRow>
-            <FeaturedMedia aria-label={featuredCard.featuredPhotoAlt || featuredCard.photoAlt || `${featuredCard.name} image`}>
-              <FeaturedMediaImage $photo={featuredCard.featuredPhoto || featuredCard.photo} />
-            </FeaturedMedia>
+          <FeaturedRow $hasMedia={hasFeaturedMedia}>
+            {hasFeaturedMedia ? (
+              <FeaturedMedia aria-label={featuredCard.featuredPhotoAlt || `${featuredCard.name} image`}>
+                <FeaturedMediaImage $photo={featuredCard.featuredPhoto} />
+              </FeaturedMedia>
+            ) : null}
 
             <FeaturedContent>
               <Brand>{featuredCard.name}</Brand>
@@ -201,9 +204,9 @@ const Title = styled.h2`
   }
 `;
 
-const FeaturedRow = styled.div`
+const FeaturedRow = styled.div<{ $hasMedia: boolean }>`
   display: grid;
-  grid-template-columns: 623px minmax(0, 1fr);
+  grid-template-columns: ${({ $hasMedia }) => ($hasMedia ? '623px minmax(0, 1fr)' : 'minmax(0, 1fr)')};
   gap: 32px;
 
   ${mediaQueries.down.xl} {
