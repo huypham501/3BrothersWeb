@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Link from 'next/link';
 import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 import { HeaderContactButton } from '@/components/home/components/HeaderContactButton';
 import { typography } from '@/styles/tokens';
 
@@ -19,6 +20,7 @@ const DEFAULT_HEADER_CONTENT: GlobalHeaderPayload = {
 
 export function Header({ content = DEFAULT_HEADER_CONTENT }: { content?: GlobalHeaderPayload }) {
   const [isFloating, setIsFloating] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -53,9 +55,20 @@ export function Header({ content = DEFAULT_HEADER_CONTENT }: { content?: GlobalH
         </LogoContainer>
 
         <NavLinks>
-          {content.nav_links?.map((link, idx) => (
-            <NavItem key={idx} href={link.url} $isFloating={isFloating}>{link.label}</NavItem>
-          ))}
+          {content.nav_links?.map((link, idx) => {
+            const normalizedUrl = link.url === '/' ? '/' : link.url.replace(/\/$/, '');
+            const normalizedPathname = pathname === '/' ? '/' : pathname.replace(/\/$/, '');
+            const isActive = normalizedUrl === '/'
+              ? normalizedPathname === '/'
+              : normalizedPathname === normalizedUrl || normalizedPathname.startsWith(`${normalizedUrl}/`);
+
+            return (
+              <NavItem key={idx} href={link.url} $isFloating={isFloating} $isActive={isActive}>
+                {link.label}
+                <NavItemActiveLine $isActive={isActive} $isFloating={isFloating} aria-hidden="true" />
+              </NavItem>
+            );
+          })}
 
           <HeaderContactButton href={content.cta_url || "#"} label={content.cta_label} $isFloating={isFloating} />
         </NavLinks>
@@ -126,11 +139,26 @@ const NavLinks = styled.nav`
   }
 `;
 
-const NavItem = styled(Link) <{ $isFloating: boolean }>`
+const NavItem = styled(Link) <{ $isFloating: boolean; $isActive: boolean }>`
+  position: relative;
   font-family: ${typography.fontFamily.montserrat};
   font-weight: 600;
   font-size: 16px;
   line-height: 160%;
   color: ${({ $isFloating }) => $isFloating ? '#061530' : '#FFFFFF'};
   text-decoration: none;
+`;
+
+const NavItemActiveLine = styled.div<{ $isActive: boolean; $isFloating: boolean }>`
+  position: absolute;
+  width: 101px;
+  height: 0;
+  left: 50%;
+  bottom: -22px;
+  transform: translateX(-50%) scaleX(${({ $isActive }) => ($isActive ? 1 : 0)});
+  transform-origin: center;
+  border: 1.5px solid ${({ $isFloating }) => ($isFloating ? '#FFFFFF' : '#003CA6')};
+  opacity: ${({ $isActive }) => ($isActive ? 1 : 0)};
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease, border-color 0.3s ease;
 `;

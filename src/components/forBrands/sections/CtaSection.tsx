@@ -147,6 +147,7 @@ const ButtonWrapper = styled.div`
 const JoinButton = styled(Link)`
   display: flex;
   align-items: center;
+  justify-content: center;
   padding: 16px 32px;
   gap: 12px;
   height: 54px;
@@ -160,8 +161,13 @@ const JoinButton = styled(Link)`
   font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.bold};
   font-size: 16px;
-  line-height: 140%;
+  line-height: 1;
   color: ${colors.secondaryDark};
+
+  svg {
+    display: block;
+    flex: none;
+  }
 
   &:hover {
     opacity: 0.85;

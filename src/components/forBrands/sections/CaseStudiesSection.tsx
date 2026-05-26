@@ -56,8 +56,8 @@ export function CaseStudiesSection({ content }: { content: ForBrandsCaseStudiesC
 
         {featuredCard ? (
           <FeaturedRow>
-            <FeaturedMedia aria-label={featuredCard.photoAlt || `${featuredCard.name} image`}>
-              <FeaturedMediaImage $photo={featuredCard.photo} />
+            <FeaturedMedia aria-label={featuredCard.featuredPhotoAlt || featuredCard.photoAlt || `${featuredCard.name} image`}>
+              <FeaturedMediaImage $photo={featuredCard.featuredPhoto || featuredCard.photo} />
             </FeaturedMedia>
 
             <FeaturedContent>

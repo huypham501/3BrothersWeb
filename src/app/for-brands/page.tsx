@@ -90,6 +90,8 @@ export default async function ForBrandsPage() {
                 handle: card.handle,
                 photo: card.photo ?? undefined,
                 photoAlt: card.photo_alt ?? undefined,
+                featuredPhoto: card.featured_photo ?? undefined,
+                featuredPhotoAlt: card.featured_photo_alt ?? undefined,
                 description: card.description,
                 brandCardStat: card.brand_card_stat,
                 stats: card.stats,

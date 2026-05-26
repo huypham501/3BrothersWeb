@@ -28,6 +28,10 @@ type LegacyCard = {
   handle?: string;
   photo?: string | null;
   photo_alt?: string | null;
+  featured_photo?: string | null;
+  featured_photo_alt?: string | null;
+  featured_media_image?: string | null;
+  featured_media_image_alt?: string | null;
   description?: string;
   brand_card_stat?: string;
   stats?: Array<{ value?: unknown; label?: unknown }>;
@@ -43,6 +47,8 @@ type FormValues = {
     handle: string;
     photo: string;
     photo_alt: string;
+    featured_photo: string;
+    featured_photo_alt: string;
     description: string;
     brand_card_stat: string;
     stats: Array<{
@@ -63,6 +69,8 @@ const formSchema = z.object({
       handle: z.string().max(40),
       photo: z.string().max(1024),
       photo_alt: z.string().max(125),
+      featured_photo: z.string().max(1024),
+      featured_photo_alt: z.string().max(125),
       description: z.string().max(1000),
       brand_card_stat: z.string().max(120),
       stats: z.array(
@@ -101,6 +109,8 @@ function normalizeCards(cards: unknown): FormValues['brand_cards'] {
       handle: raw.handle || '',
       photo: raw.photo ?? raw.image ?? '',
       photo_alt: raw.photo_alt ?? raw.image_alt ?? '',
+      featured_photo: raw.featured_photo ?? raw.featured_media_image ?? '',
+      featured_photo_alt: raw.featured_photo_alt ?? raw.featured_media_image_alt ?? '',
       description: raw.description || raw.metric || '',
       brand_card_stat: raw.brand_card_stat || firstLegacyStatValue || normalizeText(raw.metric),
       stats: Array.isArray(raw.stats) && raw.stats.length === 2
@@ -120,7 +130,7 @@ function normalizeCards(cards: unknown): FormValues['brand_cards'] {
 function mapIssuePathToFormPath(path: PropertyKey[]): string | null {
   if (path.length === 0 || path.some((segment) => typeof segment === 'symbol')) return null;
   const [root, second, third] = path;
-  if (root === 'brand_cards' && typeof second === 'number' && (third === 'name' || third === 'handle' || third === 'photo' || third === 'photo_alt' || third === 'description' || third === 'brand_card_stat' || third === 'is_featured')) {
+  if (root === 'brand_cards' && typeof second === 'number' && (third === 'name' || third === 'handle' || third === 'photo' || third === 'photo_alt' || third === 'featured_photo' || third === 'featured_photo_alt' || third === 'description' || third === 'brand_card_stat' || third === 'is_featured')) {
     return `brand_cards.${second}.${third}`;
   }
   if (root === 'brand_cards' && typeof second === 'number' && third === 'stats' && typeof path[3] === 'number' && (path[4] === 'label' || path[4] === 'value')) {
@@ -181,6 +191,8 @@ export function ForBrandsCaseStudiesEditor({ pageId, section }: { pageId: string
       handle: '',
       photo: '',
       photo_alt: '',
+      featured_photo: '',
+      featured_photo_alt: '',
       description: '',
       brand_card_stat: '3.5M+ FOLLOWERS',
       stats: [{ label: '', value: '' }, { label: '', value: '' }],
@@ -203,6 +215,8 @@ export function ForBrandsCaseStudiesEditor({ pageId, section }: { pageId: string
             handle: item.handle,
             photo: item.photo || null,
             photo_alt: item.photo_alt || null,
+            featured_photo: item.featured_photo || null,
+            featured_photo_alt: item.featured_photo_alt || null,
             description: item.description,
             brand_card_stat: item.brand_card_stat,
             stats: item.stats.map((stat) => ({
@@ -321,6 +335,27 @@ export function ForBrandsCaseStudiesEditor({ pageId, section }: { pageId: string
                     )} />
                     <FormField control={form.control} name={`brand_cards.${index}.photo_alt`} render={({ field }) => (
                       <FormItem><FormLabel>Photo Alt</FormLabel><FormControl><Input {...field} maxLength={125} showCount /></FormControl><FormMessage /></FormItem>
+                    )} />
+                  </TwoColumnGrid>
+
+                  <TwoColumnGrid>
+                    <FormField control={form.control} name={`brand_cards.${index}.featured_photo`} render={({ field }) => (
+                      <FormItem><FormLabel>Main Area Photo</FormLabel><FormControl>
+                        <AdminImageUpload
+                          value={field.value}
+                          onChange={(nextUrl) => {
+                            form.setValue(`brand_cards.${index}.featured_photo`, nextUrl, {
+                              shouldDirty: true,
+                              shouldTouch: true,
+                              shouldValidate: true,
+                            });
+                          }}
+                          label="Featured Brand Photo"
+                        />
+                      </FormControl><FormMessage /></FormItem>
+                    )} />
+                    <FormField control={form.control} name={`brand_cards.${index}.featured_photo_alt`} render={({ field }) => (
+                      <FormItem><FormLabel>Main Area Photo Alt</FormLabel><FormControl><Input {...field} maxLength={125} showCount /></FormControl><FormMessage /></FormItem>
                     )} />
                   </TwoColumnGrid>
 

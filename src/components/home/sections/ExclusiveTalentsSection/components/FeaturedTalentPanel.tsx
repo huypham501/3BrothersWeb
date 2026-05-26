@@ -22,6 +22,8 @@ import {
 
 export function FeaturedTalentPanel({ activeTalent }: { activeTalent: ExclusiveTalent | null }) {
   const descriptionText = activeTalent?.description || '';
+  const featuredPhoto = activeTalent?.featured_photo || activeTalent?.photo;
+  const featuredPhotoAlt = activeTalent?.featured_photo_alt || activeTalent?.photo_alt || activeTalent?.name || 'Featured Talent';
   const {
     containerRef,
     measureRef,
@@ -35,10 +37,10 @@ export function FeaturedTalentPanel({ activeTalent }: { activeTalent: ExclusiveT
 
   return (
     <MainTalentArea>
-      {activeTalent?.photo ? (
+      {featuredPhoto ? (
         <Image
-          src={activeTalent.photo}
-          alt={activeTalent.photo_alt || activeTalent.name || 'Featured Talent'}
+          src={featuredPhoto}
+          alt={featuredPhotoAlt}
           width={560}
           height={560}
           style={{

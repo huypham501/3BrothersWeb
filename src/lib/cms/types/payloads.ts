@@ -110,6 +110,8 @@ export interface SharedExclusiveTalentsPayload {
     handle: string;
     photo?: string | null;
     photo_alt?: string | null;
+    featured_photo?: string | null;
+    featured_photo_alt?: string | null;
     description: string;
     stats: Array<{
       value: string;
@@ -190,6 +192,8 @@ export interface ForBrandsCaseStudiesPayload {
     handle: string;
     photo?: string | null;
     photo_alt?: string | null;
+    featured_photo?: string | null;
+    featured_photo_alt?: string | null;
     description: string;
     brand_card_stat: string;
     stats?: Array<{

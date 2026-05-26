@@ -38,6 +38,8 @@ function normalizeTalents(
     handle: talent?.handle || '',
     photo: talent?.photo || '',
     photo_alt: talent?.photo_alt || '',
+    featured_photo: talent?.featured_photo || '',
+    featured_photo_alt: talent?.featured_photo_alt || '',
     description: talent?.description || '',
     stats: talent?.stats?.length === 2
       ? talent.stats.map((stat) => ({ label: stat?.label || '', value: stat?.value || '' }))
@@ -105,6 +107,8 @@ export function SharedExclusiveTalentsFields({ form }: { form: UseFormReturn<any
       handle: '',
       photo: '',
       photo_alt: '',
+      featured_photo: '',
+      featured_photo_alt: '',
       description: '',
       stats: [{ ...EMPTY_STATS[0] }, { ...EMPTY_STATS[1] }],
       is_featured: existingTalents.length === 0,
@@ -192,6 +196,27 @@ export function SharedExclusiveTalentsFields({ form }: { form: UseFormReturn<any
               )} />
               <FormField control={form.control} name={`talents.${index}.photo_alt`} render={({ field }) => (
                 <FormItem><FormLabel>Photo Alt Text</FormLabel><FormControl><Input {...field} maxLength={125} showCount /></FormControl><FormMessage /></FormItem>
+              )} />
+            </TwoColumnGrid>
+
+            <TwoColumnGrid>
+              <FormField control={form.control} name={`talents.${index}.featured_photo`} render={({ field }) => (
+                <FormItem><FormLabel>Main Area Photo</FormLabel><FormControl>
+                  <AdminImageUpload
+                    value={field.value}
+                    onChange={(nextUrl) => {
+                      form.setValue(`talents.${index}.featured_photo`, nextUrl, {
+                        shouldDirty: true,
+                        shouldTouch: true,
+                        shouldValidate: true,
+                      });
+                    }}
+                    label="Featured Talent Photo"
+                  />
+                </FormControl><FormMessage /></FormItem>
+              )} />
+              <FormField control={form.control} name={`talents.${index}.featured_photo_alt`} render={({ field }) => (
+                <FormItem><FormLabel>Main Area Photo Alt Text</FormLabel><FormControl><Input {...field} maxLength={125} showCount /></FormControl><FormMessage /></FormItem>
               )} />
             </TwoColumnGrid>
 

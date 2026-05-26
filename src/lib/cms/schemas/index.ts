@@ -74,6 +74,8 @@ const sharedExclusiveTalentItemSchema = z.object({
   handle: z.string().max(40),
   photo: z.string().nullable().optional(),
   photo_alt: z.string().max(125).nullable().optional(),
+  featured_photo: z.string().nullable().optional(),
+  featured_photo_alt: z.string().max(125).nullable().optional(),
   description: z.string().max(800),
   stats: z.array(
     z.object({
@@ -258,6 +260,8 @@ export const forBrandsCaseStudiesSchema = z.object({
       handle: z.string().max(40),
       photo: z.string().max(1024).nullable().optional(),
       photo_alt: z.string().max(125).nullable().optional(),
+      featured_photo: z.string().max(1024).nullable().optional(),
+      featured_photo_alt: z.string().max(125).nullable().optional(),
       description: z.string().max(1000),
       brand_card_stat: z.string().max(120),
       stats: z.array(

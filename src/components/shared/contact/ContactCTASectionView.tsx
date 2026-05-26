@@ -136,6 +136,7 @@ const ContactButton = styled.a`
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: center;
   padding: 16px 32px;
   gap: 12px;
   background: ${colors.white};
@@ -145,9 +146,14 @@ const ContactButton = styled.a`
   font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.bold};
   font-size: ${typography.fontSize.md};
-  line-height: 140%;
+  line-height: 1;
   white-space: nowrap;
   transition: opacity ${motion.duration.base};
+
+  svg {
+    display: block;
+    flex: none;
+  }
 
   &:hover {
     opacity: 0.85;

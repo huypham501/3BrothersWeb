@@ -43,6 +43,8 @@ const caseStudiesBrandCardSchema = z.object({
   handle: z.string().max(40),
   photo: z.string().max(1024).nullable().optional(),
   photo_alt: z.string().max(125).nullable().optional(),
+  featured_photo: z.string().max(1024).nullable().optional(),
+  featured_photo_alt: z.string().max(125).nullable().optional(),
   description: z.string().max(1000),
   brand_card_stat: z.string().max(120),
   stats: z.array(z.object({
@@ -114,6 +116,12 @@ function normalizeCaseStudiesPayload(
         photo_alt: typeof raw.photo_alt === 'string'
           ? raw.photo_alt
           : (typeof raw.image_alt === 'string' ? raw.image_alt : null),
+        featured_photo: typeof raw.featured_photo === 'string'
+          ? raw.featured_photo
+          : (typeof raw.featured_media_image === 'string' ? raw.featured_media_image : null),
+        featured_photo_alt: typeof raw.featured_photo_alt === 'string'
+          ? raw.featured_photo_alt
+          : (typeof raw.featured_media_image_alt === 'string' ? raw.featured_media_image_alt : null),
         description: typeof raw.description === 'string'
           ? raw.description
           : (typeof raw.metric === 'string' ? raw.metric : ''),
