@@ -12,6 +12,7 @@ const TESTIMONIALS_BG_WIDTH = '1440px';
 export function TestimonialsSection({ content }: { content: ForCreatorsTestimonialsPayload }) {
   return (
     <SectionContainer>
+      <TestimonialsBackground aria-hidden="true" />
       <Inner>
         <HeadingBlock>
           <Superlabel>{content.superlabel}</Superlabel>
@@ -37,8 +38,41 @@ export function TestimonialsSection({ content }: { content: ForCreatorsTestimoni
   );
 }
 
+const TestimonialsBackground = styled.div`
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: ${TESTIMONIALS_BG_WIDTH};
+  height: auto;
+  aspect-ratio: ${TESTIMONIALS_BG_ASPECT_RATIO};
+  transform: translateX(-50%);
+  background-image: url('${TESTIMONIALS_BG_IMAGE}');
+  background-repeat: no-repeat;
+  background-position: center top;
+  background-size: 100% auto;
+  -webkit-mask-image:
+    linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%),
+    linear-gradient(to bottom, black 0%, black 82%, transparent 100%);
+  mask-image:
+    linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%),
+    linear-gradient(to bottom, black 0%, black 82%, transparent 100%);
+  -webkit-mask-repeat: no-repeat, no-repeat;
+  mask-repeat: no-repeat, no-repeat;
+  -webkit-mask-size: 100% 100%, 100% 100%;
+  mask-size: 100% 100%, 100% 100%;
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
+  pointer-events: none;
+  z-index: 0;
+
+  ${mediaQueries.down.sm} {
+    background-position: center -20px;
+  }
+`;
+
 const SectionContainer = styled.section`
   position: relative;
+  z-index: 0;
   width: 100%;
   min-height: 600px;
   background: #B4CFFF;
@@ -47,35 +81,6 @@ const SectionContainer = styled.section`
   align-items: center;
   padding: 100px 0 120px;
 
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 50%;
-    width: ${TESTIMONIALS_BG_WIDTH};
-    height: auto;
-    aspect-ratio: ${TESTIMONIALS_BG_ASPECT_RATIO};
-    transform: translateX(-50%);
-    background-image: url('${TESTIMONIALS_BG_IMAGE}');
-    background-repeat: no-repeat;
-    background-position: center top;
-    background-size: 100% auto;
-    -webkit-mask-image:
-      linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%),
-      linear-gradient(to bottom, black 0%, black 82%, transparent 100%);
-    mask-image:
-      linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%),
-      linear-gradient(to bottom, black 0%, black 82%, transparent 100%);
-    -webkit-mask-repeat: no-repeat, no-repeat;
-    mask-repeat: no-repeat, no-repeat;
-    -webkit-mask-size: 100% 100%, 100% 100%;
-    mask-size: 100% 100%, 100% 100%;
-    -webkit-mask-composite: source-in;
-    mask-composite: intersect;
-    pointer-events: none;
-    z-index: 0;
-  }
-
   ${mediaQueries.down.lg} {
     padding: 80px 0 100px;
     min-height: auto;
@@ -83,10 +88,6 @@ const SectionContainer = styled.section`
 
   ${mediaQueries.down.sm} {
     padding: 60px 0 80px;
-
-    &::before {
-      background-position: center -20px;
-    }
   }
 `;
 

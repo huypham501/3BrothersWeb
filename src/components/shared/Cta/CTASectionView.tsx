@@ -41,6 +41,7 @@ export function CTASectionView({ content }: CTASectionViewProps) {
 
 const SectionContainer = styled.section`
   position: relative;
+  z-index: 0;
   width: 100%;
   padding: 120px ${spacing['5xl']};
   display: flex;

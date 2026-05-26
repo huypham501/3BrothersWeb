@@ -8,7 +8,6 @@ import {
   GlowEllipse1,
   GlowEllipse12,
   GlowEllipse2,
-  GlowEllipseBottom,
   SectionGlowWrapper,
   SectionContainer,
   Title,
@@ -53,7 +52,6 @@ export function ExclusiveTalentsSection({ content }: { content: SharedExclusiveT
           onSelectTalent={setActiveTalentIndex}
         />
       </SectionContainer>
-      <GlowEllipseBottom />
       <GlowEllipse12 />
     </SectionGlowWrapper>
   );

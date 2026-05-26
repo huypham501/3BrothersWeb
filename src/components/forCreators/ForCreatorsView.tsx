@@ -28,8 +28,11 @@ export function ForCreatorsView({
         {data.hero && <HeroSection content={data.hero} />}
         {data.benefit && <BenefitSection content={data.benefit} />}
         <BlueGroupWrapper>
-          <BlueGroupAmbient data-ambient="true" aria-hidden="true" />
           {data.testimonials && <TestimonialsSection content={data.testimonials} />}
+          <BlueGroupAmbient data-ambient="true" aria-hidden="true">
+            <BlueGroupAmbientBefore />
+            <BlueGroupAmbientAfter />
+          </BlueGroupAmbient>
           {data.shared.exclusiveTalents && <ExclusiveTalentsSection content={data.shared.exclusiveTalents} />}
           {ctaSectionSlot}
         </BlueGroupWrapper>
@@ -71,53 +74,45 @@ const BlueGroupWrapper = styled.div`
     ${colors.primaryLight} 100%
   );
 
-  > *:not([data-ambient='true']) {
-    position: relative;
-    z-index: 1;
-  }
 `;
 
 const BlueGroupAmbient = styled.div`
   position: absolute;
   inset: 0;
-  z-index: 0;
+  z-index: 1;
   pointer-events: none;
+`;
 
-  &::before,
-  &::after {
-    content: '';
-    position: absolute;
-    left: 50%;
-    width: min(1440px, 100%);
-    border-radius: 120px;
-    transform: translateX(-50%);
-  }
+const BlueGroupAmbientLayer = styled.div`
+  position: absolute;
+  left: 50%;
+  width: min(1440px, 100%);
+  border-radius: 120px;
+  transform: translateX(-50%);
+`;
 
-  &::before {
-    top: 30%;
-    height: 1281px;
-    background: #061530;
-    filter: blur(100px);
-  }
-
-  &::after {
-    top: 33%;
-    height: 1072px;
-    background: #003ca6;
-    filter: blur(60px);
-  }
+const BlueGroupAmbientBefore = styled(BlueGroupAmbientLayer)`
+  top: 30%;
+  height: 1281px;
+  background: #061530;
+  filter: blur(100px);
 
   @media (max-width: 900px) {
-    &::before {
-      height: 86vw;
-      border-radius: 60px;
-      filter: blur(56px);
-    }
+    height: 86vw;
+    border-radius: 60px;
+    filter: blur(56px);
+  }
+`;
 
-    &::after {
-      height: 72vw;
-      border-radius: 60px;
-      filter: blur(36px);
-    }
+const BlueGroupAmbientAfter = styled(BlueGroupAmbientLayer)`
+  top: 33%;
+  height: 1072px;
+  background: #003ca6;
+  filter: blur(60px);
+
+  @media (max-width: 900px) {
+    height: 72vw;
+    border-radius: 60px;
+    filter: blur(36px);
   }
 `;

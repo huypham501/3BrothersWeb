@@ -3,6 +3,7 @@ import { colors, spacing, typography, mediaQueries, motion } from '@/styles/toke
 
 export const SectionGlowWrapper = styled.div`
   position: relative;
+  z-index: 1;
   width: 100%;
   max-width: 1440px;
   margin: 0 auto;
