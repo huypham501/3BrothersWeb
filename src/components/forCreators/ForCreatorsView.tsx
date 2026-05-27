@@ -92,7 +92,7 @@ const BlueGroupAmbientLayer = styled.div`
 `;
 
 const BlueGroupAmbientBefore = styled(BlueGroupAmbientLayer)`
-  top: 30%;
+  top: 27%;
   height: 1281px;
   background: #061530;
   filter: blur(100px);

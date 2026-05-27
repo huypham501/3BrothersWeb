@@ -1,8 +1,7 @@
 'use client';
 
 import styled from 'styled-components';
-import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { colors, spacing, typography, mediaQueries, motion } from '@/styles/tokens';
 import { JOB_POSITIONS, type JobPosition } from '../data/jobPositions';
 import { JobCard } from '../shared/JobCard';
@@ -24,7 +23,16 @@ interface OpenPositionSectionProps {
 export function OpenPositionSection({ positions }: OpenPositionSectionProps) {
   const allJobs = positions ?? JOB_POSITIONS;
   const [expanded, setExpanded] = useState(false);
-  const visibleJobs = expanded ? allJobs : allJobs.slice(0, INITIAL_VISIBLE);
+  const listRef = useRef<HTMLDivElement>(null);
+  const prevExpandedRef = useRef(expanded);
+
+  useEffect(() => {
+    if (prevExpandedRef.current && !expanded && listRef.current) {
+      listRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    prevExpandedRef.current = expanded;
+  }, [expanded]);
 
   return (
     <SectionContainer>
@@ -38,15 +46,21 @@ export function OpenPositionSection({ positions }: OpenPositionSectionProps) {
         </HeadingRow>
 
         {/* Job list */}
-        <JobList>
-          {visibleJobs.map((job) => (
-            <JobCard key={job.id} job={job} variant="list" />
+        <JobList ref={listRef}>
+          {allJobs.map((job, index) => (
+            <JobItem
+              key={job.id}
+              $hidden={!expanded && index >= INITIAL_VISIBLE}
+              $delayIndex={expanded && index >= INITIAL_VISIBLE ? index - INITIAL_VISIBLE : 0}
+            >
+              <JobCard job={job} variant="list" />
+            </JobItem>
           ))}
         </JobList>
 
         {/* Xem thêm toggle */}
         {allJobs.length > INITIAL_VISIBLE && (
-          <ShowMoreButton onClick={() => setExpanded(!expanded)}>
+          <ShowMoreButton $expanded={expanded} onClick={() => setExpanded(!expanded)}>
             {expanded ? 'Thu gọn' : 'Xem thêm'}
             <ChevronIcon $rotated={expanded}>
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
@@ -178,8 +192,23 @@ const JobList = styled.div`
   width: 100%;
 `;
 
+const JobItem = styled.div<{ $hidden: boolean; $delayIndex: number }>`
+  overflow: hidden;
+  max-height: ${({ $hidden }) => ($hidden ? '0px' : '260px')};
+  opacity: ${({ $hidden }) => ($hidden ? 0 : 1)};
+  transform: translateY(${({ $hidden }) => ($hidden ? '-8px' : '0')});
+  margin-top: ${({ $hidden }) => ($hidden ? '-16px' : '0')};
+  pointer-events: ${({ $hidden }) => ($hidden ? 'none' : 'auto')};
+  transition:
+    max-height 320ms ease,
+    opacity 260ms ease,
+    transform 260ms ease,
+    margin-top 320ms ease;
+  transition-delay: ${({ $hidden, $delayIndex }) => ($hidden ? '0ms' : `${Math.min($delayIndex * 50, 300)}ms`)};
+`;
+
 /* "Xem thêm" outline pill */
-const ShowMoreButton = styled.button`
+const ShowMoreButton = styled.button<{ $expanded: boolean }>`
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -187,21 +216,29 @@ const ShowMoreButton = styled.button`
   gap: 8px;
   padding: 14px 32px;
   height: 50px;
-  background: transparent;
-  border: 1px solid ${colors.secondaryDark};
+  background: ${({ $expanded }) => ($expanded ? 'rgba(6, 21, 48, 0.12)' : 'transparent')};
+  border: 1px solid ${({ $expanded }) => ($expanded ? colors.primary : colors.secondaryDark)};
   border-radius: 48px;
   cursor: pointer;
-  transition: background ${motion.duration.base} ease, transform ${motion.duration.base} ease;
+  transition:
+    background ${motion.duration.base} ease,
+    border-color ${motion.duration.base} ease,
+    color ${motion.duration.base} ease,
+    transform ${motion.duration.base} ease;
 
   font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.bold};
   font-size: ${typography.fontSize.md};
   line-height: 140%;
-  color: ${colors.secondaryDark};
+  color: ${({ $expanded }) => ($expanded ? colors.primary : colors.secondaryDark)};
 
   &:hover {
-    background: rgba(6, 21, 48, 0.05);
+    background: ${({ $expanded }) => ($expanded ? 'rgba(6, 21, 48, 0.18)' : 'rgba(6, 21, 48, 0.05)')};
     transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0) scale(0.98);
   }
 `;
 

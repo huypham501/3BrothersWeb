@@ -98,7 +98,7 @@ const Inner = styled.div`
   width: 100%;
   max-width: 1280px;
   margin: 0 auto;
-  padding: 0 80px;
+  padding: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -189,7 +189,7 @@ const Subtitle = styled.p`
 const PerksRow = styled.div`
   display: flex;
   flex-direction: row;
-  align-items: flex-start;
+  align-items: stretch;
   gap: 32px;
   width: 100%;
 
@@ -206,7 +206,7 @@ const PerkCard = styled.div`
   align-items: flex-start;
   padding: 32px;
   gap: 19px;
-  flex: 1;
+  flex: 1 1 0;
   min-width: 0;
   background: #F0F4FF;
   border: 1px solid rgba(0, 60, 166, 0.1);
@@ -249,6 +249,7 @@ const PerkDesc = styled.p`
   font-weight: ${typography.fontWeight.normal};
   font-size: ${typography.fontSize.md};
   line-height: 140%;
+  align-self: stretch;
   color: rgba(6, 21, 48, 0.7);
-  margin: 0;
+  margin: auto 0 0;
 `;
