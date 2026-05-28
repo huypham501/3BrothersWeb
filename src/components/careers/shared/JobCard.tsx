@@ -23,12 +23,16 @@ export function JobCard({ job, variant = 'list' }: JobCardProps) {
 
           <MetaRow>
             <MetaItem>
-              <ClockIcon color={colors.primary} />
-              {job.type}
+              <MetaIcon>
+                <ClockIcon color={colors.primary} />
+              </MetaIcon>
+              <MetaLabel>{job.type}</MetaLabel>
             </MetaItem>
             <MetaItem>
-              <LocationIcon color={colors.primary} />
-              {job.location}
+              <MetaIcon>
+                <LocationIcon color={colors.primary} />
+              </MetaIcon>
+              <MetaLabel>{job.location}</MetaLabel>
             </MetaItem>
           </MetaRow>
         </CardContent>
@@ -44,11 +48,16 @@ export function JobCard({ job, variant = 'list' }: JobCardProps) {
         <JobTitle>{job.title}</JobTitle>
         <MetaRow>
           <MetaItem>
-            {job.type}
+            <MetaIcon>
+              <ClockIcon color="#6395ED" />
+            </MetaIcon>
+            <MetaLabel>{job.type}</MetaLabel>
           </MetaItem>
           <MetaItem>
-            <LocationIcon color="rgba(6,21,48,0.6)" />
-            {job.location}
+            <MetaIcon>
+              <LocationIcon color="#6395ED" />
+            </MetaIcon>
+            <MetaLabel>{job.location}</MetaLabel>
           </MetaItem>
         </MetaRow>
       </JobInfo>
@@ -77,7 +86,9 @@ const MetaRow = styled.div`
   flex-direction: row;
   align-items: center;
   gap: 16px;
-  width: 100%;
+  width: 255px;
+  max-width: 100%;
+  height: 22px;
 `;
 
 const MetaItem = styled.span`
@@ -85,6 +96,28 @@ const MetaItem = styled.span`
   flex-direction: row;
   align-items: center;
   gap: 4px;
+  height: 22px;
+`;
+
+const MetaIcon = styled.span`
+  width: 16px;
+  height: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+
+  svg {
+    width: 16px;
+    height: 16px;
+    flex: none;
+  }
+`;
+
+const MetaLabel = styled.div`
+  height: 22px;
+  display: flex;
+  align-items: center;
   font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.normal};
   font-size: ${typography.fontSize.md};

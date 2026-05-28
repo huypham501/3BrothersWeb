@@ -218,9 +218,11 @@ const Description = styled.p`
 `;
 
 const CtaButton = styled(Link)`
+  box-sizing: border-box;
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: center;
   padding: 16px 32px;
   gap: 12px;
   height: 54px;
@@ -243,8 +245,9 @@ const CtaText = styled.span`
   font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.bold};
   font-size: 16px;
-  line-height: 140%;
-  display: flex;
+  line-height: 22px;
+  height: 22px;
+  display: inline-flex;
   align-items: center;
   color: #061530;
 `;
@@ -255,6 +258,7 @@ const ArrowIcon = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  flex: none;
 `;
 
 /* ── Right Content ── */
