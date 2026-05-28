@@ -2,7 +2,6 @@
 
 import styled from 'styled-components';
 import { notFound } from 'next/navigation';
-import type { ReactNode } from 'react';
 import { typography } from '@/styles/tokens';
 
 import { Header } from '@/components/shared/Header';
@@ -23,7 +22,6 @@ interface CareerDetailViewProps {
   relatedJobs?: JobPosition[];
   header?: GlobalHeaderPayload | null;
   footer?: GlobalFooterPayload | null;
-  contactCtaSlot?: ReactNode;
 }
 
 // ── Component ─────────────────────────────────────────────────────────────────
@@ -34,7 +32,6 @@ export function CareerDetailView({
   relatedJobs,
   header,
   footer,
-  contactCtaSlot,
 }: CareerDetailViewProps) {
   const job = jobProp ?? getJobBySlug(slug);
 
@@ -50,7 +47,6 @@ export function CareerDetailView({
         <MainSection job={job} />
         <ExploreSection currentSlug={slug} relatedJobs={relatedJobs} />
       </MainContent>
-      {contactCtaSlot}
       <Footer content={footer ?? undefined} />
     </Wrapper>
   );

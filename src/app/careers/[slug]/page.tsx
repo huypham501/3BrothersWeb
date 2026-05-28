@@ -9,7 +9,6 @@ import type { JobPosition } from '@/components/careers/data/jobPositions';
 import type { CmsJobPosition } from '@/lib/cms';
 import { SITE_URL } from '@/lib/constants';
 import { resolvePublicLayoutData } from '@/lib/cms/resolvers/public-layout.resolver';
-import { ContactCTASection } from '@/components/shared/contact/ContactCTASection';
 
 export const revalidate = false;
 
@@ -98,7 +97,6 @@ export default async function CareerDetailPage({ params }: Props) {
       relatedJobs={relatedJobs}
       header={layout.header}
       footer={layout.footer}
-      contactCtaSlot={<ContactCTASection />}
     />
   );
 }

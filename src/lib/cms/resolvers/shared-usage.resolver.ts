@@ -9,7 +9,6 @@ export const SHARED_SECTION_USAGE_MAP: Record<SupportedSharedSchemaKey, string[]
     '/blogs',
     '/blogs/[slug]',
     '/social-commerce',
-    '/careers/[slug]',
   ],
   [SCHEMA_KEYS.SHARED_CTA]: [
     '/for-creators',

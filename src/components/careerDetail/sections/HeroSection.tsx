@@ -4,8 +4,11 @@ import styled from 'styled-components';
 import Link from 'next/link';
 import { colors, spacing, typography, mediaQueries, motion } from '@/styles/tokens';
 import type { JobPosition } from '../../careers/data/jobPositions';
-import { StripeOverlay } from '../../careers/shared/StripeOverlay';
 import { ClockIcon, LocationIcon, CalendarIcon, ArrowIcon } from '../../careers/shared/Icons';
+
+const HERO_BG_IMAGE = '/images/careers/hero-background.png';
+const HERO_BG_ASPECT_RATIO = '1440 / 521';
+const HERO_BG_WIDTH = '1440px';
 
 // ── Props ─────────────────────────────────────────────────────────────────────
 
@@ -23,12 +26,7 @@ export function HeroSection({ job }: CareerDetailHeroSectionProps) {
 
   return (
     <HeroContainer>
-      {/* Layered blur ellipses — from cssHero.txt */}
-      <EllipseLarge />
-      <EllipseTop />
-
-      {/* Diagonal stripe overlay */}
-      <StripeOverlay opacity={0.18} />
+      <BackgroundLayer aria-hidden="true" />
 
       <Inner>
         {/* Breadcrumb: "Tuyển dụng / Creative" */}
@@ -77,7 +75,6 @@ export function HeroSection({ job }: CareerDetailHeroSectionProps) {
 
 // ── Styled components ─────────────────────────────────────────────────────────
 
-/* Outer hero — bg: #6395ED, 521px tall from design */
 const HeroContainer = styled.section`
   position: relative;
   width: 100%;
@@ -96,31 +93,36 @@ const HeroContainer = styled.section`
   }
 `;
 
-/* Big blue ellipse blur at bottom — Ellipse 15 from cssHero.txt */
-const EllipseLarge = styled.div`
+const BackgroundLayer = styled.div`
   position: absolute;
-  width: 150%;
-  height: 458px;
-  left: -5%;
-  bottom: -217px;
-  background: rgba(0, 60, 166, 0.8);
-  filter: blur(120px);
-  pointer-events: none;
-  z-index: 0;
-`;
-
-/* White ellipse blur at top — Ellipse 16 */
-const EllipseTop = styled.div`
-  position: absolute;
-  width: 69%; /* ~991/1440 */
-  height: 188px;
+  bottom: 0;
   left: 50%;
+  width: ${HERO_BG_WIDTH};
+  height: auto;
+  aspect-ratio: ${HERO_BG_ASPECT_RATIO};
   transform: translateX(-50%);
-  bottom: 514px;
-  background: #ffffff;
-  filter: blur(120px);
+  background-image: url('${HERO_BG_IMAGE}');
+  background-repeat: no-repeat;
+  background-position: center top;
+  background-size: 100% auto;
+  -webkit-mask-image:
+    linear-gradient(to right, transparent 0%, black 18%, black 82%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, black 12%, black 100%);
+  mask-image:
+    linear-gradient(to right, transparent 0%, black 18%, black 82%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, black 12%, black 100%);
+  -webkit-mask-repeat: no-repeat, no-repeat;
+  mask-repeat: no-repeat, no-repeat;
+  -webkit-mask-size: 100% 100%, 100% 100%;
+  mask-size: 100% 100%, 100% 100%;
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
   pointer-events: none;
   z-index: 0;
+
+  ${mediaQueries.down.sm} {
+    background-position: center -20px;
+  }
 `;
 
 /* Inner content area — 170px top padding, 84px sides, 80px bottom  */
