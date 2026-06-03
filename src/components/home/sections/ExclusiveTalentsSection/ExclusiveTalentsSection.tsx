@@ -16,7 +16,7 @@ import {
 } from './ExclusiveTalentsSection.styles';
 
 export function ExclusiveTalentsSection({ content }: { content: SharedExclusiveTalentsPayload }) {
-  const talents = content.talents || [];
+  const talents = useMemo(() => content.talents || [], [content.talents]);
 
   const featuredIndex = useMemo(() => {
     const idx = talents.findIndex((talent) => talent.is_featured);

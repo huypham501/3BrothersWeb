@@ -230,7 +230,7 @@ const StepDescription = styled.p`
   font-family: ${typography.fontFamily.montserrat};
   font-size: ${typography.fontSize.md};
   line-height: 140%;
-  font-weight: ${typography.fontWeight.regular};
+  font-weight: ${typography.fontWeight.normal};
 `;
 
 const Connector = styled.div`
