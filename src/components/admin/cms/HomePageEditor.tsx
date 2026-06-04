@@ -26,6 +26,7 @@ import {
   AdminCardTitle,
 } from '@/components/admin/layout/AdminPrimitives';
 import { CmsEditorStatusBar } from './CmsEditorStatusBar';
+import { CmsActionFeedback, useCmsActionFeedback } from './CmsActionFeedback';
 import { CmsDependenciesCard } from './CmsDependenciesCard';
 import type { CmsDependency } from './CmsDependenciesCard';
 import { HomePageSettingsEditor } from './editors/HomePageSettingsEditor';
@@ -62,15 +63,16 @@ export function HomePageEditor({
 }: HomePageEditorProps) {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
+  const { feedback, showSuccess, showError } = useCmsActionFeedback();
 
   const handlePublish = () => {
     startTransition(async () => {
       try {
         await publishHomePage(page.id);
-        alert('Successfully published Home Page content!');
+        showSuccess('Published successfully.');
         router.refresh();
       } catch (err) {
-        alert('Failed to publish Home Page content. Please try again.');
+        showError(err, 'Failed to publish. Please try again.');
         console.error(err);
       }
     });
@@ -132,6 +134,7 @@ export function HomePageEditor({
         onPublish={handlePublish}
         publishLabel="Publish Home"
       />
+      <CmsActionFeedback feedback={feedback} />
 
       {/* ── Page settings ── */}
       <AdminCard>

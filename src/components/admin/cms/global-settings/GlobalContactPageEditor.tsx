@@ -20,6 +20,7 @@ import {
   AdminCard,
 } from '@/components/admin/layout/AdminPrimitives';
 import { CmsEditorStatusBar } from '@/components/admin/cms/CmsEditorStatusBar';
+import { CmsActionFeedback, useCmsActionFeedback } from '@/components/admin/cms/CmsActionFeedback';
 
 const editorSchema = z.intersection(globalContactPageSchema, z.object({ enabled: z.boolean() }));
 
@@ -36,8 +37,7 @@ export function GlobalContactPageEditor({ setting, role, canPublish }: GlobalCon
   const router = useRouter();
   const [isSaving, setIsSaving] = React.useState(false);
   const [isPublishing, setIsPublishing] = React.useState(false);
-  const [successMsg, setSuccessMsg] = React.useState<string | null>(null);
-  const [errorMsg, setErrorMsg] = React.useState<string | null>(null);
+  const { feedback, showSuccess, showError, clearFeedback } = useCmsActionFeedback();
 
   const form = useForm<FormValues>({
     resolver: zodResolver(editorSchema),
@@ -52,11 +52,6 @@ export function GlobalContactPageEditor({ setting, role, canPublish }: GlobalCon
     },
   });
 
-  const clearFlash = () => {
-    setSuccessMsg(null);
-    setErrorMsg(null);
-  };
-
   const saveValues = async (values: FormValues) => {
     const { enabled, ...payload } = values;
     await saveGlobalSettingDraft(SCHEMA_KEYS.GLOBAL_CONTACT_PAGE, payload, enabled);
@@ -64,15 +59,15 @@ export function GlobalContactPageEditor({ setting, role, canPublish }: GlobalCon
 
   const onSaveDraft = async (values: FormValues) => {
     setIsSaving(true);
-    clearFlash();
+    clearFeedback();
 
     try {
       await saveValues(values);
-      setSuccessMsg('Contact page draft saved. Changes are not live until publish.');
+      showSuccess('Contact page draft saved. Changes are not live until publish.');
       form.reset(values);
       router.refresh();
     } catch (error) {
-      setErrorMsg((error as Error).message);
+      showError(error, 'Failed to save draft.');
     } finally {
       setIsSaving(false);
     }
@@ -80,7 +75,7 @@ export function GlobalContactPageEditor({ setting, role, canPublish }: GlobalCon
 
   const handlePublish = async () => {
     setIsPublishing(true);
-    clearFlash();
+    clearFeedback();
 
     try {
       const values = form.getValues();
@@ -89,11 +84,11 @@ export function GlobalContactPageEditor({ setting, role, canPublish }: GlobalCon
       }
 
       await publishGlobalSetting(SCHEMA_KEYS.GLOBAL_CONTACT_PAGE);
-      setSuccessMsg('Contact page settings published.');
+      showSuccess('Contact page settings published.');
       form.reset(values);
       router.refresh();
     } catch (error) {
-      setErrorMsg((error as Error).message);
+      showError(error, 'Failed to publish. Please try again.');
     } finally {
       setIsPublishing(false);
     }
@@ -188,17 +183,7 @@ export function GlobalContactPageEditor({ setting, role, canPublish }: GlobalCon
             </AdminAlertDescription>
           </AdminAlert>
 
-          {errorMsg && (
-            <AdminAlert tone="destructive">
-              <AdminAlertDescription>{errorMsg}</AdminAlertDescription>
-            </AdminAlert>
-          )}
-
-          {successMsg && (
-            <AdminAlert>
-              <AdminAlertDescription>{successMsg}</AdminAlertDescription>
-            </AdminAlert>
-          )}
+          <CmsActionFeedback feedback={feedback} />
 
           <AdminCard>
             <SaveRow>

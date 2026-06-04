@@ -33,9 +33,9 @@ import {
 import { AdminInput as Input } from '@/components/admin/controls/AdminInput';
 import { AdminTextarea as Textarea } from '@/components/admin/controls/AdminTextarea';
 import {
-  AdminAlert as Alert,
-  AdminAlertDescription as AlertDescription,
-} from '@/components/admin/layout/AdminPrimitives';
+  CmsActionFeedback,
+  useCmsActionFeedback,
+} from '@/components/admin/cms/CmsActionFeedback';
 import {
   FooterRow,
   FormStack,
@@ -82,8 +82,7 @@ export function JobPositionEditor({
 }: JobPositionEditorProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
-  const [errorMsg, setErrorMsg] = React.useState<string | null>(null);
-  const [successMsg, setSuccessMsg] = React.useState<string | null>(null);
+  const { feedback, showSuccess, showError, clearFeedback } = useCmsActionFeedback();
   const [slugValue, setSlugValue] = React.useState(position?.slug ?? '');
 
   const defaultContent = position?.content ?? {
@@ -118,8 +117,7 @@ export function JobPositionEditor({
   }, [watchTitle, mode]);
 
   const onSaveDraft = (data: FormValues) => {
-    setErrorMsg(null);
-    setSuccessMsg(null);
+    clearFeedback();
     startTransition(async () => {
       try {
         if (mode === 'create') {
@@ -127,26 +125,25 @@ export function JobPositionEditor({
           router.push(`/admin/content/pages/careers/${id}`);
         } else {
           await saveJobPositionDraft(position!.id, data);
-          setSuccessMsg('Draft saved.');
+          showSuccess('Draft saved. Changes are not live until publish.');
           router.refresh();
         }
       } catch (err) {
-        setErrorMsg(err instanceof Error ? err.message : 'Failed to save draft.');
+        showError(err, 'Failed to save draft.');
       }
     });
   };
 
   const onPublish = () => {
     if (!position) return;
-    setErrorMsg(null);
-    setSuccessMsg(null);
+    clearFeedback();
     startTransition(async () => {
       try {
         await publishJobPosition(position.id);
-        setSuccessMsg('Published successfully.');
+        showSuccess('Published successfully.');
         router.refresh();
       } catch (err) {
-        setErrorMsg(err instanceof Error ? err.message : 'Failed to publish.');
+        showError(err, 'Failed to publish. Please try again.');
       }
     });
   };
@@ -170,17 +167,7 @@ export function JobPositionEditor({
           />
         )}
 
-        {/* Alerts */}
-        {errorMsg && (
-          <Alert variant="destructive">
-            <AlertDescription>{errorMsg}</AlertDescription>
-          </Alert>
-        )}
-        {successMsg && (
-          <Alert>
-            <AlertDescription>{successMsg}</AlertDescription>
-          </Alert>
-        )}
+        <CmsActionFeedback feedback={feedback} />
 
         {/* Slug preview (create mode) */}
         {mode === 'create' && (

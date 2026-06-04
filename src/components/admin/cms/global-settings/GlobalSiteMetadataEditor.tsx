@@ -19,6 +19,7 @@ import {
   AdminCard,
 } from '@/components/admin/layout/AdminPrimitives';
 import { CmsEditorStatusBar } from '@/components/admin/cms/CmsEditorStatusBar';
+import { CmsActionFeedback, useCmsActionFeedback } from '@/components/admin/cms/CmsActionFeedback';
 
 type FormValues = z.infer<typeof globalSiteMetadataSchema>;
 
@@ -34,8 +35,7 @@ export function GlobalSiteMetadataEditor({
   const router = useRouter();
   const [isSaving, setIsSaving] = React.useState(false);
   const [isPublishing, setIsPublishing] = React.useState(false);
-  const [successMsg, setSuccessMsg] = React.useState<string | null>(null);
-  const [errorMsg, setErrorMsg] = React.useState<string | null>(null);
+  const { feedback, showSuccess, showError, clearFeedback } = useCmsActionFeedback();
 
   const form = useForm<FormValues>({
     resolver: zodResolver(globalSiteMetadataSchema),
@@ -48,21 +48,16 @@ export function GlobalSiteMetadataEditor({
     },
   });
 
-  const clearFlash = () => {
-    setSuccessMsg(null);
-    setErrorMsg(null);
-  };
-
   const onSaveDraft = async (values: FormValues) => {
     setIsSaving(true);
-    clearFlash();
+    clearFeedback();
     try {
       await saveGlobalSettingDraft(SCHEMA_KEYS.GLOBAL_SITE_METADATA, values, setting.enabled);
-      setSuccessMsg('Site metadata draft saved. Changes are not live until publish.');
+      showSuccess('Site metadata draft saved. Changes are not live until publish.');
       form.reset(values);
       router.refresh();
     } catch (error) {
-      setErrorMsg((error as Error).message);
+      showError(error, 'Failed to save draft.');
     } finally {
       setIsSaving(false);
     }
@@ -70,18 +65,18 @@ export function GlobalSiteMetadataEditor({
 
   const handlePublish = async () => {
     setIsPublishing(true);
-    clearFlash();
+    clearFeedback();
     try {
       const values = form.getValues();
       if (form.formState.isDirty || !setting.id) {
         await saveGlobalSettingDraft(SCHEMA_KEYS.GLOBAL_SITE_METADATA, values, setting.enabled);
       }
       await publishGlobalSetting(SCHEMA_KEYS.GLOBAL_SITE_METADATA);
-      setSuccessMsg('Site metadata published and metadata routes revalidated.');
+      showSuccess('Site metadata published and metadata routes revalidated.');
       form.reset(values);
       router.refresh();
     } catch (error) {
-      setErrorMsg((error as Error).message);
+      showError(error, 'Failed to publish. Please try again.');
     } finally {
       setIsPublishing(false);
     }
@@ -117,17 +112,7 @@ export function GlobalSiteMetadataEditor({
             </AdminAlertDescription>
           </AdminAlert>
 
-          {errorMsg && (
-            <AdminAlert tone="destructive">
-              <AdminAlertDescription>{errorMsg}</AdminAlertDescription>
-            </AdminAlert>
-          )}
-
-          {successMsg && (
-            <AdminAlert>
-              <AdminAlertDescription>{successMsg}</AdminAlertDescription>
-            </AdminAlert>
-          )}
+          <CmsActionFeedback feedback={feedback} />
 
           <AdminCard>
             <SaveRow>

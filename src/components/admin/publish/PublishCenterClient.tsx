@@ -4,6 +4,7 @@ import * as React from 'react';
 import { Button, Typography } from 'antd';
 import { CloudUploadOutlined, CheckCircleOutlined, WarningOutlined } from '@ant-design/icons';
 import { AdminAlert, AdminCard } from '@/components/admin/layout/AdminPrimitives';
+import { CmsActionFeedback, useCmsActionFeedback } from '@/components/admin/cms/CmsActionFeedback';
 import { publishAllContent } from '@/lib/cms/publish';
 import type { PublishResult } from '@/lib/cms/publish';
 
@@ -12,15 +13,22 @@ type PublishStatus = 'idle' | 'publishing' | 'success' | 'error';
 export function PublishCenterClient() {
   const [status, setStatus] = React.useState<PublishStatus>('idle');
   const [result, setResult] = React.useState<PublishResult | null>(null);
+  const { feedback, showSuccess, showError, clearFeedback } = useCmsActionFeedback();
 
   async function handlePublish() {
     setStatus('publishing');
     setResult(null);
+    clearFeedback();
 
     try {
       const res = await publishAllContent();
       setResult(res);
       setStatus(res.success ? 'success' : 'error');
+      if (res.success) {
+        showSuccess('Published and public routes revalidated.');
+      } else {
+        showError(new Error(res.error ?? 'Đã xảy ra lỗi. Vui lòng thử lại.'), 'Đã xảy ra lỗi. Vui lòng thử lại.');
+      }
     } catch (err) {
       setResult({
         success: false,
@@ -29,6 +37,7 @@ export function PublishCenterClient() {
         error: err instanceof Error ? err.message : 'Đã xảy ra lỗi không mong đợi.',
       });
       setStatus('error');
+      showError(err, 'Đã xảy ra lỗi không mong đợi.');
     }
   }
 
@@ -74,12 +83,14 @@ export function PublishCenterClient() {
       </AdminCard>
 
       {/* ── Result feedback ── */}
+      <CmsActionFeedback feedback={feedback} />
+
       {status === 'success' && result?.success && (
         <AdminCard bodyStyle={{ padding: '24px 28px' }}>
           <div style={styles.successHeader}>
             <CheckCircleOutlined style={{ color: '#52c41a', fontSize: 20 }} />
             <Typography.Text strong style={{ color: '#52c41a', fontSize: 15 }}>
-              Publish thành công!
+              Routes revalidated
             </Typography.Text>
           </div>
           <Typography.Text type="secondary" style={{ display: 'block', marginBottom: 12 }}>
@@ -108,13 +119,6 @@ export function PublishCenterClient() {
         </AdminCard>
       )}
 
-      {status === 'error' && result && (
-        <AdminAlert
-          variant="destructive"
-          message="Publish thất bại"
-          description={result.error ?? 'Đã xảy ra lỗi. Vui lòng thử lại.'}
-        />
-      )}
     </div>
   );
 }

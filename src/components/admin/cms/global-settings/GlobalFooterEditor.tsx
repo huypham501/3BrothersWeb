@@ -19,6 +19,7 @@ import {
   AdminCard,
 } from '@/components/admin/layout/AdminPrimitives';
 import { CmsEditorStatusBar } from '@/components/admin/cms/CmsEditorStatusBar';
+import { CmsActionFeedback, useCmsActionFeedback } from '@/components/admin/cms/CmsActionFeedback';
 import { CmsSortableList } from '@/components/admin/cms/ux/CmsSortableList';
 
 type FormValues = z.infer<typeof globalFooterSchema> & { enabled: boolean };
@@ -33,8 +34,7 @@ export function GlobalFooterEditor({ setting, role, canPublish }: GlobalFooterEd
   const router = useRouter();
   const [isSaving, setIsSaving] = React.useState(false);
   const [isPublishing, setIsPublishing] = React.useState(false);
-  const [successMsg, setSuccessMsg] = React.useState<string | null>(null);
-  const [errorMsg, setErrorMsg] = React.useState<string | null>(null);
+  const { feedback, showSuccess, showError, clearFeedback } = useCmsActionFeedback();
 
   const form = useForm<FormValues>({
     resolver: zodResolver(globalFooterSchema.extend({ enabled: z.boolean() })),
@@ -63,23 +63,18 @@ export function GlobalFooterEditor({ setting, role, canPublish }: GlobalFooterEd
     name: 'social_links',
   });
 
-  const clearFlash = () => {
-    setSuccessMsg(null);
-    setErrorMsg(null);
-  };
-
   const onSaveDraft = async (values: FormValues) => {
     setIsSaving(true);
-    clearFlash();
+    clearFeedback();
 
     try {
       const { enabled, ...payload } = values;
       await saveGlobalSettingDraft(SCHEMA_KEYS.GLOBAL_FOOTER, payload, enabled);
-      setSuccessMsg('Footer draft saved. Changes are not live until publish.');
+      showSuccess('Footer draft saved. Changes are not live until publish.');
       form.reset(values);
       router.refresh();
     } catch (error) {
-      setErrorMsg((error as Error).message);
+      showError(error, 'Failed to save draft.');
     } finally {
       setIsSaving(false);
     }
@@ -87,7 +82,7 @@ export function GlobalFooterEditor({ setting, role, canPublish }: GlobalFooterEd
 
   const handlePublish = async () => {
     setIsPublishing(true);
-    clearFlash();
+    clearFeedback();
 
     try {
       const values = form.getValues();
@@ -97,11 +92,11 @@ export function GlobalFooterEditor({ setting, role, canPublish }: GlobalFooterEd
       }
 
       await publishGlobalSetting(SCHEMA_KEYS.GLOBAL_FOOTER);
-      setSuccessMsg('Footer published and global routes revalidated.');
+      showSuccess('Footer published and global routes revalidated.');
       form.reset(values);
       router.refresh();
     } catch (error) {
-      setErrorMsg((error as Error).message);
+      showError(error, 'Failed to publish. Please try again.');
     } finally {
       setIsPublishing(false);
     }
@@ -135,17 +130,7 @@ export function GlobalFooterEditor({ setting, role, canPublish }: GlobalFooterEd
             </AdminAlertDescription>
           </AdminAlert>
 
-          {errorMsg && (
-            <AdminAlert tone="destructive">
-              <AdminAlertDescription>{errorMsg}</AdminAlertDescription>
-            </AdminAlert>
-          )}
-
-          {successMsg && (
-            <AdminAlert>
-              <AdminAlertDescription>{successMsg}</AdminAlertDescription>
-            </AdminAlert>
-          )}
+          <CmsActionFeedback feedback={feedback} />
 
           <AdminCard>
             <SaveRow>

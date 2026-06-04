@@ -20,6 +20,7 @@ import {
   AdminCard,
 } from '@/components/admin/layout/AdminPrimitives';
 import { FormStack, HeaderRow, ToggleFormItem } from '@/components/admin/cms/editors/EditorLayout';
+import { CmsActionFeedback, useCmsActionFeedback } from '@/components/admin/cms/CmsActionFeedback';
 import {
   SharedContactCtaFields,
   SharedContactCtaFormValues,
@@ -44,8 +45,7 @@ export function SharedContactCtaManager({
   const router = useRouter();
   const [isSaving, setIsSaving] = React.useState(false);
   const [isPublishing, setIsPublishing] = React.useState(false);
-  const [successMsg, setSuccessMsg] = React.useState<string | null>(null);
-  const [errorMsg, setErrorMsg] = React.useState<string | null>(null);
+  const { feedback, showSuccess, showError, clearFeedback } = useCmsActionFeedback();
 
   const form = useForm<FormValues>({
     resolver: zodResolver(sharedContactCtaSchema.extend({ enabled: z.boolean() })),
@@ -55,23 +55,18 @@ export function SharedContactCtaManager({
     },
   });
 
-  const clearFlash = () => {
-    setSuccessMsg(null);
-    setErrorMsg(null);
-  };
-
   const onSaveDraft = async (values: FormValues) => {
     setIsSaving(true);
-    clearFlash();
+    clearFeedback();
 
     try {
       const { enabled, ...payload } = values;
       await saveSharedSection(SCHEMA_KEYS.SHARED_CONTACT_CTA, payload, enabled);
-      setSuccessMsg('Contact CTA draft saved. Changes are not live until publish.');
+      showSuccess('Contact CTA draft saved. Changes are not live until publish.');
       form.reset(values);
       router.refresh();
     } catch (error) {
-      setErrorMsg((error as Error).message);
+      showError(error, 'Failed to save draft.');
     } finally {
       setIsSaving(false);
     }
@@ -79,7 +74,7 @@ export function SharedContactCtaManager({
 
   const handlePublish = async () => {
     setIsPublishing(true);
-    clearFlash();
+    clearFeedback();
 
     try {
       const values = form.getValues();
@@ -89,11 +84,11 @@ export function SharedContactCtaManager({
       }
 
       await publishSharedSection(SCHEMA_KEYS.SHARED_CONTACT_CTA);
-      setSuccessMsg('Contact CTA published and affected routes revalidated.');
+      showSuccess('Contact CTA published and affected routes revalidated.');
       form.reset(values);
       router.refresh();
     } catch (error) {
-      setErrorMsg((error as Error).message);
+      showError(error, 'Failed to publish. Please try again.');
     } finally {
       setIsPublishing(false);
     }
@@ -114,17 +109,7 @@ export function SharedContactCtaManager({
           </div>
         </AdminAlert>
 
-        {errorMsg && (
-          <AdminAlert tone="destructive">
-            <AdminAlertDescription>{errorMsg}</AdminAlertDescription>
-          </AdminAlert>
-        )}
-
-        {successMsg && (
-          <AdminAlert tone="success">
-            <AdminAlertDescription>{successMsg}</AdminAlertDescription>
-          </AdminAlert>
-        )}
+        <CmsActionFeedback feedback={feedback} />
 
         <AdminCard bodyStyle={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           <HeaderRow>

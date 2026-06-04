@@ -27,6 +27,7 @@ import {
   AdminCardTitle,
 } from '@/components/admin/layout/AdminPrimitives';
 import { CmsEditorStatusBar } from './CmsEditorStatusBar';
+import { CmsActionFeedback, useCmsActionFeedback } from './CmsActionFeedback';
 import { CmsDependenciesCard } from './CmsDependenciesCard';
 import type { CmsDependency } from './CmsDependenciesCard';
 import { HomePageSettingsEditor } from './editors/HomePageSettingsEditor';
@@ -51,6 +52,7 @@ interface ForBrandsPageEditorProps {
 export function ForBrandsPageEditor({ page, sections, globals, role, canPublish }: ForBrandsPageEditorProps) {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
+  const { feedback, showSuccess, showError } = useCmsActionFeedback();
 
   const hasUnpublished = page.has_unpublished_changes || sections.some((s) => s.has_unpublished_changes);
 
@@ -73,10 +75,10 @@ export function ForBrandsPageEditor({ page, sections, globals, role, canPublish 
     startTransition(async () => {
       try {
         await publishForBrandsPage(page.id);
-        alert('Successfully published For Brands content!');
+        showSuccess('Published successfully.');
         router.refresh();
       } catch (err) {
-        alert('Failed to publish For Brands content. Please try again.');
+        showError(err, 'Failed to publish. Please try again.');
         console.error(err);
       }
     });
@@ -97,6 +99,7 @@ export function ForBrandsPageEditor({ page, sections, globals, role, canPublish 
         onPublish={handlePublish}
         publishLabel="Publish For Brands"
       />
+      <CmsActionFeedback feedback={feedback} />
 
       <AdminCard>
         <AdminCardHeader><AdminCardTitle>Page Settings</AdminCardTitle></AdminCardHeader>

@@ -26,6 +26,7 @@ import {
   AdminCardTitle,
 } from '@/components/admin/layout/AdminPrimitives';
 import { CmsEditorStatusBar } from './CmsEditorStatusBar';
+import { CmsActionFeedback, useCmsActionFeedback } from './CmsActionFeedback';
 import { CmsDependenciesCard } from './CmsDependenciesCard';
 import type { CmsDependency } from './CmsDependenciesCard';
 import { HomePageSettingsEditor } from './editors/HomePageSettingsEditor';
@@ -48,15 +49,16 @@ interface SocialCommercePageEditorProps {
 export function SocialCommercePageEditor({ page, sections, globals, role, canPublish }: SocialCommercePageEditorProps) {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
+  const { feedback, showSuccess, showError } = useCmsActionFeedback();
 
   const handlePublish = () => {
     startTransition(async () => {
       try {
         await publishSocialCommercePage(page.id);
-        alert('Successfully published Social Commerce content!');
+        showSuccess('Published successfully.');
         router.refresh();
       } catch (err) {
-        alert('Failed to publish Social Commerce content. Please try again.');
+        showError(err, 'Failed to publish. Please try again.');
         console.error(err);
       }
     });
@@ -142,6 +144,7 @@ export function SocialCommercePageEditor({ page, sections, globals, role, canPub
         onPublish={handlePublish}
         publishLabel="Publish Social Commerce"
       />
+      <CmsActionFeedback feedback={feedback} />
 
       <AdminCard>
         <AdminCardHeader><AdminCardTitle>Page Settings</AdminCardTitle></AdminCardHeader>

@@ -27,6 +27,7 @@ import {
   AdminCardTitle,
 } from '@/components/admin/layout/AdminPrimitives';
 import { CmsEditorStatusBar } from './CmsEditorStatusBar';
+import { CmsActionFeedback, useCmsActionFeedback } from './CmsActionFeedback';
 import { CmsDependenciesCard } from './CmsDependenciesCard';
 import type { CmsDependency } from './CmsDependenciesCard';
 import { HomePageSettingsEditor } from './editors/HomePageSettingsEditor';
@@ -59,6 +60,7 @@ export function ForCreatorsPageEditor({
 }: ForCreatorsPageEditorProps) {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
+  const { feedback, showSuccess, showError } = useCmsActionFeedback();
 
   const hasUnpublished =
     page.has_unpublished_changes || sections.some((s) => s.has_unpublished_changes);
@@ -67,10 +69,10 @@ export function ForCreatorsPageEditor({
     startTransition(async () => {
       try {
         await publishForCreatorsPage(page.id);
-        alert('Da publish For Creators thanh cong!');
+        showSuccess('Published successfully.');
         router.refresh();
       } catch (err) {
-        alert('Publish that bai. Vui long thu lai.');
+        showError(err, 'Failed to publish. Please try again.');
         console.error(err);
       }
     });
@@ -105,6 +107,7 @@ export function ForCreatorsPageEditor({
         onPublish={handlePublish}
         publishLabel="Publish For Creators"
       />
+      <CmsActionFeedback feedback={feedback} />
 
       <AdminCard>
         <AdminCardHeader><AdminCardTitle>Page Settings</AdminCardTitle></AdminCardHeader>

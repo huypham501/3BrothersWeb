@@ -18,8 +18,8 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { AdminInput as Input } from '@/components/admin/controls/AdminInput';
 import { AdminImageUpload } from '@/components/admin/controls/AdminImageUpload';
 import { AdminTextarea as Textarea } from '@/components/admin/controls/AdminTextarea';
-import { AdminAlert as Alert, AdminAlertDescription as AlertDescription } from '@/components/admin/layout/AdminPrimitives';
 import {
+  AdminAlert as Alert,
   AdminCard,
   AdminCardContent,
   AdminCardHeader,
@@ -39,6 +39,7 @@ import {
 } from './EditorLayout';
 import { FormItem as RawFormItem } from '@/components/admin/controls/AdminForm';
 import { CmsEditorStatusBar } from '@/components/admin/cms/CmsEditorStatusBar';
+import { CmsActionFeedback, useCmsActionFeedback } from '@/components/admin/cms/CmsActionFeedback';
 
 type FormValues = z.infer<typeof blogPostFormSchema>;
 
@@ -68,8 +69,7 @@ export function BlogPostEditor({ post, mode, role, canPublish }: BlogPostEditorP
   const router = useRouter();
   const [isSaving, setIsSaving] = React.useState(false);
   const [isPublishing, startPublishTransition] = useTransition();
-  const [success, setSuccess] = React.useState<string | null>(null);
-  const [errorMsg, setErrorMsg] = React.useState<string | null>(null);
+  const { feedback, showSuccess, showError, showWarning, clearFeedback } = useCmsActionFeedback();
   const [slug, setSlug] = React.useState(post?.slug ?? '');
   const [slugDirty, setSlugDirty] = React.useState(false);
 
@@ -125,26 +125,24 @@ export function BlogPostEditor({ post, mode, role, canPublish }: BlogPostEditorP
 
   const onSaveDraft = async (data: FormValues) => {
     setIsSaving(true);
-    setSuccess(null);
-    setErrorMsg(null);
+    clearFeedback();
     try {
       if (mode === 'create') {
         if (!slug) {
-          setErrorMsg('Slug is required. It will be auto-derived from the title.');
+          showWarning('Slug is required. It will be auto-derived from the title.');
           return;
         }
         const created = await createBlogPostWithSlug(slug, normalizePayload(data));
-        setSuccess('Blog post created successfully!');
+        showSuccess('Blog post created successfully.');
         setTimeout(() => router.push(`/admin/content/pages/blogs/${created.id}`), 1500);
       } else if (post) {
         await saveBlogPostDraft(post.id, normalizePayload(data));
-        setSuccess('Draft saved successfully.');
-        setTimeout(() => setSuccess(null), 3000);
+        showSuccess('Draft saved. Changes are not live until publish.');
         form.reset(data);
         router.refresh();
       }
     } catch (err) {
-      setErrorMsg((err as Error).message);
+      showError(err, 'Failed to save draft.');
     } finally {
       setIsSaving(false);
     }
@@ -153,8 +151,7 @@ export function BlogPostEditor({ post, mode, role, canPublish }: BlogPostEditorP
   const handlePublish = () => {
     if (!post) return;
     startPublishTransition(async () => {
-      setErrorMsg(null);
-      setSuccess(null);
+      clearFeedback();
       try {
         // First save current form state as draft
         const data = form.getValues();
@@ -162,12 +159,10 @@ export function BlogPostEditor({ post, mode, role, canPublish }: BlogPostEditorP
         await publishBlogPost(post.id);
         // Clear dirty state immediately so Publish button disables after success.
         form.reset(data);
-        setErrorMsg(null);
-        setSuccess('Published successfully!');
-        setTimeout(() => setSuccess(null), 3000);
+        showSuccess('Published successfully.');
         router.refresh();
       } catch (err) {
-        setErrorMsg((err as Error).message);
+        showError(err, 'Failed to publish. Please try again.');
       }
     });
   };
@@ -198,8 +193,7 @@ export function BlogPostEditor({ post, mode, role, canPublish }: BlogPostEditorP
 
       <Form {...form}>
         <FormStack onSubmit={form.handleSubmit(onSaveDraft)}>
-          {errorMsg && <Alert variant="destructive"><AlertDescription>{errorMsg}</AlertDescription></Alert>}
-          {success && <Alert variant="success"><AlertDescription>{success}</AlertDescription></Alert>}
+          <CmsActionFeedback feedback={feedback} />
 
           {/* ── Header row ── */}
           <HeaderRow>

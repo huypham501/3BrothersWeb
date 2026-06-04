@@ -20,6 +20,7 @@ import {
   AdminCard,
 } from '@/components/admin/layout/AdminPrimitives';
 import { CmsEditorStatusBar } from '@/components/admin/cms/CmsEditorStatusBar';
+import { CmsActionFeedback, useCmsActionFeedback } from '@/components/admin/cms/CmsActionFeedback';
 import { CmsSortableList } from '@/components/admin/cms/ux/CmsSortableList';
 
 type FormValues = z.infer<typeof globalHeaderSchema> & { enabled: boolean };
@@ -34,8 +35,7 @@ export function GlobalHeaderEditor({ setting, role, canPublish }: GlobalHeaderEd
   const router = useRouter();
   const [isSaving, setIsSaving] = React.useState(false);
   const [isPublishing, setIsPublishing] = React.useState(false);
-  const [successMsg, setSuccessMsg] = React.useState<string | null>(null);
-  const [errorMsg, setErrorMsg] = React.useState<string | null>(null);
+  const { feedback, showSuccess, showError, clearFeedback } = useCmsActionFeedback();
 
   const form = useForm<FormValues>({
     resolver: zodResolver(globalHeaderSchema.extend({ enabled: z.boolean() })),
@@ -56,23 +56,18 @@ export function GlobalHeaderEditor({ setting, role, canPublish }: GlobalHeaderEd
     name: 'nav_links',
   });
 
-  const clearFlash = () => {
-    setSuccessMsg(null);
-    setErrorMsg(null);
-  };
-
   const onSaveDraft = async (values: FormValues) => {
     setIsSaving(true);
-    clearFlash();
+    clearFeedback();
 
     try {
       const { enabled, ...payload } = values;
       await saveGlobalSettingDraft(SCHEMA_KEYS.GLOBAL_HEADER, payload, enabled);
-      setSuccessMsg('Header draft saved. Changes are not live until publish.');
+      showSuccess('Header draft saved. Changes are not live until publish.');
       form.reset(values);
       router.refresh();
     } catch (error) {
-      setErrorMsg((error as Error).message);
+      showError(error, 'Failed to save draft.');
     } finally {
       setIsSaving(false);
     }
@@ -80,7 +75,7 @@ export function GlobalHeaderEditor({ setting, role, canPublish }: GlobalHeaderEd
 
   const handlePublish = async () => {
     setIsPublishing(true);
-    clearFlash();
+    clearFeedback();
 
     try {
       const values = form.getValues();
@@ -90,11 +85,11 @@ export function GlobalHeaderEditor({ setting, role, canPublish }: GlobalHeaderEd
       }
 
       await publishGlobalSetting(SCHEMA_KEYS.GLOBAL_HEADER);
-      setSuccessMsg('Header published and global routes revalidated.');
+      showSuccess('Header published and global routes revalidated.');
       form.reset(values);
       router.refresh();
     } catch (error) {
-      setErrorMsg((error as Error).message);
+      showError(error, 'Failed to publish. Please try again.');
     } finally {
       setIsPublishing(false);
     }
@@ -128,17 +123,7 @@ export function GlobalHeaderEditor({ setting, role, canPublish }: GlobalHeaderEd
             </AdminAlertDescription>
           </AdminAlert>
 
-          {errorMsg && (
-            <AdminAlert tone="destructive">
-              <AdminAlertDescription>{errorMsg}</AdminAlertDescription>
-            </AdminAlert>
-          )}
-
-          {successMsg && (
-            <AdminAlert>
-              <AdminAlertDescription>{successMsg}</AdminAlertDescription>
-            </AdminAlert>
-          )}
+          <CmsActionFeedback feedback={feedback} />
 
           <AdminCard>
             <SaveRow>

@@ -22,6 +22,7 @@ import { SelectInput } from '@/components/admin/cms/editors/EditorLayout';
 import { CmsFieldHint } from '@/components/admin/cms/ux/CmsFieldHint';
 import { getCmsFieldUxSpec } from '@/lib/cms/ux/field-ux-spec';
 import { CmsEditorStatusBar } from '@/components/admin/cms/CmsEditorStatusBar';
+import { CmsActionFeedback, useCmsActionFeedback } from '@/components/admin/cms/CmsActionFeedback';
 
 type FormValues = z.infer<typeof globalSeoDefaultsSchema>;
 
@@ -37,8 +38,7 @@ export function GlobalSeoDefaultsEditor({
   const router = useRouter();
   const [isSaving, setIsSaving] = React.useState(false);
   const [isPublishing, setIsPublishing] = React.useState(false);
-  const [successMsg, setSuccessMsg] = React.useState<string | null>(null);
-  const [errorMsg, setErrorMsg] = React.useState<string | null>(null);
+  const { feedback, showSuccess, showError, clearFeedback } = useCmsActionFeedback();
 
   const form = useForm<FormValues>({
     resolver: zodResolver(globalSeoDefaultsSchema),
@@ -53,21 +53,16 @@ export function GlobalSeoDefaultsEditor({
     },
   });
 
-  const clearFlash = () => {
-    setSuccessMsg(null);
-    setErrorMsg(null);
-  };
-
   const onSaveDraft = async (values: FormValues) => {
     setIsSaving(true);
-    clearFlash();
+    clearFeedback();
     try {
       await saveGlobalSettingDraft(SCHEMA_KEYS.GLOBAL_SEO_DEFAULTS, values, setting.enabled);
-      setSuccessMsg('SEO defaults draft saved. Changes are not live until publish.');
+      showSuccess('SEO defaults draft saved. Changes are not live until publish.');
       form.reset(values);
       router.refresh();
     } catch (error) {
-      setErrorMsg((error as Error).message);
+      showError(error, 'Failed to save draft.');
     } finally {
       setIsSaving(false);
     }
@@ -75,18 +70,18 @@ export function GlobalSeoDefaultsEditor({
 
   const handlePublish = async () => {
     setIsPublishing(true);
-    clearFlash();
+    clearFeedback();
     try {
       const values = form.getValues();
       if (form.formState.isDirty || !setting.id) {
         await saveGlobalSettingDraft(SCHEMA_KEYS.GLOBAL_SEO_DEFAULTS, values, setting.enabled);
       }
       await publishGlobalSetting(SCHEMA_KEYS.GLOBAL_SEO_DEFAULTS);
-      setSuccessMsg('SEO defaults published and metadata routes revalidated.');
+      showSuccess('SEO defaults published and metadata routes revalidated.');
       form.reset(values);
       router.refresh();
     } catch (error) {
-      setErrorMsg((error as Error).message);
+      showError(error, 'Failed to publish. Please try again.');
     } finally {
       setIsPublishing(false);
     }
@@ -122,17 +117,7 @@ export function GlobalSeoDefaultsEditor({
             </AdminAlertDescription>
           </AdminAlert>
 
-          {errorMsg && (
-            <AdminAlert tone="destructive">
-              <AdminAlertDescription>{errorMsg}</AdminAlertDescription>
-            </AdminAlert>
-          )}
-
-          {successMsg && (
-            <AdminAlert>
-              <AdminAlertDescription>{successMsg}</AdminAlertDescription>
-            </AdminAlert>
-          )}
+          <CmsActionFeedback feedback={feedback} />
 
           <AdminCard>
             <SaveRow>

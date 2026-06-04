@@ -7,13 +7,16 @@ import { requireCmsActionCapability } from '@/lib/admin/require-admin-user';
  * All public routes that display CMS-managed content.
  * Update this list whenever a new public page is added to the site.
  */
-const PUBLIC_ROUTES = [
-  '/',
-  '/for-creators',
-  '/for-brands',
-  '/blogs',
-  '/blogs/[slug]',
-  '/careers',
+const PUBLIC_ROUTES: Array<{ path: string; type?: 'page' | 'layout' }> = [
+  { path: '/' },
+  { path: '/for-creators' },
+  { path: '/for-brands' },
+  { path: '/social-commerce' },
+  { path: '/contact' },
+  { path: '/blogs' },
+  { path: '/blogs/[slug]', type: 'page' },
+  { path: '/careers' },
+  { path: '/careers/[slug]', type: 'page' },
 ] as const;
 
 export interface PublishResult {
@@ -45,12 +48,12 @@ export async function publishAllContent(): Promise<PublishResult> {
   const routes = [...PUBLIC_ROUTES];
 
   for (const route of routes) {
-    revalidatePath(route);
+    revalidatePath(route.path, route.type);
   }
 
   return {
     success: true,
     publishedAt: new Date().toISOString(),
-    routesRevalidated: routes,
+    routesRevalidated: routes.map((route) => route.path),
   };
 }
