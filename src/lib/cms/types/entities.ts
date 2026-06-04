@@ -1,5 +1,16 @@
 export type CmsPublishStatus = 'draft' | 'published';
 export type CmsRole = 'super_admin' | 'content_admin' | 'editor' | 'viewer';
+export const CMS_AUDIT_ACTION_TYPES = ['save_draft', 'publish'] as const;
+export const CMS_AUDIT_ENTITY_TYPES = [
+  'page',
+  'page_section',
+  'shared_section',
+  'global_setting',
+  'blog_post',
+  'job_position',
+] as const;
+export type CmsAuditActionType = (typeof CMS_AUDIT_ACTION_TYPES)[number];
+export type CmsAuditEntityType = (typeof CMS_AUDIT_ENTITY_TYPES)[number];
 
 export interface CmsPage {
   id: string;
@@ -178,8 +189,8 @@ export interface CmsAuditLog {
   actor_user_id: string;
   actor_email_or_identifier: string;
   actor_role: CmsRole;
-  action_type: 'save_draft' | 'publish';
-  entity_type: 'page' | 'page_section' | 'shared_section' | 'global_setting' | 'blog_post' | 'job_position';
+  action_type: CmsAuditActionType;
+  entity_type: CmsAuditEntityType;
   entity_id: string | null;
   entity_key_or_id: string;
   page_slug_or_schema_key: string | null;
