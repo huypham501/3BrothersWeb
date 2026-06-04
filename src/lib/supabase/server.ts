@@ -2,7 +2,8 @@ import { createServerClient } from "@supabase/ssr";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
 import { NextResponse, type NextRequest } from "next/server";
-import { getSupabaseConfig } from "./config";
+import { createClient } from "@supabase/supabase-js";
+import { getSupabaseConfig, getSupabaseServiceRoleConfig } from "./config";
 
 export async function createSupabaseServerClient(
   cookieStorePromise: ReturnType<typeof cookies> = cookies()
@@ -63,4 +64,14 @@ export function createSupabaseRouteClient(
   });
 
   return { supabase, response: supabaseResponse };
+}
+
+export function createSupabaseServiceRoleClient(): SupabaseClient {
+  const { url, serviceRoleKey } = getSupabaseServiceRoleConfig();
+  return createClient(url, serviceRoleKey, {
+    auth: {
+      persistSession: false,
+      autoRefreshToken: false,
+    },
+  });
 }

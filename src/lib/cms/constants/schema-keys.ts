@@ -1,8 +1,9 @@
 export const SCHEMA_KEYS = {
-    GLOBAL_HEADER: 'global.header.v1',
-    GLOBAL_FOOTER: 'global.footer.v1',
-    GLOBAL_SEO_DEFAULTS: 'global.seo_defaults.v1',
-    GLOBAL_SITE_METADATA: 'global.site_metadata.v1',
+  GLOBAL_HEADER: 'global.header.v1',
+  GLOBAL_FOOTER: 'global.footer.v1',
+  GLOBAL_SEO_DEFAULTS: 'global.seo_defaults.v1',
+  GLOBAL_SITE_METADATA: 'global.site_metadata.v1',
+  GLOBAL_CONTACT_PAGE: 'global.contact_page.v1',
     HOME_HERO: 'home.hero.v1',
     HOME_PARTNERS: 'home.partners.v1',
     HOME_CORE_COMPETENCIES: 'home.core_competencies.v1',

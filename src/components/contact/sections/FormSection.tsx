@@ -1,15 +1,155 @@
 'use client';
 
+import * as React from 'react';
 import styled from 'styled-components';
 import { colors, typography, spacing, mediaQueries, motion } from '@/styles/tokens';
+import type { GlobalContactPagePayload } from '@/lib/cms/types';
+import {
+  CONTACTABILITY_ERROR_MESSAGE,
+  normalizeContactFormValues,
+  validateContactability,
+  validateContactBasic,
+  type ContactFieldErrors,
+  type ContactFormValues,
+} from '@/lib/validations';
 
-export function FormSection() {
+interface FormSectionProps {
+  content: GlobalContactPagePayload;
+}
+
+type FieldKey = keyof ContactFormValues;
+
+const initialValues: ContactFormValues = {
+  fullname: '',
+  email: '',
+  phone: '',
+  message: '',
+};
+
+export function FormSection({ content }: FormSectionProps) {
+  const [values, setValues] = React.useState<ContactFormValues>(initialValues);
+  const [fieldErrors, setFieldErrors] = React.useState<ContactFieldErrors>({});
+  const [status, setStatus] = React.useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+  const [statusMessage, setStatusMessage] = React.useState<string | null>(null);
+
+  const setFieldValue = (field: FieldKey, value: string) => {
+    setValues((current) => ({ ...current, [field]: value }));
+    setFieldErrors((current) => {
+      if (!current[field] && !current.contactChannel) return current;
+      const next = { ...current };
+      delete next[field];
+      if (field === 'email' || field === 'phone') {
+        delete next.contactChannel;
+      }
+      return next;
+    });
+  };
+
+  const validateClient = (): { success: true; data: ContactFormValues } | { success: false; errors: ContactFieldErrors } => {
+    const normalized = normalizeContactFormValues(values);
+    const errors: ContactFieldErrors = {};
+
+    (Object.keys(content.fields) as FieldKey[]).forEach((field) => {
+      const config = content.fields[field];
+      if (config.enabled && config.required && !normalized[field]) {
+        errors[field] = `${config.label} là bắt buộc.`;
+      }
+    });
+
+    const basic = validateContactBasic(normalized);
+    if (!basic.success) {
+      Object.assign(errors, basic.fieldErrors);
+    }
+
+    if (!validateContactability(normalized)) {
+      errors.contactChannel = CONTACTABILITY_ERROR_MESSAGE;
+    }
+
+    if (Object.keys(errors).length > 0) {
+      return { success: false, errors };
+    }
+
+    return { success: true, data: normalized };
+  };
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const validation = validateClient();
+    if (!validation.success) {
+      setFieldErrors(validation.errors);
+      setStatus('error');
+      setStatusMessage(content.error_message);
+      return;
+    }
+
+    setFieldErrors({});
+    setStatus('submitting');
+    setStatusMessage(null);
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...validation.data,
+          website: new FormData(event.currentTarget).get('website')?.toString() ?? '',
+        }),
+      });
+      const payload = await response.json().catch(() => ({}));
+
+      if (response.status === 400 && payload?.fieldErrors) {
+        setFieldErrors(payload.fieldErrors);
+        setStatus('error');
+        setStatusMessage(payload.message || content.error_message);
+        return;
+      }
+
+      if (!response.ok || payload?.ok === false) {
+        setStatus('error');
+        setStatusMessage(resolveStatusMessage(payload?.message, content.error_message));
+        return;
+      }
+
+      setValues(initialValues);
+      setStatus('success');
+      setStatusMessage(resolveStatusMessage(payload?.message, content.success_message));
+    } catch {
+      setStatus('error');
+      setStatusMessage(content.error_message);
+    }
+  };
+
+  const renderInput = (field: 'fullname' | 'email' | 'phone') => {
+    const config = content.fields[field];
+    if (!config.enabled) return null;
+
+    const type = field === 'email' ? 'email' : field === 'phone' ? 'tel' : 'text';
+
+    return (
+      <InputGroup>
+        <StyledInput
+          type={type}
+          value={values[field]}
+          placeholder={config.placeholder}
+          aria-label={config.label}
+          aria-invalid={Boolean(fieldErrors[field])}
+          required={config.required}
+          onChange={(event) => setFieldValue(field, event.target.value)}
+        />
+        {fieldErrors[field] ? <FieldError>{fieldErrors[field]}</FieldError> : null}
+      </InputGroup>
+    );
+  };
+
+  const messageConfig = content.fields.message;
+
   return (
     <SectionContainer>
       <Inner>
         <HeaderArea>
-          <Eyebrow>Đừng ngần ngại</Eyebrow>
-          <Title>LIÊN HỆ NGAY ĐỂ NHẬN TƯ VẤN</Title>
+          <Eyebrow>{content.eyebrow}</Eyebrow>
+          <Title>{content.title}</Title>
 
           <SocialMediaGroup>
             <SocialButton href="#" aria-label="Facebook">
@@ -27,31 +167,50 @@ export function FormSection() {
           </SocialMediaGroup>
         </HeaderArea>
 
-        <FormArea>
-          <FormRow>
-            <InputGroup>
-              <StyledInput type="text" placeholder="Họ Tên" />
-            </InputGroup>
-            <InputGroup>
-              <StyledInput type="email" placeholder="Email" />
-            </InputGroup>
-          </FormRow>
-          
-          <FormRow>
-            <InputGroup>
-              <StyledInput type="tel" placeholder="Số điện thoại" />
-            </InputGroup>
-          </FormRow>
+        <FormArea onSubmit={handleSubmit}>
+          <HoneypotInput
+            type="text"
+            name="website"
+            tabIndex={-1}
+            autoComplete="off"
+            aria-hidden="true"
+          />
 
-          <FormRow>
-            <InputGroup>
-              <StyledTextarea placeholder="Lời nhắn" />
-            </InputGroup>
-          </FormRow>
+          {content.fields.fullname.enabled || content.fields.email.enabled ? (
+            <FormRow>
+              {renderInput('fullname')}
+              {renderInput('email')}
+            </FormRow>
+          ) : null}
+          
+          {content.fields.phone.enabled ? (
+            <FormRow>
+              {renderInput('phone')}
+            </FormRow>
+          ) : null}
+
+          {messageConfig.enabled ? (
+            <FormRow>
+              <InputGroup>
+                <StyledTextarea
+                  value={values.message}
+                  placeholder={messageConfig.placeholder}
+                  aria-label={messageConfig.label}
+                  aria-invalid={Boolean(fieldErrors.message)}
+                  required={messageConfig.required}
+                  onChange={(event) => setFieldValue('message', event.target.value)}
+                />
+                {fieldErrors.message ? <FieldError>{fieldErrors.message}</FieldError> : null}
+              </InputGroup>
+            </FormRow>
+          ) : null}
+
+          {fieldErrors.contactChannel ? <GroupError>{fieldErrors.contactChannel}</GroupError> : null}
+          {statusMessage ? <StatusMessage tone={status === 'success' ? 'success' : 'error'}>{statusMessage}</StatusMessage> : null}
 
           <SubmitAction>
-            <SubmitButton type="button">
-              Liên hệ tư vấn
+            <SubmitButton type="submit" disabled={status === 'submitting'}>
+              {status === 'submitting' ? 'Đang gửi...' : content.submit_label}
               <ChevronRightIcon />
             </SubmitButton>
           </SubmitAction>
@@ -59,6 +218,11 @@ export function FormSection() {
       </Inner>
     </SectionContainer>
   );
+}
+
+function resolveStatusMessage(value: unknown, fallback: string): string | null {
+  if (value === '') return null;
+  return typeof value === 'string' && value.length > 0 ? value : fallback;
 }
 
 // ─── SVG Icons ───────────────────────────────────────────────────────────────
@@ -148,6 +312,16 @@ const Inner = styled.div`
   }
 `;
 
+const HoneypotInput = styled.input`
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+`;
+
 /* Header Area */
 const HeaderArea = styled.div`
   display: flex;
@@ -229,7 +403,7 @@ const SocialButton = styled.a`
 `;
 
 /* Form Area */
-const FormArea = styled.div`
+const FormArea = styled.form`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -334,4 +508,37 @@ const SubmitButton = styled.button`
   &:active {
     transform: translateY(0);
   }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+    transform: none;
+  }
+`;
+
+const FieldError = styled.p`
+  margin: 8px 0 0;
+  font-family: ${typography.fontFamily.montserrat};
+  font-weight: ${typography.fontWeight.medium};
+  font-size: 14px;
+  line-height: 140%;
+  color: #B42318;
+`;
+
+const GroupError = styled.p`
+  margin: -24px 0 0;
+  font-family: ${typography.fontFamily.montserrat};
+  font-weight: ${typography.fontWeight.medium};
+  font-size: 15px;
+  line-height: 140%;
+  color: #B42318;
+`;
+
+const StatusMessage = styled.p<{ tone: 'success' | 'error' }>`
+  margin: -24px 0 0;
+  font-family: ${typography.fontFamily.montserrat};
+  font-weight: ${typography.fontWeight.semibold};
+  font-size: 15px;
+  line-height: 150%;
+  color: ${({ tone }) => (tone === 'success' ? '#027A48' : '#B42318')};
 `;

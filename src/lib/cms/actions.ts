@@ -604,11 +604,12 @@ export async function publishGlobalSetting(schemaKey: string) {
     SCHEMA_KEYS.GLOBAL_FOOTER,
     SCHEMA_KEYS.GLOBAL_SEO_DEFAULTS,
     SCHEMA_KEYS.GLOBAL_SITE_METADATA,
+    SCHEMA_KEYS.GLOBAL_CONTACT_PAGE,
   ] as const;
 
   if (!supported.includes(schemaKey as (typeof supported)[number])) {
     throw new Error(
-      `Publishing is currently only supported for ${SCHEMA_KEYS.GLOBAL_HEADER}, ${SCHEMA_KEYS.GLOBAL_FOOTER}, ${SCHEMA_KEYS.GLOBAL_SEO_DEFAULTS}, and ${SCHEMA_KEYS.GLOBAL_SITE_METADATA}.`
+      `Publishing is currently only supported for ${SCHEMA_KEYS.GLOBAL_HEADER}, ${SCHEMA_KEYS.GLOBAL_FOOTER}, ${SCHEMA_KEYS.GLOBAL_SEO_DEFAULTS}, ${SCHEMA_KEYS.GLOBAL_SITE_METADATA}, and ${SCHEMA_KEYS.GLOBAL_CONTACT_PAGE}.`
     );
   }
 

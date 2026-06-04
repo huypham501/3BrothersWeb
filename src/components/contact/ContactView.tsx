@@ -5,7 +5,7 @@ import { colors, typography } from '@/styles/tokens';
 
 import { Header } from '@/components/shared/Header';
 import { Footer } from '@/components/shared/Footer';
-import type { GlobalFooterPayload, GlobalHeaderPayload } from '@/lib/cms/types';
+import type { GlobalContactPagePayload, GlobalFooterPayload, GlobalHeaderPayload } from '@/lib/cms/types';
 
 import { FormSection } from './sections/FormSection';
 import { ContactInfo } from './sections/ContactInfo';
@@ -13,9 +13,10 @@ import { ContactInfo } from './sections/ContactInfo';
 interface ContactViewProps {
   header?: GlobalHeaderPayload | null;
   footer?: GlobalFooterPayload | null;
+  contactPage?: GlobalContactPagePayload | null;
 }
 
-export function ContactView({ header, footer }: ContactViewProps) {
+export function ContactView({ header, footer, contactPage }: ContactViewProps) {
   return (
     <Wrapper>
       <Header content={header ?? undefined} />
@@ -31,7 +32,7 @@ export function ContactView({ header, footer }: ContactViewProps) {
           <Vector9 />
         </BackgroundMesh>
 
-        <FormSection />
+        {contactPage ? <FormSection content={contactPage} /> : null}
         <ContactInfo />
       </MainContent>
 

@@ -7,6 +7,7 @@ export const CONTENT_MODULE_NAV: AdminNavItem[] = [
   { href: '/admin/content/pages/for-brands', label: 'For Brands CMS' },
   { href: '/admin/content/shared', label: 'Shared Sections' },
   { href: '/admin/content/settings', label: 'Global Settings' },
+  { href: '/admin/content/contact-submissions', label: 'Contact Submissions' },
   { href: '/admin/content/audit', label: 'Audit Log' },
   { href: '/admin/assets', label: '🖼 Asset Manager' },
 ];

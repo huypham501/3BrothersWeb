@@ -69,6 +69,43 @@ export const globalSiteMetadataSchema = z.object({
   publisher_name: z.string().max(80),
 });
 
+export const contactFieldConfigSchema = z.object({
+  enabled: z.boolean(),
+  label: z.string().min(1).max(60),
+  placeholder: z.string().max(80),
+  required: z.boolean(),
+});
+
+export const globalContactPageSchema = z.object({
+  eyebrow: z.string().min(1).max(80),
+  title: z.string().min(1).max(140),
+  submit_label: z.string().min(1).max(40),
+  success_message: z.string().min(1).max(200),
+  error_message: z.string().min(1).max(200),
+  rate_limit_message: z.string().min(1).max(200),
+  fields: z.object({
+    fullname: contactFieldConfigSchema,
+    email: contactFieldConfigSchema,
+    phone: contactFieldConfigSchema,
+    message: contactFieldConfigSchema,
+  }),
+  recipient_email: z.email(),
+  email_subject_prefix: z.string().min(1).max(80),
+}).superRefine((value, ctx) => {
+  if (!value.fields.email.enabled && !value.fields.phone.enabled) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: 'At least one contact channel field must be enabled.',
+      path: ['fields', 'email', 'enabled'],
+    });
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: 'At least one contact channel field must be enabled.',
+      path: ['fields', 'phone', 'enabled'],
+    });
+  }
+});
+
 const sharedExclusiveTalentItemSchema = z.object({
   name: z.string().max(60),
   handle: z.string().max(40),
@@ -414,6 +451,7 @@ export const CMS_REGISTRY = {
   [SCHEMA_KEYS.GLOBAL_FOOTER]: globalFooterSchema,
   [SCHEMA_KEYS.GLOBAL_SEO_DEFAULTS]: globalSeoDefaultsSchema,
   [SCHEMA_KEYS.GLOBAL_SITE_METADATA]: globalSiteMetadataSchema,
+  [SCHEMA_KEYS.GLOBAL_CONTACT_PAGE]: globalContactPageSchema,
   [SCHEMA_KEYS.SHARED_EXCLUSIVE_TALENTS]: sharedExclusiveTalentsSchema,
   [SCHEMA_KEYS.SHARED_CONTACT_CTA]: sharedContactCtaSchema,
   [SCHEMA_KEYS.SHARED_CTA]: sharedCtaSchema,

@@ -11,6 +11,7 @@ import type {
   CtaPayload,
   ForCreatorsHeroPayload,
   ForCreatorsTestimonialsPayload,
+  GlobalContactPagePayload,
   GlobalFooterPayload,
   GlobalHeaderPayload,
   GlobalSeoDefaultsPayload,
@@ -33,6 +34,7 @@ export interface CmsSchemaPayloadMap {
   [SCHEMA_KEYS.GLOBAL_FOOTER]: GlobalFooterPayload;
   [SCHEMA_KEYS.GLOBAL_SEO_DEFAULTS]: GlobalSeoDefaultsPayload;
   [SCHEMA_KEYS.GLOBAL_SITE_METADATA]: GlobalSiteMetadataPayload;
+  [SCHEMA_KEYS.GLOBAL_CONTACT_PAGE]: GlobalContactPagePayload;
   [SCHEMA_KEYS.HOME_HERO]: HomeHeroPayload;
   [SCHEMA_KEYS.HOME_PARTNERS]: HomePartnersPayload;
   [SCHEMA_KEYS.HOME_CORE_COMPETENCIES]: HomeCoreCompetenciesPayload;
@@ -92,4 +94,5 @@ export type CmsGlobalSchemaKey =
   | typeof SCHEMA_KEYS.GLOBAL_HEADER
   | typeof SCHEMA_KEYS.GLOBAL_FOOTER
   | typeof SCHEMA_KEYS.GLOBAL_SEO_DEFAULTS
-  | typeof SCHEMA_KEYS.GLOBAL_SITE_METADATA;
+  | typeof SCHEMA_KEYS.GLOBAL_SITE_METADATA
+  | typeof SCHEMA_KEYS.GLOBAL_CONTACT_PAGE;

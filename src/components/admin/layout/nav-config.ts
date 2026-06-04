@@ -187,6 +187,13 @@ export const CMS_NAV: NavItem[] = [
       },
       {
         type: 'leaf',
+        key: 'contact-submissions',
+        label: 'Contact Submissions',
+        href: '/admin/content/contact-submissions',
+        iconName: 'MailOutlined',
+      },
+      {
+        type: 'leaf',
         key: 'audit-log',
         label: 'Audit Log',
         href: '/admin/content/audit',
@@ -220,6 +227,7 @@ const PATH_TO_KEY: Record<string, string> = {
   '/admin/content/settings/site-metadata': 'settings-metadata',
   '/admin/publish': 'publish-center',
   '/admin/assets': 'asset-manager',
+  '/admin/content/contact-submissions': 'contact-submissions',
   '/admin/content/audit': 'audit-log',
 };
 
@@ -232,6 +240,10 @@ export function getActiveKey(pathname: string): string {
 
   if (pathname.startsWith('/admin/content/pages/careers/')) {
     return 'careers-cms';
+  }
+
+  if (pathname.startsWith('/admin/content/contact-submissions/')) {
+    return 'contact-submissions';
   }
 
   return 'overview';
@@ -257,6 +269,7 @@ const KEY_TO_OPEN_GROUPS: Record<string, string[]> = {
   'settings-metadata': ['settings'],
   'publish-center': ['tools'],
   'asset-manager': ['tools'],
+  'contact-submissions': ['tools'],
   'audit-log': ['tools'],
 };
 
@@ -298,6 +311,7 @@ const PATH_TO_BREADCRUMB: Record<string, BreadcrumbSegment[]> = {
   // Tools
   '/admin/publish': [ROOT_CRUMB, { label: 'Tools' }, { label: 'Publish Center' }],
   '/admin/assets': [ROOT_CRUMB, { label: 'Tools' }, { label: 'Asset Manager' }],
+  '/admin/content/contact-submissions': [ROOT_CRUMB, { label: 'Tools' }, { label: 'Contact Submissions' }],
   '/admin/content/audit': [ROOT_CRUMB, { label: 'Tools' }, { label: 'Audit Log' }],
 };
 
@@ -310,6 +324,15 @@ export function getBreadcrumb(pathname: string): BreadcrumbSegment[] {
 
   if (pathname.startsWith('/admin/content/pages/careers/')) {
     return [ROOT_CRUMB, { label: 'Pages' }, { label: 'Careers' }, { label: 'Edit Position' }];
+  }
+
+  if (pathname.startsWith('/admin/content/contact-submissions/')) {
+    return [
+      ROOT_CRUMB,
+      { label: 'Tools' },
+      { label: 'Contact Submissions', href: '/admin/content/contact-submissions' },
+      { label: 'Submission Detail' },
+    ];
   }
 
   return [ROOT_CRUMB];

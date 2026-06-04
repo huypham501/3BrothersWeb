@@ -3,10 +3,16 @@ type SupabaseConfig = {
   key: string;
 };
 
+type SupabaseServiceRoleConfig = {
+  url: string;
+  serviceRoleKey: string;
+};
+
 const ENV = {
   NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
   NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY:
     process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY,
+  SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY,
 } as const;
 
 type EnvKey = keyof typeof ENV;
@@ -21,5 +27,12 @@ export function getSupabaseConfig(): SupabaseConfig {
   return {
     url: getEnvValue("NEXT_PUBLIC_SUPABASE_URL"),
     key: getEnvValue("NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY"),
+  };
+}
+
+export function getSupabaseServiceRoleConfig(): SupabaseServiceRoleConfig {
+  return {
+    url: getEnvValue("NEXT_PUBLIC_SUPABASE_URL"),
+    serviceRoleKey: getEnvValue("SUPABASE_SERVICE_ROLE_KEY"),
   };
 }

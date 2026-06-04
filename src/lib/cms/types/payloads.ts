@@ -42,6 +42,30 @@ export interface GlobalSiteMetadataPayload {
   publisher_name: string;
 }
 
+export interface ContactFieldConfigPayload {
+  enabled: boolean;
+  label: string;
+  placeholder: string;
+  required: boolean;
+}
+
+export interface GlobalContactPagePayload {
+  eyebrow: string;
+  title: string;
+  submit_label: string;
+  success_message: string;
+  error_message: string;
+  rate_limit_message: string;
+  fields: {
+    fullname: ContactFieldConfigPayload;
+    email: ContactFieldConfigPayload;
+    phone: ContactFieldConfigPayload;
+    message: ContactFieldConfigPayload;
+  };
+  recipient_email: string;
+  email_subject_prefix: string;
+}
+
 export interface HomeHeroPayload {
   title: string;
   subtext: string;

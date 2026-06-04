@@ -25,6 +25,12 @@ export const SUPPORTED_GLOBAL_SETTINGS = [
     description: 'Site-level metadata identity and canonical base defaults.',
     editorPath: '/admin/content/settings/site-metadata',
   },
+  {
+    schemaKey: SCHEMA_KEYS.GLOBAL_CONTACT_PAGE,
+    title: 'Contact Page',
+    description: 'Contact page copy, visible fields, required fields, and recipient email.',
+    editorPath: '/admin/content/settings/contact-page',
+  },
 ] as const;
 
 export type SupportedGlobalSchemaKey = typeof SUPPORTED_GLOBAL_SETTINGS[number]['schemaKey'];
