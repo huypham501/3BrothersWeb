@@ -168,31 +168,77 @@ export function CmsAuditLogList({ logs, params, total, error }: CmsAuditLogListP
           onChange={handleTableChange}
           expandable={{
             expandedRowRender: (record) => (
-              <Descriptions bordered column={{ xs: 1, sm: 2, lg: 3 }} size="small">
-                <Descriptions.Item label="Audit ID">
-                  <Typography.Text copyable>{record.id}</Typography.Text>
-                </Descriptions.Item>
-                <Descriptions.Item label="Actor user ID">
-                  <DetailValue>
-                    <Typography.Text copyable>{record.actor_user_id}</Typography.Text>
-                  </DetailValue>
-                </Descriptions.Item>
-                <Descriptions.Item label="Actor role">{record.actor_role}</Descriptions.Item>
-                <Descriptions.Item label="Actor email">{record.actor_email_or_identifier}</Descriptions.Item>
-                <Descriptions.Item label="Action">{AUDIT_ACTION_LABELS[record.action_type]}</Descriptions.Item>
-                <Descriptions.Item label="Entity type">{AUDIT_ENTITY_LABELS[record.entity_type]}</Descriptions.Item>
-                <Descriptions.Item label="Entity ID">
-                  <DetailValue>
-                    {record.entity_id && <Typography.Text copyable>{record.entity_id}</Typography.Text>}
-                  </DetailValue>
-                </Descriptions.Item>
-                <Descriptions.Item label="Entity key">{record.entity_key_or_id}</Descriptions.Item>
-                <Descriptions.Item label="Page/schema key">
-                  <DetailValue>{record.page_slug_or_schema_key}</DetailValue>
-                </Descriptions.Item>
-                <Descriptions.Item label="Created">{formatAuditDate(record.created_at)}</Descriptions.Item>
-                <Descriptions.Item label="Summary" span={3}>{record.summary}</Descriptions.Item>
-              </Descriptions>
+              <Descriptions
+                bordered
+                column={{ xs: 1, sm: 2, lg: 3 }}
+                size="small"
+                items={[
+                  {
+                    key: 'id',
+                    label: 'Audit ID',
+                    children: <Typography.Text copyable>{record.id}</Typography.Text>,
+                  },
+                  {
+                    key: 'actor_user_id',
+                    label: 'Actor user ID',
+                    children: (
+                      <DetailValue>
+                        <Typography.Text copyable>{record.actor_user_id}</Typography.Text>
+                      </DetailValue>
+                    ),
+                  },
+                  {
+                    key: 'actor_role',
+                    label: 'Actor role',
+                    children: record.actor_role,
+                  },
+                  {
+                    key: 'actor_email',
+                    label: 'Actor email',
+                    children: record.actor_email_or_identifier,
+                  },
+                  {
+                    key: 'action',
+                    label: 'Action',
+                    children: AUDIT_ACTION_LABELS[record.action_type],
+                  },
+                  {
+                    key: 'entity_type',
+                    label: 'Entity type',
+                    children: AUDIT_ENTITY_LABELS[record.entity_type],
+                  },
+                  {
+                    key: 'entity_id',
+                    label: 'Entity ID',
+                    children: (
+                      <DetailValue>
+                        {record.entity_id && <Typography.Text copyable>{record.entity_id}</Typography.Text>}
+                      </DetailValue>
+                    ),
+                  },
+                  {
+                    key: 'entity_key',
+                    label: 'Entity key',
+                    children: record.entity_key_or_id,
+                  },
+                  {
+                    key: 'page_schema_key',
+                    label: 'Page/schema key',
+                    children: <DetailValue>{record.page_slug_or_schema_key}</DetailValue>,
+                  },
+                  {
+                    key: 'created',
+                    label: 'Created',
+                    children: formatAuditDate(record.created_at),
+                  },
+                  {
+                    key: 'summary',
+                    label: 'Summary',
+                    span: { xs: 1, sm: 2, lg: 3 },
+                    children: record.summary,
+                  },
+                ]}
+              />
             ),
           }}
         />
