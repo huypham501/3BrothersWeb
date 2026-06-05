@@ -429,6 +429,10 @@ export const blogPostContentSectionSchema = z.object({
   id: z.string().min(1).max(60),
   heading: z.string().max(120).nullable(),
   body: z.string().min(1),
+  image_url: z.string().max(1024).nullable().optional(),
+  image_alt: z.string().max(125).nullable().optional(),
+  image_caption: z.string().max(180).nullable().optional(),
+  image_position: z.enum(['before_body', 'after_body']).nullable().optional(),
 });
 
 export const blogPostFormSchema = z.object({

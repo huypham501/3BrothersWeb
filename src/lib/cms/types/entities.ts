@@ -98,6 +98,16 @@ export interface CmsGlobalSetting<TPayload = unknown> {
   updated_at: string;
 }
 
+export interface CmsBlogPostContentSection {
+  id: string;
+  heading: string | null;
+  body: string;
+  image_url?: string | null;
+  image_alt?: string | null;
+  image_caption?: string | null;
+  image_position?: 'before_body' | 'after_body' | null;
+}
+
 export interface CmsBlogPost {
   id: string;
   slug: string;
@@ -106,8 +116,8 @@ export interface CmsBlogPost {
   excerpt: string | null;
   cover_image_url: string | null;
   cover_image_alt: string | null;
-  content: Array<{ id: string; heading: string | null; body: string }>;
-  mid_content: Array<{ id: string; heading: string | null; body: string }>;
+  content: CmsBlogPostContentSection[];
+  mid_content: CmsBlogPostContentSection[];
 
   seo_title: string | null;
   seo_description: string | null;
@@ -125,8 +135,8 @@ export interface CmsBlogPost {
   published_excerpt: string | null;
   published_cover_image_url: string | null;
   published_cover_image_alt: string | null;
-  published_content: Array<{ id: string; heading: string | null; body: string }> | null;
-  published_mid_content: Array<{ id: string; heading: string | null; body: string }> | null;
+  published_content: CmsBlogPostContentSection[] | null;
+  published_mid_content: CmsBlogPostContentSection[] | null;
   published_seo_title: string | null;
   published_seo_description: string | null;
   published_og_image: string | null;

@@ -114,6 +114,10 @@ export interface ArticleContentSection {
   id: string;
   heading: string | null;
   body: string;
+  image_url?: string | null;
+  image_alt?: string | null;
+  image_caption?: string | null;
+  image_position?: 'before_body' | 'after_body' | null;
 }
 
 export interface ArticleData {
@@ -121,9 +125,38 @@ export interface ArticleData {
   badge: string | null;
   date: string;
   heroImageBg: string;
-  midImageBg?: string;
   sections: ArticleContentSection[];
   midSections: ArticleContentSection[];
+}
+
+function SectionImage({ section }: { section: ArticleContentSection }) {
+  if (!section.image_url) return null;
+
+  return (
+    <ArticleSectionImageFigure>
+      <ArticleSectionImage src={section.image_url} alt={section.image_alt ?? ''} />
+      {section.image_caption && (
+        <ArticleSectionImageCaption>{section.image_caption}</ArticleSectionImageCaption>
+      )}
+    </ArticleSectionImageFigure>
+  );
+}
+
+function ArticleSectionBlock({ section }: { section: ArticleContentSection }) {
+  const imagePosition = section.image_position ?? 'after_body';
+
+  return (
+    <ArticleSection>
+      {section.heading && (
+        <SectionHeading>{section.heading}</SectionHeading>
+      )}
+      {imagePosition === 'before_body' && <SectionImage section={section} />}
+      {section.body.split('\n\n').map((para, i) => (
+        <ArticleParagraph key={i}>{para}</ArticleParagraph>
+      ))}
+      {imagePosition === 'after_body' && <SectionImage section={section} />}
+    </ArticleSection>
+  );
 }
 
 // ── Component ────────────────────────────────────────────────────────────────
@@ -169,31 +202,12 @@ export function DetailMainContentSection({ article }: { article?: ArticleData })
           {/* Hero image */}
           <ArticleHeroImage $bg={data.heroImageBg} />
 
-          {/* Intro paragraphs (no heading) */}
           {data.sections.map((section) => (
-            <ArticleSection key={section.id}>
-              {section.heading && (
-                <SectionHeading>{section.heading}</SectionHeading>
-              )}
-              {section.body.split('\n\n').map((para, i) => (
-                <ArticleParagraph key={i}>{para}</ArticleParagraph>
-              ))}
-            </ArticleSection>
+            <ArticleSectionBlock key={section.id} section={section} />
           ))}
 
-          {/* Mid-article image */}
-          <ArticleMidImage $bg={data.midImageBg ?? ARTICLE.midImageBg} />
-
-          {/* Remaining sections */}
           {data.midSections.map((section) => (
-            <ArticleSection key={section.id}>
-              {section.heading && (
-                <SectionHeading>{section.heading}</SectionHeading>
-              )}
-              {section.body.split('\n\n').map((para, i) => (
-                <ArticleParagraph key={i}>{para}</ArticleParagraph>
-              ))}
-            </ArticleSection>
+            <ArticleSectionBlock key={section.id} section={section} />
           ))}
 
         </ArticleColumn>
@@ -382,25 +396,6 @@ const ArticleHeroImage = styled.div<{ $bg: string }>`
   }
 `;
 
-/* Mid-article image */
-const ArticleMidImage = styled.div<{ $bg: string }>`
-  width: 100%;
-  height: 462px;
-  background: ${({ $bg }) => $bg};
-  background-size: cover;
-  background-position: center;
-  border-radius: 12px;
-  flex-shrink: 0;
-
-  ${mediaQueries.down.lg} {
-    height: 340px;
-  }
-
-  ${mediaQueries.down.sm} {
-    height: 220px;
-  }
-`;
-
 /* Individual article body section (heading + paragraphs) */
 const ArticleSection = styled.div`
   display: flex;
@@ -438,4 +433,29 @@ const ArticleParagraph = styled.p`
   ${mediaQueries.down.sm} {
     font-size: ${typography.fontSize.md};
   }
+`;
+
+const ArticleSectionImageFigure = styled.figure`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  margin: 0;
+`;
+
+const ArticleSectionImage = styled.img`
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+`;
+
+const ArticleSectionImageCaption = styled.figcaption`
+  font-family: ${typography.fontFamily.montserrat};
+  font-weight: ${typography.fontWeight.normal};
+  font-size: ${typography.fontSize.sm};
+  line-height: 150%;
+  color: #696A75;
+  margin: 0;
+  width: 100%;
 `;

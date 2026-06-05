@@ -327,6 +327,10 @@ export interface BlogPostContentSection {
   id: string;
   heading: string | null;
   body: string;
+  image_url?: string | null;
+  image_alt?: string | null;
+  image_caption?: string | null;
+  image_position?: 'before_body' | 'after_body' | null;
 }
 
 /** Shape the admin editor saves for a blog post (draft save & publish). */

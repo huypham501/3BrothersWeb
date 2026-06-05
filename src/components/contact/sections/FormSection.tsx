@@ -79,7 +79,7 @@ export function FormSection({ content }: FormSectionProps) {
     if (!validation.success) {
       setFieldErrors(validation.errors);
       setStatus('error');
-      setStatusMessage(content.error_message);
+      setStatusMessage(validation.errors.contactChannel ? null : content.error_message);
       return;
     }
 
@@ -205,7 +205,7 @@ export function FormSection({ content }: FormSectionProps) {
             </FormRow>
           ) : null}
 
-          {fieldErrors.contactChannel ? <GroupError>{fieldErrors.contactChannel}</GroupError> : null}
+          {fieldErrors.contactChannel ? <StatusMessage tone="error">{fieldErrors.contactChannel}</StatusMessage> : null}
           {statusMessage ? <StatusMessage tone={status === 'success' ? 'success' : 'error'}>{statusMessage}</StatusMessage> : null}
 
           <SubmitAction>
@@ -521,15 +521,6 @@ const FieldError = styled.p`
   font-family: ${typography.fontFamily.montserrat};
   font-weight: ${typography.fontWeight.medium};
   font-size: 14px;
-  line-height: 140%;
-  color: #B42318;
-`;
-
-const GroupError = styled.p`
-  margin: -24px 0 0;
-  font-family: ${typography.fontFamily.montserrat};
-  font-weight: ${typography.fontWeight.medium};
-  font-size: 15px;
   line-height: 140%;
   color: #B42318;
 `;

@@ -85,6 +85,8 @@ export default async function BlogDetailPage({ params }: Props) {
 
   const publishedContent = post.published_content ?? post.content ?? [];
   const publishedMidContent = post.published_mid_content ?? post.mid_content ?? [];
+  const includeContentImages = Boolean(post.published_content);
+  const includeMidContentImages = Boolean(post.published_mid_content);
 
   const article: ArticleData = {
     title: post.published_title ?? post.title,
@@ -95,11 +97,19 @@ export default async function BlogDetailPage({ params }: Props) {
       id: s.id,
       heading: s.heading,
       body: s.body,
+      image_url: includeContentImages ? s.image_url : null,
+      image_alt: includeContentImages ? s.image_alt : null,
+      image_caption: includeContentImages ? s.image_caption : null,
+      image_position: includeContentImages ? s.image_position : null,
     })),
     midSections: publishedMidContent.map((s) => ({
       id: s.id,
       heading: s.heading,
       body: s.body,
+      image_url: includeMidContentImages ? s.image_url : null,
+      image_alt: includeMidContentImages ? s.image_alt : null,
+      image_caption: includeMidContentImages ? s.image_caption : null,
+      image_position: includeMidContentImages ? s.image_position : null,
     })),
   };
 

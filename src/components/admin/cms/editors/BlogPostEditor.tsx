@@ -9,7 +9,6 @@ import { z } from 'zod';
 import { Button, Switch, Typography } from 'antd';
 import {
   PlusOutlined,
-  DeleteOutlined,
 } from '@ant-design/icons';
 import { blogPostFormSchema } from '@/lib/cms';
 import type { CmsBlogPost } from '@/lib/cms';
@@ -34,6 +33,7 @@ import {
   SectionHeaderRow,
   SectionStack,
   SectionTitle,
+  SelectInput,
   TwoColumnGrid,
   ToggleFormItem,
 } from './EditorLayout';
@@ -42,6 +42,7 @@ import { CmsEditorStatusBar } from '@/components/admin/cms/CmsEditorStatusBar';
 import { CmsActionFeedback, useCmsActionFeedback } from '@/components/admin/cms/CmsActionFeedback';
 
 type FormValues = z.infer<typeof blogPostFormSchema>;
+type SectionFieldPath = 'content' | 'mid_content';
 
 interface BlogPostEditorProps {
   /** Existing post for edit mode. Omit for create mode. */
@@ -171,6 +172,74 @@ export function BlogPostEditor({ post, mode, role, canPublish }: BlogPostEditorP
   const canPublishNow = hasUnpublished || form.formState.isDirty;
   const keywordsString = form.watch('keywords').join(', ');
   const ux = (fieldPath: string) => getCmsFieldUxSpec('blog_post', fieldPath);
+  const renderSectionImageFields = (fieldPath: SectionFieldPath, index: number) => (
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 12,
+        border: '1px solid #f0f0f0',
+        borderRadius: 8,
+        padding: 12,
+        background: '#fafafa',
+      }}
+    >
+      <Typography.Text strong style={{ fontSize: 13 }}>Image</Typography.Text>
+      <TwoColumnGrid>
+        <FormField control={form.control} name={`${fieldPath}.${index}.image_url`} render={({ field }) => (
+          <FormItem>
+            <FormLabel>Image URL</FormLabel>
+            <FormControl>
+              <AdminImageUpload
+                value={field.value}
+                onChange={(nextUrl) => {
+                  form.setValue(`${fieldPath}.${index}.image_url`, nextUrl, {
+                    shouldDirty: true,
+                    shouldTouch: true,
+                    shouldValidate: true,
+                  });
+                }}
+                label="Section Image"
+              />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )} />
+        <FormField control={form.control} name={`${fieldPath}.${index}.image_position`} render={({ field }) => (
+          <FormItem>
+            <FormLabel>Image Position</FormLabel>
+            <FormControl>
+              <SelectInput
+                value={field.value ?? 'after_body'}
+                onChange={(value) => field.onChange(value)}
+                options={[
+                  { label: 'After body', value: 'after_body' },
+                  { label: 'Before body', value: 'before_body' },
+                ]}
+              />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )} />
+      </TwoColumnGrid>
+      <TwoColumnGrid>
+        <FormField control={form.control} name={`${fieldPath}.${index}.image_alt`} render={({ field }) => (
+          <FormItem>
+            <FormLabel>Image Alt Text</FormLabel>
+            <FormControl><Input {...field} value={field.value ?? ''} placeholder="Describe the image" maxLength={125} showCount /></FormControl>
+            <FormMessage />
+          </FormItem>
+        )} />
+        <FormField control={form.control} name={`${fieldPath}.${index}.image_caption`} render={({ field }) => (
+          <FormItem>
+            <FormLabel>Image Caption</FormLabel>
+            <FormControl><Input {...field} value={field.value ?? ''} placeholder="Optional caption shown under image" maxLength={180} showCount /></FormControl>
+            <FormMessage />
+          </FormItem>
+        )} />
+      </TwoColumnGrid>
+    </div>
+  );
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
@@ -333,7 +402,7 @@ export function BlogPostEditor({ post, mode, role, canPublish }: BlogPostEditorP
                 type="dashed"
                 icon={<PlusOutlined />}
                 size="small"
-                onClick={() => appendContent({ id: `section-${Date.now()}`, heading: null, body: '' })}
+                onClick={() => appendContent({ id: `section-${Date.now()}`, heading: null, body: '', image_position: 'after_body' })}
               >
                 Add Section
               </Button>
@@ -375,6 +444,8 @@ export function BlogPostEditor({ post, mode, role, canPublish }: BlogPostEditorP
                         <FormMessage />
                       </FormItem>
                     )} />
+
+                    {renderSectionImageFields('content', index)}
                   </div>
                 );
               }}
@@ -395,7 +466,7 @@ export function BlogPostEditor({ post, mode, role, canPublish }: BlogPostEditorP
                     type="dashed"
                     icon={<PlusOutlined />}
                     size="small"
-                    onClick={() => appendMid({ id: `mid-${Date.now()}`, heading: '', body: '' })}
+                    onClick={() => appendMid({ id: `mid-${Date.now()}`, heading: '', body: '', image_position: 'after_body' })}
                   >
                     Add Mid Section
                   </Button>
@@ -437,6 +508,8 @@ export function BlogPostEditor({ post, mode, role, canPublish }: BlogPostEditorP
                             <FormMessage />
                           </FormItem>
                         )} />
+
+                        {renderSectionImageFields('mid_content', index)}
                       </div>
                     );
                   }}
