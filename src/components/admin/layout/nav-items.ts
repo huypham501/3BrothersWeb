@@ -5,6 +5,7 @@ export const CONTENT_MODULE_NAV: AdminNavItem[] = [
   { href: '/admin/content/pages/home', label: 'Home CMS' },
   { href: '/admin/content/pages/for-creators', label: 'For Creators CMS' },
   { href: '/admin/content/pages/for-brands', label: 'For Brands CMS' },
+  { href: '/admin/content/pages/contact', label: 'Contact CMS' },
   { href: '/admin/content/shared', label: 'Shared Sections' },
   { href: '/admin/content/settings', label: 'Global Settings' },
   { href: '/admin/content/contact-submissions', label: 'Contact Submissions' },

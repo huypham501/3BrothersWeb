@@ -29,7 +29,7 @@ export const SUPPORTED_GLOBAL_SETTINGS = [
     schemaKey: SCHEMA_KEYS.GLOBAL_CONTACT_PAGE,
     title: 'Contact Page',
     description: 'Contact page copy, visible fields, required fields, and recipient email.',
-    editorPath: '/admin/content/settings/contact-page',
+    editorPath: '/admin/content/pages/contact',
   },
 ] as const;
 

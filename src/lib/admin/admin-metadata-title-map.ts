@@ -6,6 +6,7 @@ export const ADMIN_METADATA_PAGE_TITLE_LABELS = {
   pagesForCreators: 'For Creators',
   pagesForBrands: 'For Brands',
   pagesSocialCommerce: 'Social Commerce',
+  pagesContact: 'Contact',
   blogsList: 'Blogs',
   blogsNew: 'New Blog Post',
   blogsEdit: 'Edit Blog Post',

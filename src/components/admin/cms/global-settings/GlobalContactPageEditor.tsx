@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Button, Divider, Typography } from 'antd';
+import { Button, Typography } from 'antd';
 import { CmsGlobalSetting, globalContactPageSchema, SCHEMA_KEYS } from '@/lib/cms';
 import { saveGlobalSettingDraft, publishGlobalSetting } from '@/lib/cms/actions';
 import { DEFAULT_CONTACT_PAGE_CONFIG } from '@/lib/contact/contact-page-config';
@@ -26,6 +26,13 @@ const editorSchema = z.intersection(globalContactPageSchema, z.object({ enabled:
 
 type FormValues = z.infer<typeof globalContactPageSchema> & { enabled: boolean };
 type FieldKey = keyof FormValues['fields'];
+
+const FIELD_ROWS: Array<{ key: FieldKey; label: string }> = [
+  { key: 'fullname', label: 'Full name' },
+  { key: 'email', label: 'Email' },
+  { key: 'phone', label: 'Phone' },
+  { key: 'message', label: 'Message' },
+];
 
 interface GlobalContactPageEditorProps {
   setting: CmsGlobalSetting<z.infer<typeof globalContactPageSchema>>;
@@ -51,6 +58,9 @@ export function GlobalContactPageEditor({ setting, role, canPublish }: GlobalCon
       },
     },
   });
+
+  const fields = form.watch('fields');
+  const contactChannelMissing = !fields.email.enabled && !fields.phone.enabled;
 
   const saveValues = async (values: FormValues) => {
     const { enabled, ...payload } = values;
@@ -94,66 +104,155 @@ export function GlobalContactPageEditor({ setting, role, canPublish }: GlobalCon
     }
   };
 
-  const renderFieldConfig = (fieldKey: FieldKey, title: string) => (
-    <AdminCard key={fieldKey}>
-      <Typography.Title level={4} style={{ marginTop: 0 }}>{title}</Typography.Title>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 20 }}>
+  const handleFieldEnabledChange = (fieldKey: FieldKey, checked: boolean, onChange: (value: boolean) => void) => {
+    onChange(checked);
+    if (!checked) {
+      form.setValue(`fields.${fieldKey}.required`, false, {
+        shouldDirty: true,
+        shouldTouch: true,
+        shouldValidate: true,
+      });
+    }
+  };
+
+  const renderFieldRow = ({ key, label }: { key: FieldKey; label: string }) => {
+    const isEnabled = fields[key].enabled;
+    const toggleCellStyle: React.CSSProperties = {
+      alignItems: 'flex-start',
+      marginBottom: 0,
+      paddingTop: 3,
+    };
+
+    return (
+      <div
+        key={key}
+        style={{
+          display: 'grid',
+          gridTemplateColumns: '150px 88px 96px minmax(180px, 1fr) minmax(220px, 1.2fr)',
+          gap: 16,
+          alignItems: 'start',
+          padding: '16px 0',
+          borderTop: '1px solid #f0f0f0',
+        }}
+      >
+        <Typography.Text strong style={{ paddingTop: 7 }}>{label}</Typography.Text>
+
         <FormField
           control={form.control}
-          name={`fields.${fieldKey}.enabled`}
+          name={`fields.${key}.enabled`}
           render={({ field }) => (
-            <FormItem>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
-                <FormLabel>Render on public form</FormLabel>
-                <FormControl>
-                  <Switch checked={field.value} onCheckedChange={field.onChange} />
-                </FormControl>
-              </div>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name={`fields.${fieldKey}.required`}
-          render={({ field }) => (
-            <FormItem>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
-                <FormLabel>Required on public form</FormLabel>
-                <FormControl>
-                  <Switch checked={field.value} onCheckedChange={field.onChange} />
-                </FormControl>
-              </div>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name={`fields.${fieldKey}.label`}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Label</FormLabel>
+            <FormItem style={toggleCellStyle}>
               <FormControl>
-                <Input {...field} maxLength={60} showCount />
+                <Switch
+                  checked={field.value}
+                  onCheckedChange={(checked) => handleFieldEnabledChange(key, checked, field.onChange)}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
+
         <FormField
           control={form.control}
-          name={`fields.${fieldKey}.placeholder`}
+          name={`fields.${key}.required`}
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Placeholder</FormLabel>
+            <FormItem style={toggleCellStyle}>
               <FormControl>
-                <Input {...field} maxLength={80} showCount />
+                <Switch
+                  checked={isEnabled && field.value}
+                  disabled={!isEnabled}
+                  onCheckedChange={field.onChange}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
+
+        <FormField
+          control={form.control}
+          name={`fields.${key}.label`}
+          render={({ field }) => (
+            <FormItem style={{ marginBottom: 0 }}>
+              <FormControl>
+                <Input {...field} disabled={!isEnabled} maxLength={60} showCount />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name={`fields.${key}.placeholder`}
+          render={({ field }) => (
+            <FormItem style={{ marginBottom: 0 }}>
+              <FormControl>
+                <Input {...field} disabled={!isEnabled} maxLength={80} showCount />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      </div>
+    );
+  };
+
+  const gridStyle: React.CSSProperties = {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
+    gap: 20,
+  };
+
+  const cardTitleStyle: React.CSSProperties = {
+    marginTop: 0,
+    marginBottom: 16,
+  };
+
+  const sectionDescriptionStyle: React.CSSProperties = {
+    display: 'block',
+    marginBottom: 16,
+  };
+
+  const fieldHeaderStyle: React.CSSProperties = {
+    display: 'grid',
+    gridTemplateColumns: '150px 88px 96px minmax(180px, 1fr) minmax(220px, 1.2fr)',
+    gap: 16,
+    color: '#6b7280',
+    fontSize: 12,
+    fontWeight: 600,
+    textTransform: 'uppercase',
+    letterSpacing: 0,
+    paddingBottom: 8,
+  };
+
+  const renderFormFieldsEditor = () => (
+    <AdminCard>
+      <Typography.Title level={4} style={cardTitleStyle}>Form Fields</Typography.Title>
+      <Typography.Text type="secondary" style={sectionDescriptionStyle}>
+        Configure which fields render on the public contact form and whether each field is required.
+      </Typography.Text>
+
+      {contactChannelMissing ? (
+        <AdminAlert tone="destructive">
+          <AdminAlertDescription>
+            Enable at least Email or Phone so users have an actionable contact channel.
+          </AdminAlertDescription>
+        </AdminAlert>
+      ) : null}
+
+      <div style={{ overflowX: 'auto', marginTop: contactChannelMissing ? 16 : 0 }}>
+        <div style={{ minWidth: 880 }}>
+          <div style={fieldHeaderStyle}>
+            <span>Field</span>
+            <span>Visible</span>
+            <span>Required</span>
+            <span>Label</span>
+            <span>Placeholder</span>
+          </div>
+          {FIELD_ROWS.map(renderFieldRow)}
+        </div>
       </div>
     </AdminCard>
   );
@@ -186,33 +285,35 @@ export function GlobalContactPageEditor({ setting, role, canPublish }: GlobalCon
           <CmsActionFeedback feedback={feedback} />
 
           <AdminCard>
-            <SaveRow>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16 }}>
+              <FormField
+                control={form.control}
+                name="enabled"
+                render={({ field }) => (
+                  <FormItem style={{ marginBottom: 0, flex: 1 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
+                      <div>
+                        <FormLabel style={{ marginBottom: 4 }}>Enable Contact Form Section</FormLabel>
+                        <Typography.Text type="secondary">
+                          Hide or show the editable form section on the public Contact page.
+                        </Typography.Text>
+                      </div>
+                      <FormControl>
+                        <Switch checked={field.value} onCheckedChange={field.onChange} />
+                      </FormControl>
+                    </div>
+                  </FormItem>
+                )}
+              />
               <Button type="primary" htmlType="submit" loading={isSaving} disabled={!form.formState.isDirty}>
                 Save Draft
               </Button>
-            </SaveRow>
-
-            <Divider style={{ margin: '12px 0' }} />
-
-            <FormField
-              control={form.control}
-              name="enabled"
-              render={({ field }) => (
-                <FormItem style={{ marginBottom: 0 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
-                    <FormLabel style={{ marginBottom: 0 }}>Enable Contact Form Section</FormLabel>
-                    <FormControl>
-                      <Switch checked={field.value} onCheckedChange={field.onChange} />
-                    </FormControl>
-                  </div>
-                </FormItem>
-              )}
-            />
+            </div>
           </AdminCard>
 
           <AdminCard>
-            <Typography.Title level={4} style={{ marginTop: 0 }}>Form Copy</Typography.Title>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 20 }}>
+            <Typography.Title level={4} style={cardTitleStyle}>Content Copy</Typography.Title>
+            <div style={gridStyle}>
               <FormField control={form.control} name="eyebrow" render={({ field }) => (
                 <FormItem><FormLabel>Eyebrow</FormLabel><FormControl><Input {...field} maxLength={80} showCount /></FormControl><FormMessage /></FormItem>
               )} />
@@ -223,6 +324,12 @@ export function GlobalContactPageEditor({ setting, role, canPublish }: GlobalCon
             <FormField control={form.control} name="title" render={({ field }) => (
               <FormItem><FormLabel>Title</FormLabel><FormControl><Input {...field} maxLength={140} showCount /></FormControl><FormMessage /></FormItem>
             )} />
+          </AdminCard>
+
+          {renderFormFieldsEditor()}
+
+          <AdminCard>
+            <Typography.Title level={4} style={cardTitleStyle}>Feedback Messages</Typography.Title>
             <FormField control={form.control} name="success_message" render={({ field }) => (
               <FormItem><FormLabel>Success Message</FormLabel><FormControl><Textarea {...field} maxLength={200} showCount /></FormControl><FormMessage /></FormItem>
             )} />
@@ -235,8 +342,8 @@ export function GlobalContactPageEditor({ setting, role, canPublish }: GlobalCon
           </AdminCard>
 
           <AdminCard>
-            <Typography.Title level={4} style={{ marginTop: 0 }}>Mail Delivery</Typography.Title>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 20 }}>
+            <Typography.Title level={4} style={cardTitleStyle}>Mail Delivery</Typography.Title>
+            <div style={gridStyle}>
               <FormField control={form.control} name="recipient_email" render={({ field }) => (
                 <FormItem><FormLabel>Recipient Email</FormLabel><FormControl><Input {...field} maxLength={200} showCount /></FormControl><FormMessage /></FormItem>
               )} />
@@ -245,17 +352,8 @@ export function GlobalContactPageEditor({ setting, role, canPublish }: GlobalCon
               )} />
             </div>
           </AdminCard>
-
-          {renderFieldConfig('fullname', 'Full Name Field')}
-          {renderFieldConfig('email', 'Email Field')}
-          {renderFieldConfig('phone', 'Phone Field')}
-          {renderFieldConfig('message', 'Message Field')}
         </form>
       </Form>
     </div>
   );
 }
-
-const SaveRow = (props: React.ComponentProps<'div'>) => (
-  <div style={{ display: 'flex', justifyContent: 'flex-end' }} {...props} />
-);
