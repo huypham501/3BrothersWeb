@@ -192,6 +192,63 @@ BEGIN
     }'::jsonb,
     true,
     false
+  ),
+  (
+    careers_page_id,
+    'careers.social_share.v1',
+    'careers.social_share.v1',
+    2,
+    true,
+    '{
+      "enabled": true,
+      "share_label": "Chia sẻ vị trí này",
+      "platforms": [
+        {
+          "id": "facebook",
+          "label": "Facebook",
+          "enabled": true,
+          "url_template": "https://www.facebook.com/sharer/sharer.php?u={url}"
+        },
+        {
+          "id": "twitter",
+          "label": "Twitter",
+          "enabled": true,
+          "url_template": "https://twitter.com/intent/tweet?url={url}&text={title}"
+        },
+        {
+          "id": "instagram",
+          "label": "Instagram",
+          "enabled": true,
+          "url_template": ""
+        }
+      ]
+    }'::jsonb,
+    '{
+      "enabled": true,
+      "share_label": "Chia sẻ vị trí này",
+      "platforms": [
+        {
+          "id": "facebook",
+          "label": "Facebook",
+          "enabled": true,
+          "url_template": "https://www.facebook.com/sharer/sharer.php?u={url}"
+        },
+        {
+          "id": "twitter",
+          "label": "Twitter",
+          "enabled": true,
+          "url_template": "https://twitter.com/intent/tweet?url={url}&text={title}"
+        },
+        {
+          "id": "instagram",
+          "label": "Instagram",
+          "enabled": true,
+          "url_template": ""
+        }
+      ]
+    }'::jsonb,
+    true,
+    false
   );
 END $$;
 

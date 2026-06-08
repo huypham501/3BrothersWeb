@@ -4,9 +4,9 @@ import { requireCmsActionCapability } from '@/lib/admin/require-admin-user';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { writeCmsAuditLog } from './audit';
 import { invalidateAdminReadScope } from './admin-read-cache';
-import { careersHeroSchema, jobPositionContentSchema } from './schemas';
+import { careersHeroSchema, careersSocialShareSchema, jobPositionContentSchema } from './schemas';
 import { SCHEMA_KEYS } from './constants/schema-keys';
-import type { CareersHeroPayload, JobPositionContent } from './types/payloads';
+import type { CareersHeroPayload, CareersSocialSharePayload, JobPositionContent } from './types/payloads';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Careers Hero (page section)
@@ -61,6 +61,61 @@ export async function saveCareersHeroDraft(
     entityKeyOrId: SCHEMA_KEYS.CAREERS_HERO,
     pageSlugOrSchemaKey: page.slug,
     summary: `Saved draft careers hero section for ${page.slug}`,
+  });
+
+  invalidateAdminReadScope('careers');
+}
+
+export async function saveCareersSocialShareDraft(
+  pageId: string,
+  payload: CareersSocialSharePayload
+): Promise<void> {
+  const actor = await requireCmsActionCapability('edit_draft');
+  const supabase = await createSupabaseServerClient();
+
+  const validated = careersSocialShareSchema.parse(payload);
+  const editedAt = new Date().toISOString();
+
+  const { data: page, error: pageError } = await supabase
+    .from('pages')
+    .select('slug')
+    .eq('id', pageId)
+    .single();
+
+  if (pageError || !page) {
+    throw new Error('Careers page not found.');
+  }
+
+  const { data: section, error } = await supabase
+    .from('page_sections')
+    .update({
+      content: validated,
+      enabled: validated.enabled,
+      has_unpublished_changes: true,
+      last_edited_by: actor.userId,
+      last_edited_by_identifier: actor.email,
+      last_edited_at: editedAt,
+    })
+    .eq('page_id', pageId)
+    .eq('schema_key', SCHEMA_KEYS.CAREERS_SOCIAL_SHARE)
+    .select('id')
+    .single();
+
+  if (error || !section) {
+    console.error('Error saving careers social share draft:', error);
+    throw new Error('Failed to save careers social share draft.');
+  }
+
+  await writeCmsAuditLog({
+    actorUserId: actor.userId,
+    actorEmail: actor.email,
+    actorRole: actor.role,
+    actionType: 'save_draft',
+    entityType: 'page_section',
+    entityId: section.id,
+    entityKeyOrId: SCHEMA_KEYS.CAREERS_SOCIAL_SHARE,
+    pageSlugOrSchemaKey: page.slug,
+    summary: `Saved draft careers social share section for ${page.slug}`,
   });
 
   invalidateAdminReadScope('careers');

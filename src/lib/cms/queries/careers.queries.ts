@@ -1,7 +1,7 @@
 import { createSupabaseServerClient } from '../../supabase/server';
 import { createSupabasePublicClient } from '../../supabase/public-client';
 import type { CmsJobPosition, CmsPageSection } from '../types';
-import type { CareersHeroPayload } from '../types/payloads';
+import type { CareersHeroPayload, CareersSocialSharePayload } from '../types/payloads';
 import { SCHEMA_KEYS } from '../constants/schema-keys';
 import { getAdminReadCached } from '../admin-read-cache';
 
@@ -50,6 +50,21 @@ export async function getCareersHeroSection(): Promise<
 
   if (error || !data) return null;
   return data as CmsPageSection<CareersHeroPayload>;
+}
+
+export async function getCareersSocialShareSection(): Promise<
+  CmsPageSection<CareersSocialSharePayload> | null
+> {
+  const supabase = createSupabasePublicClient();
+  const { data, error } = await supabase
+    .from('page_sections')
+    .select('*')
+    .eq('schema_key', SCHEMA_KEYS.CAREERS_SOCIAL_SHARE)
+    .eq('published_enabled', true)
+    .single();
+
+  if (error || !data) return null;
+  return data as CmsPageSection<CareersSocialSharePayload>;
 }
 
 /** Returns the careers page row (slug='careers') for admin use. */
@@ -115,5 +130,21 @@ export async function getCareersHeroSectionForAdmin(): Promise<
 
     if (error || !data) return null;
     return data as CmsPageSection<CareersHeroPayload>;
+  });
+}
+
+export async function getCareersSocialShareSectionForAdmin(): Promise<
+  CmsPageSection<CareersSocialSharePayload> | null
+> {
+  return getAdminReadCached('careers', ['social-share-section'], async () => {
+    const supabase = await createSupabaseServerClient();
+    const { data, error } = await supabase
+      .from('page_sections')
+      .select('*')
+      .eq('schema_key', SCHEMA_KEYS.CAREERS_SOCIAL_SHARE)
+      .single();
+
+    if (error || !data) return null;
+    return data as CmsPageSection<CareersSocialSharePayload>;
   });
 }

@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { CareerDetailView } from '@/components/careerDetail/CareerDetailView';
 import {
+  getCareersSocialShareSection,
   getPublishedJobPositionBySlug,
   getPublishedJobPositions,
 } from '@/lib/cms/queries';
@@ -76,9 +77,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function CareerDetailPage({ params }: Props) {
   const { slug } = await params;
 
-  const [cmsJob, allCmsPositions, layout] = await Promise.all([
+  const [cmsJob, allCmsPositions, socialShareSection, layout] = await Promise.all([
     getPublishedJobPositionBySlug(slug),
     getPublishedJobPositions(),
+    getCareersSocialShareSection(),
     resolvePublicLayoutData(),
   ]);
 
@@ -95,6 +97,7 @@ export default async function CareerDetailPage({ params }: Props) {
       slug={slug}
       job={job}
       relatedJobs={relatedJobs}
+      socialShare={socialShareSection?.published_content ?? socialShareSection?.content ?? null}
       header={layout.header}
       footer={layout.footer}
     />

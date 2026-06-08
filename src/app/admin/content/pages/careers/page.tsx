@@ -1,6 +1,7 @@
 import {
   getAllJobPositionsForAdmin,
   getCareersHeroSectionForAdmin,
+  getCareersSocialShareSectionForAdmin,
 } from '@/lib/cms/queries';
 import { getCareersPageForAdmin } from '@/lib/cms/queries/careers.queries';
 import { JobPositionListTable } from '@/components/admin/cms/JobPositionListTable';
@@ -18,10 +19,11 @@ export const metadata = {
 export const dynamic = 'force-dynamic';
 
 export default async function CareersAdminPage() {
-  const [ui, positions, heroSection, careersPage] = await Promise.all([
+  const [ui, positions, heroSection, socialShareSection, careersPage] = await Promise.all([
     getAdminUiContextFromActor(),
     getAllJobPositionsForAdmin(),
     getCareersHeroSectionForAdmin(),
+    getCareersSocialShareSectionForAdmin(),
     getCareersPageForAdmin(),
   ]);
 
@@ -33,6 +35,7 @@ export default async function CareersAdminPage() {
       />
       <CareersAdminTabs
         heroSection={heroSection}
+        socialShareSection={socialShareSection}
         careersPageId={careersPage?.id ?? null}
         positions={positions}
         role={ui.actor.role}

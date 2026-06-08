@@ -10,7 +10,7 @@ import { HeroSection } from './sections/HeroSection';
 import { MainSection } from './sections/MainSection';
 import { ExploreSection } from './sections/ExploreSection';
 import { getJobBySlug, type JobPosition } from '../careers/data/jobPositions';
-import type { GlobalFooterPayload, GlobalHeaderPayload } from '@/lib/cms/types';
+import type { CareersSocialSharePayload, GlobalFooterPayload, GlobalHeaderPayload } from '@/lib/cms/types';
 
 // ── Props ─────────────────────────────────────────────────────────────────────
 
@@ -20,6 +20,7 @@ interface CareerDetailViewProps {
   job?: JobPosition | null;
   /** Related positions from CMS for the Explore section. */
   relatedJobs?: JobPosition[];
+  socialShare?: CareersSocialSharePayload | null;
   header?: GlobalHeaderPayload | null;
   footer?: GlobalFooterPayload | null;
 }
@@ -30,6 +31,7 @@ export function CareerDetailView({
   slug,
   job: jobProp,
   relatedJobs,
+  socialShare,
   header,
   footer,
 }: CareerDetailViewProps) {
@@ -44,7 +46,7 @@ export function CareerDetailView({
       <Header content={header ?? undefined} />
       <MainContent>
         <HeroSection job={job} />
-        <MainSection job={job} />
+        <MainSection job={job} socialShare={socialShare} />
         <ExploreSection currentSlug={slug} relatedJobs={relatedJobs} />
       </MainContent>
       <Footer content={footer ?? undefined} />

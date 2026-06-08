@@ -2,7 +2,9 @@
 
 import styled from 'styled-components';
 import { colors, spacing, typography, mediaQueries, motion } from '@/styles/tokens';
+import { SITE_URL } from '@/lib/constants';
 import type { JobPosition } from '../../careers/data/jobPositions';
+import type { CareersSocialSharePayload } from '@/lib/cms/types';
 import Link from 'next/link';
 import {
   DepartmentIcon,
@@ -19,11 +21,25 @@ import {
 
 interface CareerDetailMainSectionProps {
   job: JobPosition;
+  socialShare?: CareersSocialSharePayload | null;
 }
+
+const DEFAULT_SOCIAL_SHARE: CareersSocialSharePayload = {
+  enabled: true,
+  share_label: 'Chia sẻ vị trí này',
+  platforms: [
+    { id: 'facebook', label: 'Facebook', enabled: true, url_template: 'https://www.facebook.com/sharer/sharer.php?u={url}' },
+    { id: 'twitter', label: 'Twitter', enabled: true, url_template: 'https://twitter.com/intent/tweet?url={url}&text={title}' },
+    { id: 'instagram', label: 'Instagram', enabled: true, url_template: '' },
+  ],
+};
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
-export function MainSection({ job }: CareerDetailMainSectionProps) {
+export function MainSection({ job, socialShare }: CareerDetailMainSectionProps) {
+  const shareConfig = socialShare ?? DEFAULT_SOCIAL_SHARE;
+  const shareLinks = shareConfig.platforms.filter((platform) => platform.enabled);
+
   return (
     <Container>
       <Inner>
@@ -49,19 +65,59 @@ export function MainSection({ job }: CareerDetailMainSectionProps) {
 
             <ApplyButton href="/contact">Ứng tuyển ngay</ApplyButton>
 
-            <ShareSection>
-              <ShareLabel>Chia sẻ vị trí này</ShareLabel>
-              <SocialRow>
-                <SocialBtn href="#"><FacebookIcon color={colors.primary} /></SocialBtn>
-                <SocialBtn href="#"><TwitterIcon color={colors.primary} /></SocialBtn>
-                <SocialBtn href="#"><InstagramIcon color={colors.primary} /></SocialBtn>
-              </SocialRow>
-            </ShareSection>
+            {shareConfig.enabled && shareLinks.length > 0 && (
+              <ShareSection>
+                <ShareLabel>{shareConfig.share_label}</ShareLabel>
+                <SocialRow>
+                  {shareLinks.map((platform) => (
+                    <SocialBtn
+                      key={platform.id}
+                      href={buildShareHref(platform, job)}
+                      aria-label={platform.label}
+                      target={platform.url_template ? '_blank' : undefined}
+                      rel={platform.url_template ? 'noopener noreferrer' : undefined}
+                    >
+                      {renderSocialIcon(platform.id)}
+                    </SocialBtn>
+                  ))}
+                </SocialRow>
+              </ShareSection>
+            )}
           </OverviewCard>
         </SidebarColumn>
       </Inner>
     </Container>
   );
+}
+
+function buildShareHref(
+  platform: CareersSocialSharePayload['platforms'][number],
+  job: JobPosition
+) {
+  const pageUrl = `${SITE_URL}/careers/${job.slug}`;
+  const template = platform.url_template.trim();
+
+  if (template) {
+    return template
+      .replaceAll('{url}', encodeURIComponent(pageUrl))
+      .replaceAll('{title}', encodeURIComponent(job.title));
+  }
+
+  if (platform.id === 'facebook') {
+    return `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(pageUrl)}`;
+  }
+
+  if (platform.id === 'twitter') {
+    return `https://twitter.com/intent/tweet?url=${encodeURIComponent(pageUrl)}&text=${encodeURIComponent(job.title)}`;
+  }
+
+  return '#';
+}
+
+function renderSocialIcon(platformId: CareersSocialSharePayload['platforms'][number]['id']) {
+  if (platformId === 'facebook') return <FacebookIcon color={colors.primary} />;
+  if (platformId === 'twitter') return <TwitterIcon color={colors.primary} />;
+  return <InstagramIcon color={colors.primary} />;
 }
 
 // ── Helper Subcomponents ──────────────────────────────────────────────────────
