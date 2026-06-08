@@ -33,7 +33,9 @@ export function BlogDetailView({
         <DetailMainContentSection article={article} />
         <RelatedPostsSection posts={relatedPosts} />
       </MainContent>
-      {contactCtaSlot}
+      <ContactCTAContainer>
+        {contactCtaSlot}
+      </ContactCTAContainer>
       <Footer content={footer ?? undefined} />
     </Wrapper>
   );
@@ -52,4 +54,9 @@ const Wrapper = styled.div`
 
 const MainContent = styled.main`
   width: 100%;
+`;
+
+const ContactCTAContainer = styled.div`
+  width: 100%;
+  background: ${colors.primaryLight};
 `;
