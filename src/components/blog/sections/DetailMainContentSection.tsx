@@ -2,6 +2,8 @@
 
 import styled from 'styled-components';
 import { colors, spacing, typography, mediaQueries, borderRadius, motion } from '@/styles/tokens';
+import { buildBlogShareUrl, DEFAULT_BLOG_SOCIAL_SHARE } from '@/lib/cms/blog-social-share';
+import type { BlogSocialSharePlatformId, GlobalBlogSocialSharePayload } from '@/lib/cms/types';
 
 // ── Article data (placeholder — replace with real CMS/API data) ───────────────
 
@@ -105,6 +107,25 @@ function YoutubeIcon() {
   );
 }
 
+function LinkedinIcon() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M5.372 8.25H1.5V21h3.872V8.25ZM3.436 6.51C4.674 6.51 5.688 5.49 5.688 4.246C5.688 3.004 4.674 2 3.436 2C2.184 2 1.188 3.004 1.188 4.246C1.188 5.49 2.184 6.51 3.436 6.51ZM22.5 21V14.02C22.5 10.592 21.772 7.958 17.764 7.958C15.836 7.958 14.544 9.014 14.016 10.016H13.964V8.25H10.252V21H14.124V14.692C14.124 13.03 14.44 11.422 16.5 11.422C18.53 11.422 18.56 13.324 18.56 14.8V21H22.5Z"
+        fill="#003CA6"
+      />
+    </svg>
+  );
+}
+
+function SocialIcon({ id }: { id: BlogSocialSharePlatformId }) {
+  if (id === 'facebook') return <FacebookIcon />;
+  if (id === 'x') return <TwitterIcon />;
+  if (id === 'instagram') return <InstagramIcon />;
+  if (id === 'youtube') return <YoutubeIcon />;
+  return <LinkedinIcon />;
+}
+
 // ── Types ─────────────────────────────────────────────────────────────────────
 
 export interface ArticleContentSection {
@@ -123,6 +144,7 @@ export interface ArticleData {
   badge: string | null;
   date: string;
   heroImageBg: string;
+  shareUrl?: string;
   sections: ArticleContentSection[];
 }
 
@@ -167,27 +189,39 @@ function ArticleSectionBlock({ section }: { section: ArticleContentSection }) {
 
 // ── Component ────────────────────────────────────────────────────────────────
 
-export function DetailMainContentSection({ article }: { article?: ArticleData }) {
-  const data = article ?? ARTICLE;
+export function DetailMainContentSection({
+  article,
+  socialShare,
+}: {
+  article?: ArticleData;
+  socialShare?: GlobalBlogSocialSharePayload;
+}) {
+  const data = (article ?? ARTICLE) as ArticleData;
+  const shareConfig = socialShare ?? DEFAULT_BLOG_SOCIAL_SHARE;
+  const sharePlatforms = shareConfig.enabled
+    ? shareConfig.platforms.filter((platform) => platform.enabled)
+    : [];
+
   return (
     <SectionContainer>
       <InnerLayout>
 
         {/* ── Left social sidebar ── */}
-        <SocialSidebar>
-          <SocialButton href="#" aria-label="Share on Facebook">
-            <FacebookIcon />
-          </SocialButton>
-          <SocialButton href="#" aria-label="Share on Twitter">
-            <TwitterIcon />
-          </SocialButton>
-          <SocialButton href="#" aria-label="Share on Instagram">
-            <InstagramIcon />
-          </SocialButton>
-          <SocialButton href="#" aria-label="Share on YouTube">
-            <YoutubeIcon />
-          </SocialButton>
-        </SocialSidebar>
+        {sharePlatforms.length > 0 && (
+          <SocialSidebar>
+            {sharePlatforms.map((platform) => (
+              <SocialButton
+                key={platform.id}
+                href={buildBlogShareUrl(platform.url_template, data.shareUrl ?? '#', data.title)}
+                aria-label={`Share on ${platform.label}`}
+                target={platform.url_template === '#' ? undefined : '_blank'}
+                rel={platform.url_template === '#' ? undefined : 'noopener noreferrer'}
+              >
+                <SocialIcon id={platform.id} />
+              </SocialButton>
+            ))}
+          </SocialSidebar>
+        )}
 
         {/* ── Article content ── */}
         <ArticleColumn>

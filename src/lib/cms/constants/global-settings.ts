@@ -31,6 +31,12 @@ export const SUPPORTED_GLOBAL_SETTINGS = [
     description: 'Contact page copy, visible fields, required fields, and recipient email.',
     editorPath: '/admin/content/pages/contact',
   },
+  {
+    schemaKey: SCHEMA_KEYS.GLOBAL_BLOG_SOCIAL_SHARE,
+    title: 'Blog Social Share',
+    description: 'Blog detail social share sidebar platforms and URL templates.',
+    editorPath: '/admin/content/pages/blogs',
+  },
 ] as const;
 
 export type SupportedGlobalSchemaKey = typeof SUPPORTED_GLOBAL_SETTINGS[number]['schemaKey'];

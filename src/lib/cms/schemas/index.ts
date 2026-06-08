@@ -106,6 +106,27 @@ export const globalContactPageSchema = z.object({
   }
 });
 
+export const blogSocialSharePlatformSchema = z.object({
+  id: z.enum(['facebook', 'x', 'linkedin', 'instagram', 'youtube']),
+  label: z.string().min(1).max(40),
+  enabled: z.boolean(),
+  url_template: z.string().min(1).max(500),
+});
+
+export const globalBlogSocialShareSchema = z.object({
+  enabled: z.boolean(),
+  platforms: z.array(blogSocialSharePlatformSchema).min(1).max(8),
+}).superRefine((value, ctx) => {
+  const ids = value.platforms.map((platform) => platform.id);
+  if (new Set(ids).size !== ids.length) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: 'Duplicate platforms are not allowed.',
+      path: ['platforms'],
+    });
+  }
+});
+
 const sharedExclusiveTalentItemSchema = z.object({
   name: z.string().max(60),
   handle: z.string().max(40),
@@ -410,6 +431,28 @@ export const careersHeroSchema = z.object({
   perks: z.array(careersHeroPerkSchema).length(3),
 });
 
+export const careersSocialSharePlatformSchema = z.object({
+  id: z.enum(['facebook', 'twitter', 'instagram']),
+  label: z.string().min(1).max(40),
+  enabled: z.boolean(),
+  url_template: z.string().max(500),
+});
+
+export const careersSocialShareSchema = z.object({
+  enabled: z.boolean(),
+  share_label: z.string().min(1).max(80),
+  platforms: z.array(careersSocialSharePlatformSchema).min(1).max(3),
+}).superRefine((value, ctx) => {
+  const ids = value.platforms.map((platform) => platform.id);
+  if (new Set(ids).size !== ids.length) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: 'Duplicate platforms are not allowed.',
+      path: ['platforms'],
+    });
+  }
+});
+
 export const jobPositionContentSchema = z.object({
   title: z.string().min(1).max(200),
   department: z.string().max(80),
@@ -475,6 +518,7 @@ export const CMS_REGISTRY = {
   [SCHEMA_KEYS.GLOBAL_SEO_DEFAULTS]: globalSeoDefaultsSchema,
   [SCHEMA_KEYS.GLOBAL_SITE_METADATA]: globalSiteMetadataSchema,
   [SCHEMA_KEYS.GLOBAL_CONTACT_PAGE]: globalContactPageSchema,
+  [SCHEMA_KEYS.GLOBAL_BLOG_SOCIAL_SHARE]: globalBlogSocialShareSchema,
   [SCHEMA_KEYS.SHARED_EXCLUSIVE_TALENTS]: sharedExclusiveTalentsSchema,
   [SCHEMA_KEYS.SHARED_CONTACT_CTA]: sharedContactCtaSchema,
   [SCHEMA_KEYS.SHARED_CTA]: sharedCtaSchema,
@@ -498,4 +542,5 @@ export const CMS_REGISTRY = {
   [SCHEMA_KEYS.SOCIAL_COMMERCE_VALUE_PROPOSITION]: socialCommerceValuePropositionSchema,
   [SCHEMA_KEYS.SOCIAL_COMMERCE_SOCIAL_PROOF]: socialCommerceSocialProofSchema,
   [SCHEMA_KEYS.CAREERS_HERO]: careersHeroSchema,
+  [SCHEMA_KEYS.CAREERS_SOCIAL_SHARE]: careersSocialShareSchema,
 };

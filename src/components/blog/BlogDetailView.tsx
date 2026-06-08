@@ -9,13 +9,14 @@ import { Footer } from '@/components/shared/Footer';
 import { DetailMainContentSection, type ArticleData } from './sections/DetailMainContentSection';
 import { RelatedPostsSection } from './sections/RelatedPostsSection';
 import type { BlogPost } from './components/BlogPostCard';
-import type { GlobalFooterPayload, GlobalHeaderPayload } from '@/lib/cms/types';
+import type { GlobalBlogSocialSharePayload, GlobalFooterPayload, GlobalHeaderPayload } from '@/lib/cms/types';
 
 interface BlogDetailViewProps {
   article?: ArticleData;
   relatedPosts?: BlogPost[];
   header?: GlobalHeaderPayload | null;
   footer?: GlobalFooterPayload | null;
+  blogSocialShare?: GlobalBlogSocialSharePayload | null;
   contactCtaSlot?: ReactNode;
 }
 
@@ -24,13 +25,14 @@ export function BlogDetailView({
   relatedPosts,
   header,
   footer,
+  blogSocialShare,
   contactCtaSlot,
 }: BlogDetailViewProps) {
   return (
     <Wrapper>
       <Header content={header ?? undefined} />
       <MainContent>
-        <DetailMainContentSection article={article} />
+        <DetailMainContentSection article={article} socialShare={blogSocialShare ?? undefined} />
         <RelatedPostsSection posts={relatedPosts} />
       </MainContent>
       <ContactCTAContainer>

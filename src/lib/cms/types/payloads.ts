@@ -66,6 +66,18 @@ export interface GlobalContactPagePayload {
   email_subject_prefix: string;
 }
 
+export type BlogSocialSharePlatformId = 'facebook' | 'x' | 'linkedin' | 'instagram' | 'youtube';
+
+export interface GlobalBlogSocialSharePayload {
+  enabled: boolean;
+  platforms: Array<{
+    id: BlogSocialSharePlatformId;
+    label: string;
+    enabled: boolean;
+    url_template: string;
+  }>;
+}
+
 export interface HomeHeroPayload {
   title: string;
   subtext: string;
@@ -305,6 +317,19 @@ export interface CareersHeroPayload {
   title: string;
   subtitle: string;
   perks: CareersHeroPerk[];
+}
+
+export type CareersSocialSharePlatformId = 'facebook' | 'twitter' | 'instagram';
+
+export interface CareersSocialSharePayload {
+  enabled: boolean;
+  share_label: string;
+  platforms: Array<{
+    id: CareersSocialSharePlatformId;
+    label: string;
+    enabled: boolean;
+    url_template: string;
+  }>;
 }
 
 /** Shape of the content / published_content JSONB columns for a job position. */

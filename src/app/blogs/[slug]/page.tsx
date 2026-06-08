@@ -5,6 +5,7 @@ import { getPublishedBlogPostBySlug, getRelatedBlogPosts } from '@/lib/cms/queri
 import type { ArticleData } from '@/components/blog/sections/DetailMainContentSection';
 import type { BlogPost } from '@/components/blog/components/BlogPostCard';
 import { resolvePublicLayoutData } from '@/lib/cms/resolvers/public-layout.resolver';
+import { resolveBlogSocialShareData } from '@/lib/cms/resolvers/blog-social-share.resolver';
 import { ContactCTASection } from '@/components/shared/contact/ContactCTASection';
 
 import { SITE_URL } from '@/lib/constants';
@@ -75,10 +76,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function BlogDetailPage({ params }: Props) {
   const { slug } = await params;
 
-  const [post, related, layout] = await Promise.all([
+  const [post, related, layout, blogSocialShare] = await Promise.all([
     getPublishedBlogPostBySlug(slug),
     getRelatedBlogPosts(slug, 3),
     resolvePublicLayoutData(),
+    resolveBlogSocialShareData(),
   ]);
 
   if (!post) notFound();
@@ -115,6 +117,7 @@ export default async function BlogDetailPage({ params }: Props) {
     badge: post.published_badge ?? post.badge,
     date: formatBlogDate(post.published_at),
     heroImageBg: toCoverBackground(post.published_cover_image_url ?? post.cover_image_url),
+    shareUrl: `${SITE_URL}/blogs/${slug}`,
     sections: articleSections,
   };
 
@@ -134,6 +137,7 @@ export default async function BlogDetailPage({ params }: Props) {
       relatedPosts={relatedPosts}
       header={layout.header}
       footer={layout.footer}
+      blogSocialShare={blogSocialShare}
       contactCtaSlot={<ContactCTASection />}
     />
   );

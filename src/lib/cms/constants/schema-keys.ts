@@ -4,6 +4,7 @@ export const SCHEMA_KEYS = {
   GLOBAL_SEO_DEFAULTS: 'global.seo_defaults.v1',
   GLOBAL_SITE_METADATA: 'global.site_metadata.v1',
   GLOBAL_CONTACT_PAGE: 'global.contact_page.v1',
+  GLOBAL_BLOG_SOCIAL_SHARE: 'global.blog_social_share.v1',
     HOME_HERO: 'home.hero.v1',
     HOME_PARTNERS: 'home.partners.v1',
     HOME_CORE_COMPETENCIES: 'home.core_competencies.v1',
@@ -27,6 +28,7 @@ export const SCHEMA_KEYS = {
     SOCIAL_COMMERCE_VALUE_PROPOSITION: 'social_commerce.value_proposition.v1',
     SOCIAL_COMMERCE_SOCIAL_PROOF: 'social_commerce.social_proof.v1',
     CAREERS_HERO: 'careers.hero.v1',
+    CAREERS_SOCIAL_SHARE: 'careers.social_share.v1',
 } as const;
 
 export type SchemaKey = typeof SCHEMA_KEYS[keyof typeof SCHEMA_KEYS];

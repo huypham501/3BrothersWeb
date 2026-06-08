@@ -2,6 +2,7 @@ import type { SCHEMA_KEYS } from '../constants/schema-keys';
 import type {
   ForBrandsCategoriesPayload,
   CareersHeroPayload,
+  CareersSocialSharePayload,
   ForBrandsCaseStudiesPayload,
   ForBrandsCtaPayload,
   ForBrandsHeroPayload,
@@ -12,6 +13,7 @@ import type {
   ForCreatorsHeroPayload,
   ForCreatorsTestimonialsPayload,
   GlobalContactPagePayload,
+  GlobalBlogSocialSharePayload,
   GlobalFooterPayload,
   GlobalHeaderPayload,
   GlobalSeoDefaultsPayload,
@@ -35,6 +37,7 @@ export interface CmsSchemaPayloadMap {
   [SCHEMA_KEYS.GLOBAL_SEO_DEFAULTS]: GlobalSeoDefaultsPayload;
   [SCHEMA_KEYS.GLOBAL_SITE_METADATA]: GlobalSiteMetadataPayload;
   [SCHEMA_KEYS.GLOBAL_CONTACT_PAGE]: GlobalContactPagePayload;
+  [SCHEMA_KEYS.GLOBAL_BLOG_SOCIAL_SHARE]: GlobalBlogSocialSharePayload;
   [SCHEMA_KEYS.HOME_HERO]: HomeHeroPayload;
   [SCHEMA_KEYS.HOME_PARTNERS]: HomePartnersPayload;
   [SCHEMA_KEYS.HOME_CORE_COMPETENCIES]: HomeCoreCompetenciesPayload;
@@ -58,6 +61,7 @@ export interface CmsSchemaPayloadMap {
   [SCHEMA_KEYS.SOCIAL_COMMERCE_VALUE_PROPOSITION]: SocialCommerceValuePropositionPayload;
   [SCHEMA_KEYS.SOCIAL_COMMERCE_SOCIAL_PROOF]: SocialCommerceSocialProofPayload;
   [SCHEMA_KEYS.CAREERS_HERO]: CareersHeroPayload;
+  [SCHEMA_KEYS.CAREERS_SOCIAL_SHARE]: CareersSocialSharePayload;
 }
 
 export type CmsSectionSchemaKey =
@@ -83,7 +87,8 @@ export type CmsSectionSchemaKey =
   | typeof SCHEMA_KEYS.SHARED_EXCLUSIVE_TALENTS
   | typeof SCHEMA_KEYS.SHARED_CONTACT_CTA
   | typeof SCHEMA_KEYS.SHARED_CTA
-  | typeof SCHEMA_KEYS.CAREERS_HERO;
+  | typeof SCHEMA_KEYS.CAREERS_HERO
+  | typeof SCHEMA_KEYS.CAREERS_SOCIAL_SHARE;
 
 export type CmsSharedSchemaKey =
   | typeof SCHEMA_KEYS.SHARED_EXCLUSIVE_TALENTS
@@ -95,4 +100,5 @@ export type CmsGlobalSchemaKey =
   | typeof SCHEMA_KEYS.GLOBAL_FOOTER
   | typeof SCHEMA_KEYS.GLOBAL_SEO_DEFAULTS
   | typeof SCHEMA_KEYS.GLOBAL_SITE_METADATA
-  | typeof SCHEMA_KEYS.GLOBAL_CONTACT_PAGE;
+  | typeof SCHEMA_KEYS.GLOBAL_CONTACT_PAGE
+  | typeof SCHEMA_KEYS.GLOBAL_BLOG_SOCIAL_SHARE;
