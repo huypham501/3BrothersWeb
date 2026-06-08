@@ -129,14 +129,6 @@ export const CMS_LIST_ORDER_RULES: CmsListOrderRule[] = [
     editorPath: 'src/components/admin/cms/editors/BlogPostEditor.tsx',
   },
   {
-    id: 'blog_post.mid_content',
-    formId: 'blog_post',
-    fieldPath: 'mid_content',
-    policy: 'required',
-    reason: 'Mid article sections are rendered in array order.',
-    editorPath: 'src/components/admin/cms/editors/BlogPostEditor.tsx',
-  },
-  {
     id: 'careers.job_positions_sort_order',
     formId: 'careers_positions',
     fieldPath: 'sort_order',

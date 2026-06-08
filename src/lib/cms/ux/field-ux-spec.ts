@@ -27,15 +27,6 @@ export const CMS_FIELD_UX_SPECS: Record<string, CmsFormUxSpec> = {
       impact: 'Changing after publish may affect existing links.',
       example: 'intro',
     },
-    'mid_content.id': {
-      label: 'Section ID',
-      what: 'Internal identifier for this mid-page section.',
-      why: 'Used for stable references in section rendering.',
-      format: 'Lowercase kebab-case; unique per post.',
-      validation: 'Required; max 60 characters.',
-      impact: 'Duplicate IDs can cause unstable anchors.',
-      example: 'health',
-    },
   },
   home_page_settings: {
     internal_name: {

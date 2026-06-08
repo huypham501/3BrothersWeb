@@ -10,7 +10,6 @@ const ARTICLE = {
   title: '2025 - Một năm tăng tốc Media trong hệ sinh thái Influence',
   date: 'August 20, 2022',
   heroImageBg: 'linear-gradient(135deg, #003CA6 0%, #1a56c4 50%, #0a3080 100%)',
-  midImageBg: 'linear-gradient(160deg, #e8a020 0%, #c06010 100%)',
   sections: [
     {
       id: 'intro',
@@ -27,8 +26,6 @@ const ARTICLE = {
       heading: 'Plan Your Itinerary',
       body: `While it's essential to leave room for spontaneity and unexpected adventures, having a rough itinerary can help you make the most of your time and budget. Identify the must-see sights and experiences and prioritize them according to your interests and preferences. This will help you avoid overscheduling and ensure that you have time to relax and enjoy your journey.\n\nVitae sapien pellentesque habitant morbi tristique. Luctus venenatis lectus magna fringilla. Nec ullamcorper sit amet risus nullam eget felis. Tincidunt arcu non sodales neque sodales ut etiam sit amet.`,
     },
-  ],
-  midSections: [
     {
       id: 'packing',
       heading: 'Pack Lightly and Smartly',
@@ -111,9 +108,10 @@ function YoutubeIcon() {
 // ── Types ─────────────────────────────────────────────────────────────────────
 
 export interface ArticleContentSection {
+  type?: 'text' | 'image' | null;
   id: string;
-  heading: string | null;
-  body: string;
+  heading?: string | null;
+  body?: string | null;
   image_url?: string | null;
   image_alt?: string | null;
   image_caption?: string | null;
@@ -126,7 +124,6 @@ export interface ArticleData {
   date: string;
   heroImageBg: string;
   sections: ArticleContentSection[];
-  midSections: ArticleContentSection[];
 }
 
 function SectionImage({ section }: { section: ArticleContentSection }) {
@@ -143,7 +140,16 @@ function SectionImage({ section }: { section: ArticleContentSection }) {
 }
 
 function ArticleSectionBlock({ section }: { section: ArticleContentSection }) {
+  const type = section.type ?? 'text';
   const imagePosition = section.image_position ?? 'after_body';
+
+  if (type === 'image') {
+    return (
+      <ArticleSection>
+        <SectionImage section={section} />
+      </ArticleSection>
+    );
+  }
 
   return (
     <ArticleSection>
@@ -151,7 +157,7 @@ function ArticleSectionBlock({ section }: { section: ArticleContentSection }) {
         <SectionHeading>{section.heading}</SectionHeading>
       )}
       {imagePosition === 'before_body' && <SectionImage section={section} />}
-      {section.body.split('\n\n').map((para, i) => (
+      {(section.body ?? '').split('\n\n').filter(Boolean).map((para, i) => (
         <ArticleParagraph key={i}>{para}</ArticleParagraph>
       ))}
       {imagePosition === 'after_body' && <SectionImage section={section} />}
@@ -203,10 +209,6 @@ export function DetailMainContentSection({ article }: { article?: ArticleData })
           <ArticleHeroImage $bg={data.heroImageBg} />
 
           {data.sections.map((section) => (
-            <ArticleSectionBlock key={section.id} section={section} />
-          ))}
-
-          {data.midSections.map((section) => (
             <ArticleSectionBlock key={section.id} section={section} />
           ))}
 

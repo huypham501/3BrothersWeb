@@ -324,9 +324,10 @@ export interface JobPositionContent {
 // ── Blog Posts ───────────────────────────────────────────────────────────────
 
 export interface BlogPostContentSection {
+  type?: 'text' | 'image' | null;
   id: string;
-  heading: string | null;
-  body: string;
+  heading?: string | null;
+  body?: string | null;
   image_url?: string | null;
   image_alt?: string | null;
   image_caption?: string | null;

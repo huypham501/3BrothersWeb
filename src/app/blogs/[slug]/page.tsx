@@ -87,30 +87,35 @@ export default async function BlogDetailPage({ params }: Props) {
   const publishedMidContent = post.published_mid_content ?? post.mid_content ?? [];
   const includeContentImages = Boolean(post.published_content);
   const includeMidContentImages = Boolean(post.published_mid_content);
+  const articleSections = [
+    ...publishedContent.map((s) => ({
+      type: s.type ?? 'text',
+      id: s.id,
+      heading: s.heading ?? null,
+      body: s.body ?? null,
+      image_url: includeContentImages ? s.image_url : null,
+      image_alt: includeContentImages ? s.image_alt : null,
+      image_caption: includeContentImages ? s.image_caption : null,
+      image_position: includeContentImages ? s.image_position : null,
+    })),
+    ...publishedMidContent.map((s) => ({
+      type: s.type ?? 'text',
+      id: s.id,
+      heading: s.heading ?? null,
+      body: s.body ?? null,
+      image_url: includeMidContentImages ? s.image_url : null,
+      image_alt: includeMidContentImages ? s.image_alt : null,
+      image_caption: includeMidContentImages ? s.image_caption : null,
+      image_position: includeMidContentImages ? s.image_position : null,
+    })),
+  ];
 
   const article: ArticleData = {
     title: post.published_title ?? post.title,
     badge: post.published_badge ?? post.badge,
     date: formatBlogDate(post.published_at),
     heroImageBg: toCoverBackground(post.published_cover_image_url ?? post.cover_image_url),
-    sections: publishedContent.map((s) => ({
-      id: s.id,
-      heading: s.heading,
-      body: s.body,
-      image_url: includeContentImages ? s.image_url : null,
-      image_alt: includeContentImages ? s.image_alt : null,
-      image_caption: includeContentImages ? s.image_caption : null,
-      image_position: includeContentImages ? s.image_position : null,
-    })),
-    midSections: publishedMidContent.map((s) => ({
-      id: s.id,
-      heading: s.heading,
-      body: s.body,
-      image_url: includeMidContentImages ? s.image_url : null,
-      image_alt: includeMidContentImages ? s.image_alt : null,
-      image_caption: includeMidContentImages ? s.image_caption : null,
-      image_position: includeMidContentImages ? s.image_position : null,
-    })),
+    sections: articleSections,
   };
 
   const relatedPosts: BlogPost[] = related.map((p) => ({

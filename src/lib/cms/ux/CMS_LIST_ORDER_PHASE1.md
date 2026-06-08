@@ -21,13 +21,13 @@
 5. `home_core_competencies.services`
 6. `home_efficiency.stats`
 7. `home_trending.selected_post_ids`
-8. `for_creators_testimonials.testimonials`
-9. `shared_exclusive_talents.talents`
-10. `job_position.descriptions`
-11. `job_position.requirements`
-12. `job_position.benefits`
-13. `blog_post.content`
-14. `blog_post.mid_content`
+8. `for_brands_categories.categories`
+9. `for_creators_testimonials.testimonials`
+10. `shared_exclusive_talents.talents`
+11. `job_position.descriptions`
+12. `job_position.requirements`
+13. `job_position.benefits`
+14. `blog_post.content`
 15. `careers.job_positions_sort_order`
 
 ## Forbidden Reorder Targets (5)
@@ -39,7 +39,7 @@
 
 ## Current Inconsistency Snapshot
 - Already has reorder UX:
-  - `blog_post.content`, `blog_post.mid_content`
+  - `blog_post.content`
   - `job_position.descriptions|requirements|benefits`
   - `home_trending.selected_post_ids` (custom non-Antd pattern)
 - Missing reorder UX but should have:

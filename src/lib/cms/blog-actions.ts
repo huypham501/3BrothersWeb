@@ -5,7 +5,14 @@ import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { writeCmsAuditLog } from './audit';
 import { invalidateAdminReadScope } from './admin-read-cache';
 import { blogPostFormSchema } from './schemas';
-import type { BlogPostFormPayload } from './types';
+import type { BlogPostContentSection, BlogPostFormPayload } from './types';
+
+function mergeBlogContent(
+  content: BlogPostContentSection[] | null | undefined,
+  midContent: BlogPostContentSection[] | null | undefined
+): BlogPostContentSection[] {
+  return [...(content ?? []), ...(midContent ?? [])];
+}
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Create
@@ -20,6 +27,7 @@ export async function createBlogPostWithSlug(
   const supabase = await createSupabaseServerClient();
 
   const validated = blogPostFormSchema.parse(payload);
+  const content = mergeBlogContent(validated.content, validated.mid_content);
   const now = new Date().toISOString();
 
   const { data, error } = await supabase
@@ -31,8 +39,8 @@ export async function createBlogPostWithSlug(
       excerpt: validated.excerpt ?? null,
       cover_image_url: validated.cover_image_url ?? null,
       cover_image_alt: validated.cover_image_alt ?? null,
-      content: validated.content,
-      mid_content: validated.mid_content,
+      content,
+      mid_content: [],
       seo_title: validated.seo_title ?? null,
       seo_description: validated.seo_description ?? null,
       og_image: validated.og_image ?? null,
@@ -82,6 +90,7 @@ export async function saveBlogPostDraft(
   const supabase = await createSupabaseServerClient();
 
   const validated = blogPostFormSchema.parse(payload);
+  const content = mergeBlogContent(validated.content, validated.mid_content);
   const now = new Date().toISOString();
 
   const { data: existing, error: fetchError } = await supabase
@@ -102,8 +111,8 @@ export async function saveBlogPostDraft(
       excerpt: validated.excerpt ?? null,
       cover_image_url: validated.cover_image_url ?? null,
       cover_image_alt: validated.cover_image_alt ?? null,
-      content: validated.content,
-      mid_content: validated.mid_content,
+      content,
+      mid_content: [],
       seo_title: validated.seo_title ?? null,
       seo_description: validated.seo_description ?? null,
       og_image: validated.og_image ?? null,
@@ -140,7 +149,11 @@ export async function saveBlogPostDraft(
 // Publish
 // ─────────────────────────────────────────────────────────────────────────────
 
-export async function publishBlogPost(postId: string): Promise<void> {
+export async function publishBlogPost(postId: string): Promise<{
+  has_unpublished_changes: boolean;
+  last_published_by_identifier: string | null;
+  last_published_at: string | null;
+}> {
   const actor = await requireCmsActionCapability('publish');
   const supabase = await createSupabaseServerClient();
   const publishedAt = new Date().toISOString();
@@ -162,8 +175,8 @@ export async function publishBlogPost(postId: string): Promise<void> {
     excerpt: post.excerpt,
     cover_image_url: post.cover_image_url,
     cover_image_alt: post.cover_image_alt,
-    content: post.content,
-    mid_content: post.mid_content,
+    content: mergeBlogContent(post.content, post.mid_content),
+    mid_content: [],
     seo_title: post.seo_title,
     seo_description: post.seo_description,
     og_image: post.og_image,
@@ -176,6 +189,8 @@ export async function publishBlogPost(postId: string): Promise<void> {
     .update({
       status: 'published',
       published_at: post.published_at ?? publishedAt,
+      content: validated.content,
+      mid_content: [],
 
       // Snapshot all draft content to published columns
       published_title: validated.title,
@@ -184,7 +199,7 @@ export async function publishBlogPost(postId: string): Promise<void> {
       published_cover_image_url: validated.cover_image_url ?? null,
       published_cover_image_alt: validated.cover_image_alt ?? null,
       published_content: validated.content,
-      published_mid_content: validated.mid_content,
+      published_mid_content: [],
       published_seo_title: validated.seo_title ?? null,
       published_seo_description: validated.seo_description ?? null,
       published_og_image: validated.og_image ?? null,
@@ -196,7 +211,9 @@ export async function publishBlogPost(postId: string): Promise<void> {
       last_published_by_identifier: actor.email,
       last_published_at: publishedAt,
     })
-    .eq('id', postId);
+    .eq('id', postId)
+    .select('has_unpublished_changes, last_published_by_identifier, last_published_at')
+    .single();
 
   if (error) {
     console.error('Error publishing blog post:', error);
@@ -216,6 +233,12 @@ export async function publishBlogPost(postId: string): Promise<void> {
   });
 
   invalidateAdminReadScope('blogs');
+
+  return {
+    has_unpublished_changes: false,
+    last_published_by_identifier: actor.email,
+    last_published_at: publishedAt,
+  };
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

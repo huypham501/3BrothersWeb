@@ -33,7 +33,6 @@ import {
   SectionHeaderRow,
   SectionStack,
   SectionTitle,
-  SelectInput,
   TwoColumnGrid,
   ToggleFormItem,
 } from './EditorLayout';
@@ -42,7 +41,7 @@ import { CmsEditorStatusBar } from '@/components/admin/cms/CmsEditorStatusBar';
 import { CmsActionFeedback, useCmsActionFeedback } from '@/components/admin/cms/CmsActionFeedback';
 
 type FormValues = z.infer<typeof blogPostFormSchema>;
-type SectionFieldPath = 'content' | 'mid_content';
+type BlogSection = FormValues['content'][number];
 
 interface BlogPostEditorProps {
   /** Existing post for edit mode. Omit for create mode. */
@@ -66,6 +65,96 @@ function slugify(text: string): string {
     .slice(0, 80);
 }
 
+function makeUniqueSectionId(baseId: string, usedIds: Set<string>): string {
+  let nextId = baseId;
+  let suffix = 2;
+
+  while (usedIds.has(nextId)) {
+    nextId = `${baseId}-${suffix}`;
+    suffix += 1;
+  }
+
+  usedIds.add(nextId);
+  return nextId;
+}
+
+function normalizeSectionForEditor(section: BlogSection, usedIds: Set<string>): BlogSection[] {
+  const type = section.type ?? 'text';
+
+  if (type === 'image') {
+    return [{
+      type: 'image',
+      id: makeUniqueSectionId(section.id, usedIds),
+      heading: null,
+      body: null,
+      image_url: section.image_url ?? '',
+      image_alt: section.image_alt ?? '',
+      image_caption: section.image_caption ?? '',
+    }];
+  }
+
+  const textBlock: BlogSection = {
+    type: 'text',
+    id: makeUniqueSectionId(section.id, usedIds),
+    heading: section.heading ?? null,
+    body: section.body ?? '',
+  };
+
+  if (!section.image_url) return [textBlock];
+
+  const imageBlock: BlogSection = {
+    type: 'image',
+    id: makeUniqueSectionId(`${section.id}-image`, usedIds),
+    heading: null,
+    body: null,
+    image_url: section.image_url,
+    image_alt: section.image_alt ?? '',
+    image_caption: section.image_caption ?? '',
+  };
+
+  return section.image_position === 'before_body'
+    ? [imageBlock, textBlock]
+    : [textBlock, imageBlock];
+}
+
+function getInitialContent(post?: CmsBlogPost): BlogSection[] {
+  const mergedContent: BlogSection[] = [
+    ...(post?.content ?? []),
+    ...(post?.mid_content ?? []),
+  ];
+  const usedIds = new Set<string>();
+  const sections = mergedContent.flatMap((section) => normalizeSectionForEditor(section, usedIds));
+
+  return sections.length
+    ? sections
+    : [{ type: 'text', id: 'intro', heading: null, body: '' }];
+}
+
+function normalizeSectionsForSave(sections: BlogSection[]): BlogSection[] {
+  return sections.map((section) => {
+    const type = section.type ?? 'text';
+
+    if (type === 'image') {
+      return {
+        type: 'image',
+        id: section.id,
+        heading: null,
+        body: null,
+        image_url: section.image_url ?? '',
+        image_alt: section.image_alt ?? null,
+        image_caption: section.image_caption ?? null,
+      };
+    }
+
+    return {
+      type: 'text',
+      id: section.id,
+      heading: section.heading ?? null,
+      body: section.body ?? '',
+    };
+  });
+}
+
 export function BlogPostEditor({ post, mode, role, canPublish }: BlogPostEditorProps) {
   const router = useRouter();
   const [isSaving, setIsSaving] = React.useState(false);
@@ -73,6 +162,11 @@ export function BlogPostEditor({ post, mode, role, canPublish }: BlogPostEditorP
   const { feedback, showSuccess, showError, showWarning, clearFeedback } = useCmsActionFeedback();
   const [slug, setSlug] = React.useState(post?.slug ?? '');
   const [slugDirty, setSlugDirty] = React.useState(false);
+  const [statusState, setStatusState] = React.useState({
+    hasUnpublished: post?.has_unpublished_changes ?? true,
+    lastPublishedBy: post?.last_published_by_identifier ?? null,
+    lastPublishedAt: post?.last_published_at ?? null,
+  });
 
   const form = useForm<FormValues>({
     resolver: zodResolver(blogPostFormSchema),
@@ -82,10 +176,8 @@ export function BlogPostEditor({ post, mode, role, canPublish }: BlogPostEditorP
       excerpt: post?.excerpt ?? '',
       cover_image_url: post?.cover_image_url ?? '',
       cover_image_alt: post?.cover_image_alt ?? '',
-      content: post?.content?.length
-        ? post.content
-        : [{ id: 'intro', heading: null, body: '' }],
-      mid_content: post?.mid_content ?? [],
+      content: getInitialContent(post),
+      mid_content: [],
       seo_title: post?.seo_title ?? '',
       seo_description: post?.seo_description ?? '',
       og_image: post?.og_image ?? '',
@@ -94,14 +186,22 @@ export function BlogPostEditor({ post, mode, role, canPublish }: BlogPostEditorP
     },
   });
 
+  React.useEffect(() => {
+    setStatusState({
+      hasUnpublished: post?.has_unpublished_changes ?? true,
+      lastPublishedBy: post?.last_published_by_identifier ?? null,
+      lastPublishedAt: post?.last_published_at ?? null,
+    });
+  }, [
+    post?.id,
+    post?.has_unpublished_changes,
+    post?.last_published_by_identifier,
+    post?.last_published_at,
+  ]);
+
   const { fields: contentFields, append: appendContent, remove: removeContent, move: moveContent } = useFieldArray({
     control: form.control,
     name: 'content',
-  });
-
-  const { fields: midFields, append: appendMid, remove: removeMid, move: moveMid } = useFieldArray({
-    control: form.control,
-    name: 'mid_content',
   });
 
   // Auto-derive slug from title in create mode
@@ -115,6 +215,8 @@ export function BlogPostEditor({ post, mode, role, canPublish }: BlogPostEditorP
   // react-hook-form returns undefined for optional fields; actions require null
   const normalizePayload = (data: FormValues): import('@/lib/cms').BlogPostFormPayload => ({
     ...data,
+    content: normalizeSectionsForSave(data.content),
+    mid_content: [],
     badge: data.badge ?? null,
     excerpt: data.excerpt ?? null,
     cover_image_url: data.cover_image_url ?? null,
@@ -138,6 +240,7 @@ export function BlogPostEditor({ post, mode, role, canPublish }: BlogPostEditorP
         setTimeout(() => router.push(`/admin/content/pages/blogs/${created.id}`), 1500);
       } else if (post) {
         await saveBlogPostDraft(post.id, normalizePayload(data));
+        setStatusState((current) => ({ ...current, hasUnpublished: true }));
         showSuccess('Draft saved. Changes are not live until publish.');
         form.reset(data);
         router.refresh();
@@ -157,9 +260,14 @@ export function BlogPostEditor({ post, mode, role, canPublish }: BlogPostEditorP
         // First save current form state as draft
         const data = form.getValues();
         await saveBlogPostDraft(post.id, normalizePayload(data));
-        await publishBlogPost(post.id);
+        const published = await publishBlogPost(post.id);
         // Clear dirty state immediately so Publish button disables after success.
         form.reset(data);
+        setStatusState({
+          hasUnpublished: published.has_unpublished_changes,
+          lastPublishedBy: published.last_published_by_identifier,
+          lastPublishedAt: published.last_published_at,
+        });
         showSuccess('Published successfully.');
         router.refresh();
       } catch (err) {
@@ -168,78 +276,12 @@ export function BlogPostEditor({ post, mode, role, canPublish }: BlogPostEditorP
     });
   };
 
-  const hasUnpublished = post?.has_unpublished_changes ?? true;
+  const hasUnpublished = statusState.hasUnpublished;
   const canPublishNow = hasUnpublished || form.formState.isDirty;
   const keywordsString = form.watch('keywords').join(', ');
   const ux = (fieldPath: string) => getCmsFieldUxSpec('blog_post', fieldPath);
-  const renderSectionImageFields = (fieldPath: SectionFieldPath, index: number) => (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 12,
-        border: '1px solid #f0f0f0',
-        borderRadius: 8,
-        padding: 12,
-        background: '#fafafa',
-      }}
-    >
-      <Typography.Text strong style={{ fontSize: 13 }}>Image</Typography.Text>
-      <TwoColumnGrid>
-        <FormField control={form.control} name={`${fieldPath}.${index}.image_url`} render={({ field }) => (
-          <FormItem>
-            <FormLabel>Image URL</FormLabel>
-            <FormControl>
-              <AdminImageUpload
-                value={field.value}
-                onChange={(nextUrl) => {
-                  form.setValue(`${fieldPath}.${index}.image_url`, nextUrl, {
-                    shouldDirty: true,
-                    shouldTouch: true,
-                    shouldValidate: true,
-                  });
-                }}
-                label="Section Image"
-              />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )} />
-        <FormField control={form.control} name={`${fieldPath}.${index}.image_position`} render={({ field }) => (
-          <FormItem>
-            <FormLabel>Image Position</FormLabel>
-            <FormControl>
-              <SelectInput
-                value={field.value ?? 'after_body'}
-                onChange={(value) => field.onChange(value)}
-                options={[
-                  { label: 'After body', value: 'after_body' },
-                  { label: 'Before body', value: 'before_body' },
-                ]}
-              />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )} />
-      </TwoColumnGrid>
-      <TwoColumnGrid>
-        <FormField control={form.control} name={`${fieldPath}.${index}.image_alt`} render={({ field }) => (
-          <FormItem>
-            <FormLabel>Image Alt Text</FormLabel>
-            <FormControl><Input {...field} value={field.value ?? ''} placeholder="Describe the image" maxLength={125} showCount /></FormControl>
-            <FormMessage />
-          </FormItem>
-        )} />
-        <FormField control={form.control} name={`${fieldPath}.${index}.image_caption`} render={({ field }) => (
-          <FormItem>
-            <FormLabel>Image Caption</FormLabel>
-            <FormControl><Input {...field} value={field.value ?? ''} placeholder="Optional caption shown under image" maxLength={180} showCount /></FormControl>
-            <FormMessage />
-          </FormItem>
-        )} />
-      </TwoColumnGrid>
-    </div>
-  );
+  const appendTextSection = () => appendContent({ type: 'text', id: `section-${Date.now()}`, heading: null, body: '' });
+  const appendImageSection = () => appendContent({ type: 'image', id: `image-${Date.now()}`, heading: null, body: null, image_url: '', image_alt: '', image_caption: '' });
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
@@ -250,8 +292,8 @@ export function BlogPostEditor({ post, mode, role, canPublish }: BlogPostEditorP
           hasUnpublished={canPublishNow}
           lastEditedBy={post.last_edited_by_identifier}
           lastEditedAt={post.last_edited_at}
-          lastPublishedBy={post.last_published_by_identifier}
-          lastPublishedAt={post.last_published_at}
+          lastPublishedBy={statusState.lastPublishedBy}
+          lastPublishedAt={statusState.lastPublishedAt}
           role={role}
           canPublish={canPublish}
           isPublishing={isPublishing}
@@ -350,6 +392,55 @@ export function BlogPostEditor({ post, mode, role, canPublish }: BlogPostEditorP
 
           <AdminCard>
             <AdminCardHeader>
+              <AdminCardTitle>SEO</AdminCardTitle>
+            </AdminCardHeader>
+            <AdminCardContent>
+              <SectionStack>
+                <FormField control={form.control} name="seo_title" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>SEO Title</FormLabel>
+                    <FormControl><Input {...field} value={field.value ?? ''} placeholder="Post Title | 3BROTHERS NETWORK" maxLength={70} showCount /></FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )} />
+
+                <FormField control={form.control} name="seo_description" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>SEO Description</FormLabel>
+                    <FormControl><Textarea {...field} value={field.value ?? ''} rows={2} placeholder="Meta description, max 160 characters" maxLength={160} showCount /></FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )} />
+
+                <TwoColumnGrid>
+                  <FormField control={form.control} name="og_image" render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>OG Image URL</FormLabel>
+                      <FormControl><Input {...field} value={field.value ?? ''} placeholder="https://..." maxLength={1024} showCount /></FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )} />
+                  <RawFormItem>
+                    <label style={{ fontSize: 13, fontWeight: 500, display: 'block', marginBottom: 4 }}>
+                      Keywords{' '}
+                      <span style={{ fontWeight: 400, color: '#888' }}>(comma-separated)</span>
+                    </label>
+                    <Input
+                      value={keywordsString}
+                      onChange={(e) => {
+                        const kw = e.target.value.split(',').map((k) => k.trim()).filter(Boolean);
+                        form.setValue('keywords', kw, { shouldDirty: true });
+                      }}
+                      placeholder="media, influence, creator"
+                    />
+                  </RawFormItem>
+                </TwoColumnGrid>
+              </SectionStack>
+            </AdminCardContent>
+          </AdminCard>
+
+          <AdminCard>
+            <AdminCardHeader>
               <AdminCardTitle>Cover Image</AdminCardTitle>
             </AdminCardHeader>
             <AdminCardContent>
@@ -398,14 +489,24 @@ export function BlogPostEditor({ post, mode, role, canPublish }: BlogPostEditorP
               <SectionStack>
             <SectionHeaderRow>
               <SectionTitle>Sections</SectionTitle>
-              <Button
-                type="dashed"
-                icon={<PlusOutlined />}
-                size="small"
-                onClick={() => appendContent({ id: `section-${Date.now()}`, heading: null, body: '', image_position: 'after_body' })}
-              >
-                Add Section
-              </Button>
+              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                <Button
+                  type="dashed"
+                  icon={<PlusOutlined />}
+                  size="small"
+                  onClick={appendTextSection}
+                >
+                  Add Text
+                </Button>
+                <Button
+                  type="dashed"
+                  icon={<PlusOutlined />}
+                  size="small"
+                  onClick={appendImageSection}
+                >
+                  Add Image
+                </Button>
+              </div>
             </SectionHeaderRow>
 
             <CmsSortableList
@@ -415,157 +516,84 @@ export function BlogPostEditor({ post, mode, role, canPublish }: BlogPostEditorP
               onRemove={removeContent}
               renderItem={({ item }) => {
                 const index = item.value;
+                const sectionType = form.watch(`content.${index}.type`) ?? 'text';
                 return (
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                     <SectionHeaderRow>
-                      <Typography.Text strong style={{ fontSize: 13 }}>Section {index + 1}</Typography.Text>
+                      <Typography.Text strong style={{ fontSize: 13 }}>
+                        {sectionType === 'image' ? 'Image' : 'Text'} Section {index + 1}
+                      </Typography.Text>
                     </SectionHeaderRow>
 
                     <FormField control={form.control} name={`content.${index}.id`} render={({ field }) => (
                       <FormItem>
                         <FormLabel>{ux('content.id').label ?? 'Section ID'}</FormLabel>
-                        <FormControl><Input {...field} placeholder="e.g. intro, research" maxLength={60} showCount style={{ fontFamily: 'monospace', fontSize: 12 }} /></FormControl>
+                        <FormControl><Input {...field} placeholder={sectionType === 'image' ? 'e.g. itinerary-image' : 'e.g. intro, research'} maxLength={60} showCount style={{ fontFamily: 'monospace', fontSize: 12 }} /></FormControl>
                         <FormMessage />
                       </FormItem>
                     )} />
 
-                    <FormField control={form.control} name={`content.${index}.heading`} render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Heading <span style={{ color: '#888', fontWeight: 400 }}>(optional)</span></FormLabel>
-                        <FormControl><Input {...field} value={field.value ?? ''} onChange={(e) => field.onChange(e.target.value || null)} placeholder="Section heading" maxLength={120} showCount /></FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )} />
-
-                    <FormField control={form.control} name={`content.${index}.body`} render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Body *</FormLabel>
-                        <FormControl><Textarea {...field} rows={6} placeholder="Article content..." /></FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )} />
-
-                    {renderSectionImageFields('content', index)}
-                  </div>
-                );
-              }}
-            />
-              </SectionStack>
-            </AdminCardContent>
-          </AdminCard>
-
-          <AdminCard>
-            <AdminCardHeader>
-              <AdminCardTitle>Mid-Page Sections</AdminCardTitle>
-            </AdminCardHeader>
-            <AdminCardContent>
-              <SectionStack>
-                <SectionHeaderRow>
-                  <SectionTitle>Mid Sections</SectionTitle>
-                  <Button
-                    type="dashed"
-                    icon={<PlusOutlined />}
-                    size="small"
-                    onClick={() => appendMid({ id: `mid-${Date.now()}`, heading: '', body: '', image_position: 'after_body' })}
-                  >
-                    Add Mid Section
-                  </Button>
-                </SectionHeaderRow>
-
-                <CmsSortableList
-                  title={`Mid Sections (${midFields.length})`}
-                  items={midFields.map((field, index) => ({ key: field.id, value: index }))}
-                  onMove={moveMid}
-                  onRemove={removeMid}
-                  renderItem={({ item }) => {
-                    const index = item.value;
-                    return (
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                        <SectionHeaderRow>
-                          <Typography.Text strong style={{ fontSize: 13 }}>Mid Section {index + 1}</Typography.Text>
-                        </SectionHeaderRow>
-
-                        <FormField control={form.control} name={`mid_content.${index}.id`} render={({ field }) => (
+                    {sectionType === 'image' ? (
+                      <>
+                        <FormField control={form.control} name={`content.${index}.image_url`} render={({ field }) => (
                           <FormItem>
-                            <FormLabel>{ux('mid_content.id').label ?? 'Section ID'}</FormLabel>
-                            <FormControl><Input {...field} placeholder="e.g. packing, health" maxLength={60} showCount style={{ fontFamily: 'monospace', fontSize: 12 }} /></FormControl>
+                            <FormLabel>Image *</FormLabel>
+                            <FormControl>
+                              <AdminImageUpload
+                                value={field.value}
+                                onChange={(nextUrl) => {
+                                  form.setValue(`content.${index}.image_url`, nextUrl, {
+                                    shouldDirty: true,
+                                    shouldTouch: true,
+                                    shouldValidate: true,
+                                  });
+                                }}
+                                label="Section Image"
+                              />
+                            </FormControl>
                             <FormMessage />
                           </FormItem>
                         )} />
-
-                        <FormField control={form.control} name={`mid_content.${index}.heading`} render={({ field }) => (
+                        <TwoColumnGrid>
+                          <FormField control={form.control} name={`content.${index}.image_alt`} render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Alt Text</FormLabel>
+                              <FormControl><Input {...field} value={field.value ?? ''} placeholder="Describe the image" maxLength={125} showCount /></FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )} />
+                          <FormField control={form.control} name={`content.${index}.image_caption`} render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Caption</FormLabel>
+                              <FormControl><Input {...field} value={field.value ?? ''} placeholder="Optional caption shown under image" maxLength={180} showCount /></FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )} />
+                        </TwoColumnGrid>
+                      </>
+                    ) : (
+                      <>
+                        <FormField control={form.control} name={`content.${index}.heading`} render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Heading *</FormLabel>
+                            <FormLabel>Heading <span style={{ color: '#888', fontWeight: 400 }}>(optional)</span></FormLabel>
                             <FormControl><Input {...field} value={field.value ?? ''} onChange={(e) => field.onChange(e.target.value || null)} placeholder="Section heading" maxLength={120} showCount /></FormControl>
                             <FormMessage />
                           </FormItem>
                         )} />
 
-                        <FormField control={form.control} name={`mid_content.${index}.body`} render={({ field }) => (
+                        <FormField control={form.control} name={`content.${index}.body`} render={({ field }) => (
                           <FormItem>
                             <FormLabel>Body *</FormLabel>
-                            <FormControl><Textarea {...field} rows={5} placeholder="Article content..." /></FormControl>
+                            <FormControl><Textarea {...field} value={field.value ?? ''} rows={6} placeholder="Article content..." /></FormControl>
                             <FormMessage />
                           </FormItem>
                         )} />
-
-                        {renderSectionImageFields('mid_content', index)}
-                      </div>
-                    );
-                  }}
-                />
-                {midFields.length === 0 && (
-                  <Typography.Text type="secondary" style={{ fontSize: 12 }}>No mid-page sections. Add one if your article has a second half after the cover image break.</Typography.Text>
-                )}
-              </SectionStack>
-            </AdminCardContent>
-          </AdminCard>
-
-          <AdminCard>
-            <AdminCardHeader>
-              <AdminCardTitle>SEO</AdminCardTitle>
-            </AdminCardHeader>
-            <AdminCardContent>
-              <SectionStack>
-                <FormField control={form.control} name="seo_title" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>SEO Title</FormLabel>
-                    <FormControl><Input {...field} value={field.value ?? ''} placeholder="Post Title | 3BROTHERS NETWORK" maxLength={70} showCount /></FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )} />
-
-                <FormField control={form.control} name="seo_description" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>SEO Description</FormLabel>
-                    <FormControl><Textarea {...field} value={field.value ?? ''} rows={2} placeholder="Meta description, max 160 characters" maxLength={160} showCount /></FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )} />
-
-                <TwoColumnGrid>
-                  <FormField control={form.control} name="og_image" render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>OG Image URL</FormLabel>
-                      <FormControl><Input {...field} value={field.value ?? ''} placeholder="https://..." maxLength={1024} showCount /></FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )} />
-                  <RawFormItem>
-                    <label style={{ fontSize: 13, fontWeight: 500, display: 'block', marginBottom: 4 }}>
-                      Keywords{' '}
-                      <span style={{ fontWeight: 400, color: '#888' }}>(comma-separated)</span>
-                    </label>
-                    <Input
-                      value={keywordsString}
-                      onChange={(e) => {
-                        const kw = e.target.value.split(',').map((k) => k.trim()).filter(Boolean);
-                        form.setValue('keywords', kw, { shouldDirty: true });
-                      }}
-                      placeholder="media, influence, creator"
-                    />
-                  </RawFormItem>
-                </TwoColumnGrid>
+                      </>
+                    )}
+                  </div>
+                );
+              }}
+            />
               </SectionStack>
             </AdminCardContent>
           </AdminCard>

@@ -426,13 +426,32 @@ export const jobPositionContentSchema = z.object({
 // ── Blog Posts ───────────────────────────────────────────────────────────────
 
 export const blogPostContentSectionSchema = z.object({
+  type: z.enum(['text', 'image']).nullable().optional(),
   id: z.string().min(1).max(60),
-  heading: z.string().max(120).nullable(),
-  body: z.string().min(1),
+  heading: z.string().max(120).nullable().optional(),
+  body: z.string().nullable().optional(),
   image_url: z.string().max(1024).nullable().optional(),
   image_alt: z.string().max(125).nullable().optional(),
   image_caption: z.string().max(180).nullable().optional(),
   image_position: z.enum(['before_body', 'after_body']).nullable().optional(),
+}).superRefine((value, ctx) => {
+  const type = value.type ?? 'text';
+
+  if (type === 'text' && !value.body?.trim()) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: 'Body is required for text sections.',
+      path: ['body'],
+    });
+  }
+
+  if (type === 'image' && !value.image_url?.trim()) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: 'Image is required for image sections.',
+      path: ['image_url'],
+    });
+  }
 });
 
 export const blogPostFormSchema = z.object({
@@ -441,8 +460,8 @@ export const blogPostFormSchema = z.object({
   excerpt: z.string().max(300).nullable().optional(),
   cover_image_url: z.string().max(1024).nullable().optional(),
   cover_image_alt: z.string().max(125).nullable().optional(),
-  content: z.array(blogPostContentSectionSchema).max(20),
-  mid_content: z.array(blogPostContentSectionSchema).max(20),
+  content: z.array(blogPostContentSectionSchema).max(40),
+  mid_content: z.array(blogPostContentSectionSchema).max(40),
   seo_title: z.string().max(70).nullable().optional(),
   seo_description: z.string().max(160).nullable().optional(),
   og_image: z.string().max(1024).nullable().optional(),
